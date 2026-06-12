@@ -12,9 +12,14 @@ type NavItem = {
 
 const navLinks: NavItem[] = [
   { href: "/", label: "Home" },
-  { href: "/mass-times", label: "Mass Times" },
-  { href: "/news-events", label: "News & Events" },
-  { href: "/bulletins", label: "Bulletins" },
+  {
+    href: "/mass-times",
+    label: "Mass & Sacraments",
+    children: [
+      { href: "/mass-times", label: "Mass Times & Confessions" },
+      { href: "/sacraments", label: "Sacraments" },
+    ],
+  },
   {
     href: "/faith-formation",
     label: "Faith Formation",
@@ -22,23 +27,22 @@ const navLinks: NavItem[] = [
       { href: "/faith-formation", label: "Overview" },
       { href: "/ccd-calendar", label: "CCD Calendar" },
       { href: "/ccd-registration", label: "CCD Registration" },
+      { href: "/teen-life", label: "Teen Life" },
     ],
   },
   {
-    href: "/cyo-basketball",
-    label: "CYO",
+    href: "/news-events",
+    label: "Parish Life",
     children: [
-      { href: "/cyo-basketball", label: "Basketball Schedule" },
+      { href: "/news-events", label: "News & Announcements" },
+      { href: "/parish-calendar", label: "Parish Calendar" },
+      { href: "/bulletins", label: "Weekly Bulletins" },
+      { href: "/cyo-basketball", label: "CYO Basketball" },
+      { href: "/ministries", label: "Ministries & Devotions" },
+      { href: "/volunteer", label: "Volunteer" },
     ],
   },
-  {
-    href: "/ministries",
-    label: "Ministries",
-    children: [
-      { href: "/ministries", label: "Devotions & Ministries" },
-      { href: "/volunteer", label: "Volunteer Sign-Up" },
-    ],
-  },
+  { href: "/forms", label: "Forms" },
   { href: "/giving", label: "Giving" },
   { href: "/contact", label: "Contact" },
 ];
@@ -71,12 +75,12 @@ function DesktopDropdown({ item, location }: { item: NavItem; location: string }
         <ChevronDown className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
-        <div className="absolute top-full left-0 mt-1 bg-white border border-border rounded-lg shadow-lg py-1 min-w-[180px] z-50 animate-in fade-in-0 zoom-in-95 duration-150">
+        <div className="absolute top-full left-0 mt-1 bg-white border border-border rounded-lg shadow-lg py-1 min-w-[200px] z-50 animate-in fade-in-0 zoom-in-95 duration-150">
           {item.children!.map(child => (
             <Link
               key={child.href}
               href={child.href}
-              className={`block px-4 py-2 text-sm transition-colors ${
+              className={`block px-4 py-2.5 text-sm transition-colors ${
                 location === child.href
                   ? "text-primary bg-primary/5"
                   : "text-foreground/70 hover:text-primary hover:bg-primary/5"
@@ -113,7 +117,7 @@ export default function Navigation() {
         <div className="hidden lg:flex items-center gap-0.5">
           {navLinks.map((link) =>
             link.children ? (
-              <DesktopDropdown key={link.href} item={link} location={location} />
+              <DesktopDropdown key={link.label} item={link} location={location} />
             ) : (
               <Link
                 key={link.href}
@@ -158,7 +162,7 @@ export default function Navigation() {
         <div className="lg:hidden border-t border-border bg-white animate-scale-in max-h-[80vh] overflow-y-auto">
           <div className="container py-4 flex flex-col gap-1">
             {navLinks.map((link) => (
-              <div key={link.href}>
+              <div key={link.label}>
                 {link.children ? (
                   <>
                     <span className="px-4 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">

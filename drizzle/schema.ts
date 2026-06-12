@@ -228,3 +228,23 @@ export const ccdEvents = mysqlTable("ccd_events", {
 
 export type CcdEvent = typeof ccdEvents.$inferSelect;
 export type InsertCcdEvent = typeof ccdEvents.$inferInsert;
+
+/**
+ * Parish documents and forms managed by admin
+ * Categories: baptism, confirmation, marriage, funeral, ccd, general
+ */
+export const parishDocuments = mysqlTable("parish_documents", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 500 }).notNull(),
+  description: text("description"),
+  category: varchar("category", { length: 100 }).notNull(),
+  fileUrl: text("fileUrl").notNull(),
+  fileKey: varchar("fileKey", { length: 500 }),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  published: boolean("published").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ParishDocument = typeof parishDocuments.$inferSelect;
+export type InsertParishDocument = typeof parishDocuments.$inferInsert;

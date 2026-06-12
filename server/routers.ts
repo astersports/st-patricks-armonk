@@ -519,6 +519,54 @@ export const appRouter = router({
       return { success: true };
     }),
   }),
+
+  // ===== PARISH DOCUMENTS =====
+  documents: router({
+    byCategory: publicProcedure.input(z.object({ category: z.string() })).query(async ({ input }) => {
+      return db.getDocumentsByCategory(input.category);
+    }),
+    all: adminProcedure.query(async () => {
+      return db.getAllDocuments();
+    }),
+    create: adminProcedure.input(z.object({
+      title: z.string().min(1),
+      description: z.string().optional(),
+      category: z.string().min(1),
+      fileUrl: z.string().min(1),
+      fileKey: z.string().optional(),
+      sortOrder: z.number().optional(),
+    })).mutation(async ({ input }) => {
+      await db.createDocument({ ...input, sortOrder: input.sortOrder ?? 0 });
+      return { success: true };
+    }),
+    update: adminProcedure.input(z.object({
+      id: z.number(),
+      title: z.string().optional(),
+      description: z.string().optional(),
+      category: z.string().optional(),
+      fileUrl: z.string().optional(),
+      sortOrder: z.number().optional(),
+      published: z.boolean().optional(),
+    })).mutation(async ({ input }) => {
+      const { id, ...data } = input;
+      await db.updateDocument(id, data);
+      return { success: true };
+    }),
+    delete: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+      await db.deleteDocument(input.id);
+      return { success: true };
+    }),
+    upload: adminProcedure.input(z.object({
+      fileName: z.string(),
+      fileData: z.string(), // base64
+      contentType: z.string(),
+    })).mutation(async ({ input }) => {
+      const buffer = Buffer.from(input.fileData, "base64");
+      const key = `documents/${nanoid()}-${input.fileName}`;
+      const { url } = await storagePut(key, buffer, input.contentType);
+      return { url, key };
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

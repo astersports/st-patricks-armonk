@@ -19,20 +19,28 @@ import CyoBasketball from "./pages/CyoBasketball";
 import CcdRegistration from "./pages/CcdRegistration";
 import Volunteer from "./pages/Volunteer";
 import CcdUnsubscribe from "./pages/CcdUnsubscribe";
+import Sacraments from "./pages/Sacraments";
+import ParishCalendar from "./pages/ParishCalendar";
+import TeenLife from "./pages/TeenLife";
+import FormsDocuments from "./pages/FormsDocuments";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/mass-times" component={MassTimes} />
+      <Route path="/sacraments" component={Sacraments} />
       <Route path="/news-events" component={NewsEvents} />
       <Route path="/bulletins" component={Bulletins} />
+      <Route path="/parish-calendar" component={ParishCalendar} />
       <Route path="/faith-formation" component={FaithFormation} />
       <Route path="/ccd-calendar" component={CcdCalendar} />
       <Route path="/ccd-registration" component={CcdRegistration} />
       <Route path="/cyo-basketball" component={CyoBasketball} />
+      <Route path="/teen-life" component={TeenLife} />
       <Route path="/ministries" component={Ministries} />
       <Route path="/volunteer" component={Volunteer} />
+      <Route path="/forms" component={FormsDocuments} />
       <Route path="/giving" component={Giving} />
       <Route path="/contact" component={Contact} />
       <Route path="/admin" component={Admin} />

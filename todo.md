@@ -35,3 +35,13 @@
 - [x] Update navigation with dropdown menus for new sections
 - [x] "Get Involved" section on homepage linking to new features
 - [x] Parent notification system for CCD class reminders (opt-in during registration, scheduled handler at /api/scheduled/ccd-reminders, unsubscribe flow)
+
+## Phase 3 - Site Reorganization & New Sections
+
+- [x] Sacraments hub page with sub-sections (Baptism, Confirmation, Marriage, Funerals)
+- [x] Admin-managed document/forms system (upload PDFs, categorize, display on pages)
+- [x] Parish Events Calendar page with Google Calendar embed
+- [x] Teen Life page with Google Form embed
+- [x] Forms & Documents center page (consolidated downloadable forms by category)
+- [x] Reorganize navigation into cleaner dropdown structure (Mass & Sacraments, Faith Formation, Parish Life)
+- [x] Seed existing parish PDF forms as document records (external URLs from eCatholic)

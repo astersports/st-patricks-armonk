@@ -1,0 +1,108 @@
+import PageLayout from "@/components/PageLayout";
+import { Card } from "@/components/ui/card";
+import { trpc } from "@/lib/trpc";
+import { FileText, Download, ExternalLink, Loader2, Droplets, Cross, Heart, Church, BookOpen, FolderOpen } from "lucide-react";
+
+const CATEGORIES = [
+  { id: "baptism", label: "Baptism", icon: Droplets, description: "Registration and sponsor forms for Baptism" },
+  { id: "confirmation", label: "Confirmation", icon: Cross, description: "Sponsor certificates, service forms, and preparation materials" },
+  { id: "marriage", label: "Marriage", icon: Heart, description: "Wedding guidelines for parishioners and non-parishioners" },
+  { id: "funeral", label: "Funeral", icon: Church, description: "Funeral preparation and planning forms" },
+  { id: "ccd", label: "Religious Education (CCD)", icon: BookOpen, description: "Registration, calendars, bus forms, and volunteer sign-ups" },
+  { id: "general", label: "General Parish Forms", icon: FolderOpen, description: "Other parish forms and documents" },
+];
+
+function CategorySection({ category }: { category: typeof CATEGORIES[number] }) {
+  const { data: docs, isLoading } = trpc.documents.byCategory.useQuery({ category: category.id });
+  const Icon = category.icon;
+
+  if (isLoading) {
+    return (
+      <Card className="p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+            <Icon className="w-5 h-5 text-primary" />
+          </div>
+          <div>
+            <h2 className="font-serif text-xl text-foreground">{category.label}</h2>
+            <p className="text-xs text-muted-foreground">{category.description}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Loader2 className="w-4 h-4 animate-spin" /> Loading...
+        </div>
+      </Card>
+    );
+  }
+
+  if (!docs || docs.length === 0) return null;
+
+  return (
+    <Card className="p-6">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+          <Icon className="w-5 h-5 text-primary" />
+        </div>
+        <div>
+          <h2 className="font-serif text-xl text-foreground">{category.label}</h2>
+          <p className="text-xs text-muted-foreground">{category.description}</p>
+        </div>
+      </div>
+      <div className="space-y-2">
+        {docs.map((doc) => (
+          <a
+            key={doc.id}
+            href={doc.fileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 p-3 rounded-lg border border-border hover:border-primary/30 hover:bg-primary/5 transition-colors group"
+          >
+            <Download className="w-4 h-4 text-muted-foreground group-hover:text-primary shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-foreground truncate">{doc.title}</p>
+              {doc.description && <p className="text-xs text-muted-foreground truncate">{doc.description}</p>}
+            </div>
+            <ExternalLink className="w-3 h-3 text-muted-foreground shrink-0" />
+          </a>
+        ))}
+      </div>
+    </Card>
+  );
+}
+
+export default function FormsDocuments() {
+  return (
+    <PageLayout>
+      {/* Page Header */}
+      <section className="bg-gradient-to-b from-primary/5 to-background py-12 border-b border-primary/10">
+        <div className="container max-w-5xl">
+          <div className="flex items-center gap-3 mb-3">
+            <FileText className="w-8 h-8 text-primary" />
+            <h1 className="font-serif text-4xl md:text-5xl text-foreground">Forms & Documents</h1>
+          </div>
+          <p className="text-lg text-muted-foreground max-w-2xl">
+            All parish forms and documents in one place. Download what you need for sacramental preparation, registration, and more.
+          </p>
+        </div>
+      </section>
+
+      <section className="py-12">
+        <div className="container max-w-4xl space-y-6">
+          {CATEGORIES.map((cat) => (
+            <CategorySection key={cat.id} category={cat} />
+          ))}
+
+          {/* Note about online forms */}
+          <Card className="p-6 bg-primary/5 border-primary/20">
+            <h3 className="font-serif text-lg text-foreground mb-2">Looking for Online Forms?</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Many of our forms are now available to complete online. Visit the{" "}
+              <a href="/ccd-registration" className="text-primary hover:underline font-medium">CCD Registration</a> page to register for Religious Education,
+              or the <a href="/volunteer" className="text-primary hover:underline font-medium">Volunteer</a> page to sign up for parish ministries.
+            </p>
+          </Card>
+        </div>
+      </section>
+    </PageLayout>
+  );
+}

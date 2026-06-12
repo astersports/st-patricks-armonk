@@ -1,7 +1,7 @@
 import { eq, desc, and, gte, lte, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, newsPosts, bulletins, events, emailSubscriptions, ccdRegistrations, cyoTeams, cyoGames, volunteerOpportunities, volunteerSignups, ccdEvents } from "../drizzle/schema";
-import type { InsertNewsPost, InsertBulletin, InsertEvent, InsertEmailSubscription, InsertCcdRegistration, InsertCyoTeam, InsertCyoGame, InsertVolunteerOpportunity, InsertVolunteerSignup, InsertCcdEvent } from "../drizzle/schema";
+import { InsertUser, users, newsPosts, bulletins, events, emailSubscriptions, ccdRegistrations, cyoTeams, cyoGames, volunteerOpportunities, volunteerSignups, ccdEvents, parishDocuments } from "../drizzle/schema";
+import type { InsertNewsPost, InsertBulletin, InsertEvent, InsertEmailSubscription, InsertCcdRegistration, InsertCyoTeam, InsertCyoGame, InsertVolunteerOpportunity, InsertVolunteerSignup, InsertCcdEvent, InsertParishDocument } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -466,4 +466,38 @@ export async function unsubscribeCcdReminder(token: string) {
   await db.update(ccdRegistrations)
     .set({ reminderOptIn: false })
     .where(eq(ccdRegistrations.unsubscribeToken, token));
+}
+
+// ===== PARISH DOCUMENTS =====
+
+export async function getDocumentsByCategory(category: string) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(parishDocuments)
+    .where(and(eq(parishDocuments.category, category), eq(parishDocuments.published, true)))
+    .orderBy(parishDocuments.sortOrder);
+}
+
+export async function getAllDocuments() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(parishDocuments).orderBy(parishDocuments.category, parishDocuments.sortOrder);
+}
+
+export async function createDocument(doc: InsertParishDocument) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(parishDocuments).values(doc);
+}
+
+export async function updateDocument(id: number, data: Partial<InsertParishDocument>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(parishDocuments).set(data).where(eq(parishDocuments.id, id));
+}
+
+export async function deleteDocument(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(parishDocuments).where(eq(parishDocuments.id, id));
 }
