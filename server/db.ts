@@ -1,7 +1,7 @@
 import { eq, desc, and, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, newsPosts, bulletins, events, emailSubscriptions } from "../drizzle/schema";
-import type { InsertNewsPost, InsertBulletin, InsertEvent, InsertEmailSubscription } from "../drizzle/schema";
+import { InsertUser, users, newsPosts, bulletins, events, emailSubscriptions, ccdRegistrations, cyoTeams, cyoGames, volunteerOpportunities, volunteerSignups, ccdEvents } from "../drizzle/schema";
+import type { InsertNewsPost, InsertBulletin, InsertEvent, InsertEmailSubscription, InsertCcdRegistration, InsertCyoTeam, InsertCyoGame, InsertVolunteerOpportunity, InsertVolunteerSignup, InsertCcdEvent } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -241,4 +241,180 @@ export async function getAllSubscriptions() {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(emailSubscriptions).orderBy(desc(emailSubscriptions.createdAt));
+}
+
+// ===== CCD REGISTRATION HELPERS =====
+
+export async function createCcdRegistration(data: InsertCcdRegistration) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(ccdRegistrations).values(data);
+  return result[0].insertId;
+}
+
+export async function getCcdRegistrations(schoolYear?: string) {
+  const db = await getDb();
+  if (!db) return [];
+  if (schoolYear) {
+    return db.select().from(ccdRegistrations)
+      .where(eq(ccdRegistrations.schoolYear, schoolYear))
+      .orderBy(desc(ccdRegistrations.createdAt));
+  }
+  return db.select().from(ccdRegistrations).orderBy(desc(ccdRegistrations.createdAt));
+}
+
+export async function updateCcdRegistrationStatus(id: number, status: "pending" | "approved" | "waitlisted" | "cancelled") {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(ccdRegistrations).set({ status }).where(eq(ccdRegistrations.id, id));
+}
+
+// ===== CYO BASKETBALL HELPERS =====
+
+export async function createCyoTeam(data: InsertCyoTeam) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(cyoTeams).values(data);
+  return result[0].insertId;
+}
+
+export async function getCyoTeams(season?: string) {
+  const db = await getDb();
+  if (!db) return [];
+  if (season) {
+    return db.select().from(cyoTeams).where(eq(cyoTeams.season, season)).orderBy(cyoTeams.name);
+  }
+  return db.select().from(cyoTeams).orderBy(desc(cyoTeams.createdAt));
+}
+
+export async function updateCyoTeam(id: number, data: Partial<InsertCyoTeam>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(cyoTeams).set(data).where(eq(cyoTeams.id, id));
+}
+
+export async function deleteCyoTeam(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(cyoGames).where(eq(cyoGames.teamId, id));
+  await db.delete(cyoTeams).where(eq(cyoTeams.id, id));
+}
+
+export async function createCyoGame(data: InsertCyoGame) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(cyoGames).values(data);
+  return result[0].insertId;
+}
+
+export async function getCyoGames(teamId?: number) {
+  const db = await getDb();
+  if (!db) return [];
+  if (teamId) {
+    return db.select().from(cyoGames).where(eq(cyoGames.teamId, teamId)).orderBy(cyoGames.gameDate);
+  }
+  return db.select().from(cyoGames).orderBy(cyoGames.gameDate);
+}
+
+export async function updateCyoGame(id: number, data: Partial<InsertCyoGame>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(cyoGames).set(data).where(eq(cyoGames.id, id));
+}
+
+export async function deleteCyoGame(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(cyoGames).where(eq(cyoGames.id, id));
+}
+
+// ===== VOLUNTEER HELPERS =====
+
+export async function createVolunteerOpportunity(data: InsertVolunteerOpportunity) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(volunteerOpportunities).values(data);
+  return result[0].insertId;
+}
+
+export async function getVolunteerOpportunities(activeOnly = true) {
+  const db = await getDb();
+  if (!db) return [];
+  if (activeOnly) {
+    return db.select().from(volunteerOpportunities)
+      .where(eq(volunteerOpportunities.active, true))
+      .orderBy(volunteerOpportunities.eventDate);
+  }
+  return db.select().from(volunteerOpportunities).orderBy(desc(volunteerOpportunities.createdAt));
+}
+
+export async function updateVolunteerOpportunity(id: number, data: Partial<InsertVolunteerOpportunity>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(volunteerOpportunities).set(data).where(eq(volunteerOpportunities.id, id));
+}
+
+export async function deleteVolunteerOpportunity(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(volunteerSignups).where(eq(volunteerSignups.opportunityId, id));
+  await db.delete(volunteerOpportunities).where(eq(volunteerOpportunities.id, id));
+}
+
+export async function createVolunteerSignup(data: InsertVolunteerSignup) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(volunteerSignups).values(data);
+  // Increment spots filled
+  await db.update(volunteerOpportunities)
+    .set({ spotsFilled: sql`spotsFilled + 1` })
+    .where(eq(volunteerOpportunities.id, data.opportunityId));
+  return result[0].insertId;
+}
+
+export async function getVolunteerSignups(opportunityId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(volunteerSignups)
+    .where(and(eq(volunteerSignups.opportunityId, opportunityId), eq(volunteerSignups.status, "confirmed")))
+    .orderBy(desc(volunteerSignups.createdAt));
+}
+
+export async function cancelVolunteerSignup(id: number, opportunityId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(volunteerSignups).set({ status: "cancelled" }).where(eq(volunteerSignups.id, id));
+  await db.update(volunteerOpportunities)
+    .set({ spotsFilled: sql`GREATEST(spotsFilled - 1, 0)` })
+    .where(eq(volunteerOpportunities.id, opportunityId));
+}
+
+// ===== CCD EVENTS =====
+
+export async function getCcdEvents(schoolYear?: string) {
+  const db = await getDb();
+  if (!db) return [];
+  if (schoolYear) {
+    return db.select().from(ccdEvents).where(eq(ccdEvents.schoolYear, schoolYear)).orderBy(ccdEvents.eventDate);
+  }
+  return db.select().from(ccdEvents).orderBy(desc(ccdEvents.eventDate));
+}
+
+export async function createCcdEvent(data: Omit<InsertCcdEvent, "id" | "createdAt" | "updatedAt">) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(ccdEvents).values(data as any);
+  return result[0].insertId;
+}
+
+export async function updateCcdEvent(id: number, data: Partial<Omit<InsertCcdEvent, "id" | "createdAt" | "updatedAt">>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(ccdEvents).set(data as any).where(eq(ccdEvents.id, id));
+}
+
+export async function deleteCcdEvent(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(ccdEvents).where(eq(ccdEvents.id, id));
 }

@@ -259,6 +259,262 @@ export const appRouter = router({
       return db.getAllSubscriptions();
     }),
   }),
+
+  // ===== CCD REGISTRATION =====
+  ccd: router({
+    register: publicProcedure.input(z.object({
+      parentFirstName: z.string().min(1),
+      parentLastName: z.string().min(1),
+      parentEmail: z.string().email(),
+      parentPhone: z.string().min(1),
+      address: z.string().min(1),
+      childFirstName: z.string().min(1),
+      childLastName: z.string().min(1),
+      childDob: z.string(),
+      grade: z.string().min(1),
+      baptized: z.boolean(),
+      baptismChurch: z.string().optional(),
+      firstCommunion: z.boolean(),
+      schoolYear: z.string().min(1),
+      notes: z.string().optional(),
+    })).mutation(async ({ input }) => {
+      const id = await db.createCcdRegistration({
+        ...input,
+        childDob: new Date(input.childDob),
+        baptismChurch: input.baptismChurch ?? null,
+        notes: input.notes ?? null,
+      });
+      // Notify owner of new registration
+      await notifyOwner({
+        title: "New CCD Registration",
+        content: `${input.childFirstName} ${input.childLastName} (Grade ${input.grade}) has been registered for CCD ${input.schoolYear} by ${input.parentFirstName} ${input.parentLastName} (${input.parentEmail}).`,
+      });
+      return { success: true, id };
+    }),
+    list: adminProcedure.input(z.object({
+      schoolYear: z.string().optional(),
+    }).optional()).query(async ({ input }) => {
+      return db.getCcdRegistrations(input?.schoolYear);
+    }),
+    updateStatus: adminProcedure.input(z.object({
+      id: z.number(),
+      status: z.enum(["pending", "approved", "waitlisted", "cancelled"]),
+    })).mutation(async ({ input }) => {
+      await db.updateCcdRegistrationStatus(input.id, input.status);
+      return { success: true };
+    }),
+    // CCD Calendar Events
+    listEvents: publicProcedure.input(z.object({
+      schoolYear: z.string().optional(),
+    }).optional()).query(async ({ input }) => {
+      return db.getCcdEvents(input?.schoolYear);
+    }),
+    createEvent: adminProcedure.input(z.object({
+      title: z.string().min(1),
+      description: z.string().optional(),
+      eventDate: z.string(),
+      endDate: z.string().optional(),
+      eventType: z.enum(["class", "holiday", "special", "sacrament"]),
+      grade: z.string().optional(),
+      location: z.string().optional(),
+      schoolYear: z.string().min(1),
+    })).mutation(async ({ input }) => {
+      const id = await db.createCcdEvent({
+        ...input,
+        eventDate: new Date(input.eventDate),
+        endDate: input.endDate ? new Date(input.endDate) : null,
+        description: input.description ?? null,
+        grade: input.grade ?? null,
+        location: input.location ?? null,
+      });
+      return { success: true, id };
+    }),
+    updateEvent: adminProcedure.input(z.object({
+      id: z.number(),
+      title: z.string().optional(),
+      description: z.string().optional(),
+      eventDate: z.string().optional(),
+      endDate: z.string().optional(),
+      eventType: z.enum(["class", "holiday", "special", "sacrament"]).optional(),
+      grade: z.string().optional(),
+      location: z.string().optional(),
+    })).mutation(async ({ input }) => {
+      const { id, eventDate, endDate, ...rest } = input;
+      const data: any = { ...rest };
+      if (eventDate) data.eventDate = new Date(eventDate);
+      if (endDate) data.endDate = new Date(endDate);
+      await db.updateCcdEvent(id, data);
+      return { success: true };
+    }),
+    deleteEvent: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+      await db.deleteCcdEvent(input.id);
+      return { success: true };
+    }),
+  }),
+
+  // ===== CYO BASKETBALL =====
+  cyo: router({
+    // Teams
+    listTeams: publicProcedure.input(z.object({
+      season: z.string().optional(),
+    }).optional()).query(async ({ input }) => {
+      return db.getCyoTeams(input?.season);
+    }),
+    createTeam: adminProcedure.input(z.object({
+      name: z.string().min(1),
+      division: z.string().min(1),
+      ageGroup: z.string().min(1),
+      season: z.string().min(1),
+      coachName: z.string().optional(),
+      coachEmail: z.string().optional(),
+      coachPhone: z.string().optional(),
+    })).mutation(async ({ input }) => {
+      const id = await db.createCyoTeam({
+        ...input,
+        coachName: input.coachName ?? null,
+        coachEmail: input.coachEmail ?? null,
+        coachPhone: input.coachPhone ?? null,
+      });
+      return { success: true, id };
+    }),
+    updateTeam: adminProcedure.input(z.object({
+      id: z.number(),
+      name: z.string().optional(),
+      division: z.string().optional(),
+      ageGroup: z.string().optional(),
+      coachName: z.string().optional(),
+      coachEmail: z.string().optional(),
+      coachPhone: z.string().optional(),
+      wins: z.number().optional(),
+      losses: z.number().optional(),
+    })).mutation(async ({ input }) => {
+      const { id, ...data } = input;
+      await db.updateCyoTeam(id, data as any);
+      return { success: true };
+    }),
+    deleteTeam: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+      await db.deleteCyoTeam(input.id);
+      return { success: true };
+    }),
+    // Games
+    listGames: publicProcedure.input(z.object({
+      teamId: z.number().optional(),
+    }).optional()).query(async ({ input }) => {
+      return db.getCyoGames(input?.teamId);
+    }),
+    createGame: adminProcedure.input(z.object({
+      teamId: z.number(),
+      opponent: z.string().min(1),
+      gameDate: z.string(),
+      location: z.string().min(1),
+      homeAway: z.enum(["home", "away"]),
+      notes: z.string().optional(),
+    })).mutation(async ({ input }) => {
+      const id = await db.createCyoGame({
+        ...input,
+        gameDate: new Date(input.gameDate),
+        notes: input.notes ?? null,
+      });
+      return { success: true, id };
+    }),
+    updateGame: adminProcedure.input(z.object({
+      id: z.number(),
+      opponent: z.string().optional(),
+      gameDate: z.string().optional(),
+      location: z.string().optional(),
+      homeAway: z.enum(["home", "away"]).optional(),
+      ourScore: z.number().optional(),
+      theirScore: z.number().optional(),
+      status: z.enum(["scheduled", "completed", "cancelled", "postponed"]).optional(),
+      notes: z.string().optional(),
+    })).mutation(async ({ input }) => {
+      const { id, gameDate, ...rest } = input;
+      const data: any = { ...rest };
+      if (gameDate) data.gameDate = new Date(gameDate);
+      await db.updateCyoGame(id, data);
+      return { success: true };
+    }),
+    deleteGame: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+      await db.deleteCyoGame(input.id);
+      return { success: true };
+    }),
+  }),
+
+  // ===== VOLUNTEER SIGN-UPS =====
+  volunteer: router({
+    listOpportunities: publicProcedure.query(async () => {
+      return db.getVolunteerOpportunities(true);
+    }),
+    listAllOpportunities: adminProcedure.query(async () => {
+      return db.getVolunteerOpportunities(false);
+    }),
+    createOpportunity: adminProcedure.input(z.object({
+      title: z.string().min(1),
+      description: z.string().optional(),
+      ministry: z.string().optional(),
+      eventDate: z.string().optional(),
+      startTime: z.string().optional(),
+      endTime: z.string().optional(),
+      spotsAvailable: z.number().min(1),
+    })).mutation(async ({ input }) => {
+      const id = await db.createVolunteerOpportunity({
+        ...input,
+        description: input.description ?? null,
+        ministry: input.ministry ?? null,
+        eventDate: input.eventDate ? new Date(input.eventDate) : null,
+        startTime: input.startTime ?? null,
+        endTime: input.endTime ?? null,
+      });
+      return { success: true, id };
+    }),
+    updateOpportunity: adminProcedure.input(z.object({
+      id: z.number(),
+      title: z.string().optional(),
+      description: z.string().optional(),
+      ministry: z.string().optional(),
+      eventDate: z.string().optional(),
+      startTime: z.string().optional(),
+      endTime: z.string().optional(),
+      spotsAvailable: z.number().optional(),
+      active: z.boolean().optional(),
+    })).mutation(async ({ input }) => {
+      const { id, eventDate, ...rest } = input;
+      const data: any = { ...rest };
+      if (eventDate) data.eventDate = new Date(eventDate);
+      await db.updateVolunteerOpportunity(id, data);
+      return { success: true };
+    }),
+    deleteOpportunity: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+      await db.deleteVolunteerOpportunity(input.id);
+      return { success: true };
+    }),
+    signup: publicProcedure.input(z.object({
+      opportunityId: z.number(),
+      name: z.string().min(1),
+      email: z.string().email(),
+      phone: z.string().optional(),
+      notes: z.string().optional(),
+    })).mutation(async ({ input }) => {
+      const id = await db.createVolunteerSignup({
+        ...input,
+        phone: input.phone ?? null,
+        notes: input.notes ?? null,
+      });
+      return { success: true, id };
+    }),
+    listSignups: adminProcedure.input(z.object({
+      opportunityId: z.number(),
+    })).query(async ({ input }) => {
+      return db.getVolunteerSignups(input.opportunityId);
+    }),
+    cancelSignup: adminProcedure.input(z.object({
+      id: z.number(),
+      opportunityId: z.number(),
+    })).mutation(async ({ input }) => {
+      await db.cancelVolunteerSignup(input.id, input.opportunityId);
+      return { success: true };
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

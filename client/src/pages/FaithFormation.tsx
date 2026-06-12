@@ -31,10 +31,10 @@ export default function FaithFormation() {
               <CardContent className="space-y-4">
                 <div className="bg-accent/10 border border-accent/20 rounded-lg p-4">
                   <p className="font-semibold text-accent-foreground">
-                    CCD Registration for 2026–27 is Now Available
+                    CCD Registration for 2026–27 is Now Open!
                   </p>
                   <p className="text-sm text-muted-foreground mt-1">
-                    Contact the Religious Education Office to register your child.
+                    <a href="/ccd-registration" className="text-primary hover:underline font-medium">Register online now →</a> or contact the Religious Education Office.
                   </p>
                 </div>
                 <p className="text-muted-foreground leading-relaxed">
@@ -110,10 +110,10 @@ export default function FaithFormation() {
               <CardContent className="p-6">
                 <Calendar className="w-8 h-8 text-primary mb-3" />
                 <h3 className="font-semibold text-lg mb-2">CCD Calendar</h3>
-                <p className="text-muted-foreground text-sm">
-                  The Religious Education calendar is available from the Religious Education Office. 
-                  Contact us for class schedules and important dates.
+                <p className="text-muted-foreground text-sm mb-3">
+                  View the full Religious Education class schedule, key dates, and special events.
                 </p>
+                <a href="/ccd-calendar" className="text-sm text-primary hover:underline font-medium">View CCD Calendar →</a>
               </CardContent>
             </Card>
 

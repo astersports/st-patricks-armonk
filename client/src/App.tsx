@@ -14,6 +14,10 @@ import Giving from "./pages/Giving";
 import Contact from "./pages/Contact";
 import Admin from "./pages/Admin";
 import Unsubscribe from "./pages/Unsubscribe";
+import CcdCalendar from "./pages/CcdCalendar";
+import CyoBasketball from "./pages/CyoBasketball";
+import CcdRegistration from "./pages/CcdRegistration";
+import Volunteer from "./pages/Volunteer";
 
 function Router() {
   return (
@@ -23,7 +27,11 @@ function Router() {
       <Route path="/news-events" component={NewsEvents} />
       <Route path="/bulletins" component={Bulletins} />
       <Route path="/faith-formation" component={FaithFormation} />
+      <Route path="/ccd-calendar" component={CcdCalendar} />
+      <Route path="/ccd-registration" component={CcdRegistration} />
+      <Route path="/cyo-basketball" component={CyoBasketball} />
       <Route path="/ministries" component={Ministries} />
+      <Route path="/volunteer" component={Volunteer} />
       <Route path="/giving" component={Giving} />
       <Route path="/contact" component={Contact} />
       <Route path="/admin" component={Admin} />

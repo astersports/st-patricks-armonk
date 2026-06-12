@@ -175,7 +175,44 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Newsletter Subscription */}
+      {/* Quick Links to New Features */}
+      <section className="py-12 bg-green-50/50">
+        <div className="container">
+          <h2 className="font-serif text-3xl font-bold text-foreground text-center mb-8">Get Involved</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Link href="/ccd-calendar">
+              <Card className="p-5 hover:shadow-md transition-all hover:-translate-y-0.5 cursor-pointer h-full">
+                <Calendar className="w-8 h-8 text-primary mb-3" />
+                <h3 className="font-semibold text-foreground mb-1">CCD Calendar</h3>
+                <p className="text-sm text-muted-foreground">View the Religious Education schedule and key dates.</p>
+              </Card>
+            </Link>
+            <Link href="/cyo-basketball">
+              <Card className="p-5 hover:shadow-md transition-all hover:-translate-y-0.5 cursor-pointer h-full">
+                <Calendar className="w-8 h-8 text-accent mb-3" />
+                <h3 className="font-semibold text-foreground mb-1">CYO Basketball</h3>
+                <p className="text-sm text-muted-foreground">Schedules, teams, and game results for all ages.</p>
+              </Card>
+            </Link>
+            <Link href="/ccd-registration">
+              <Card className="p-5 hover:shadow-md transition-all hover:-translate-y-0.5 cursor-pointer h-full">
+                <BookOpen className="w-8 h-8 text-primary mb-3" />
+                <h3 className="font-semibold text-foreground mb-1">CCD Registration</h3>
+                <p className="text-sm text-muted-foreground">Register your child for Religious Education online.</p>
+              </Card>
+            </Link>
+            <Link href="/volunteer">
+              <Card className="p-5 hover:shadow-md transition-all hover:-translate-y-0.5 cursor-pointer h-full">
+                <Heart className="w-8 h-8 text-accent mb-3" />
+                <h3 className="font-semibold text-foreground mb-1">Volunteer</h3>
+                <p className="text-sm text-muted-foreground">Sign up to serve our parish community.</p>
+              </Card>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Flocknote + Newsletter Subscription */}
       <section className="container py-16">
         <Card className="bg-gradient-to-r from-primary to-parish-green-dark text-white overflow-hidden">
           <CardContent className="p-8 md:p-12 flex flex-col md:flex-row items-center gap-8">
@@ -215,6 +252,13 @@ export default function Home() {
                   {subscribeMutation.isPending ? "Subscribing..." : "Subscribe"}
                 </Button>
               </form>
+              <p className="text-white/70 text-sm mt-3">
+                Or join us on{" "}
+                <a href="https://stpatarmonk.flocknote.com/home" target="_blank" rel="noopener noreferrer" className="text-gold underline hover:text-gold/80">
+                  Flocknote
+                </a>{" "}
+                for text and email updates.
+              </p>
             </div>
           </CardContent>
         </Card>

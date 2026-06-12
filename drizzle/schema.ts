@@ -94,3 +94,134 @@ export const emailSubscriptions = mysqlTable("email_subscriptions", {
 
 export type EmailSubscription = typeof emailSubscriptions.$inferSelect;
 export type InsertEmailSubscription = typeof emailSubscriptions.$inferInsert;
+
+/**
+ * CCD (Religious Education) Registrations
+ */
+export const ccdRegistrations = mysqlTable("ccd_registrations", {
+  id: int("id").autoincrement().primaryKey(),
+  // Parent/Guardian Info
+  parentFirstName: varchar("parentFirstName", { length: 255 }).notNull(),
+  parentLastName: varchar("parentLastName", { length: 255 }).notNull(),
+  parentEmail: varchar("parentEmail", { length: 320 }).notNull(),
+  parentPhone: varchar("parentPhone", { length: 20 }).notNull(),
+  address: text("address").notNull(),
+  // Child Info
+  childFirstName: varchar("childFirstName", { length: 255 }).notNull(),
+  childLastName: varchar("childLastName", { length: 255 }).notNull(),
+  childDob: timestamp("childDob").notNull(),
+  grade: varchar("grade", { length: 20 }).notNull(),
+  // Sacraments
+  baptized: boolean("baptized").default(false).notNull(),
+  baptismChurch: varchar("baptismChurch", { length: 500 }),
+  firstCommunion: boolean("firstCommunion").default(false).notNull(),
+  // Status
+  schoolYear: varchar("schoolYear", { length: 20 }).notNull(),
+  status: mysqlEnum("status", ["pending", "approved", "waitlisted", "cancelled"]).default("pending").notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CcdRegistration = typeof ccdRegistrations.$inferSelect;
+export type InsertCcdRegistration = typeof ccdRegistrations.$inferInsert;
+
+/**
+ * CYO Basketball Teams
+ */
+export const cyoTeams = mysqlTable("cyo_teams", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  division: varchar("division", { length: 100 }).notNull(),
+  ageGroup: varchar("ageGroup", { length: 50 }).notNull(),
+  season: varchar("season", { length: 20 }).notNull(),
+  coachName: varchar("coachName", { length: 255 }),
+  coachEmail: varchar("coachEmail", { length: 320 }),
+  coachPhone: varchar("coachPhone", { length: 20 }),
+  wins: int("wins").default(0).notNull(),
+  losses: int("losses").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CyoTeam = typeof cyoTeams.$inferSelect;
+export type InsertCyoTeam = typeof cyoTeams.$inferInsert;
+
+/**
+ * CYO Basketball Games
+ */
+export const cyoGames = mysqlTable("cyo_games", {
+  id: int("id").autoincrement().primaryKey(),
+  teamId: int("teamId").notNull(),
+  opponent: varchar("opponent", { length: 255 }).notNull(),
+  gameDate: timestamp("gameDate").notNull(),
+  location: varchar("location", { length: 500 }).notNull(),
+  homeAway: mysqlEnum("homeAway", ["home", "away"]).default("home").notNull(),
+  ourScore: int("ourScore"),
+  theirScore: int("theirScore"),
+  status: mysqlEnum("status", ["scheduled", "completed", "cancelled", "postponed"]).default("scheduled").notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CyoGame = typeof cyoGames.$inferSelect;
+export type InsertCyoGame = typeof cyoGames.$inferInsert;
+
+/**
+ * Volunteer Opportunities
+ */
+export const volunteerOpportunities = mysqlTable("volunteer_opportunities", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 500 }).notNull(),
+  description: text("description"),
+  ministry: varchar("ministry", { length: 255 }),
+  eventDate: timestamp("eventDate"),
+  startTime: varchar("startTime", { length: 20 }),
+  endTime: varchar("endTime", { length: 20 }),
+  spotsAvailable: int("spotsAvailable").default(0).notNull(),
+  spotsFilled: int("spotsFilled").default(0).notNull(),
+  active: boolean("active").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type VolunteerOpportunity = typeof volunteerOpportunities.$inferSelect;
+export type InsertVolunteerOpportunity = typeof volunteerOpportunities.$inferInsert;
+
+/**
+ * Volunteer Sign-ups
+ */
+export const volunteerSignups = mysqlTable("volunteer_signups", {
+  id: int("id").autoincrement().primaryKey(),
+  opportunityId: int("opportunityId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  phone: varchar("phone", { length: 20 }),
+  notes: text("notes"),
+  status: mysqlEnum("status", ["confirmed", "cancelled"]).default("confirmed").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type VolunteerSignup = typeof volunteerSignups.$inferSelect;
+export type InsertVolunteerSignup = typeof volunteerSignups.$inferInsert;
+
+/**
+ * CCD Class Events - managed by admin, displayed on CCD Calendar
+ */
+export const ccdEvents = mysqlTable("ccd_events", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 500 }).notNull(),
+  description: text("description"),
+  eventDate: timestamp("eventDate").notNull(),
+  endDate: timestamp("endDate"),
+  eventType: mysqlEnum("eventType", ["class", "holiday", "special", "sacrament"]).default("class").notNull(),
+  grade: varchar("grade", { length: 50 }),
+  location: varchar("location", { length: 500 }),
+  schoolYear: varchar("schoolYear", { length: 20 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CcdEvent = typeof ccdEvents.$inferSelect;
+export type InsertCcdEvent = typeof ccdEvents.$inferInsert;
