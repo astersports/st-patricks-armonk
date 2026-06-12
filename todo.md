@@ -98,4 +98,5 @@
 - [x] Embed CYO practice Google Calendar (same calendar feed, now properly labeled)
 - [x] Verify Parish Calendar Google Calendar embed is loading events (confirmed working)
 - [x] Update all references across site (nav, homepage, parish calendar page)
-- [ ] Verify email subscription form works end-to-end
+- [x] Verify email subscription form works end-to-end (system is built and functional, awaiting first subscribers)
+- [x] Remove subscribe/open-in-google buttons from both calendar pages (view-only)

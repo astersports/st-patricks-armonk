@@ -46,7 +46,7 @@ export default function CyoBasketball() {
           <Card className="p-1 md:p-3 mb-8">
             <div className="aspect-[4/3] md:aspect-[16/9] w-full">
               <iframe
-                src="https://calendar.google.com/calendar/embed?src=stpatrickinarmonk.org_5snqr5qqph11et22r6sk81k67g%40group.calendar.google.com&ctz=America%2FNew_York&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0"
+                src="https://calendar.google.com/calendar/embed?src=stpatrickinarmonk.org_5snqr5qqph11et22r6sk81k67g%40group.calendar.google.com&ctz=America%2FNew_York&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0&mode=AGENDA"
                 className="w-full h-full rounded-lg border-0"
                 title="CYO Practice Calendar - St. Francis Hall"
               />

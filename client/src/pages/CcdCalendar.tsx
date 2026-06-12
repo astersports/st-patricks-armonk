@@ -2,7 +2,7 @@ import PageLayout from "@/components/PageLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, BookOpen, Clock, Bell, ExternalLink } from "lucide-react";
+import { Calendar, BookOpen, Clock, Bell } from "lucide-react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 
@@ -68,23 +68,13 @@ export default function CcdCalendar() {
 
           {/* Google Calendar Embed */}
           <div className="mb-10">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-serif text-2xl text-foreground flex items-center gap-2">
-                <Calendar className="w-6 h-6 text-primary" />
-                Religious Education Schedule
-              </h2>
-              <a
-                href="https://calendar.google.com/calendar/embed?src=reled%40stpatrickinarmonk.org&ctz=America%2FNew_York"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-primary hover:underline flex items-center gap-1"
-              >
-                Open in Google Calendar <ExternalLink className="w-3 h-3" />
-              </a>
-            </div>
+            <h2 className="font-serif text-2xl text-foreground flex items-center gap-2 mb-4">
+              <Calendar className="w-6 h-6 text-primary" />
+              Religious Education Schedule
+            </h2>
             <div className="rounded-xl overflow-hidden border border-border shadow-sm bg-white">
               <iframe
-                src="https://calendar.google.com/calendar/embed?src=reled%40stpatrickinarmonk.org&ctz=America%2FNew_York&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=1&showCalendars=0&showTz=0"
+                src="https://calendar.google.com/calendar/embed?src=reled%40stpatrickinarmonk.org&ctz=America%2FNew_York&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0&mode=AGENDA"
                 style={{ border: 0 }}
                 width="100%"
                 height="600"
