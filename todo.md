@@ -83,3 +83,4 @@
 - [x] Convert Faith Formation detail sections to accordions with status banner
 - [x] Add colored left-border accents to news/announcement cards
 - [x] Final verification and testing (11/11 tests pass, 0 TS errors)
+- [x] Fix quick-access cards on mobile: 2x2 compact grid instead of stacked full-width
