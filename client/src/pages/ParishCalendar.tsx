@@ -44,9 +44,9 @@ export default function ParishCalendar() {
               </Button>
             </Card>
             <Card className="p-5">
-              <h3 className="font-serif text-lg text-foreground mb-2">CYO Basketball</h3>
+              <h3 className="font-serif text-lg text-foreground mb-2">CYO Practice Schedule</h3>
               <p className="text-sm text-muted-foreground mb-3">
-                Game schedules, team info, and results.
+                Practice times at St. Francis Hall.
               </p>
               <Button variant="outline" size="sm" asChild>
                 <a href="/cyo-basketball">View CYO Schedule</a>

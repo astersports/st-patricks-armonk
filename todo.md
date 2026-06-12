@@ -91,3 +91,11 @@
 - [x] Ensure all pages use compact layouts on mobile (no oversized stacked cards)
 - [x] Audit Sacraments, Faith Formation, Ministries, Giving, Contact for mobile spacing
 - [x] Verify all pages look great on 375px viewport (all pages tested at 375x812)
+
+## Phase 8: CYO Page Correction & Calendar/Subscription Verification
+- [x] Rename CYO Basketball page to "CYO Practice Schedule" (St. Francis Hall)
+- [x] Remove game-tracker structure (teams, scores, opponents) — replace with practice calendar
+- [x] Embed CYO practice Google Calendar (same calendar feed, now properly labeled)
+- [x] Verify Parish Calendar Google Calendar embed is loading events (confirmed working)
+- [x] Update all references across site (nav, homepage, parish calendar page)
+- [ ] Verify email subscription form works end-to-end

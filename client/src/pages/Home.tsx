@@ -242,8 +242,8 @@ export default function Home() {
               <Link href="/cyo-basketball">
                 <Card className="p-3 sm:p-5 hover-lift cursor-pointer h-full border-0 shadow-sm">
                   <Users className="w-5 h-5 sm:w-8 sm:h-8 text-accent mb-1.5 sm:mb-3" />
-                  <h3 className="font-semibold text-foreground text-xs sm:text-sm mb-0.5">CYO Basketball</h3>
-                  <p className="text-[10px] sm:text-sm text-muted-foreground hidden sm:block">Schedules, teams, and game results.</p>
+                  <h3 className="font-semibold text-foreground text-xs sm:text-sm mb-0.5">CYO Practice</h3>
+                  <p className="text-[10px] sm:text-sm text-muted-foreground hidden sm:block">Practice schedule at St. Francis Hall.</p>
                 </Card>
               </Link>
               <Link href="/faith-formation">

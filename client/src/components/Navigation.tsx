@@ -45,7 +45,7 @@ const navLinks: NavItem[] = [
       { href: "/news-events", label: "News & Announcements" },
       { href: "/parish-calendar", label: "Parish Calendar" },
       { href: "/bulletins", label: "Weekly Bulletins" },
-      { href: "/cyo-basketball", label: "CYO Basketball" },
+      { href: "/cyo-basketball", label: "CYO Practice Schedule" },
       { href: "/ministries", label: "Ministries & Devotions" },
       { href: "/volunteer", label: "Volunteer" },
       { href: "/forms", label: "Forms & Documents" },
