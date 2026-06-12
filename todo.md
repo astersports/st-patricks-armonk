@@ -74,3 +74,12 @@
 - [x] Polish typography, spacing, and animations across all pages (global animation system + page headers)
 - [x] Ensure mobile experience is flawless (responsive nav, mobile hero, tested)
 - [x] Final comprehensive review - every page must be 10/10
+
+## Phase 6: Legacy Hoopers-Inspired UX Improvements
+- [x] Add pill badges/status indicators throughout (Latest, Open, Weekly, By Request, This Week, 8th Grade, etc.)
+- [x] Lighter, cleaner navigation dropdowns (less padding, simpler animation)
+- [x] Quick Access card row on homepage (4 cards with colored top borders)
+- [x] Convert Sacraments page to accordion pattern with colored left borders
+- [x] Convert Faith Formation detail sections to accordions with status banner
+- [x] Add colored left-border accents to news/announcement cards
+- [x] Final verification and testing (11/11 tests pass, 0 TS errors)

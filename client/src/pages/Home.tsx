@@ -1,9 +1,10 @@
 import PageLayout from "@/components/PageLayout";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { Clock, BookOpen, Calendar, Heart, ArrowRight, Mail, Users, Church, Cross } from "lucide-react";
+import { Clock, BookOpen, Calendar, Heart, ArrowRight, Mail, Users, Church } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -11,10 +12,10 @@ import { format } from "date-fns";
 import { useReveal } from "@/hooks/useReveal";
 
 const quickCards = [
-  { icon: Clock, title: "Mass Times", description: "Weekend & weekday schedules", href: "/mass-times", color: "bg-primary" },
-  { icon: BookOpen, title: "Bulletin", description: "This week's parish bulletin", href: "/bulletins", color: "bg-accent" },
-  { icon: Calendar, title: "Events", description: "Upcoming parish events", href: "/news-events", color: "bg-primary" },
-  { icon: Heart, title: "Give", description: "Support our parish", href: "/giving", color: "bg-accent" },
+  { icon: Clock, title: "Mass Times", subtitle: "Weekend & weekday schedules", href: "/mass-times", accent: "border-t-[oklch(0.42_0.12_150)]" },
+  { icon: BookOpen, title: "Sacraments", subtitle: "Baptism, Marriage & more", href: "/sacraments", accent: "border-t-[oklch(0.75_0.15_85)]" },
+  { icon: Heart, title: "Give Online", subtitle: "Support our parish mission", href: "/giving", accent: "border-t-[oklch(0.55_0.15_25)]" },
+  { icon: Calendar, title: "Events", subtitle: "What's happening this week", href: "/news-events", accent: "border-t-[oklch(0.5_0.12_250)]" },
 ];
 
 export default function Home() {
@@ -32,7 +33,7 @@ export default function Home() {
 
   return (
     <PageLayout>
-      {/* Hero Section — dramatic, full-viewport with layered gradient */}
+      {/* Hero Section */}
       <section className="relative h-[75vh] min-h-[540px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img
@@ -69,24 +70,19 @@ export default function Home() {
             </Link>
           </div>
         </div>
-        {/* Bottom fade */}
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
       </section>
 
-      {/* Quick Access Cards — overlapping hero */}
+      {/* Quick Access Cards — colored top border style (Legacy Hoopers inspired) */}
       <section className="container -mt-14 relative z-20 mb-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {quickCards.map((card, i) => (
             <Link key={card.href} href={card.href}>
-              <Card className={`group cursor-pointer hover-lift border-0 shadow-md animate-fade-up stagger-${i + 1}`}>
-                <CardContent className="p-6 flex items-center gap-4">
-                  <div className={`${card.color} p-3 rounded-xl text-white transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}>
-                    <card.icon className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">{card.title}</h3>
-                    <p className="text-sm text-muted-foreground">{card.description}</p>
-                  </div>
+              <Card className={`group cursor-pointer hover-lift border-0 shadow-md border-t-4 ${card.accent} animate-fade-up stagger-${i + 1}`}>
+                <CardContent className="p-5 text-center">
+                  <card.icon className="w-7 h-7 text-primary mx-auto mb-2 transition-transform duration-300 group-hover:scale-110" />
+                  <h3 className="font-semibold text-foreground text-sm">{card.title}</h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">{card.subtitle}</p>
                 </CardContent>
               </Card>
             </Link>
@@ -119,7 +115,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Latest News Section */}
+        {/* Latest News Section — with colored left-border accents and pill badges */}
         <section className="reveal container pb-16">
           <div className="flex items-center justify-between mb-8">
             <div>
@@ -133,21 +129,24 @@ export default function Home() {
             </Link>
           </div>
           {news && news.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {news.slice(0, 3).map((post) => (
-                <Card key={post.id} className="overflow-hidden hover-lift border-0 shadow-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {news.slice(0, 3).map((post, idx) => (
+                <Card key={post.id} className={`overflow-hidden hover-lift border-0 shadow-sm border-l-4 ${idx === 0 ? "border-l-[oklch(0.42_0.12_150)]" : idx === 1 ? "border-l-[oklch(0.75_0.15_85)]" : "border-l-[oklch(0.5_0.12_250)]"}`}>
                   {post.imageUrl && (
-                    <div className="h-48 overflow-hidden">
+                    <div className="h-44 overflow-hidden">
                       <img src={post.imageUrl} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                     </div>
                   )}
-                  <CardContent className="p-6">
-                    <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">
-                      {post.publishedAt ? format(new Date(post.publishedAt), "MMMM d, yyyy") : ""}
-                    </p>
-                    <h3 className="font-semibold text-lg mb-2 line-clamp-2">{post.title}</h3>
-                    <p className="text-sm text-muted-foreground line-clamp-3">
-                      {post.excerpt || post.content.substring(0, 150)}
+                  <CardContent className="p-5">
+                    <div className="flex items-center gap-2 mb-2">
+                      {idx === 0 && <Badge className="bg-primary/10 text-primary border-0 text-[10px] px-1.5 py-0">Latest</Badge>}
+                      <p className="text-xs text-muted-foreground uppercase tracking-wider">
+                        {post.publishedAt ? format(new Date(post.publishedAt), "MMM d, yyyy") : ""}
+                      </p>
+                    </div>
+                    <h3 className="font-semibold text-base mb-1.5 line-clamp-2">{post.title}</h3>
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      {post.excerpt || post.content.substring(0, 120)}
                     </p>
                   </CardContent>
                 </Card>
@@ -162,7 +161,7 @@ export default function Home() {
           )}
         </section>
 
-        {/* Upcoming Events */}
+        {/* Upcoming Events — with pill badges for timing */}
         <section className="reveal bg-gradient-to-b from-secondary/40 to-transparent py-16">
           <div className="container">
             <div className="flex items-center justify-between mb-8">
@@ -178,30 +177,42 @@ export default function Home() {
             </div>
             {upcomingEvents && upcomingEvents.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {upcomingEvents.slice(0, 4).map((event) => (
-                  <Card key={event.id} className="hover-glow transition-all">
-                    <CardContent className="p-6 flex gap-4">
-                      <div className="bg-primary/10 rounded-xl p-3 text-center min-w-[64px] h-fit">
-                        <p className="text-xs text-primary font-medium uppercase">
-                          {format(new Date(event.startDate), "MMM")}
-                        </p>
-                        <p className="text-2xl font-bold text-primary">
-                          {format(new Date(event.startDate), "d")}
-                        </p>
-                      </div>
-                      <div>
-                        <h3 className="font-semibold mb-1">{event.title}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {event.location && `${event.location} · `}
-                          {format(new Date(event.startDate), "h:mm a")}
-                        </p>
-                        {event.description && (
-                          <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{event.description}</p>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                {upcomingEvents.slice(0, 4).map((event, idx) => {
+                  const eventDate = new Date(event.startDate);
+                  const now = new Date();
+                  const daysUntil = Math.ceil((eventDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+                  const isThisWeek = daysUntil <= 7 && daysUntil >= 0;
+
+                  return (
+                    <Card key={event.id} className={`hover-glow transition-all border-l-4 ${idx % 2 === 0 ? "border-l-[oklch(0.42_0.12_150)]" : "border-l-[oklch(0.75_0.15_85)]"}`}>
+                      <CardContent className="p-5 flex gap-4">
+                        <div className="bg-primary/10 rounded-xl p-3 text-center min-w-[60px] h-fit">
+                          <p className="text-[10px] text-primary font-medium uppercase">
+                            {format(eventDate, "MMM")}
+                          </p>
+                          <p className="text-2xl font-bold text-primary">
+                            {format(eventDate, "d")}
+                          </p>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="font-semibold text-sm truncate">{event.title}</h3>
+                            {isThisWeek && (
+                              <Badge className="bg-accent/15 text-accent-foreground border-0 text-[10px] px-1.5 py-0 shrink-0">This Week</Badge>
+                            )}
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            {event.location && `${event.location} · `}
+                            {format(eventDate, "h:mm a")}
+                          </p>
+                          {event.description && (
+                            <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{event.description}</p>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
               </div>
             ) : (
               <Card className="p-10 text-center border-dashed border-2 bg-white/50">

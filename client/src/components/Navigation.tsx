@@ -94,16 +94,16 @@ function DesktopDropdown({ item, location }: { item: NavItem; location: string }
         <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
       </Link>
       {open && (
-        <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
-          <div className="nav-dropdown-enter bg-white rounded-xl shadow-lg ring-1 ring-black/5 py-2 min-w-[220px]">
+        <div className="absolute top-full left-1/2 -translate-x-1/2 pt-1.5 z-50">
+          <div className="nav-dropdown-enter bg-white rounded-lg shadow-md ring-1 ring-black/[0.04] py-1.5 min-w-[200px]">
             {item.children!.map(child => (
               <Link
                 key={child.href}
                 href={child.href}
-                className={`block px-4 py-2.5 text-sm transition-colors duration-150 ${
+                className={`block px-3.5 py-2 text-[13px] transition-colors duration-100 ${
                   location === child.href
-                    ? "text-primary bg-primary/5 font-medium"
-                    : "text-foreground/70 hover:text-primary hover:bg-primary/5"
+                    ? "text-primary font-medium"
+                    : "text-foreground/70 hover:text-primary hover:bg-primary/[0.04]"
                 }`}
                 onClick={() => setOpen(false)}
               >

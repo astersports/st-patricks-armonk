@@ -1,5 +1,7 @@
 import PageLayout from "@/components/PageLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { BookOpen, GraduationCap, Phone, Calendar, Users, Heart } from "lucide-react";
 import { Link } from "wouter";
 import { useReveal } from "@/hooks/useReveal";
@@ -26,111 +28,162 @@ export default function FaithFormation() {
       <div ref={revealRef}>
         <section className="container py-12">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Content */}
-            <div className="lg:col-span-2 space-y-8">
-              {/* CCD Registration */}
-              <Card className="reveal border-t-4 border-t-primary shadow-sm">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className="bg-primary/10 p-2.5 rounded-xl">
-                      <GraduationCap className="w-5 h-5 text-primary" />
+            {/* Main Content — Accordion */}
+            <div className="lg:col-span-2">
+              {/* Status Banner */}
+              <div className="reveal bg-accent/10 border border-accent/20 rounded-xl p-4 mb-8 flex items-center gap-3">
+                <Badge className="bg-accent text-white border-0 text-[10px] px-2 py-0.5 shrink-0">Open</Badge>
+                <div>
+                  <p className="font-semibold text-accent-foreground text-sm">
+                    CCD Registration for 2026–27 is Now Open!
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    <Link href="/ccd-registration" className="text-primary hover:underline font-medium">Register online now →</Link> or contact the Religious Education Office.
+                  </p>
+                </div>
+              </div>
+
+              <Accordion type="single" collapsible defaultValue="ccd" className="space-y-4">
+                {/* CCD */}
+                <AccordionItem
+                  value="ccd"
+                  className="reveal border border-border/60 rounded-xl overflow-hidden shadow-sm hover-glow transition-all border-l-4 border-l-[oklch(0.42_0.12_150)]"
+                >
+                  <AccordionTrigger className="px-6 py-5 hover:no-underline">
+                    <div className="flex items-center gap-4">
+                      <div className="bg-primary/10 p-2.5 rounded-xl shrink-0">
+                        <GraduationCap className="w-5 h-5 text-primary" />
+                      </div>
+                      <div className="text-left">
+                        <div className="flex items-center gap-2">
+                          <span className="font-serif text-lg font-semibold text-foreground">Religious Education (CCD)</span>
+                          <Badge className="bg-primary/10 text-primary border-0 text-[10px] px-1.5 py-0">Grades 1–8</Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-0.5">Weekly classes for children and sacramental preparation</p>
+                      </div>
                     </div>
-                    <CardTitle className="font-serif text-2xl">Religious Education (CCD)</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="bg-accent/10 border border-accent/20 rounded-xl p-4">
-                    <p className="font-semibold text-accent-foreground">
-                      CCD Registration for 2026–27 is Now Open!
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-6">
+                    <p className="text-muted-foreground leading-relaxed mb-4">
+                      Our Religious Education program provides faith formation for children from 
+                      first grade through Confirmation. Classes are designed to help young people 
+                      grow in their understanding of the Catholic faith and develop a personal 
+                      relationship with Jesus Christ.
                     </p>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      <Link href="/ccd-registration" className="text-primary hover:underline font-medium">Register online now →</Link> or contact the Religious Education Office.
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                      <div className="p-3.5 rounded-lg bg-secondary/50">
+                        <h4 className="font-semibold text-sm mb-1">Grades 1–6</h4>
+                        <p className="text-xs text-muted-foreground">Weekly classes covering Catholic doctrine, sacraments, and prayer.</p>
+                      </div>
+                      <div className="p-3.5 rounded-lg bg-secondary/50">
+                        <h4 className="font-semibold text-sm mb-1">Sacramental Preparation</h4>
+                        <p className="text-xs text-muted-foreground">First Reconciliation, First Communion, and Confirmation programs.</p>
+                      </div>
+                    </div>
+                    <Link href="/ccd-registration" className="text-sm text-primary hover:underline font-medium">Register for CCD →</Link>
+                  </AccordionContent>
+                </AccordionItem>
+
+                {/* RCIA */}
+                <AccordionItem
+                  value="rcia"
+                  className="reveal border border-border/60 rounded-xl overflow-hidden shadow-sm hover-glow transition-all border-l-4 border-l-[oklch(0.75_0.15_85)]"
+                >
+                  <AccordionTrigger className="px-6 py-5 hover:no-underline">
+                    <div className="flex items-center gap-4">
+                      <div className="bg-accent/10 p-2.5 rounded-xl shrink-0">
+                        <Users className="w-5 h-5 text-accent" />
+                      </div>
+                      <div className="text-left">
+                        <div className="flex items-center gap-2">
+                          <span className="font-serif text-lg font-semibold text-foreground">RCIA</span>
+                          <Badge className="bg-accent/15 text-accent-foreground border-0 text-[10px] px-1.5 py-0">Adults</Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-0.5">Rite of Christian Initiation of Adults</p>
+                      </div>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-6">
+                    <p className="text-muted-foreground leading-relaxed mb-3">
+                      The Rite of Christian Initiation of Adults (RCIA) is a process for adults who wish 
+                      to become Catholic or complete their sacraments of initiation. Whether you are exploring 
+                      the Catholic faith for the first time or returning after time away, RCIA provides a 
+                      welcoming community of inquiry and formation.
                     </p>
-                  </div>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Our Religious Education program provides faith formation for children from 
-                    first grade through Confirmation. Classes are designed to help young people 
-                    grow in their understanding of the Catholic faith and develop a personal 
-                    relationship with Jesus Christ.
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                    <div className="p-4 rounded-xl bg-secondary/50 hover-glow transition-all">
-                      <h4 className="font-semibold mb-1">Grades 1–6</h4>
-                      <p className="text-sm text-muted-foreground">Weekly classes covering Catholic doctrine, sacraments, and prayer.</p>
-                    </div>
-                    <div className="p-4 rounded-xl bg-secondary/50 hover-glow transition-all">
-                      <h4 className="font-semibold mb-1">Sacramental Preparation</h4>
-                      <p className="text-sm text-muted-foreground">First Reconciliation, First Communion, and Confirmation programs.</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                    <p className="text-sm text-muted-foreground">
+                      Contact the parish office at <a href="tel:9142739724" className="text-primary hover:underline font-medium">(914) 273-9724</a> to learn more.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
 
-              {/* RCIA */}
-              <Card className="reveal shadow-sm">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className="bg-accent/10 p-2.5 rounded-xl">
-                      <Users className="w-5 h-5 text-accent" />
+                {/* Walking With Purpose */}
+                <AccordionItem
+                  value="wwp"
+                  className="reveal border border-border/60 rounded-xl overflow-hidden shadow-sm hover-glow transition-all border-l-4 border-l-[oklch(0.55_0.15_25)]"
+                >
+                  <AccordionTrigger className="px-6 py-5 hover:no-underline">
+                    <div className="flex items-center gap-4">
+                      <div className="bg-accent/10 p-2.5 rounded-xl shrink-0">
+                        <Heart className="w-5 h-5 text-accent" />
+                      </div>
+                      <div className="text-left">
+                        <div className="flex items-center gap-2">
+                          <span className="font-serif text-lg font-semibold text-foreground">Walking With Purpose</span>
+                          <Badge className="bg-accent/15 text-accent-foreground border-0 text-[10px] px-1.5 py-0">Women</Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-0.5">Catholic women's Bible study program</p>
+                      </div>
                     </div>
-                    <CardTitle className="font-serif text-2xl">RCIA</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground leading-relaxed">
-                    The Rite of Christian Initiation of Adults (RCIA) is a process for adults who wish 
-                    to become Catholic or complete their sacraments of initiation. If you are interested 
-                    in learning more about the Catholic faith, please contact the parish office.
-                  </p>
-                </CardContent>
-              </Card>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-6">
+                    <p className="text-muted-foreground leading-relaxed mb-3">
+                      Walking With Purpose is a women's Catholic Bible study program that aims to bring women 
+                      to a deeper personal relationship with Jesus Christ. Through personal study and small 
+                      group discussions, participants grow in faith and fellowship.
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Sessions meet weekly during the school year. New participants are always welcome. 
+                      Contact the parish office at <a href="tel:9142739724" className="text-primary hover:underline font-medium">(914) 273-9724</a> for current schedule.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
 
-              {/* Walking With Purpose */}
-              <Card className="reveal shadow-sm">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className="bg-accent/10 p-2.5 rounded-xl">
-                      <Heart className="w-5 h-5 text-accent" />
+                {/* Adult Faith Formation */}
+                <AccordionItem
+                  value="adult"
+                  className="reveal border border-border/60 rounded-xl overflow-hidden shadow-sm hover-glow transition-all border-l-4 border-l-[oklch(0.5_0.12_250)]"
+                >
+                  <AccordionTrigger className="px-6 py-5 hover:no-underline">
+                    <div className="flex items-center gap-4">
+                      <div className="bg-primary/10 p-2.5 rounded-xl shrink-0">
+                        <BookOpen className="w-5 h-5 text-primary" />
+                      </div>
+                      <div className="text-left">
+                        <div className="flex items-center gap-2">
+                          <span className="font-serif text-lg font-semibold text-foreground">Adult Faith Formation</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-0.5">Bible study, book discussions, and spiritual enrichment</p>
+                      </div>
                     </div>
-                    <CardTitle className="font-serif text-2xl">Walking With Purpose</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground leading-relaxed mb-3">
-                    Walking With Purpose is a women's Catholic Bible study program that aims to bring women 
-                    to a deeper personal relationship with Jesus Christ. Through personal study and small 
-                    group discussions, participants grow in faith and fellowship.
-                  </p>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Sessions meet weekly during the school year. New participants are always welcome. 
-                    Contact the parish office at <a href="tel:9142739724" className="text-primary hover:underline font-medium">(914) 273-9724</a> for current schedule and registration information.
-                  </p>
-                </CardContent>
-              </Card>
-
-              {/* Adult Faith Formation */}
-              <Card className="reveal shadow-sm">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className="bg-primary/10 p-2.5 rounded-xl">
-                      <BookOpen className="w-5 h-5 text-primary" />
-                    </div>
-                    <CardTitle className="font-serif text-2xl">Adult Faith Formation</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground leading-relaxed mb-4">
-                    Deepen your faith through Bible study, book discussions, and spiritual enrichment programs. 
-                    Visit <a href="https://stpatrickinarmonk.formed.org" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">FORMED.org</a> for 
-                    free access to Catholic movies, shows, audiobooks, and more.
-                  </p>
-                </CardContent>
-              </Card>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-6">
+                    <p className="text-muted-foreground leading-relaxed mb-3">
+                      Deepen your faith through Bible study, book discussions, and spiritual enrichment programs 
+                      offered throughout the year. Our adult programs are designed for parishioners at every 
+                      stage of their faith journey.
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Visit <a href="https://stpatrickinarmonk.formed.org" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">FORMED.org</a> for 
+                      free access to Catholic movies, shows, audiobooks, and more.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </div>
 
             {/* Sidebar */}
-            <div className="reveal space-y-6">
-              <Card className="bg-primary text-white shadow-lg">
+            <div className="reveal space-y-5">
+              <Card className="bg-primary text-white shadow-lg border-0">
                 <CardContent className="p-6">
                   <Phone className="w-8 h-8 text-gold mb-3" />
                   <h3 className="font-semibold text-lg mb-2">Religious Education Office</h3>
