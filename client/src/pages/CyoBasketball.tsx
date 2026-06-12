@@ -1,8 +1,8 @@
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Calendar, MapPin, Clock, Users, ExternalLink, Info } from "lucide-react";
+
+import { Calendar, MapPin, Clock, Users, Info } from "lucide-react";
 
 export default function CyoBasketball() {
   return (
@@ -41,19 +41,7 @@ export default function CyoBasketball() {
       {/* Calendar Embed */}
       <section className="py-8 md:py-12">
         <div className="container max-w-5xl">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-serif text-xl md:text-2xl text-foreground">Practice Calendar</h2>
-            <Button variant="outline" size="sm" asChild>
-              <a
-                href="https://calendar.google.com/calendar/embed?src=stpatrickinarmonk.org_5snqr5qqph11et22r6sk81k67g%40group.calendar.google.com&ctz=America%2FNew_York"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5"
-              >
-                Open in Google <ExternalLink className="w-3 h-3" />
-              </a>
-            </Button>
-          </div>
+          <h2 className="font-serif text-xl md:text-2xl text-foreground mb-4">Practice Calendar</h2>
 
           <Card className="p-1 md:p-3 mb-8">
             <div className="aspect-[4/3] md:aspect-[16/9] w-full">

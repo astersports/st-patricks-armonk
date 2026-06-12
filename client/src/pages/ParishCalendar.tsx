@@ -1,7 +1,7 @@
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, ExternalLink } from "lucide-react";
+import { Calendar } from "lucide-react";
 
 export default function ParishCalendar() {
   return (
@@ -33,7 +33,7 @@ export default function ParishCalendar() {
           </Card>
 
           {/* Quick Links */}
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-2 gap-4">
             <Card className="p-5">
               <h3 className="font-serif text-lg text-foreground mb-2">CCD Calendar</h3>
               <p className="text-sm text-muted-foreground mb-3">
@@ -52,22 +52,7 @@ export default function ParishCalendar() {
                 <a href="/cyo-basketball">View CYO Schedule</a>
               </Button>
             </Card>
-            <Card className="p-5">
-              <h3 className="font-serif text-lg text-foreground mb-2">Subscribe</h3>
-              <p className="text-sm text-muted-foreground mb-3">
-                Add this calendar to your phone or computer.
-              </p>
-              <Button variant="outline" size="sm" asChild>
-                <a
-                  href="https://calendar.google.com/calendar/embed?src=auhh52vq6k97cih05uovakdvlcobb3qj%40import.calendar.google.com&ctz=America%2FNew_York"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1"
-                >
-                  Open in Google Calendar <ExternalLink className="w-3 h-3" />
-                </a>
-              </Button>
-            </Card>
+
           </div>
         </div>
       </section>
