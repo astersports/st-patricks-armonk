@@ -377,3 +377,25 @@ export const funeralPrePlanning = mysqlTable("funeral_pre_planning", {
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 export type FuneralPrePlanning = typeof funeralPrePlanning.$inferSelect;
+
+// Teen Life Registrations
+export const teenLifeRegistrations = mysqlTable("teen_life_registrations", {
+  id: int("id").autoincrement().primaryKey(),
+  teenFirstName: varchar("teenFirstName", { length: 100 }).notNull(),
+  teenLastName: varchar("teenLastName", { length: 100 }).notNull(),
+  grade: varchar("grade", { length: 10 }).notNull(),
+  school: varchar("school", { length: 200 }),
+  parentName: varchar("parentName", { length: 200 }).notNull(),
+  parentEmail: varchar("parentEmail", { length: 320 }).notNull(),
+  parentPhone: varchar("parentPhone", { length: 20 }).notNull(),
+  address: text("address"),
+  interests: text("interests"),
+  medicalNotes: text("medicalNotes"),
+  emergencyContact: varchar("emergencyContact", { length: 200 }),
+  emergencyPhone: varchar("emergencyPhone", { length: 20 }),
+  photoConsent: int("photoConsent").default(0),
+  status: varchar("status", { length: 20 }).default("pending").notNull(),
+  adminNotes: text("adminNotes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type TeenLifeRegistration = typeof teenLifeRegistrations.$inferSelect;

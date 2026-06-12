@@ -710,6 +710,47 @@ export const appRouter = router({
       return { url, key };
     }),
   }),
+
+  // Teen Life registration
+  teenLife: router({
+    register: publicProcedure.input(z.object({
+      teenFirstName: z.string().min(1),
+      teenLastName: z.string().min(1),
+      grade: z.string().min(1),
+      school: z.string().optional(),
+      parentName: z.string().min(1),
+      parentEmail: z.string().email(),
+      parentPhone: z.string().min(1),
+      address: z.string().optional(),
+      interests: z.string().optional(),
+      medicalNotes: z.string().optional(),
+      emergencyContact: z.string().optional(),
+      emergencyPhone: z.string().optional(),
+      photoConsent: z.boolean().optional(),
+    })).mutation(async ({ input }) => {
+      await db.createTeenLifeRegistration({
+        ...input,
+        photoConsent: input.photoConsent ? 1 : 0,
+      });
+      // Notify parish office
+      notifyOwner({
+        title: "New Teen Life Registration",
+        content: `${input.teenFirstName} ${input.teenLastName} (Grade ${input.grade}) has registered for Teen Life. Parent: ${input.parentName} (${input.parentEmail}).`,
+      }).catch(() => {});
+      return { success: true };
+    }),
+    list: adminProcedure.query(async () => {
+      return db.getTeenLifeRegistrations();
+    }),
+    updateStatus: adminProcedure.input(z.object({
+      id: z.number(),
+      status: z.string(),
+      adminNotes: z.string().optional(),
+    })).mutation(async ({ input }) => {
+      await db.updateTeenLifeRegistrationStatus(input.id, input.status, input.adminNotes);
+      return { success: true };
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

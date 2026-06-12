@@ -58,4 +58,4 @@
 - [x] Instant notification to parish office on new form submission
 - [x] Confirmation email to submitter after form submission (success screen with next steps shown on-page)
 - [x] Replace PDF links with digital form buttons on Sacraments page (PDFs kept as reference)
-- [ ] Bring Teen Life registration in-house (replace Google Form embed)
+- [x] Bring Teen Life registration in-house (replace Google Form embed)

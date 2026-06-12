@@ -1,9 +1,52 @@
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, Calendar, Heart, ExternalLink } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Users, Calendar, Heart, CheckCircle2 } from "lucide-react";
+import { trpc } from "@/lib/trpc";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function TeenLife() {
+  const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState({
+    teenFirstName: "",
+    teenLastName: "",
+    grade: "",
+    school: "",
+    parentName: "",
+    parentEmail: "",
+    parentPhone: "",
+    address: "",
+    interests: "",
+    medicalNotes: "",
+    emergencyContact: "",
+    emergencyPhone: "",
+    photoConsent: false,
+  });
+
+  const registerMutation = trpc.teenLife.register.useMutation({
+    onSuccess: () => {
+      setSubmitted(true);
+      toast.success("Registration submitted successfully!");
+    },
+    onError: (err) => {
+      toast.error(err.message || "Failed to submit registration");
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.teenFirstName || !form.teenLastName || !form.grade || !form.parentName || !form.parentEmail || !form.parentPhone) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+    registerMutation.mutate(form);
+  };
+
   return (
     <PageLayout>
       {/* Page Header */}
@@ -21,7 +64,7 @@ export default function TeenLife() {
 
       <section className="py-12">
         <div className="container max-w-5xl">
-          {/* Overview */}
+          {/* Overview Cards */}
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             <Card className="p-6 text-center">
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
@@ -52,25 +95,131 @@ export default function TeenLife() {
             </Card>
           </div>
 
-          {/* Sign Up Form */}
-          <Card className="p-6 md:p-8 mb-8">
-            <h2 className="font-serif text-2xl text-foreground mb-4">Join Teen Life</h2>
-            <p className="text-muted-foreground mb-6">
-              Interested in joining our Teen Life program? Fill out the registration form below to get started. Open to all high school students (grades 9–12).
-            </p>
-            <div className="aspect-[4/3] md:aspect-[16/9] w-full rounded-lg overflow-hidden border border-border">
-              <iframe
-                src="https://docs.google.com/forms/d/e/1FAIpQLScDOJYawP1yS-Q9H4RTSEgYr1M4peL7lEQR-_E3Kxo6N57AmQ/viewform?embedded=true"
-                className="w-full h-full border-0"
-                title="Teen Life Registration Form"
-              >
-                Loading form...
-              </iframe>
-            </div>
-          </Card>
+          {/* Registration Form */}
+          {submitted ? (
+            <Card className="p-8 text-center">
+              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+                <CheckCircle2 className="w-8 h-8 text-green-600" />
+              </div>
+              <h2 className="font-serif text-2xl text-foreground mb-3">Registration Submitted!</h2>
+              <p className="text-muted-foreground max-w-md mx-auto">
+                Thank you for registering for Teen Life! The parish youth ministry team will be in touch with more information about upcoming events and meetings.
+              </p>
+              <Button className="mt-6" onClick={() => { setSubmitted(false); setForm({ teenFirstName: "", teenLastName: "", grade: "", school: "", parentName: "", parentEmail: "", parentPhone: "", address: "", interests: "", medicalNotes: "", emergencyContact: "", emergencyPhone: "", photoConsent: false }); }}>
+                Register Another Teen
+              </Button>
+            </Card>
+          ) : (
+            <Card className="p-6 md:p-8 mb-8">
+              <h2 className="font-serif text-2xl text-foreground mb-2">Join Teen Life</h2>
+              <p className="text-muted-foreground mb-6">
+                Open to all high school students (grades 9–12). Fill out the form below to register.
+              </p>
+
+              <form onSubmit={handleSubmit} className="space-y-8">
+                {/* Teen Information */}
+                <div>
+                  <h3 className="font-semibold text-foreground mb-4 pb-2 border-b border-border">Teen Information</h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-1 block">First Name *</label>
+                      <Input value={form.teenFirstName} onChange={(e) => setForm({ ...form, teenFirstName: e.target.value })} required />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-1 block">Last Name *</label>
+                      <Input value={form.teenLastName} onChange={(e) => setForm({ ...form, teenLastName: e.target.value })} required />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-1 block">Grade *</label>
+                      <Select value={form.grade} onValueChange={(v) => setForm({ ...form, grade: v })}>
+                        <SelectTrigger><SelectValue placeholder="Select grade" /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="9">9th Grade</SelectItem>
+                          <SelectItem value="10">10th Grade</SelectItem>
+                          <SelectItem value="11">11th Grade</SelectItem>
+                          <SelectItem value="12">12th Grade</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-1 block">School</label>
+                      <Input value={form.school} onChange={(e) => setForm({ ...form, school: e.target.value })} placeholder="e.g., Byram Hills High School" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Parent/Guardian Information */}
+                <div>
+                  <h3 className="font-semibold text-foreground mb-4 pb-2 border-b border-border">Parent/Guardian Information</h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-1 block">Parent/Guardian Name *</label>
+                      <Input value={form.parentName} onChange={(e) => setForm({ ...form, parentName: e.target.value })} required />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-1 block">Email *</label>
+                      <Input type="email" value={form.parentEmail} onChange={(e) => setForm({ ...form, parentEmail: e.target.value })} required />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-1 block">Phone *</label>
+                      <Input type="tel" value={form.parentPhone} onChange={(e) => setForm({ ...form, parentPhone: e.target.value })} required />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-1 block">Address</label>
+                      <Input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="Street, City, State, ZIP" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Emergency Contact */}
+                <div>
+                  <h3 className="font-semibold text-foreground mb-4 pb-2 border-b border-border">Emergency Contact (other than parent)</h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-1 block">Emergency Contact Name</label>
+                      <Input value={form.emergencyContact} onChange={(e) => setForm({ ...form, emergencyContact: e.target.value })} />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-1 block">Emergency Contact Phone</label>
+                      <Input type="tel" value={form.emergencyPhone} onChange={(e) => setForm({ ...form, emergencyPhone: e.target.value })} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Additional Information */}
+                <div>
+                  <h3 className="font-semibold text-foreground mb-4 pb-2 border-b border-border">Additional Information</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-1 block">Interests & Activities</label>
+                      <Textarea value={form.interests} onChange={(e) => setForm({ ...form, interests: e.target.value })} placeholder="What activities or topics interest your teen? (e.g., service projects, retreats, social events, Bible study)" rows={3} />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-1 block">Medical Notes / Allergies</label>
+                      <Textarea value={form.medicalNotes} onChange={(e) => setForm({ ...form, medicalNotes: e.target.value })} placeholder="Any medical conditions, allergies, or special needs we should be aware of" rows={2} />
+                    </div>
+                    <div className="flex items-start gap-3 pt-2">
+                      <Checkbox
+                        id="photoConsent"
+                        checked={form.photoConsent}
+                        onCheckedChange={(checked) => setForm({ ...form, photoConsent: checked === true })}
+                      />
+                      <label htmlFor="photoConsent" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
+                        I give permission for my teen's photo to be used in parish publications, social media, and the parish website.
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <Button type="submit" size="lg" className="w-full md:w-auto" disabled={registerMutation.isPending}>
+                  {registerMutation.isPending ? "Submitting..." : "Submit Registration"}
+                </Button>
+              </form>
+            </Card>
+          )}
 
           {/* Additional Info */}
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-6 mt-8">
             <Card className="p-6">
               <h3 className="font-serif text-lg text-foreground mb-3">Meeting Schedule</h3>
               <p className="text-muted-foreground text-sm leading-relaxed mb-4">
