@@ -1,4 +1,4 @@
-import { eq, desc, and, sql } from "drizzle-orm";
+import { eq, desc, and, gte, lte, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, newsPosts, bulletins, events, emailSubscriptions, ccdRegistrations, cyoTeams, cyoGames, volunteerOpportunities, volunteerSignups, ccdEvents } from "../drizzle/schema";
 import type { InsertNewsPost, InsertBulletin, InsertEvent, InsertEmailSubscription, InsertCcdRegistration, InsertCyoTeam, InsertCyoGame, InsertVolunteerOpportunity, InsertVolunteerSignup, InsertCcdEvent } from "../drizzle/schema";
@@ -417,4 +417,53 @@ export async function deleteCcdEvent(id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.delete(ccdEvents).where(eq(ccdEvents.id, id));
+}
+
+// ===== CCD REMINDER HELPERS =====
+
+/**
+ * Get all CCD parents who have opted in to reminders and have approved registrations.
+ */
+export async function getCcdReminderParents() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select({
+    id: ccdRegistrations.id,
+    parentFirstName: ccdRegistrations.parentFirstName,
+    parentEmail: ccdRegistrations.parentEmail,
+    childFirstName: ccdRegistrations.childFirstName,
+    grade: ccdRegistrations.grade,
+    unsubscribeToken: ccdRegistrations.unsubscribeToken,
+  }).from(ccdRegistrations)
+    .where(and(
+      eq(ccdRegistrations.reminderOptIn, true),
+      eq(ccdRegistrations.status, "approved"),
+    ));
+}
+
+/**
+ * Get CCD events happening in the next N days (for scheduled reminders).
+ */
+export async function getUpcomingCcdEvents(daysAhead: number = 2) {
+  const db = await getDb();
+  if (!db) return [];
+  const now = new Date();
+  const future = new Date(now.getTime() + daysAhead * 24 * 60 * 60 * 1000);
+  return db.select().from(ccdEvents)
+    .where(and(
+      gte(ccdEvents.eventDate, now),
+      lte(ccdEvents.eventDate, future),
+    ))
+    .orderBy(ccdEvents.eventDate);
+}
+
+/**
+ * Unsubscribe a CCD parent from reminders by their token.
+ */
+export async function unsubscribeCcdReminder(token: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(ccdRegistrations)
+    .set({ reminderOptIn: false })
+    .where(eq(ccdRegistrations.unsubscribeToken, token));
 }

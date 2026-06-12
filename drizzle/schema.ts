@@ -119,6 +119,9 @@ export const ccdRegistrations = mysqlTable("ccd_registrations", {
   schoolYear: varchar("schoolYear", { length: 20 }).notNull(),
   status: mysqlEnum("status", ["pending", "approved", "waitlisted", "cancelled"]).default("pending").notNull(),
   notes: text("notes"),
+  // Reminder preferences
+  reminderOptIn: boolean("reminderOptIn").default(true).notNull(),
+  unsubscribeToken: varchar("unsubscribeToken", { length: 64 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

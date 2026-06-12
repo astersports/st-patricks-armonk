@@ -277,12 +277,16 @@ export const appRouter = router({
       firstCommunion: z.boolean(),
       schoolYear: z.string().min(1),
       notes: z.string().optional(),
+      reminderOptIn: z.boolean().default(true),
     })).mutation(async ({ input }) => {
+      const unsubscribeToken = nanoid(32);
       const id = await db.createCcdRegistration({
         ...input,
         childDob: new Date(input.childDob),
         baptismChurch: input.baptismChurch ?? null,
         notes: input.notes ?? null,
+        reminderOptIn: input.reminderOptIn,
+        unsubscribeToken,
       });
       // Notify owner of new registration
       await notifyOwner({
@@ -670,5 +674,61 @@ async function sendBulletinNotifications(bulletinId: number, title: string) {
     console.log(`[Notifications] Bulletin notification: ${sentCount}/${subscriberCount} emails sent for "${title}"`);
   } catch (error) {
     console.error("[Notifications] Failed to send bulletin notifications:", error);
+  }
+}
+
+/**
+ * Sends CCD class reminder emails to all opted-in parents for upcoming events.
+ * Called by the scheduled handler when a CCD event is approaching.
+ */
+export async function sendCcdReminders(events: Array<{ id: number; title: string; eventDate: Date; eventType: string; grade: string | null; location: string | null }>) {
+  try {
+    const parents = await db.getCcdReminderParents();
+    if (parents.length === 0) return { sent: 0, total: 0 };
+
+    let sentCount = 0;
+    for (const parent of parents) {
+      // Filter events by grade if applicable
+      const relevantEvents = events.filter(e => !e.grade || e.grade === "All" || e.grade === parent.grade);
+      if (relevantEvents.length === 0) continue;
+
+      const eventListHtml = relevantEvents.map(e => {
+        const dateStr = new Date(e.eventDate).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit" });
+        return `<li style="margin-bottom: 8px;"><strong>${e.title}</strong> — ${dateStr}${e.location ? ` at ${e.location}` : ""}</li>`;
+      }).join("");
+
+      const unsubscribeUrl = `/ccd-unsubscribe?token=${parent.unsubscribeToken}`;
+      const htmlBody = `
+        <div style="font-family: 'Georgia', serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="text-align: center; padding: 20px 0; border-bottom: 2px solid #1a5c2e;">
+            <h1 style="color: #1a5c2e; margin: 0; font-size: 24px;">St. Patrick Church</h1>
+            <p style="color: #666; margin: 5px 0 0; font-size: 12px;">Religious Education Reminder</p>
+          </div>
+          <div style="padding: 30px 0;">
+            <p style="color: #333; font-size: 16px;">Dear ${parent.parentFirstName},</p>
+            <p style="color: #555; line-height: 1.6; font-size: 15px;">This is a reminder about upcoming CCD activities for <strong>${parent.childFirstName}</strong> (Grade ${parent.grade}):</p>
+            <ul style="color: #555; line-height: 1.8; font-size: 14px;">${eventListHtml}</ul>
+            <p style="margin-top: 20px;"><a href="/ccd-calendar" style="background: #1a5c2e; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">View Full Calendar</a></p>
+          </div>
+          <div style="border-top: 1px solid #eee; padding-top: 15px; text-align: center;">
+            <p style="color: #999; font-size: 11px;">Church of St. Patrick | 29 Cox Ave, Armonk NY 10504</p>
+            <p style="color: #999; font-size: 11px;"><a href="${unsubscribeUrl}" style="color: #999;">Unsubscribe from CCD reminders</a></p>
+          </div>
+        </div>
+      `;
+
+      const sent = await sendEmailToSubscriber(
+        parent.parentEmail,
+        `CCD Reminder: Upcoming Class for ${parent.childFirstName}`,
+        htmlBody
+      );
+      if (sent) sentCount++;
+    }
+
+    console.log(`[CCD Reminders] ${sentCount}/${parents.length} reminder emails sent`);
+    return { sent: sentCount, total: parents.length };
+  } catch (error) {
+    console.error("[CCD Reminders] Failed to send reminders:", error);
+    return { sent: 0, total: 0 };
   }
 }

@@ -28,6 +28,7 @@ export default function CcdRegistration() {
     firstCommunion: false,
     schoolYear: "2026-2027",
     notes: "",
+    reminderOptIn: true,
   });
 
   const registerMutation = trpc.ccd.register.useMutation({
@@ -67,7 +68,7 @@ export default function CcdRegistration() {
                 reled@stpatrickinarmonk.org
               </a>
             </p>
-            <Button onClick={() => { setSubmitted(false); setForm({ parentFirstName: "", parentLastName: "", parentEmail: "", parentPhone: "", address: "", childFirstName: "", childLastName: "", childDob: "", grade: "", baptized: false, baptismChurch: "", firstCommunion: false, schoolYear: "2026-2027", notes: "" }); }}>
+            <Button onClick={() => { setSubmitted(false); setForm({ parentFirstName: "", parentLastName: "", parentEmail: "", parentPhone: "", address: "", childFirstName: "", childLastName: "", childDob: "", grade: "", baptized: false, baptismChurch: "", firstCommunion: false, schoolYear: "2026-2027", notes: "", reminderOptIn: true }); }}>
               Register Another Child
             </Button>
           </div>
@@ -192,6 +193,18 @@ export default function CcdRegistration() {
                   placeholder="Any allergies, learning needs, or other information we should know..."
                   rows={4}
                 />
+              </div>
+            </Card>
+
+            {/* Email Reminders */}
+            <Card className="p-6">
+              <h2 className="font-serif text-xl text-foreground mb-4 pb-2 border-b border-border">Class Reminders</h2>
+              <div className="flex items-start gap-3">
+                <Checkbox id="reminderOptIn" checked={form.reminderOptIn} onCheckedChange={(v) => setForm({ ...form, reminderOptIn: !!v })} />
+                <div>
+                  <Label htmlFor="reminderOptIn" className="cursor-pointer">Send me email reminders before CCD classes</Label>
+                  <p className="text-sm text-muted-foreground mt-1">You'll receive an email reminder 1-2 days before each scheduled class or special event. You can unsubscribe at any time.</p>
+                </div>
               </div>
             </Card>
 

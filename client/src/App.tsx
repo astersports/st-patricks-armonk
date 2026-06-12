@@ -18,6 +18,7 @@ import CcdCalendar from "./pages/CcdCalendar";
 import CyoBasketball from "./pages/CyoBasketball";
 import CcdRegistration from "./pages/CcdRegistration";
 import Volunteer from "./pages/Volunteer";
+import CcdUnsubscribe from "./pages/CcdUnsubscribe";
 
 function Router() {
   return (
@@ -36,6 +37,7 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/admin" component={Admin} />
       <Route path="/unsubscribe/:token" component={Unsubscribe} />
+      <Route path="/ccd-unsubscribe" component={CcdUnsubscribe} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

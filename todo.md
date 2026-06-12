@@ -34,4 +34,4 @@
 - [x] Flocknote integration (outbound links on homepage, volunteer, and footer)
 - [x] Update navigation with dropdown menus for new sections
 - [x] "Get Involved" section on homepage linking to new features
-- [ ] Parent notification system for CCD class reminders (future enhancement)
+- [x] Parent notification system for CCD class reminders (opt-in during registration, scheduled handler at /api/scheduled/ccd-reminders, unsubscribe flow)
