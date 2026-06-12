@@ -43,6 +43,13 @@
       "when": 1781297890701,
       "tag": "0005_absurd_monster_badoon",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1781298658180,
+      "tag": "0006_chunky_valeria_richards",
+      "breakpoints": true
     }
   ]
 }

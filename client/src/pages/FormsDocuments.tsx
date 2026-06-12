@@ -92,14 +92,20 @@ export default function FormsDocuments() {
             <CategorySection key={cat.id} category={cat} />
           ))}
 
-          {/* Note about online forms */}
+          {/* Digital Forms Banner */}
           <Card className="p-6 bg-primary/5 border-primary/20">
-            <h3 className="font-serif text-lg text-foreground mb-2">Looking for Online Forms?</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Many of our forms are now available to complete online. Visit the{" "}
-              <a href="/ccd-registration" className="text-primary hover:underline font-medium">CCD Registration</a> page to register for Religious Education,
-              or the <a href="/volunteer" className="text-primary hover:underline font-medium">Volunteer</a> page to sign up for parish ministries.
+            <h3 className="font-serif text-lg text-foreground mb-2">Complete Forms Online</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+              Most parish forms are now available to complete digitally — no printing or scanning needed.
             </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              <a href="/baptism-form" className="text-sm font-medium text-primary hover:underline">→ Baptism Registration</a>
+              <a href="/sponsor-form" className="text-sm font-medium text-primary hover:underline">→ Sponsor Certificate</a>
+              <a href="/marriage-form" className="text-sm font-medium text-primary hover:underline">→ Marriage Inquiry</a>
+              <a href="/funeral-form" className="text-sm font-medium text-primary hover:underline">→ Funeral Planning</a>
+              <a href="/ccd-registration" className="text-sm font-medium text-primary hover:underline">→ CCD Registration</a>
+              <a href="/volunteer" className="text-sm font-medium text-primary hover:underline">→ Volunteer Sign-Up</a>
+            </div>
           </Card>
         </div>
       </section>

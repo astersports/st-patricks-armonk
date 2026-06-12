@@ -1,7 +1,7 @@
 import { eq, desc, and, gte, lte, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, newsPosts, bulletins, events, emailSubscriptions, ccdRegistrations, cyoTeams, cyoGames, volunteerOpportunities, volunteerSignups, ccdEvents, parishDocuments } from "../drizzle/schema";
-import type { InsertNewsPost, InsertBulletin, InsertEvent, InsertEmailSubscription, InsertCcdRegistration, InsertCyoTeam, InsertCyoGame, InsertVolunteerOpportunity, InsertVolunteerSignup, InsertCcdEvent, InsertParishDocument } from "../drizzle/schema";
+import { InsertUser, users, newsPosts, bulletins, events, emailSubscriptions, ccdRegistrations, cyoTeams, cyoGames, volunteerOpportunities, volunteerSignups, ccdEvents, parishDocuments, baptismRegistrations, sponsorCertificates, marriageInquiries, funeralPrePlanning } from "../drizzle/schema";
+import type { InsertNewsPost, InsertBulletin, InsertEvent, InsertEmailSubscription, InsertCcdRegistration, InsertCyoTeam, InsertCyoGame, InsertVolunteerOpportunity, InsertVolunteerSignup, InsertCcdEvent, InsertParishDocument, BaptismRegistration, SponsorCertificate, MarriageInquiry, FuneralPrePlanning } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -500,4 +500,91 @@ export async function deleteDocument(id: number) {
   const db = await getDb();
   if (!db) return;
   await db.delete(parishDocuments).where(eq(parishDocuments.id, id));
+}
+
+// ===== DIGITAL FORM SUBMISSIONS =====
+
+// Baptism Registrations
+export async function createBaptismRegistration(data: Omit<BaptismRegistration, "id" | "status" | "adminNotes" | "createdAt" | "updatedAt">) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.insert(baptismRegistrations).values(data as any);
+  return result;
+}
+
+export async function getBaptismRegistrations() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(baptismRegistrations).orderBy(desc(baptismRegistrations.createdAt));
+}
+
+export async function updateBaptismStatus(id: number, status: string, adminNotes?: string) {
+  const db = await getDb();
+  if (!db) return;
+  const updateData: any = { status };
+  if (adminNotes !== undefined) updateData.adminNotes = adminNotes;
+  await db.update(baptismRegistrations).set(updateData).where(eq(baptismRegistrations.id, id));
+}
+
+// Sponsor Certificates
+export async function createSponsorCertificate(data: Omit<SponsorCertificate, "id" | "status" | "adminNotes" | "createdAt" | "updatedAt">) {
+  const db = await getDb();
+  if (!db) return null;
+  return db.insert(sponsorCertificates).values(data as any);
+}
+
+export async function getSponsorCertificates() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(sponsorCertificates).orderBy(desc(sponsorCertificates.createdAt));
+}
+
+export async function updateSponsorStatus(id: number, status: string, adminNotes?: string) {
+  const db = await getDb();
+  if (!db) return;
+  const updateData: any = { status };
+  if (adminNotes !== undefined) updateData.adminNotes = adminNotes;
+  await db.update(sponsorCertificates).set(updateData).where(eq(sponsorCertificates.id, id));
+}
+
+// Marriage Inquiries
+export async function createMarriageInquiry(data: Omit<MarriageInquiry, "id" | "status" | "adminNotes" | "createdAt" | "updatedAt">) {
+  const db = await getDb();
+  if (!db) return null;
+  return db.insert(marriageInquiries).values(data as any);
+}
+
+export async function getMarriageInquiries() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(marriageInquiries).orderBy(desc(marriageInquiries.createdAt));
+}
+
+export async function updateMarriageStatus(id: number, status: string, adminNotes?: string) {
+  const db = await getDb();
+  if (!db) return;
+  const updateData: any = { status };
+  if (adminNotes !== undefined) updateData.adminNotes = adminNotes;
+  await db.update(marriageInquiries).set(updateData).where(eq(marriageInquiries.id, id));
+}
+
+// Funeral Pre-Planning
+export async function createFuneralPrePlanning(data: Omit<FuneralPrePlanning, "id" | "status" | "adminNotes" | "createdAt" | "updatedAt">) {
+  const db = await getDb();
+  if (!db) return null;
+  return db.insert(funeralPrePlanning).values(data as any);
+}
+
+export async function getFuneralPrePlannings() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(funeralPrePlanning).orderBy(desc(funeralPrePlanning.createdAt));
+}
+
+export async function updateFuneralStatus(id: number, status: string, adminNotes?: string) {
+  const db = await getDb();
+  if (!db) return;
+  const updateData: any = { status };
+  if (adminNotes !== undefined) updateData.adminNotes = adminNotes;
+  await db.update(funeralPrePlanning).set(updateData).where(eq(funeralPrePlanning.id, id));
 }

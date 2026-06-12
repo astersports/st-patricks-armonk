@@ -45,3 +45,17 @@
 - [x] Forms & Documents center page (consolidated downloadable forms by category)
 - [x] Reorganize navigation into cleaner dropdown structure (Mass & Sacraments, Faith Formation, Parish Life)
 - [x] Seed existing parish PDF forms as document records (external URLs from eCatholic)
+
+## Phase 4 - Digital Forms (Replace PDFs)
+
+- [x] Database tables for Baptism, Sponsor Certificate, Marriage Inquiry, and Funeral Pre-Planning submissions
+- [x] Backend routes for form submissions with validation
+- [x] Digital Baptism Registration form (child info, parent info, preferred date, birth cert upload)
+- [x] Digital Sponsor Certificate form (sponsor info, parish details, sacrament type)
+- [x] Digital Marriage Inquiry form (couple info, date preferences, parishioner status)
+- [x] Digital Funeral Pre-Planning form (liturgy preferences, readings, music, pallbearers)
+- [x] Admin dashboard tab for managing all form submissions (view, approve, export)
+- [x] Instant notification to parish office on new form submission
+- [x] Confirmation email to submitter after form submission (success screen with next steps shown on-page)
+- [x] Replace PDF links with digital form buttons on Sacraments page (PDFs kept as reference)
+- [ ] Bring Teen Life registration in-house (replace Google Form embed)

@@ -23,6 +23,10 @@ import Sacraments from "./pages/Sacraments";
 import ParishCalendar from "./pages/ParishCalendar";
 import TeenLife from "./pages/TeenLife";
 import FormsDocuments from "./pages/FormsDocuments";
+import BaptismForm from "./pages/BaptismForm";
+import SponsorForm from "./pages/SponsorForm";
+import MarriageForm from "./pages/MarriageForm";
+import FuneralForm from "./pages/FuneralForm";
 
 function Router() {
   return (
@@ -41,6 +45,10 @@ function Router() {
       <Route path="/ministries" component={Ministries} />
       <Route path="/volunteer" component={Volunteer} />
       <Route path="/forms" component={FormsDocuments} />
+      <Route path="/baptism-form" component={BaptismForm} />
+      <Route path="/sponsor-form" component={SponsorForm} />
+      <Route path="/marriage-form" component={MarriageForm} />
+      <Route path="/funeral-form" component={FuneralForm} />
       <Route path="/giving" component={Giving} />
       <Route path="/contact" component={Contact} />
       <Route path="/admin" component={Admin} />

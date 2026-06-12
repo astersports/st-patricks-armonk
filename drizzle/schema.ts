@@ -248,3 +248,132 @@ export const parishDocuments = mysqlTable("parish_documents", {
 
 export type ParishDocument = typeof parishDocuments.$inferSelect;
 export type InsertParishDocument = typeof parishDocuments.$inferInsert;
+
+// ===== DIGITAL FORM SUBMISSIONS =====
+
+/**
+ * Baptism Registration submissions
+ */
+export const baptismRegistrations = mysqlTable("baptism_registrations", {
+  id: int("id").autoincrement().primaryKey(),
+  // Child info
+  childFirstName: varchar("childFirstName", { length: 200 }).notNull(),
+  childLastName: varchar("childLastName", { length: 200 }).notNull(),
+  childDob: varchar("childDob", { length: 20 }).notNull(),
+  childGender: varchar("childGender", { length: 20 }).notNull(),
+  // Parent info
+  fatherName: varchar("fatherName", { length: 300 }),
+  motherName: varchar("motherName", { length: 300 }),
+  parentEmail: varchar("parentEmail", { length: 320 }).notNull(),
+  parentPhone: varchar("parentPhone", { length: 30 }).notNull(),
+  address: text("address").notNull(),
+  // Godparents
+  godparentName1: varchar("godparentName1", { length: 300 }),
+  godparentName2: varchar("godparentName2", { length: 300 }),
+  // Preferences
+  preferredDate: varchar("preferredDate", { length: 50 }),
+  birthCertUrl: text("birthCertUrl"),
+  notes: text("notes"),
+  // Status
+  status: mysqlEnum("status", ["pending", "approved", "scheduled", "completed", "cancelled"]).default("pending").notNull(),
+  adminNotes: text("adminNotes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type BaptismRegistration = typeof baptismRegistrations.$inferSelect;
+
+/**
+ * Sponsor Certificate submissions (for Baptism or Confirmation)
+ */
+export const sponsorCertificates = mysqlTable("sponsor_certificates", {
+  id: int("id").autoincrement().primaryKey(),
+  // Sponsor info
+  sponsorFirstName: varchar("sponsorFirstName", { length: 200 }).notNull(),
+  sponsorLastName: varchar("sponsorLastName", { length: 200 }).notNull(),
+  sponsorEmail: varchar("sponsorEmail", { length: 320 }).notNull(),
+  sponsorPhone: varchar("sponsorPhone", { length: 30 }).notNull(),
+  sponsorAddress: text("sponsorAddress").notNull(),
+  // Sponsor's parish
+  sponsorParish: varchar("sponsorParish", { length: 300 }).notNull(),
+  sponsorParishCity: varchar("sponsorParishCity", { length: 200 }).notNull(),
+  // Sacrament details
+  sacramentType: mysqlEnum("sacramentType", ["baptism", "confirmation"]).notNull(),
+  candidateName: varchar("candidateName", { length: 300 }).notNull(),
+  ceremonyDate: varchar("ceremonyDate", { length: 50 }),
+  // Sponsor qualifications
+  isBaptized: boolean("isBaptized").default(true).notNull(),
+  isConfirmed: boolean("isConfirmed").default(true).notNull(),
+  isActiveCatholic: boolean("isActiveCatholic").default(true).notNull(),
+  notes: text("notes"),
+  // Status
+  status: mysqlEnum("status", ["pending", "verified", "approved", "denied"]).default("pending").notNull(),
+  adminNotes: text("adminNotes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type SponsorCertificate = typeof sponsorCertificates.$inferSelect;
+
+/**
+ * Marriage Inquiry submissions
+ */
+export const marriageInquiries = mysqlTable("marriage_inquiries", {
+  id: int("id").autoincrement().primaryKey(),
+  // Bride info
+  brideFirstName: varchar("brideFirstName", { length: 200 }).notNull(),
+  brideLastName: varchar("brideLastName", { length: 200 }).notNull(),
+  brideEmail: varchar("brideEmail", { length: 320 }).notNull(),
+  bridePhone: varchar("bridePhone", { length: 30 }).notNull(),
+  brideReligion: varchar("brideReligion", { length: 100 }),
+  brideParish: varchar("brideParish", { length: 300 }),
+  // Groom info
+  groomFirstName: varchar("groomFirstName", { length: 200 }).notNull(),
+  groomLastName: varchar("groomLastName", { length: 200 }).notNull(),
+  groomEmail: varchar("groomEmail", { length: 320 }),
+  groomPhone: varchar("groomPhone", { length: 30 }),
+  groomReligion: varchar("groomReligion", { length: 100 }),
+  groomParish: varchar("groomParish", { length: 300 }),
+  // Wedding details
+  preferredDate: varchar("preferredDate", { length: 50 }),
+  alternateDate: varchar("alternateDate", { length: 50 }),
+  isParishioner: boolean("isParishioner").default(false).notNull(),
+  previousMarriage: boolean("previousMarriage").default(false).notNull(),
+  previousMarriageDetails: text("previousMarriageDetails"),
+  guestCount: varchar("guestCount", { length: 20 }),
+  notes: text("notes"),
+  // Status
+  status: mysqlEnum("status", ["pending", "in_review", "meeting_scheduled", "approved", "denied"]).default("pending").notNull(),
+  adminNotes: text("adminNotes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type MarriageInquiry = typeof marriageInquiries.$inferSelect;
+
+/**
+ * Funeral Pre-Planning submissions
+ */
+export const funeralPrePlanning = mysqlTable("funeral_pre_planning", {
+  id: int("id").autoincrement().primaryKey(),
+  // Deceased/Planner info
+  plannerName: varchar("plannerName", { length: 300 }).notNull(),
+  plannerEmail: varchar("plannerEmail", { length: 320 }).notNull(),
+  plannerPhone: varchar("plannerPhone", { length: 30 }).notNull(),
+  plannerRelation: varchar("plannerRelation", { length: 100 }),
+  deceasedName: varchar("deceasedName", { length: 300 }).notNull(),
+  isPrePlanning: boolean("isPrePlanning").default(false).notNull(),
+  // Liturgy preferences
+  preferredDate: varchar("preferredDate", { length: 50 }),
+  massType: mysqlEnum("massType", ["funeral_mass", "memorial_mass", "vigil_service", "graveside"]).default("funeral_mass").notNull(),
+  firstReading: text("firstReading"),
+  secondReading: text("secondReading"),
+  gospel: text("gospel"),
+  hymns: text("hymns"),
+  eulogist: varchar("eulogist", { length: 300 }),
+  pallbearers: text("pallbearers"),
+  specialRequests: text("specialRequests"),
+  // Status
+  status: mysqlEnum("status", ["pending", "confirmed", "completed"]).default("pending").notNull(),
+  adminNotes: text("adminNotes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type FuneralPrePlanning = typeof funeralPrePlanning.$inferSelect;

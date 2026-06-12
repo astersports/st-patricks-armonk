@@ -15,8 +15,9 @@ function DocumentList({ category }: { category: string }) {
     <div className="mt-6">
       <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
         <FileText className="w-4 h-4 text-primary" />
-        Forms & Documents
+        Reference Documents
       </h4>
+      <p className="text-xs text-muted-foreground mb-2 italic">These PDFs are available for reference. We recommend using the digital forms above for faster processing.</p>
       <div className="space-y-2">
         {docs.map((doc) => (
           <a
@@ -111,6 +112,15 @@ export default function Sacraments() {
                   </p>
                 </div>
 
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <a href="/baptism-form">
+                    <Button className="gap-2"><FileText className="w-4 h-4" /> Register for Baptism Online</Button>
+                  </a>
+                  <a href="/sponsor-form">
+                    <Button variant="outline" className="gap-2"><FileText className="w-4 h-4" /> Sponsor Certificate Form</Button>
+                  </a>
+                </div>
+
                 <DocumentList category="baptism" />
               </Card>
             </TabsContent>
@@ -147,6 +157,12 @@ export default function Sacraments() {
                   <p className="text-muted-foreground leading-relaxed">
                     Confirmation is typically celebrated in the spring. Specific dates and details are communicated through the CCD program. Check the <a href="/ccd-calendar" className="text-primary hover:underline">CCD Calendar</a> for the latest schedule.
                   </p>
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <a href="/sponsor-form">
+                    <Button className="gap-2"><FileText className="w-4 h-4" /> Sponsor Certificate Form</Button>
+                  </a>
                 </div>
 
                 <DocumentList category="confirmation" />
@@ -191,6 +207,12 @@ export default function Sacraments() {
                   </p>
                 </div>
 
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <a href="/marriage-form">
+                    <Button className="gap-2"><Heart className="w-4 h-4" /> Marriage Inquiry Form</Button>
+                  </a>
+                </div>
+
                 <DocumentList category="marriage" />
               </Card>
             </TabsContent>
@@ -231,6 +253,12 @@ export default function Sacraments() {
                   <p className="text-muted-foreground leading-relaxed">
                     We encourage parishioners to pre-plan their funeral liturgy. The Funeral Preparation Form allows you to select readings, hymns, and other preferences in advance, easing the burden on your family during a difficult time.
                   </p>
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <a href="/funeral-form">
+                    <Button className="gap-2"><Church className="w-4 h-4" /> Funeral Pre-Planning Form</Button>
+                  </a>
                 </div>
 
                 <DocumentList category="funeral" />
