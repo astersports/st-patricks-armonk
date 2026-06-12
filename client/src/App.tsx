@@ -27,11 +27,17 @@ import BaptismForm from "./pages/BaptismForm";
 import SponsorForm from "./pages/SponsorForm";
 import MarriageForm from "./pages/MarriageForm";
 import FuneralForm from "./pages/FuneralForm";
+import About from "./pages/About";
+import Staff from "./pages/Staff";
+import ParishRegistration from "./pages/ParishRegistration";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/about" component={About} />
+      <Route path="/staff" component={Staff} />
+      <Route path="/parish-registration" component={ParishRegistration} />
       <Route path="/mass-times" component={MassTimes} />
       <Route path="/sacraments" component={Sacraments} />
       <Route path="/news-events" component={NewsEvents} />

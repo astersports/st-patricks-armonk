@@ -1,7 +1,7 @@
 import { eq, desc, and, gte, lte, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, newsPosts, bulletins, events, emailSubscriptions, ccdRegistrations, cyoTeams, cyoGames, volunteerOpportunities, volunteerSignups, ccdEvents, parishDocuments, baptismRegistrations, sponsorCertificates, marriageInquiries, funeralPrePlanning, teenLifeRegistrations } from "../drizzle/schema";
-import type { InsertNewsPost, InsertBulletin, InsertEvent, InsertEmailSubscription, InsertCcdRegistration, InsertCyoTeam, InsertCyoGame, InsertVolunteerOpportunity, InsertVolunteerSignup, InsertCcdEvent, InsertParishDocument, BaptismRegistration, SponsorCertificate, MarriageInquiry, FuneralPrePlanning, TeenLifeRegistration } from "../drizzle/schema";
+import { InsertUser, users, newsPosts, bulletins, events, emailSubscriptions, ccdRegistrations, cyoTeams, cyoGames, volunteerOpportunities, volunteerSignups, ccdEvents, parishDocuments, baptismRegistrations, sponsorCertificates, marriageInquiries, funeralPrePlanning, teenLifeRegistrations, parishRegistrations } from "../drizzle/schema";
+import type { InsertNewsPost, InsertBulletin, InsertEvent, InsertEmailSubscription, InsertCcdRegistration, InsertCyoTeam, InsertCyoGame, InsertVolunteerOpportunity, InsertVolunteerSignup, InsertCcdEvent, InsertParishDocument, BaptismRegistration, SponsorCertificate, MarriageInquiry, FuneralPrePlanning, TeenLifeRegistration, ParishRegistration } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -623,4 +623,38 @@ export async function updateTeenLifeRegistrationStatus(id: number, status: strin
   const updateData: Record<string, unknown> = { status };
   if (adminNotes !== undefined) updateData.adminNotes = adminNotes;
   await db.update(teenLifeRegistrations).set(updateData).where(eq(teenLifeRegistrations.id, id));
+}
+
+// ===== PARISH REGISTRATIONS =====
+export async function createParishRegistration(data: {
+  headOfHousehold: string;
+  spouseName?: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  phone: string;
+  email: string;
+  previousParish?: string;
+  numChildren?: string;
+  notes?: string;
+}) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.insert(parishRegistrations).values(data);
+  return result;
+}
+
+export async function getParishRegistrations() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(parishRegistrations).orderBy(desc(parishRegistrations.createdAt));
+}
+
+export async function updateParishRegistrationStatus(id: number, status: string, adminNotes?: string) {
+  const db = await getDb();
+  if (!db) return;
+  const updateData: Record<string, unknown> = { status };
+  if (adminNotes !== undefined) updateData.adminNotes = adminNotes;
+  await db.update(parishRegistrations).set(updateData).where(eq(parishRegistrations.id, id));
 }

@@ -11,12 +11,20 @@ type NavItem = {
 };
 
 const navLinks: NavItem[] = [
-  { href: "/", label: "Home" },
+  {
+    href: "/about",
+    label: "About",
+    children: [
+      { href: "/about", label: "Our Parish" },
+      { href: "/staff", label: "Staff & Leadership" },
+      { href: "/parish-registration", label: "New Parishioner Registration" },
+    ],
+  },
   {
     href: "/mass-times",
-    label: "Mass & Sacraments",
+    label: "Mass & Prayer",
     children: [
-      { href: "/mass-times", label: "Mass Times & Confessions" },
+      { href: "/mass-times", label: "Mass Times & Confession" },
       { href: "/sacraments", label: "Sacraments" },
     ],
   },
@@ -40,56 +48,69 @@ const navLinks: NavItem[] = [
       { href: "/cyo-basketball", label: "CYO Basketball" },
       { href: "/ministries", label: "Ministries & Devotions" },
       { href: "/volunteer", label: "Volunteer" },
+      { href: "/forms", label: "Forms & Documents" },
     ],
   },
-  { href: "/forms", label: "Forms" },
   { href: "/giving", label: "Giving" },
   { href: "/contact", label: "Contact" },
 ];
 
 function DesktopDropdown({ item, location }: { item: NavItem; location: string }) {
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => setOpen(false), 150);
+  };
 
   useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
   }, []);
 
   const isActive = item.children?.some(c => c.href === location) || item.href === location;
 
   return (
-    <div ref={ref} className="relative">
-      <button
-        onClick={() => setOpen(!open)}
-        className={`flex items-center gap-0.5 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+    <div
+      className="relative"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <Link
+        href={item.href}
+        className={`flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150 ${
           isActive
-            ? "text-primary bg-primary/5"
-            : "text-foreground/70 hover:text-primary hover:bg-primary/5"
+            ? "text-primary"
+            : "text-foreground/70 hover:text-primary"
         }`}
       >
         {item.label}
-        <ChevronDown className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`} />
-      </button>
+        <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+      </Link>
       {open && (
-        <div className="absolute top-full left-0 mt-1 bg-white border border-border rounded-lg shadow-lg py-1 min-w-[200px] z-50 animate-in fade-in-0 zoom-in-95 duration-150">
-          {item.children!.map(child => (
-            <Link
-              key={child.href}
-              href={child.href}
-              className={`block px-4 py-2.5 text-sm transition-colors ${
-                location === child.href
-                  ? "text-primary bg-primary/5"
-                  : "text-foreground/70 hover:text-primary hover:bg-primary/5"
-              }`}
-              onClick={() => setOpen(false)}
-            >
-              {child.label}
-            </Link>
-          ))}
+        <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
+          <div className="nav-dropdown-enter bg-white rounded-xl shadow-lg ring-1 ring-black/5 py-2 min-w-[220px]">
+            {item.children!.map(child => (
+              <Link
+                key={child.href}
+                href={child.href}
+                className={`block px-4 py-2.5 text-sm transition-colors duration-150 ${
+                  location === child.href
+                    ? "text-primary bg-primary/5 font-medium"
+                    : "text-foreground/70 hover:text-primary hover:bg-primary/5"
+                }`}
+                onClick={() => setOpen(false)}
+              >
+                {child.label}
+              </Link>
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -98,18 +119,42 @@ function DesktopDropdown({ item, location }: { item: NavItem; location: string }
 
 export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [location] = useLocation();
   const { user, isAuthenticated } = useAuth();
 
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location]);
+
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border shadow-sm">
-      <nav className="container flex items-center justify-between h-16 lg:h-18">
+    <header
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-white/95 backdrop-blur-md shadow-sm"
+          : "bg-white/80 backdrop-blur-sm"
+      }`}
+    >
+      <nav className="container flex items-center justify-between h-16 lg:h-[4.5rem]">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <Church className="w-7 h-7 text-primary transition-transform group-hover:scale-110" />
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="relative">
+            <Church className="w-8 h-8 text-primary transition-transform duration-300 group-hover:scale-110" />
+          </div>
           <div className="flex flex-col">
-            <span className="font-serif text-lg font-bold text-primary leading-tight">St. Patrick</span>
-            <span className="text-[10px] text-muted-foreground leading-tight tracking-wider uppercase">Armonk, NY</span>
+            <span className="font-serif text-lg font-bold text-primary leading-tight tracking-tight">
+              St. Patrick
+            </span>
+            <span className="text-[10px] text-muted-foreground leading-tight tracking-widest uppercase">
+              Armonk, NY
+            </span>
           </div>
         </Link>
 
@@ -122,10 +167,10 @@ export default function Navigation() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150 ${
                   location === link.href
-                    ? "text-primary bg-primary/5"
-                    : "text-foreground/70 hover:text-primary hover:bg-primary/5"
+                    ? "text-primary"
+                    : "text-foreground/70 hover:text-primary"
                 }`}
               >
                 {link.label}
@@ -135,10 +180,10 @@ export default function Navigation() {
           {isAuthenticated && user?.role === "admin" && (
             <Link
               href="/admin"
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`ml-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors duration-150 ${
                 location === "/admin"
-                  ? "text-accent bg-accent/10"
-                  : "text-accent/80 hover:text-accent hover:bg-accent/5"
+                  ? "bg-accent text-accent-foreground"
+                  : "bg-accent/10 text-accent-foreground/80 hover:bg-accent/20"
               }`}
             >
               Admin
@@ -150,8 +195,9 @@ export default function Navigation() {
         <Button
           variant="ghost"
           size="icon"
-          className="lg:hidden"
+          className="lg:hidden press-scale"
           onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
         >
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </Button>
@@ -159,39 +205,20 @@ export default function Navigation() {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="lg:hidden border-t border-border bg-white animate-scale-in max-h-[80vh] overflow-y-auto">
+        <div className="lg:hidden border-t border-border/50 bg-white animate-slide-down max-h-[80vh] overflow-y-auto">
           <div className="container py-4 flex flex-col gap-1">
             {navLinks.map((link) => (
               <div key={link.label}>
                 {link.children ? (
-                  <>
-                    <span className="px-4 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                      {link.label}
-                    </span>
-                    {link.children.map(child => (
-                      <Link
-                        key={child.href}
-                        href={child.href}
-                        className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                          location === child.href
-                            ? "text-primary bg-primary/5"
-                            : "text-foreground/70 hover:text-primary hover:bg-primary/5"
-                        }`}
-                        onClick={() => setMobileOpen(false)}
-                      >
-                        {child.label}
-                      </Link>
-                    ))}
-                  </>
+                  <MobileAccordion item={link} location={location} />
                 ) : (
                   <Link
                     href={link.href}
-                    className={`px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                    className={`block px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                       location === link.href
                         ? "text-primary bg-primary/5"
-                        : "text-foreground/70 hover:text-primary hover:bg-primary/5"
+                        : "text-foreground/80 hover:text-primary hover:bg-primary/5"
                     }`}
-                    onClick={() => setMobileOpen(false)}
                   >
                     {link.label}
                   </Link>
@@ -201,8 +228,7 @@ export default function Navigation() {
             {isAuthenticated && user?.role === "admin" && (
               <Link
                 href="/admin"
-                className="px-4 py-3 rounded-lg text-sm font-medium text-accent hover:bg-accent/5"
-                onClick={() => setMobileOpen(false)}
+                className="px-4 py-3 rounded-lg text-sm font-semibold text-accent hover:bg-accent/5"
               >
                 Admin Dashboard
               </Link>
@@ -211,5 +237,43 @@ export default function Navigation() {
         </div>
       )}
     </header>
+  );
+}
+
+function MobileAccordion({ item, location }: { item: NavItem; location: string }) {
+  const [open, setOpen] = useState(false);
+  const isActive = item.children?.some(c => c.href === location);
+
+  return (
+    <div>
+      <button
+        onClick={() => setOpen(!open)}
+        className={`w-full flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+          isActive
+            ? "text-primary bg-primary/5"
+            : "text-foreground/80 hover:text-primary hover:bg-primary/5"
+        }`}
+      >
+        {item.label}
+        <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <div className="ml-4 mt-1 mb-2 border-l-2 border-primary/20 pl-3 space-y-0.5 animate-scale-in">
+          {item.children!.map(child => (
+            <Link
+              key={child.href}
+              href={child.href}
+              className={`block px-3 py-2.5 rounded-md text-sm transition-colors ${
+                location === child.href
+                  ? "text-primary font-medium bg-primary/5"
+                  : "text-foreground/70 hover:text-primary"
+              }`}
+            >
+              {child.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

@@ -59,3 +59,18 @@
 - [x] Confirmation email to submitter after form submission (success screen with next steps shown on-page)
 - [x] Replace PDF links with digital form buttons on Sacraments page (PDFs kept as reference)
 - [x] Bring Teen Life registration in-house (replace Google Form embed)
+
+## Phase 5 - UX Overhaul & Missing Content (10/10 Experience)
+- [x] Full UX audit of every page (design quality, navigation, first impression)
+- [x] Redesign homepage hero for instant wow factor (3-second rule)
+- [x] Simplify and streamline navigation (reduce cognitive load)
+- [x] Add Staff Directory (integrated into About section, not a separate cluttered page)
+- [x] Add Parish History & Armonk Cross (elegant storytelling page)
+- [x] Add RCIA info (integrated into Faith Formation)
+- [x] Add Walking With Purpose info (integrated into Faith Formation)
+- [x] Add Holy Day Mass schedule section to Mass Times page (dynamic - announced in bulletin)
+- [x] Add Morning Prayer/Lauds to Mass Times page
+- [x] Add Parish Registration digital form
+- [x] Polish typography, spacing, and animations across all pages (global animation system + page headers)
+- [x] Ensure mobile experience is flawless (responsive nav, mobile hero, tested)
+- [x] Final comprehensive review - every page must be 10/10

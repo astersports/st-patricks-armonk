@@ -399,3 +399,24 @@ export const teenLifeRegistrations = mysqlTable("teen_life_registrations", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 export type TeenLifeRegistration = typeof teenLifeRegistrations.$inferSelect;
+
+// Parish Registrations (new parishioner sign-up)
+export const parishRegistrations = mysqlTable("parish_registrations", {
+  id: int("id").autoincrement().primaryKey(),
+  headOfHousehold: varchar("headOfHousehold", { length: 200 }).notNull(),
+  spouseName: varchar("spouseName", { length: 200 }),
+  address: text("address").notNull(),
+  city: varchar("city", { length: 100 }).notNull(),
+  state: varchar("state", { length: 10 }).default("NY").notNull(),
+  zip: varchar("zip", { length: 10 }).notNull(),
+  phone: varchar("phone", { length: 20 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  previousParish: varchar("previousParish", { length: 300 }),
+  numChildren: varchar("numChildren", { length: 10 }),
+  notes: text("notes"),
+  status: mysqlEnum("status", ["pending", "welcomed", "active"]).default("pending").notNull(),
+  adminNotes: text("adminNotes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ParishRegistration = typeof parishRegistrations.$inferSelect;

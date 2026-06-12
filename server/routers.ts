@@ -751,6 +751,39 @@ export const appRouter = router({
       return { success: true };
     }),
   }),
+  parishRegistration: router({
+    create: publicProcedure.input(z.object({
+      headOfHousehold: z.string().min(1),
+      spouseName: z.string().optional(),
+      address: z.string().min(1),
+      city: z.string().min(1),
+      state: z.string().default("NY"),
+      zip: z.string().min(1),
+      phone: z.string().min(1),
+      email: z.string().email(),
+      previousParish: z.string().optional(),
+      numChildren: z.string().optional(),
+      notes: z.string().optional(),
+    })).mutation(async ({ input }) => {
+      await db.createParishRegistration(input);
+      notifyOwner({
+        title: "New Parish Registration",
+        content: `${input.headOfHousehold} (${input.email}) has registered as a new parishioner. Address: ${input.address}, ${input.city}, ${input.state} ${input.zip}. Phone: ${input.phone}.`,
+      }).catch(() => {});
+      return { success: true };
+    }),
+    list: adminProcedure.query(async () => {
+      return db.getParishRegistrations();
+    }),
+    updateStatus: adminProcedure.input(z.object({
+      id: z.number(),
+      status: z.string(),
+      adminNotes: z.string().optional(),
+    })).mutation(async ({ input }) => {
+      await db.updateParishRegistrationStatus(input.id, input.status, input.adminNotes);
+      return { success: true };
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
