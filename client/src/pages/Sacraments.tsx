@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { trpc } from "@/lib/trpc";
-import { Droplets, Cross, Heart, Church, FileText, Download, ExternalLink } from "lucide-react";
+import { Droplets, Cross, Heart, Church, FileText, Download, ExternalLink, Sparkles } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
 
 function DocumentList({ category }: { category: string }) {
@@ -72,6 +72,44 @@ const sacraments = [
           <a href="/sponsor-form"><Button size="sm" variant="outline" className="gap-2"><FileText className="w-3.5 h-3.5" /> Sponsor Certificate</Button></a>
         </div>
         <DocumentList category="baptism" />
+      </>
+    ),
+  },
+  {
+    id: "first-communion",
+    icon: Sparkles,
+    title: "First Holy Communion",
+    subtitle: "Receiving the Body and Blood of Christ for the first time",
+    accent: "border-l-[oklch(0.6_0.18_60)]",
+    badge: "2nd Grade",
+    content: (
+      <>
+        <p className="text-muted-foreground leading-relaxed mb-4">
+          First Holy Communion is one of the most joyful milestones in a child's faith journey. At St. Patrick's, children typically receive their First Communion in the spring of 2nd grade, after completing sacramental preparation through our CCD program.
+        </p>
+        <h4 className="font-semibold text-foreground mb-2">Preparation Requirements</h4>
+        <ul className="space-y-1.5 text-sm text-muted-foreground mb-4 ml-4">
+          <li className="flex gap-2"><span className="text-primary">&bull;</span>Child must be enrolled in 2nd grade CCD (Religious Education)</li>
+          <li className="flex gap-2"><span className="text-primary">&bull;</span>Child must have received the Sacrament of Baptism</li>
+          <li className="flex gap-2"><span className="text-primary">&bull;</span>Child will receive First Reconciliation before First Communion</li>
+          <li className="flex gap-2"><span className="text-primary">&bull;</span>Parent participation in preparation meetings is required</li>
+          <li className="flex gap-2"><span className="text-primary">&bull;</span>Regular attendance at Sunday Mass throughout the preparation year</li>
+        </ul>
+        <h4 className="font-semibold text-foreground mb-2">Timeline</h4>
+        <ul className="space-y-1.5 text-sm text-muted-foreground mb-4 ml-4">
+          <li className="flex gap-2"><span className="text-primary">&bull;</span><strong>September:</strong> CCD classes begin; register by August</li>
+          <li className="flex gap-2"><span className="text-primary">&bull;</span><strong>January–February:</strong> First Reconciliation celebrated</li>
+          <li className="flex gap-2"><span className="text-primary">&bull;</span><strong>April–May:</strong> First Holy Communion Mass</li>
+        </ul>
+        <h4 className="font-semibold text-foreground mb-2">How to Sign Up</h4>
+        <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+          Register your child for 2nd grade CCD through our online registration form. First Communion preparation is included as part of the 2nd grade curriculum. For questions, contact the Religious Education Office at <a href="mailto:reled@stpatrickinarmonk.org" className="text-primary hover:underline">reled@stpatrickinarmonk.org</a> or <a href="tel:9145311759" className="text-primary hover:underline">(914) 531-1759</a>.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <a href="/ccd-registration"><Button size="sm" className="gap-2"><FileText className="w-3.5 h-3.5" /> Register for 2nd Grade CCD</Button></a>
+          <a href="/ccd-calendar"><Button size="sm" variant="outline" className="gap-2"><Sparkles className="w-3.5 h-3.5" /> View CCD Calendar</Button></a>
+        </div>
+        <DocumentList category="first-communion" />
       </>
     ),
   },
