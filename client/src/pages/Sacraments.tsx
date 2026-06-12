@@ -175,44 +175,44 @@ export default function Sacraments() {
   return (
     <PageLayout>
       {/* Page Header */}
-      <section className="relative py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      <section className="relative py-10 sm:py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container max-w-5xl">
-          <p className="text-gold font-medium tracking-widest uppercase text-sm mb-3 animate-fade-in">Sacred Encounters</p>
-          <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4 animate-fade-in">Sacraments</h1>
-          <p className="text-lg text-muted-foreground max-w-2xl animate-fade-up">
+          <p className="text-gold font-medium tracking-widest uppercase text-xs sm:text-sm mb-2 sm:mb-3 animate-fade-in">Sacred Encounters</p>
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4 animate-fade-in">Sacraments</h1>
+          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl animate-fade-up">
             The sacraments are encounters with Christ that transform our lives. Select a sacrament below to learn about preparation and requirements.
           </p>
         </div>
       </section>
 
       <div ref={revealRef}>
-        <section className="py-12">
+        <section className="py-8 sm:py-12">
           <div className="container max-w-4xl">
             {/* Accordion for Sacraments */}
-            <Accordion type="single" collapsible className="space-y-4">
+            <Accordion type="single" collapsible className="space-y-3 sm:space-y-4">
               {sacraments.map((sac) => (
                 <AccordionItem
                   key={sac.id}
                   value={sac.id}
                   className={`reveal border border-border/60 rounded-xl overflow-hidden shadow-sm hover-glow transition-all border-l-4 ${sac.accent}`}
                 >
-                  <AccordionTrigger className="px-6 py-5 hover:no-underline">
-                    <div className="flex items-center gap-4">
-                      <div className="bg-primary/10 p-2.5 rounded-xl shrink-0">
-                        <sac.icon className="w-5 h-5 text-primary" />
+                  <AccordionTrigger className="px-4 sm:px-6 py-3 sm:py-5 hover:no-underline">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                      <div className="bg-primary/10 p-2 sm:p-2.5 rounded-lg sm:rounded-xl shrink-0">
+                        <sac.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                       </div>
                       <div className="text-left">
                         <div className="flex items-center gap-2">
-                          <span className="font-serif text-lg font-semibold text-foreground">{sac.title}</span>
+                          <span className="font-serif text-base sm:text-lg font-semibold text-foreground">{sac.title}</span>
                           {sac.badge && (
                             <Badge className="bg-accent/15 text-accent-foreground border-0 text-[10px] px-1.5 py-0">{sac.badge}</Badge>
                           )}
                         </div>
-                        <p className="text-sm text-muted-foreground mt-0.5">{sac.subtitle}</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">{sac.subtitle}</p>
                       </div>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="px-6 pb-6">
+                  <AccordionContent className="px-4 sm:px-6 pb-4 sm:pb-6">
                     {sac.content}
                   </AccordionContent>
                 </AccordionItem>

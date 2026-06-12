@@ -92,35 +92,35 @@ export default function Home() {
 
       <div ref={revealRef}>
         {/* Parish Stats Strip */}
-        <section className="reveal border-y border-border/50 bg-secondary/30 py-10 mb-16">
+        <section className="reveal border-y border-border/50 bg-secondary/30 py-6 sm:py-10 mb-10 sm:mb-16">
           <div className="container">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 text-center">
               <div>
-                <p className="font-serif text-3xl md:text-4xl font-bold text-primary">1924</p>
-                <p className="text-sm text-muted-foreground mt-1">Year Founded</p>
+                <p className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-primary">1924</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Year Founded</p>
               </div>
               <div>
-                <p className="font-serif text-3xl md:text-4xl font-bold text-primary">1,500+</p>
-                <p className="text-sm text-muted-foreground mt-1">Families</p>
+                <p className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-primary">1,500+</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Families</p>
               </div>
               <div>
-                <p className="font-serif text-3xl md:text-4xl font-bold text-primary">4</p>
-                <p className="text-sm text-muted-foreground mt-1">Weekend Masses</p>
+                <p className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-primary">4</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Weekend Masses</p>
               </div>
               <div>
-                <p className="font-serif text-3xl md:text-4xl font-bold text-primary">100</p>
-                <p className="text-sm text-muted-foreground mt-1">Years of Faith</p>
+                <p className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-primary">100</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Years of Faith</p>
               </div>
             </div>
           </div>
         </section>
 
         {/* Latest News Section — with colored left-border accents and pill badges */}
-        <section className="reveal container pb-16">
-          <div className="flex items-center justify-between mb-8">
+        <section className="reveal container pb-10 sm:pb-16">
+          <div className="flex items-center justify-between mb-5 sm:mb-8">
             <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground">Latest News</h2>
-              <p className="text-muted-foreground mt-1">Stay connected with our parish community</p>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Latest News</h2>
+              <p className="text-muted-foreground mt-0.5 text-sm sm:text-base">Stay connected with our parish community</p>
             </div>
             <Link href="/news-events">
               <Button variant="ghost" className="text-primary hover:text-primary/80 press-scale">
@@ -162,12 +162,12 @@ export default function Home() {
         </section>
 
         {/* Upcoming Events — with pill badges for timing */}
-        <section className="reveal bg-gradient-to-b from-secondary/40 to-transparent py-16">
+        <section className="reveal bg-gradient-to-b from-secondary/40 to-transparent py-10 sm:py-16">
           <div className="container">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-5 sm:mb-8">
               <div>
-                <h2 className="font-serif text-3xl font-bold text-foreground">Upcoming Events</h2>
-                <p className="text-muted-foreground mt-1">Join us in faith and fellowship</p>
+                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Upcoming Events</h2>
+                <p className="text-muted-foreground mt-0.5 text-sm sm:text-base">Join us in faith and fellowship</p>
               </div>
               <Link href="/parish-calendar">
                 <Button variant="ghost" className="text-primary hover:text-primary/80 press-scale">
@@ -225,39 +225,39 @@ export default function Home() {
         </section>
 
         {/* Get Involved */}
-        <section className="reveal py-16">
+        <section className="reveal py-10 sm:py-16">
           <div className="container">
-            <h2 className="font-serif text-3xl font-bold text-foreground text-center mb-3">Get Involved</h2>
-            <p className="text-muted-foreground text-center mb-10 max-w-lg mx-auto">
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground text-center mb-2">Get Involved</h2>
+            <p className="text-muted-foreground text-center mb-6 sm:mb-10 max-w-lg mx-auto text-sm sm:text-base">
               There are many ways to grow in faith and serve our community.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               <Link href="/ccd-calendar">
-                <Card className="p-6 hover-lift cursor-pointer h-full border-0 shadow-sm">
-                  <Calendar className="w-8 h-8 text-primary mb-3" />
-                  <h3 className="font-semibold text-foreground mb-1">CCD Calendar</h3>
-                  <p className="text-sm text-muted-foreground">Religious Education schedule and key dates.</p>
+                <Card className="p-3 sm:p-5 hover-lift cursor-pointer h-full border-0 shadow-sm">
+                  <Calendar className="w-5 h-5 sm:w-8 sm:h-8 text-primary mb-1.5 sm:mb-3" />
+                  <h3 className="font-semibold text-foreground text-xs sm:text-sm mb-0.5">CCD Calendar</h3>
+                  <p className="text-[10px] sm:text-sm text-muted-foreground hidden sm:block">Religious Education schedule and key dates.</p>
                 </Card>
               </Link>
               <Link href="/cyo-basketball">
-                <Card className="p-6 hover-lift cursor-pointer h-full border-0 shadow-sm">
-                  <Users className="w-8 h-8 text-accent mb-3" />
-                  <h3 className="font-semibold text-foreground mb-1">CYO Basketball</h3>
-                  <p className="text-sm text-muted-foreground">Schedules, teams, and game results.</p>
+                <Card className="p-3 sm:p-5 hover-lift cursor-pointer h-full border-0 shadow-sm">
+                  <Users className="w-5 h-5 sm:w-8 sm:h-8 text-accent mb-1.5 sm:mb-3" />
+                  <h3 className="font-semibold text-foreground text-xs sm:text-sm mb-0.5">CYO Basketball</h3>
+                  <p className="text-[10px] sm:text-sm text-muted-foreground hidden sm:block">Schedules, teams, and game results.</p>
                 </Card>
               </Link>
               <Link href="/faith-formation">
-                <Card className="p-6 hover-lift cursor-pointer h-full border-0 shadow-sm">
-                  <BookOpen className="w-8 h-8 text-primary mb-3" />
-                  <h3 className="font-semibold text-foreground mb-1">Faith Formation</h3>
-                  <p className="text-sm text-muted-foreground">Programs for all ages — CCD, RCIA, Bible study.</p>
+                <Card className="p-3 sm:p-5 hover-lift cursor-pointer h-full border-0 shadow-sm">
+                  <BookOpen className="w-5 h-5 sm:w-8 sm:h-8 text-primary mb-1.5 sm:mb-3" />
+                  <h3 className="font-semibold text-foreground text-xs sm:text-sm mb-0.5">Faith Formation</h3>
+                  <p className="text-[10px] sm:text-sm text-muted-foreground hidden sm:block">Programs for all ages — CCD, RCIA, Bible study.</p>
                 </Card>
               </Link>
               <Link href="/volunteer">
-                <Card className="p-6 hover-lift cursor-pointer h-full border-0 shadow-sm">
-                  <Heart className="w-8 h-8 text-accent mb-3" />
-                  <h3 className="font-semibold text-foreground mb-1">Volunteer</h3>
-                  <p className="text-sm text-muted-foreground">Sign up to serve our parish community.</p>
+                <Card className="p-3 sm:p-5 hover-lift cursor-pointer h-full border-0 shadow-sm">
+                  <Heart className="w-5 h-5 sm:w-8 sm:h-8 text-accent mb-1.5 sm:mb-3" />
+                  <h3 className="font-semibold text-foreground text-xs sm:text-sm mb-0.5">Volunteer</h3>
+                  <p className="text-[10px] sm:text-sm text-muted-foreground hidden sm:block">Sign up to serve our parish community.</p>
                 </Card>
               </Link>
             </div>
@@ -265,9 +265,9 @@ export default function Home() {
         </section>
 
         {/* Newsletter Subscription */}
-        <section className="reveal container pb-16">
+        <section className="reveal container pb-10 sm:pb-16">
           <Card className="bg-gradient-to-br from-primary via-parish-green-dark to-primary overflow-hidden border-0 shadow-xl">
-            <CardContent className="p-8 md:p-12 flex flex-col md:flex-row items-center gap-8">
+            <CardContent className="p-5 sm:p-8 md:p-12 flex flex-col md:flex-row items-center gap-5 sm:gap-8">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-3">
                   <Mail className="w-5 h-5 text-gold" />

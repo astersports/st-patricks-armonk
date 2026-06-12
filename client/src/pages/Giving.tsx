@@ -9,14 +9,14 @@ export default function Giving() {
 
   return (
     <PageLayout>
-      <section className="relative py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      <section className="relative py-10 sm:py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container">
           <div className="max-w-3xl">
-            <p className="text-gold font-medium tracking-widest uppercase text-sm mb-3 animate-fade-in">Stewardship</p>
-            <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4 animate-fade-in">
+            <p className="text-gold font-medium tracking-widest uppercase text-xs sm:text-sm mb-2 sm:mb-3 animate-fade-in">Stewardship</p>
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4 animate-fade-in">
               Online Giving
             </h1>
-            <p className="text-lg text-muted-foreground animate-fade-up">
+            <p className="text-base sm:text-lg text-muted-foreground animate-fade-up">
               Your generous support sustains our parish community and its mission. Thank you for your stewardship.
             </p>
           </div>
@@ -24,8 +24,8 @@ export default function Giving() {
       </section>
 
       <div ref={revealRef}>
-        <section className="container py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <section className="container py-8 sm:py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-8">
             {/* WeShare */}
             <Card className="reveal border-t-4 border-t-primary shadow-sm">
               <CardHeader>
@@ -95,10 +95,10 @@ export default function Giving() {
           </div>
 
           {/* Additional Info */}
-          <Card className="reveal mt-8 bg-primary/5 border-primary/20">
-            <CardContent className="p-8 text-center">
-              <Heart className="w-10 h-10 text-primary mx-auto mb-4" />
-              <h3 className="font-serif text-xl font-semibold mb-2">Other Ways to Give</h3>
+          <Card className="reveal mt-5 sm:mt-8 bg-primary/5 border-primary/20">
+            <CardContent className="p-5 sm:p-8 text-center">
+              <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-primary mx-auto mb-3 sm:mb-4" />
+              <h3 className="font-serif text-lg sm:text-xl font-semibold mb-2">Other Ways to Give</h3>
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 If you prefer to use contribution envelopes or have questions about giving, 
                 please contact the parish office at <a href="tel:9142739724" className="font-semibold text-primary hover:underline">(914) 273-9724</a>.
@@ -107,9 +107,9 @@ export default function Giving() {
           </Card>
 
           {/* Cardinals Appeal */}
-          <Card className="reveal mt-8 shadow-sm">
-            <CardContent className="p-8">
-              <h3 className="font-serif text-2xl font-semibold mb-4 text-center">2026 Cardinal's Appeal</h3>
+          <Card className="reveal mt-5 sm:mt-8 shadow-sm">
+            <CardContent className="p-5 sm:p-8">
+              <h3 className="font-serif text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-center">2026 Cardinal's Appeal</h3>
               <p className="text-muted-foreground text-center max-w-2xl mx-auto leading-relaxed">
                 The Cardinal's Appeal exists to fund the vast educational, charitable, and pastoral outreach 
                 of our diocese, all of which serve to make Christ known to the world.

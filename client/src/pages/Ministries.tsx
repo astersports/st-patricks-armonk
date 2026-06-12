@@ -68,14 +68,14 @@ export default function Ministries() {
 
   return (
     <PageLayout>
-      <section className="relative py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      <section className="relative py-10 sm:py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container">
           <div className="max-w-3xl">
-            <p className="text-gold font-medium tracking-widest uppercase text-sm mb-3 animate-fade-in">Serve & Pray</p>
-            <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4 animate-fade-in">
+            <p className="text-gold font-medium tracking-widest uppercase text-xs sm:text-sm mb-2 sm:mb-3 animate-fade-in">Serve & Pray</p>
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4 animate-fade-in">
               Ministries & Devotions
             </h1>
-            <p className="text-lg text-muted-foreground animate-fade-up">
+            <p className="text-base sm:text-lg text-muted-foreground animate-fade-up">
               Serve the Lord and grow in holiness through our parish ministries and devotional practices.
             </p>
           </div>
@@ -83,25 +83,25 @@ export default function Ministries() {
       </section>
 
       <div ref={revealRef}>
-        <section className="container py-12">
+        <section className="container py-8 sm:py-12">
           {/* Devotions */}
-          <div className="reveal mb-16">
+          <div className="reveal mb-10 sm:mb-16">
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-1 h-6 bg-primary rounded-full" />
-              <h2 className="font-serif text-3xl font-bold text-foreground">Devotions</h2>
+              <div className="w-1 h-5 sm:h-6 bg-primary rounded-full" />
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Devotions</h2>
             </div>
-            <p className="text-muted-foreground mb-8 ml-4">Regular opportunities for prayer and spiritual growth.</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <p className="text-muted-foreground mb-5 sm:mb-8 ml-4 text-sm sm:text-base">Regular opportunities for prayer and spiritual growth.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
               {devotions.map((devotion) => (
                 <Card key={devotion.title} className="hover-glow transition-all">
-                  <CardContent className="p-6 flex gap-4">
-                    <div className="bg-primary/10 p-3 rounded-xl shrink-0">
-                      <devotion.icon className="w-5 h-5 text-primary" />
+                  <CardContent className="p-4 sm:p-6 flex gap-3 sm:gap-4">
+                    <div className="bg-primary/10 p-2 sm:p-3 rounded-xl shrink-0">
+                      <devotion.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-lg">{devotion.title}</h3>
-                      <p className="text-muted-foreground text-sm">{devotion.description}</p>
-                      <p className="text-primary font-medium text-sm mt-1">{devotion.time}</p>
+                      <h3 className="font-semibold text-sm sm:text-lg">{devotion.title}</h3>
+                      <p className="text-muted-foreground text-xs sm:text-sm">{devotion.description}</p>
+                      <p className="text-primary font-medium text-xs sm:text-sm mt-0.5 sm:mt-1">{devotion.time}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -122,23 +122,23 @@ export default function Ministries() {
           {/* Ministries */}
           <div className="reveal">
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-1 h-6 bg-accent rounded-full" />
-              <h2 className="font-serif text-3xl font-bold text-foreground">Parish Ministries</h2>
+              <div className="w-1 h-5 sm:h-6 bg-accent rounded-full" />
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Parish Ministries</h2>
             </div>
-            <p className="text-muted-foreground mb-8 ml-4">Use your gifts to serve God and our community.</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <p className="text-muted-foreground mb-5 sm:mb-8 ml-4 text-sm sm:text-base">Use your gifts to serve God and our community.</p>
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
               {ministries.map((ministry) => (
                 <Card key={ministry.title} className="hover-lift group shadow-sm">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-accent/10 p-2.5 rounded-xl group-hover:bg-accent/20 transition-colors">
-                        <ministry.icon className="w-5 h-5 text-accent" />
+                  <CardHeader className="p-3 sm:p-6 pb-2 sm:pb-3">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <div className="bg-accent/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl group-hover:bg-accent/20 transition-colors">
+                        <ministry.icon className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
                       </div>
-                      <CardTitle className="text-lg">{ministry.title}</CardTitle>
+                      <CardTitle className="text-xs sm:text-lg">{ministry.title}</CardTitle>
                     </div>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground text-sm">{ministry.description}</p>
+                  <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
+                    <p className="text-muted-foreground text-[10px] sm:text-sm hidden sm:block">{ministry.description}</p>
                   </CardContent>
                 </Card>
               ))}

@@ -70,17 +70,17 @@ export default function ParishRegistration() {
   return (
     <PageLayout>
       {/* Header */}
-      <section className="relative py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      <section className="relative py-10 sm:py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container">
           <div className="max-w-3xl">
-            <div className="flex items-center gap-3 mb-4">
-              <Heart className="w-6 h-6 text-accent animate-fade-in" />
-              <p className="text-gold font-medium tracking-widest uppercase text-sm animate-fade-in">Welcome Home</p>
+            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+              <Heart className="w-5 h-5 sm:w-6 sm:h-6 text-accent animate-fade-in" />
+              <p className="text-gold font-medium tracking-widest uppercase text-xs sm:text-sm animate-fade-in">Welcome Home</p>
             </div>
-            <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4 animate-fade-in">
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4 animate-fade-in">
               New Parishioner Registration
             </h1>
-            <p className="text-lg text-muted-foreground animate-fade-up">
+            <p className="text-base sm:text-lg text-muted-foreground animate-fade-up">
               We're delighted you'd like to join our parish family. Please complete this form 
               and our office will reach out to welcome you personally.
             </p>
@@ -88,7 +88,7 @@ export default function ParishRegistration() {
         </div>
       </section>
 
-      <section className="container py-12">
+      <section className="container py-8 sm:py-12">
         <form onSubmit={handleSubmit} className="max-w-3xl mx-auto space-y-8">
           {/* Family Information */}
           <Card>

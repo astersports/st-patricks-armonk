@@ -10,15 +10,15 @@ export default function About() {
   return (
     <PageLayout>
       {/* Hero Header */}
-      <section className="relative py-20 md:py-28 overflow-hidden bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      <section className="relative py-12 sm:py-20 md:py-28 overflow-hidden bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23166534' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
         <div className="container relative">
           <div className="max-w-3xl">
-            <p className="text-gold font-medium tracking-widest uppercase text-sm mb-4 animate-fade-in">Est. 1924</p>
-            <h1 className="font-serif text-4xl md:text-6xl font-bold text-foreground mb-6 animate-fade-in">
+            <p className="text-gold font-medium tracking-widest uppercase text-xs sm:text-sm mb-2 sm:mb-4 animate-fade-in">Est. 1924</p>
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-6xl font-bold text-foreground mb-4 sm:mb-6 animate-fade-in">
               Our Parish
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed animate-fade-up">
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed animate-fade-up">
               For a century, St. Patrick's has been a spiritual home for the Catholic community 
               of Armonk and surrounding areas — a place of worship, fellowship, and service.
             </p>
@@ -28,9 +28,9 @@ export default function About() {
 
       <div ref={revealRef}>
         {/* Parish Story */}
-        <section className="container py-16 md:py-20">
+        <section className="container py-10 sm:py-16 md:py-20">
           <div className="max-w-4xl mx-auto">
-            <div className="reveal grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-12 items-start">
+            <div className="reveal grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-6 sm:gap-12 items-start">
               <div className="space-y-4">
                 <div className="bg-primary/10 p-4 rounded-2xl inline-block">
                   <Church className="w-10 h-10 text-primary" />
@@ -60,10 +60,10 @@ export default function About() {
         </section>
 
         {/* The Armonk Cross */}
-        <section className="bg-gradient-to-b from-secondary/50 to-transparent py-16 md:py-20">
+        <section className="bg-gradient-to-b from-secondary/50 to-transparent py-10 sm:py-16 md:py-20">
           <div className="container">
             <div className="reveal max-w-4xl mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-12 items-start">
+              <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-6 sm:gap-12 items-start">
                 <div className="space-y-6">
                   <div className="flex items-center gap-3 mb-2">
                     <Cross className="w-6 h-6 text-primary" />
@@ -95,17 +95,17 @@ export default function About() {
         </section>
 
         {/* Quick Links */}
-        <section className="container py-16">
-          <h2 className="reveal font-serif text-3xl font-bold text-foreground text-center mb-10">
+        <section className="container py-10 sm:py-16">
+          <h2 className="reveal font-serif text-2xl sm:text-3xl font-bold text-foreground text-center mb-6 sm:mb-10">
             Get to Know Us
           </h2>
-          <div className="reveal grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <div className="reveal grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto">
             <Link href="/staff">
               <Card className="hover-lift cursor-pointer h-full border-0 shadow-md">
-                <CardContent className="p-8 text-center">
-                  <Users className="w-10 h-10 text-primary mx-auto mb-4" />
-                  <h3 className="font-semibold text-lg mb-2">Staff & Leadership</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
+                <CardContent className="p-5 sm:p-8 text-center">
+                  <Users className="w-8 h-8 sm:w-10 sm:h-10 text-primary mx-auto mb-3 sm:mb-4" />
+                  <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Staff & Leadership</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
                     Meet our pastor, staff, and parish council members.
                   </p>
                   <span className="text-sm text-primary font-medium inline-flex items-center gap-1">
@@ -116,10 +116,10 @@ export default function About() {
             </Link>
             <Link href="/parish-registration">
               <Card className="hover-lift cursor-pointer h-full border-0 shadow-md">
-                <CardContent className="p-8 text-center">
-                  <Heart className="w-10 h-10 text-accent mx-auto mb-4" />
-                  <h3 className="font-semibold text-lg mb-2">New Parishioners</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
+                <CardContent className="p-5 sm:p-8 text-center">
+                  <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-accent mx-auto mb-3 sm:mb-4" />
+                  <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">New Parishioners</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
                     Welcome! Register to become part of our parish family.
                   </p>
                   <span className="text-sm text-primary font-medium inline-flex items-center gap-1">
@@ -130,10 +130,10 @@ export default function About() {
             </Link>
             <Link href="/contact">
               <Card className="hover-lift cursor-pointer h-full border-0 shadow-md">
-                <CardContent className="p-8 text-center">
-                  <Church className="w-10 h-10 text-primary mx-auto mb-4" />
-                  <h3 className="font-semibold text-lg mb-2">Visit Us</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
+                <CardContent className="p-5 sm:p-8 text-center">
+                  <Church className="w-8 h-8 sm:w-10 sm:h-10 text-primary mx-auto mb-3 sm:mb-4" />
+                  <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Visit Us</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
                     29 Cox Ave, Armonk NY 10504. All are welcome.
                   </p>
                   <span className="text-sm text-primary font-medium inline-flex items-center gap-1">

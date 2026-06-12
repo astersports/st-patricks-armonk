@@ -9,14 +9,14 @@ export default function MassTimes() {
   return (
     <PageLayout>
       {/* Page Header */}
-      <section className="relative py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      <section className="relative py-10 sm:py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container">
           <div className="max-w-3xl">
-            <p className="text-gold font-medium tracking-widest uppercase text-sm mb-3 animate-fade-in">Worship With Us</p>
-            <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4 animate-fade-in">
+            <p className="text-gold font-medium tracking-widest uppercase text-xs sm:text-sm mb-2 sm:mb-3 animate-fade-in">Worship With Us</p>
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4 animate-fade-in">
               Mass Times & Confession
             </h1>
-            <p className="text-lg text-muted-foreground animate-fade-up">
+            <p className="text-base sm:text-lg text-muted-foreground animate-fade-up">
               Join us in worship and prayer. All are welcome at St. Patrick Church.
             </p>
             <div className="flex flex-wrap items-center gap-4 mt-6 text-sm text-muted-foreground animate-fade-up stagger-1">
@@ -34,8 +34,8 @@ export default function MassTimes() {
       </section>
 
       <div ref={revealRef}>
-        <section className="container py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <section className="container py-8 sm:py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
             {/* Weekend Masses */}
             <Card className="reveal border-t-4 border-t-primary shadow-sm">
               <CardHeader>

@@ -11,14 +11,14 @@ export default function FaithFormation() {
 
   return (
     <PageLayout>
-      <section className="relative py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      <section className="relative py-10 sm:py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container">
           <div className="max-w-3xl">
-            <p className="text-gold font-medium tracking-widest uppercase text-sm mb-3 animate-fade-in">Grow in Faith</p>
-            <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4 animate-fade-in">
+            <p className="text-gold font-medium tracking-widest uppercase text-xs sm:text-sm mb-2 sm:mb-3 animate-fade-in">Grow in Faith</p>
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4 animate-fade-in">
               Faith Formation
             </h1>
-            <p className="text-lg text-muted-foreground animate-fade-up">
+            <p className="text-base sm:text-lg text-muted-foreground animate-fade-up">
               Growing in faith together — Religious Education programs for children, youth, and adults.
             </p>
           </div>
@@ -26,8 +26,8 @@ export default function FaithFormation() {
       </section>
 
       <div ref={revealRef}>
-        <section className="container py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <section className="container py-8 sm:py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-8">
             {/* Main Content — Accordion */}
             <div className="lg:col-span-2">
               {/* Status Banner */}
@@ -49,21 +49,21 @@ export default function FaithFormation() {
                   value="ccd"
                   className="reveal border border-border/60 rounded-xl overflow-hidden shadow-sm hover-glow transition-all border-l-4 border-l-[oklch(0.42_0.12_150)]"
                 >
-                  <AccordionTrigger className="px-6 py-5 hover:no-underline">
-                    <div className="flex items-center gap-4">
-                      <div className="bg-primary/10 p-2.5 rounded-xl shrink-0">
-                        <GraduationCap className="w-5 h-5 text-primary" />
+                  <AccordionTrigger className="px-4 sm:px-6 py-3 sm:py-5 hover:no-underline">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                      <div className="bg-primary/10 p-2 sm:p-2.5 rounded-lg sm:rounded-xl shrink-0">
+                        <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                       </div>
                       <div className="text-left">
                         <div className="flex items-center gap-2">
-                          <span className="font-serif text-lg font-semibold text-foreground">Religious Education (CCD)</span>
+                          <span className="font-serif text-base sm:text-lg font-semibold text-foreground">Religious Education (CCD)</span>
                           <Badge className="bg-primary/10 text-primary border-0 text-[10px] px-1.5 py-0">Grades 1–8</Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mt-0.5">Weekly classes for children and sacramental preparation</p>
                       </div>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="px-6 pb-6">
+                  <AccordionContent className="px-4 sm:px-6 pb-4 sm:pb-6">
                     <p className="text-muted-foreground leading-relaxed mb-4">
                       Our Religious Education program provides faith formation for children from 
                       first grade through Confirmation. Classes are designed to help young people 
@@ -89,21 +89,21 @@ export default function FaithFormation() {
                   value="rcia"
                   className="reveal border border-border/60 rounded-xl overflow-hidden shadow-sm hover-glow transition-all border-l-4 border-l-[oklch(0.75_0.15_85)]"
                 >
-                  <AccordionTrigger className="px-6 py-5 hover:no-underline">
-                    <div className="flex items-center gap-4">
-                      <div className="bg-accent/10 p-2.5 rounded-xl shrink-0">
-                        <Users className="w-5 h-5 text-accent" />
+                  <AccordionTrigger className="px-4 sm:px-6 py-3 sm:py-5 hover:no-underline">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                      <div className="bg-accent/10 p-2 sm:p-2.5 rounded-lg sm:rounded-xl shrink-0">
+                        <Users className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
                       </div>
                       <div className="text-left">
                         <div className="flex items-center gap-2">
-                          <span className="font-serif text-lg font-semibold text-foreground">RCIA</span>
+                          <span className="font-serif text-base sm:text-lg font-semibold text-foreground">RCIA</span>
                           <Badge className="bg-accent/15 text-accent-foreground border-0 text-[10px] px-1.5 py-0">Adults</Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mt-0.5">Rite of Christian Initiation of Adults</p>
                       </div>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="px-6 pb-6">
+                  <AccordionContent className="px-4 sm:px-6 pb-4 sm:pb-6">
                     <p className="text-muted-foreground leading-relaxed mb-3">
                       The Rite of Christian Initiation of Adults (RCIA) is a process for adults who wish 
                       to become Catholic or complete their sacraments of initiation. Whether you are exploring 
@@ -121,21 +121,21 @@ export default function FaithFormation() {
                   value="wwp"
                   className="reveal border border-border/60 rounded-xl overflow-hidden shadow-sm hover-glow transition-all border-l-4 border-l-[oklch(0.55_0.15_25)]"
                 >
-                  <AccordionTrigger className="px-6 py-5 hover:no-underline">
-                    <div className="flex items-center gap-4">
-                      <div className="bg-accent/10 p-2.5 rounded-xl shrink-0">
-                        <Heart className="w-5 h-5 text-accent" />
+                  <AccordionTrigger className="px-4 sm:px-6 py-3 sm:py-5 hover:no-underline">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                      <div className="bg-accent/10 p-2 sm:p-2.5 rounded-lg sm:rounded-xl shrink-0">
+                        <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
                       </div>
                       <div className="text-left">
                         <div className="flex items-center gap-2">
-                          <span className="font-serif text-lg font-semibold text-foreground">Walking With Purpose</span>
+                          <span className="font-serif text-base sm:text-lg font-semibold text-foreground">Walking With Purpose</span>
                           <Badge className="bg-accent/15 text-accent-foreground border-0 text-[10px] px-1.5 py-0">Women</Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mt-0.5">Catholic women's Bible study program</p>
                       </div>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="px-6 pb-6">
+                  <AccordionContent className="px-4 sm:px-6 pb-4 sm:pb-6">
                     <p className="text-muted-foreground leading-relaxed mb-3">
                       Walking With Purpose is a women's Catholic Bible study program that aims to bring women 
                       to a deeper personal relationship with Jesus Christ. Through personal study and small 
@@ -153,20 +153,20 @@ export default function FaithFormation() {
                   value="adult"
                   className="reveal border border-border/60 rounded-xl overflow-hidden shadow-sm hover-glow transition-all border-l-4 border-l-[oklch(0.5_0.12_250)]"
                 >
-                  <AccordionTrigger className="px-6 py-5 hover:no-underline">
-                    <div className="flex items-center gap-4">
-                      <div className="bg-primary/10 p-2.5 rounded-xl shrink-0">
-                        <BookOpen className="w-5 h-5 text-primary" />
+                  <AccordionTrigger className="px-4 sm:px-6 py-3 sm:py-5 hover:no-underline">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                      <div className="bg-primary/10 p-2 sm:p-2.5 rounded-lg sm:rounded-xl shrink-0">
+                        <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                       </div>
                       <div className="text-left">
                         <div className="flex items-center gap-2">
-                          <span className="font-serif text-lg font-semibold text-foreground">Adult Faith Formation</span>
+                          <span className="font-serif text-base sm:text-lg font-semibold text-foreground">Adult Faith Formation</span>
                         </div>
                         <p className="text-sm text-muted-foreground mt-0.5">Bible study, book discussions, and spiritual enrichment</p>
                       </div>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="px-6 pb-6">
+                  <AccordionContent className="px-4 sm:px-6 pb-4 sm:pb-6">
                     <p className="text-muted-foreground leading-relaxed mb-3">
                       Deepen your faith through Bible study, book discussions, and spiritual enrichment programs 
                       offered throughout the year. Our adult programs are designed for parishioners at every 

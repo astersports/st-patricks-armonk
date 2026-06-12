@@ -36,16 +36,16 @@ const staffMembers: StaffMember[] = [
 function StaffCard({ member }: { member: StaffMember }) {
   return (
     <Card className="hover-glow transition-all duration-200">
-      <CardContent className="p-5">
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-            <span className="text-primary font-serif font-bold text-lg">
+      <CardContent className="p-3 sm:p-5">
+        <div className="flex items-start gap-3 sm:gap-4">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+            <span className="text-primary font-serif font-bold text-sm sm:text-lg">
               {member.name.split(" ").map(n => n[0]).slice(0, 2).join("")}
             </span>
           </div>
           <div className="min-w-0">
-            <h3 className="font-semibold text-foreground truncate">{member.name}</h3>
-            <p className="text-sm text-muted-foreground">{member.role}</p>
+            <h3 className="font-semibold text-sm sm:text-base text-foreground truncate">{member.name}</h3>
+            <p className="text-xs sm:text-sm text-muted-foreground">{member.role}</p>
             {member.phone && (
               <a
                 href={`tel:${member.phone.replace(/[^\d+]/g, "")}`}
@@ -72,14 +72,14 @@ export default function Staff() {
   return (
     <PageLayout>
       {/* Page Header */}
-      <section className="relative py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      <section className="relative py-10 sm:py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container">
           <div className="max-w-3xl">
-            <p className="text-gold font-medium tracking-widest uppercase text-sm mb-3 animate-fade-in">Our Team</p>
-            <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4 animate-fade-in">
+            <p className="text-gold font-medium tracking-widest uppercase text-xs sm:text-sm mb-2 sm:mb-3 animate-fade-in">Our Team</p>
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4 animate-fade-in">
               Staff & Leadership
             </h1>
-            <p className="text-lg text-muted-foreground animate-fade-up">
+            <p className="text-base sm:text-lg text-muted-foreground animate-fade-up">
               The dedicated people who serve our parish community every day.
             </p>
           </div>
@@ -87,10 +87,10 @@ export default function Staff() {
       </section>
 
       <div ref={revealRef}>
-        <section className="container py-12 md:py-16">
+        <section className="container py-8 sm:py-12 md:py-16">
           {/* Pastor */}
-          <div className="reveal mb-12">
-            <div className="flex items-center gap-2 mb-6">
+          <div className="reveal mb-8 sm:mb-12">
+            <div className="flex items-center gap-2 mb-4 sm:mb-6">
               <div className="w-1 h-6 bg-primary rounded-full" />
               <h2 className="font-serif text-2xl font-bold text-foreground">Pastor</h2>
             </div>
@@ -121,12 +121,12 @@ export default function Staff() {
           </div>
 
           {/* Parish Staff */}
-          <div className="reveal mb-12">
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-1 h-6 bg-accent rounded-full" />
-              <h2 className="font-serif text-2xl font-bold text-foreground">Parish Staff</h2>
+          <div className="reveal mb-8 sm:mb-12">
+            <div className="flex items-center gap-2 mb-4 sm:mb-6">
+              <div className="w-1 h-5 sm:h-6 bg-accent rounded-full" />
+              <h2 className="font-serif text-xl sm:text-2xl font-bold text-foreground">Parish Staff</h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {staff.map((member) => (
                 <StaffCard key={member.name} member={member} />
               ))}
@@ -135,11 +135,11 @@ export default function Staff() {
 
           {/* Parish Leadership */}
           <div className="reveal">
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-1 h-6 bg-primary rounded-full" />
-              <h2 className="font-serif text-2xl font-bold text-foreground">Parish Leadership</h2>
+            <div className="flex items-center gap-2 mb-4 sm:mb-6">
+              <div className="w-1 h-5 sm:h-6 bg-primary rounded-full" />
+              <h2 className="font-serif text-xl sm:text-2xl font-bold text-foreground">Parish Leadership</h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {leadership.map((member) => (
                 <StaffCard key={member.name} member={member} />
               ))}

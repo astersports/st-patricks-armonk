@@ -21,14 +21,14 @@ export default function Contact() {
 
   return (
     <PageLayout>
-      <section className="relative py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      <section className="relative py-10 sm:py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container">
           <div className="max-w-3xl">
-            <p className="text-gold font-medium tracking-widest uppercase text-sm mb-3 animate-fade-in">Get in Touch</p>
-            <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4 animate-fade-in">
+            <p className="text-gold font-medium tracking-widest uppercase text-xs sm:text-sm mb-2 sm:mb-3 animate-fade-in">Get in Touch</p>
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4 animate-fade-in">
               Contact Us
             </h1>
-            <p className="text-lg text-muted-foreground animate-fade-up">
+            <p className="text-base sm:text-lg text-muted-foreground animate-fade-up">
               We would love to hear from you. Reach out to our parish office for any inquiries.
             </p>
           </div>
@@ -36,15 +36,15 @@ export default function Contact() {
       </section>
 
       <div ref={revealRef}>
-        <section className="container py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <section className="container py-8 sm:py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-8">
             {/* Contact Info */}
-            <div className="reveal space-y-6">
+            <div className="reveal space-y-4 sm:space-y-6">
               <Card className="border-t-4 border-t-primary shadow-sm">
-                <CardHeader>
-                  <CardTitle className="font-serif text-2xl">Parish Office</CardTitle>
+                <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-4">
+                  <CardTitle className="font-serif text-xl sm:text-2xl">Parish Office</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6 pt-0">
                   <div className="flex items-start gap-4">
                     <div className="bg-primary/10 p-2.5 rounded-xl shrink-0">
                       <MapPin className="w-5 h-5 text-primary" />
@@ -124,7 +124,7 @@ export default function Contact() {
             </div>
 
             {/* Map */}
-            <div className="reveal h-[500px] lg:h-auto min-h-[400px] rounded-xl overflow-hidden shadow-lg border">
+            <div className="reveal h-[300px] sm:h-[500px] lg:h-auto min-h-[250px] sm:min-h-[400px] rounded-xl overflow-hidden shadow-lg border">
               <MapView onMapReady={handleMapReady} className="w-full h-full" />
             </div>
           </div>

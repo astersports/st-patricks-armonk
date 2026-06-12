@@ -22,20 +22,20 @@ export default function NewsEvents() {
 
   return (
     <PageLayout>
-      <section className="relative py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      <section className="relative py-10 sm:py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container">
-          <p className="text-gold font-medium tracking-widest uppercase text-sm mb-3 animate-fade-in">Stay Informed</p>
-          <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4 animate-fade-in">News & Events</h1>
-          <p className="text-lg text-muted-foreground max-w-2xl animate-fade-up">
+          <p className="text-gold font-medium tracking-widest uppercase text-xs sm:text-sm mb-2 sm:mb-3 animate-fade-in">Stay Informed</p>
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4 animate-fade-in">News & Events</h1>
+          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl animate-fade-up">
             Stay informed about parish happenings, announcements, and upcoming events.
           </p>
         </div>
       </section>
 
       <div ref={revealRef}>
-        <section className="container py-12">
+        <section className="container py-8 sm:py-12">
           <Tabs defaultValue="news" className="w-full">
-            <TabsList className="mb-8">
+            <TabsList className="mb-5 sm:mb-8">
               <TabsTrigger value="news" className="gap-2">
                 <Newspaper className="w-4 h-4" /> News & Announcements
               </TabsTrigger>

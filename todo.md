@@ -84,3 +84,10 @@
 - [x] Add colored left-border accents to news/announcement cards
 - [x] Final verification and testing (11/11 tests pass, 0 TS errors)
 - [x] Fix quick-access cards on mobile: 2x2 compact grid instead of stacked full-width
+
+## Phase 7: Full Mobile Optimization Pass
+- [x] Fix "Get Involved" cards on homepage: 2x2 compact grid on mobile
+- [x] Reduce padding on all card components for mobile
+- [x] Ensure all pages use compact layouts on mobile (no oversized stacked cards)
+- [x] Audit Sacraments, Faith Formation, Ministries, Giving, Contact for mobile spacing
+- [x] Verify all pages look great on 375px viewport (all pages tested at 375x812)
