@@ -251,3 +251,4 @@
 - [x] Extend calendar page to show 6 months of events with accordion-style month groups
 - [x] Add back-to-homepage button on all interior pages (not just calendar)
 - [x] Fix ICS parser to convert UTC times to Eastern Time (America/New_York) for display
+- [x] Fix Contact page removeChild crash: separate Google Maps mount div from React-rendered loading/error overlay
