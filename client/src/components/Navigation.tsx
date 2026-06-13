@@ -16,6 +16,7 @@ const navLinks: NavItem[] = [
     label: "About",
     children: [
       { href: "/about", label: "Our Parish" },
+      { href: "/new-here", label: "New Here? Plan Your Visit" },
       { href: "/staff", label: "Staff & Leadership" },
       { href: "/parish-registration", label: "New Parishioner Registration" },
     ],

@@ -152,3 +152,11 @@
 - [x] Add sticky announcement bar above nav for "New Parish Registration"
 - [x] Add "Watch Mass" section on homepage with YouTube embed + recent video sidebar
 - [x] Add YouTube icon/link in footer
+
+## Phase 14: Homepage Refinement & New Here Page
+
+- [x] Remove Watch Mass section from homepage (YouTube isn't weekly content)
+- [x] Remove stats strip ("1924 Founded, 1500+ Families") and replace with pastor's welcome quote
+- [x] Simplify footer YouTube to a "Subscribe on YouTube" button (not icon)
+- [x] Create "New Here?" / "Plan Your Visit" page (directions, what to expect at Mass, welcome message)
+- [x] Add "New Here?" link to navigation

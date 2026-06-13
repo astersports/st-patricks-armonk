@@ -31,7 +31,7 @@ export default function Footer() {
           {/* Stay Connected */}
           <div className="md:text-right space-y-3">
             <h4 className="text-sm font-semibold text-gold uppercase tracking-wider">Stay Connected</h4>
-            <div className="flex items-center gap-3 md:justify-end">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 md:justify-end">
               <a
                 href="https://stpatarmonk.flocknote.com/home"
                 target="_blank"
@@ -41,15 +41,15 @@ export default function Footer() {
                 Join Flocknote
               </a>
               <a
-                href="https://www.youtube.com/@stpatricksarmonk"
+                href="http://www.youtube.com/@StPatricksArmonk"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center w-9 h-9 rounded-md bg-white/10 hover:bg-red-600/80 transition-colors"
-                aria-label="YouTube Channel"
+                className="inline-flex items-center gap-1.5 text-sm bg-white/10 border border-white/20 text-white/80 px-4 py-2 rounded-md hover:bg-red-600/20 hover:border-red-500/30 hover:text-white transition-colors"
               >
-                <svg className="w-4.5 h-4.5" viewBox="0 0 24 24" fill="currentColor">
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                 </svg>
+                Subscribe
               </a>
             </div>
           </div>
