@@ -11,6 +11,8 @@ export default function PageLayout({ children }: PageLayoutProps) {
       <Navigation />
       <main className="flex-1">{children}</main>
       <Footer />
+      {/* Spacer for mobile bottom tab bar + safe area */}
+      <div className="lg:hidden h-14" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }} />
     </div>
   );
 }

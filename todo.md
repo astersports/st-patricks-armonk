@@ -179,3 +179,10 @@
 - [x] Replace Aster Sports logo with transparent version that blends with dark green footer
 - [x] Use original gold/orange Aster logo colors (not white) and increase powered-by section size
 - [x] Reduce card padding/spacing on mobile across all pages (Mass Times, Ministries, Devotions)
+
+## Phase 17: Mobile Navigation Streamlining
+
+- [x] Add persistent bottom tab bar on mobile (Mass Times, Calendar, Give, More)
+- [x] Simplify hamburger menu to flat list with icons (no nested accordions)
+- [x] Remove back arrows (not needed with persistent nav)
+- [x] Ensure bottom tab bar doesn't overlap page content

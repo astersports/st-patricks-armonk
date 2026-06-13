@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, Church, ChevronDown, ArrowRight } from "lucide-react";
+import { Menu, X, Church, ChevronDown, ArrowRight, Clock, BookOpen, Users, Heart, Calendar, FileText, GraduationCap, Newspaper, Phone, UserPlus, HandHeart, Music, Cross } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import MobileBottomNav from "./MobileBottomNav";
 
 type NavItem = {
   href: string;
@@ -55,6 +56,25 @@ const navLinks: NavItem[] = [
   },
   { href: "/giving", label: "Giving" },
   { href: "/contact", label: "Contact" },
+];
+
+// Flat list for the simplified mobile menu
+const mobileMenuItems = [
+  { href: "/mass-times", label: "Mass Times & Confession", icon: Clock },
+  { href: "/sacraments", label: "Sacraments", icon: Cross },
+  { href: "/faith-formation", label: "Faith Formation", icon: GraduationCap },
+  { href: "/ccd-calendar", label: "CCD Calendar", icon: Calendar },
+  { href: "/ccd-registration", label: "CCD Registration", icon: FileText },
+  { href: "/news-events", label: "News & Events", icon: Newspaper },
+  { href: "/parish-calendar", label: "Parish Calendar", icon: Calendar },
+  { href: "/bulletins", label: "Weekly Bulletins", icon: BookOpen },
+  { href: "/ministries", label: "Ministries & Devotions", icon: HandHeart },
+  { href: "/giving", label: "Give Online", icon: Heart },
+  { href: "/volunteer", label: "Volunteer", icon: Users },
+  { href: "/about", label: "About Our Parish", icon: Church },
+  { href: "/staff", label: "Staff & Leadership", icon: Users },
+  { href: "/contact", label: "Contact Us", icon: Phone },
+  { href: "/parish-registration", label: "Register as a Parishioner", icon: UserPlus },
 ];
 
 function DesktopDropdown({ item, location }: { item: NavItem; location: string }) {
@@ -136,157 +156,131 @@ export default function Navigation() {
     setMobileOpen(false);
   }, [location]);
 
+  const handleMoreClick = () => {
+    setMobileOpen(true);
+    window.scrollTo({ top: 0 });
+  };
+
   return (
-    <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-white/95 backdrop-blur-md shadow-sm"
-          : "bg-white/80 backdrop-blur-sm"
-      }`}
-    >
-      {/* Announcement Bar */}
-      <div className="bg-primary text-white text-center py-2 px-4">
-        <Link
-          href="/parish-registration"
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium hover:underline transition-all"
-        >
-          <span className="hidden sm:inline">New to St. Patrick's?</span>
-          <span className="font-semibold">Register as a Parishioner</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
-      </div>
-      <nav className="container flex items-center justify-between h-16 lg:h-[4.5rem]">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="relative">
-            <Church className="w-8 h-8 text-primary transition-transform duration-300 group-hover:scale-110" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-serif text-lg font-bold text-primary leading-tight tracking-tight">
-              St. Patrick
-            </span>
-            <span className="text-[10px] text-muted-foreground leading-tight tracking-widest uppercase">
-              Armonk, NY
-            </span>
-          </div>
-        </Link>
-
-        {/* Desktop Nav */}
-        <div className="hidden lg:flex items-center gap-0.5">
-          {navLinks.map((link) =>
-            link.children ? (
-              <DesktopDropdown key={link.label} item={link} location={location} />
-            ) : (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150 ${
-                  location === link.href
-                    ? "text-primary"
-                    : "text-foreground/70 hover:text-primary"
-                }`}
-              >
-                {link.label}
-              </Link>
-            )
-          )}
-          {isAuthenticated && user?.role === "admin" && (
-            <Link
-              href="/admin"
-              className={`ml-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors duration-150 ${
-                location === "/admin"
-                  ? "bg-accent text-accent-foreground"
-                  : "bg-accent/10 text-accent-foreground/80 hover:bg-accent/20"
-              }`}
-            >
-              Admin
-            </Link>
-          )}
+    <>
+      <header
+        className={`sticky top-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? "bg-white/95 backdrop-blur-md shadow-sm"
+            : "bg-white/80 backdrop-blur-sm"
+        }`}
+      >
+        {/* Announcement Bar */}
+        <div className="bg-primary text-white text-center py-2 px-4">
+          <Link
+            href="/parish-registration"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium hover:underline transition-all"
+          >
+            <span className="hidden sm:inline">New to St. Patrick's?</span>
+            <span className="font-semibold">Register as a Parishioner</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
+        <nav className="container flex items-center justify-between h-16 lg:h-[4.5rem]">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="relative">
+              <Church className="w-8 h-8 text-primary transition-transform duration-300 group-hover:scale-110" />
+            </div>
+            <div className="flex flex-col">
+              <span className="font-serif text-lg font-bold text-primary leading-tight tracking-tight">
+                St. Patrick
+              </span>
+              <span className="text-[10px] text-muted-foreground leading-tight tracking-widest uppercase">
+                Armonk, NY
+              </span>
+            </div>
+          </Link>
 
-        {/* Mobile Toggle */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="lg:hidden press-scale"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
-        >
-          {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </Button>
-      </nav>
-
-      {/* Mobile Menu */}
-      {mobileOpen && (
-        <div className="lg:hidden border-t border-border/50 bg-white animate-slide-down max-h-[80vh] overflow-y-auto">
-          <div className="container py-4 flex flex-col gap-1">
-            {navLinks.map((link) => (
-              <div key={link.label}>
-                {link.children ? (
-                  <MobileAccordion item={link} location={location} />
-                ) : (
-                  <Link
-                    href={link.href}
-                    className={`block px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                      location === link.href
-                        ? "text-primary bg-primary/5"
-                        : "text-foreground/80 hover:text-primary hover:bg-primary/5"
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                )}
-              </div>
-            ))}
+          {/* Desktop Nav */}
+          <div className="hidden lg:flex items-center gap-0.5">
+            {navLinks.map((link) =>
+              link.children ? (
+                <DesktopDropdown key={link.label} item={link} location={location} />
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150 ${
+                    location === link.href
+                      ? "text-primary"
+                      : "text-foreground/70 hover:text-primary"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              )
+            )}
             {isAuthenticated && user?.role === "admin" && (
               <Link
                 href="/admin"
-                className="px-4 py-3 rounded-lg text-sm font-semibold text-accent hover:bg-accent/5"
+                className={`ml-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors duration-150 ${
+                  location === "/admin"
+                    ? "bg-accent text-accent-foreground"
+                    : "bg-accent/10 text-accent-foreground/80 hover:bg-accent/20"
+                }`}
               >
-                Admin Dashboard
+                Admin
               </Link>
             )}
           </div>
-        </div>
-      )}
-    </header>
-  );
-}
 
-function MobileAccordion({ item, location }: { item: NavItem; location: string }) {
-  const [open, setOpen] = useState(false);
-  const isActive = item.children?.some(c => c.href === location);
+          {/* Mobile Toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden press-scale"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          >
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </Button>
+        </nav>
 
-  return (
-    <div>
-      <button
-        onClick={() => setOpen(!open)}
-        className={`w-full flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-          isActive
-            ? "text-primary bg-primary/5"
-            : "text-foreground/80 hover:text-primary hover:bg-primary/5"
-        }`}
-      >
-        {item.label}
-        <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
-      </button>
-      {open && (
-        <div className="ml-4 mt-1 mb-2 border-l-2 border-primary/20 pl-3 space-y-0.5 animate-scale-in">
-          {item.children!.map(child => (
-            <Link
-              key={child.href}
-              href={child.href}
-              className={`block px-3 py-2.5 rounded-md text-sm transition-colors ${
-                location === child.href
-                  ? "text-primary font-medium bg-primary/5"
-                  : "text-foreground/70 hover:text-primary"
-              }`}
-            >
-              {child.label}
-            </Link>
-          ))}
-        </div>
-      )}
-    </div>
+        {/* Mobile Menu - Flat list */}
+        {mobileOpen && (
+          <div className="lg:hidden border-t border-border/50 bg-white animate-slide-down max-h-[70vh] overflow-y-auto pb-16">
+            <div className="container py-3">
+              <div className="grid grid-cols-1 gap-0.5">
+                {mobileMenuItems.map((item) => {
+                  const isActive = location === item.href;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                        isActive
+                          ? "text-primary bg-primary/5 font-medium"
+                          : "text-foreground/80 active:bg-primary/5"
+                      }`}
+                    >
+                      <item.icon className={`w-4 h-4 shrink-0 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
+                      <span className="text-sm">{item.label}</span>
+                    </Link>
+                  );
+                })}
+                {isAuthenticated && user?.role === "admin" && (
+                  <Link
+                    href="/admin"
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold text-accent"
+                  >
+                    <Church className="w-4 h-4 text-accent" />
+                    Admin Dashboard
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* Bottom Tab Bar - Mobile only */}
+      <MobileBottomNav onMoreClick={handleMoreClick} />
+    </>
   );
 }
