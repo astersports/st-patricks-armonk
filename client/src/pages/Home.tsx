@@ -1,7 +1,7 @@
 import PageLayout from "@/components/PageLayout";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Calendar, Newspaper } from "lucide-react";
+import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Calendar, Newspaper, BookOpen, Dribbble } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -56,7 +56,7 @@ const journeyCards = [
 
 export default function Home() {
   const [email, setEmail] = useState("");
-  const { data: nextCalEvent } = trpc.googleCalendar.nextEvent.useQuery();
+  const { data: upcomingEvents } = trpc.googleCalendar.upcomingEvents.useQuery();
   const { data: newsItems } = trpc.news.listPublished.useQuery();
   const subscribeMutation = trpc.subscriptions.subscribe.useMutation({
     onSuccess: () => {
@@ -112,59 +112,102 @@ export default function Home() {
       </section>
 
       <div ref={revealRef}>
-        {/* News & Events Highlight — replaces the old Mass Schedule bar */}
+        {/* What's Happening — upcoming events + calendar sub-nav */}
         <section className="reveal container -mt-8 relative z-20 mb-10 sm:mb-14">
           <Card className="border-0 shadow-lg overflow-hidden">
             <CardContent className="p-0">
-              <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border/50">
-                {/* Latest News */}
-                <Link href="/news-events" className="group">
-                  <div className="p-4 sm:p-5 flex items-center gap-4 hover:bg-primary/[0.02] transition-colors">
-                    <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <Newspaper className="w-5 h-5 text-primary" />
+              {/* Latest News row */}
+              <Link href="/news-events" className="group">
+                <div className="p-4 sm:p-5 flex items-center gap-4 hover:bg-primary/[0.02] transition-colors border-b border-border/50">
+                  <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                    <Newspaper className="w-5 h-5 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Latest News</p>
+                    {latestNews ? (
+                      <>
+                        <p className="font-semibold text-foreground text-sm sm:text-base truncate">{latestNews.title}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {format(new Date(latestNews.publishedAt || latestNews.createdAt), "MMM d, yyyy")}
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="font-semibold text-foreground text-sm sm:text-base">News & Announcements</p>
+                        <p className="text-xs text-muted-foreground">Parish updates and community news</p>
+                      </>
+                    )}
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+                </div>
+              </Link>
+
+              {/* Upcoming Events — show 2-3 events */}
+              <div className="border-b border-border/50">
+                <div className="px-4 sm:px-5 pt-4 pb-2">
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Coming Up</p>
+                </div>
+                {upcomingEvents && upcomingEvents.length > 0 ? (
+                  <div className="divide-y divide-border/30">
+                    {upcomingEvents.map((event, idx) => (
+                      <Link key={idx} href="/parish-calendar" className="group">
+                        <div className="px-4 sm:px-5 py-3 flex items-center gap-3 hover:bg-primary/[0.02] transition-colors">
+                          <div className="w-10 h-10 rounded-lg bg-gold/10 flex flex-col items-center justify-center shrink-0">
+                            <span className="text-[10px] font-medium text-gold uppercase leading-none">
+                              {format(new Date(event.startDate), "EEE")}
+                            </span>
+                            <span className="text-sm font-bold text-gold leading-tight">
+                              {format(new Date(event.startDate), "d")}
+                            </span>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-semibold text-foreground text-sm truncate">{event.title}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {format(new Date(event.startDate), "h:mm a")}
+                              {event.description && (
+                                <span className="ml-1 text-muted-foreground/70">· {event.description.slice(0, 40)}{event.description.length > 40 ? "…" : ""}</span>
+                              )}
+                            </p>
+                          </div>
+                          <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:text-primary transition-colors shrink-0" />
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <Link href="/parish-calendar" className="group">
+                    <div className="px-4 sm:px-5 py-3 flex items-center gap-3 hover:bg-primary/[0.02] transition-colors">
+                      <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center shrink-0">
+                        <Calendar className="w-5 h-5 text-gold" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-foreground text-sm">View Parish Calendar</p>
+                        <p className="text-xs text-muted-foreground">All upcoming events and activities</p>
+                      </div>
+                      <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:text-primary transition-colors shrink-0" />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Latest News</p>
-                      {latestNews ? (
-                        <>
-                          <p className="font-semibold text-foreground text-sm sm:text-base truncate">{latestNews.title}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {format(new Date(latestNews.publishedAt || latestNews.createdAt), "MMM d, yyyy")}
-                          </p>
-                        </>
-                      ) : (
-                        <>
-                          <p className="font-semibold text-foreground text-sm sm:text-base">News & Announcements</p>
-                          <p className="text-xs text-muted-foreground">Parish updates and community news</p>
-                        </>
-                      )}
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+                  </Link>
+                )}
+              </div>
+
+              {/* Calendar Sub-Navigation — quick links to specific calendars */}
+              <div className="grid grid-cols-3 divide-x divide-border/50">
+                <Link href="/parish-calendar" className="group">
+                  <div className="p-3 sm:p-4 flex flex-col items-center gap-1.5 hover:bg-primary/[0.03] transition-colors text-center">
+                    <Calendar className="w-4.5 h-4.5 text-primary" />
+                    <span className="text-[11px] sm:text-xs font-medium text-foreground group-hover:text-primary transition-colors">Parish</span>
                   </div>
                 </Link>
-                {/* Upcoming Event from Google Calendar */}
-                <Link href="/parish-calendar" className="group">
-                  <div className="p-4 sm:p-5 flex items-center gap-4 hover:bg-primary/[0.02] transition-colors">
-                    <div className="w-11 h-11 rounded-full bg-gold/10 flex items-center justify-center shrink-0">
-                      <Calendar className="w-5 h-5 text-gold" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Coming Up</p>
-                      {nextCalEvent ? (
-                        <>
-                          <p className="font-semibold text-foreground text-sm sm:text-base truncate">{nextCalEvent.title}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {format(new Date(nextCalEvent.startDate), "EEE, MMM d")} · {format(new Date(nextCalEvent.startDate), "h:mm a")}
-                          </p>
-                        </>
-                      ) : (
-                        <>
-                          <p className="font-semibold text-foreground text-sm sm:text-base">Parish Calendar</p>
-                          <p className="text-xs text-muted-foreground">View all upcoming events and activities</p>
-                        </>
-                      )}
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+                <Link href="/ccd-calendar" className="group">
+                  <div className="p-3 sm:p-4 flex flex-col items-center gap-1.5 hover:bg-primary/[0.03] transition-colors text-center">
+                    <BookOpen className="w-4.5 h-4.5 text-primary" />
+                    <span className="text-[11px] sm:text-xs font-medium text-foreground group-hover:text-primary transition-colors">CCD</span>
+                  </div>
+                </Link>
+                <Link href="/cyo-basketball" className="group">
+                  <div className="p-3 sm:p-4 flex flex-col items-center gap-1.5 hover:bg-primary/[0.03] transition-colors text-center">
+                    <Dribbble className="w-4.5 h-4.5 text-gold" />
+                    <span className="text-[11px] sm:text-xs font-medium text-foreground group-hover:text-primary transition-colors">CYO</span>
                   </div>
                 </Link>
               </div>

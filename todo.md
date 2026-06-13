@@ -219,3 +219,9 @@
 - [x] Add CYO ICS URL (stpatrickinarmonk.org_5snqr5qqph11et22r6sk81k67g@group.calendar.google.com)
 - [x] Fix Home.tsx 'Latest News' highlight link to use correct route (/news-events)
 - [x] Change mobile journey cards from horizontal scroll to vertical stack (full-width, icon+text+arrow layout)
+
+## Phase 21: Homepage Highlight Section Redesign
+
+- [x] Show 2-3 upcoming events in "Coming Up" section (not just one)
+- [x] Add calendar sub-navigation links below events (Parish Calendar, CYO, CCD)
+- [x] Redesign section label/layout so users can navigate to specific calendars without going back to homepage

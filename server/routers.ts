@@ -241,6 +241,15 @@ export const appRouter = router({
       );
       return nonMass || events[0] || null;
     }),
+    upcomingEvents: publicProcedure.query(async () => {
+      const { parseICSFeed, PARISH_CALENDAR_ICS } = await import("./icsParser");
+      const events = await parseICSFeed(PARISH_CALENDAR_ICS, { daysAhead: 14, maxEvents: 20 });
+      // Return up to 3 upcoming non-Daily-Mass events
+      const filtered = events.filter(e => 
+        !e.title.toLowerCase().includes("daily mass")
+      );
+      return filtered.slice(0, 3);
+    }),
   }),
 
   // ===== EMAIL SUBSCRIPTIONS =====
