@@ -24,8 +24,9 @@ export async function parseICSFeed(
 ): Promise<ParsedEvent[]> {
   const { daysAhead = 60, maxEvents = 50 } = options;
 
-  // Check cache
-  const cached = cache.get(icsUrl);
+  // Check cache (key includes options so different ranges don't share stale data)
+  const cacheKey = `${icsUrl}:${daysAhead}:${maxEvents}`;
+  const cached = cache.get(cacheKey);
   if (cached && Date.now() - cached.fetchedAt < CACHE_TTL) {
     return cached.events;
   }
@@ -115,7 +116,7 @@ export async function parseICSFeed(
     const result = events.slice(0, maxEvents);
 
     // Cache
-    cache.set(icsUrl, { events: result, fetchedAt: Date.now() });
+    cache.set(cacheKey, { events: result, fetchedAt: Date.now() });
 
     return result;
   } catch (error) {

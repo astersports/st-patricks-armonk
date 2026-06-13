@@ -191,7 +191,13 @@ export default function Home() {
               </div>
 
               {/* Calendar Sub-Navigation — quick links to filtered calendar view */}
-              <div className="grid grid-cols-3 divide-x divide-border/50">
+              <div className="grid grid-cols-4 divide-x divide-border/50">
+                <Link href="/calendar" className="group">
+                  <div className="p-3 sm:p-4 flex flex-col items-center gap-1.5 hover:bg-primary/[0.03] transition-colors text-center">
+                    <Calendar className="w-4.5 h-4.5 text-primary" />
+                    <span className="text-[11px] sm:text-xs font-medium text-foreground group-hover:text-primary transition-colors">All</span>
+                  </div>
+                </Link>
                 <Link href="/calendar?filter=parish" className="group">
                   <div className="p-3 sm:p-4 flex flex-col items-center gap-1.5 hover:bg-primary/[0.03] transition-colors text-center">
                     <Calendar className="w-4.5 h-4.5 text-primary" />

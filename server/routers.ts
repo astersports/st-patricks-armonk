@@ -253,9 +253,9 @@ export const appRouter = router({
     allEvents: publicProcedure.query(async () => {
       const { parseICSFeed, PARISH_CALENDAR_ICS, CCD_CALENDAR_ICS, CYO_CALENDAR_ICS } = await import("./icsParser");
       const [parish, ccd, cyo, dbParish, dbCcd] = await Promise.all([
-        parseICSFeed(PARISH_CALENDAR_ICS, { daysAhead: 90, maxEvents: 50 }),
-        parseICSFeed(CCD_CALENDAR_ICS, { daysAhead: 90, maxEvents: 50 }),
-        parseICSFeed(CYO_CALENDAR_ICS, { daysAhead: 90, maxEvents: 50 }),
+        parseICSFeed(PARISH_CALENDAR_ICS, { daysAhead: 180, maxEvents: 100 }),
+        parseICSFeed(CCD_CALENDAR_ICS, { daysAhead: 180, maxEvents: 100 }),
+        parseICSFeed(CYO_CALENDAR_ICS, { daysAhead: 180, maxEvents: 100 }),
         db.getUpcomingEvents(),
         db.getCcdEvents("2026-2027"),
       ]);
