@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, Church, ChevronDown, ArrowRight, Clock, BookOpen, Users, Heart, Calendar, FileText, GraduationCap, Newspaper, Phone, UserPlus, HandHeart, Music, Cross } from "lucide-react";
+import { Menu, X, Church, ChevronDown, ArrowRight, Clock, BookOpen, Users, Heart, Calendar, FileText, GraduationCap, Newspaper, Phone, UserPlus, HandHeart, Music, Cross, Search } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import MobileBottomNav from "./MobileBottomNav";
@@ -56,6 +56,32 @@ const navLinks: NavItem[] = [
   },
   { href: "/giving", label: "Giving" },
   { href: "/contact", label: "Contact" },
+];
+
+// Searchable page index — includes all pages with keywords for fuzzy matching
+type SearchableItem = { href: string; label: string; keywords: string[]; icon: typeof Clock };
+
+const searchablePages: SearchableItem[] = [
+  { href: "/mass-times", label: "Mass Times & Confession", keywords: ["mass", "confession", "reconciliation", "schedule", "saturday", "sunday", "weekday", "holy day", "prayer", "lauds"], icon: Clock },
+  { href: "/sacraments", label: "Sacraments", keywords: ["baptism", "confirmation", "marriage", "wedding", "funeral", "communion", "eucharist", "sponsor", "rcia", "anointing"], icon: Cross },
+  { href: "/faith-formation", label: "Faith Formation", keywords: ["faith", "formation", "religious education", "rcia", "walking with purpose", "blaze", "adult"], icon: GraduationCap },
+  { href: "/calendar?filter=ccd", label: "CCD Calendar", keywords: ["ccd", "religious ed", "class", "schedule", "catechism"], icon: Calendar },
+  { href: "/ccd-registration", label: "CCD Registration", keywords: ["ccd", "register", "enroll", "religious ed", "sign up", "child"], icon: FileText },
+  { href: "/ccd-permissions", label: "CCD Permission Forms", keywords: ["ccd", "permission", "release", "bus", "medical", "allergy", "pickup", "dismissal", "photo"], icon: FileText },
+  { href: "/teen-life", label: "Teen Life", keywords: ["teen", "youth", "high school", "confirmation", "young"], icon: Users },
+  { href: "/news-events", label: "News & Announcements", keywords: ["news", "announcement", "update", "parish"], icon: Newspaper },
+  { href: "/calendar", label: "Calendar (All Events)", keywords: ["calendar", "events", "schedule", "upcoming", "parish", "cyo", "ccd"], icon: Calendar },
+  { href: "/bulletins", label: "Weekly Bulletins", keywords: ["bulletin", "weekly", "pdf", "download", "read"], icon: BookOpen },
+  { href: "/calendar?filter=cyo", label: "CYO Schedule", keywords: ["cyo", "basketball", "sports", "practice", "youth", "athletics"], icon: Calendar },
+  { href: "/ministries", label: "Ministries & Devotions", keywords: ["ministry", "devotion", "lector", "eucharistic", "choir", "music", "rosary", "prayer", "share care", "fiat", "embrace"], icon: HandHeart },
+  { href: "/volunteer", label: "Volunteer", keywords: ["volunteer", "help", "serve", "sign up", "get involved"], icon: Users },
+  { href: "/forms", label: "Forms & Documents", keywords: ["form", "document", "download", "pdf", "application"], icon: FileText },
+  { href: "/giving", label: "Give Online", keywords: ["give", "donate", "offering", "weshare", "venmo", "tithe", "stewardship", "cardinal", "appeal"], icon: Heart },
+  { href: "/contact", label: "Contact Us", keywords: ["contact", "phone", "email", "address", "office", "hours", "directions", "map"], icon: Phone },
+  { href: "/about", label: "Our Parish", keywords: ["about", "parish", "history", "armonk", "cross", "community"], icon: Church },
+  { href: "/new-here", label: "New Here? Plan Your Visit", keywords: ["new", "visit", "welcome", "first time", "directions", "what to expect"], icon: UserPlus },
+  { href: "/staff", label: "Staff & Leadership", keywords: ["staff", "pastor", "priest", "deacon", "director", "leadership", "team", "contact"], icon: Users },
+  { href: "/parish-registration", label: "Register as a Parishioner", keywords: ["register", "new member", "join", "parishioner", "sign up", "family"], icon: UserPlus },
 ];
 
 // Grouped mobile menu matching site flow
@@ -174,6 +200,141 @@ function DesktopDropdown({ item, location }: { item: NavItem; location: string }
   );
 }
 
+function MobileMenu({ location, isAuthenticated, isAdmin, onClose }: {
+  location: string;
+  isAuthenticated: boolean;
+  isAdmin?: boolean;
+  onClose: () => void;
+}) {
+  const [query, setQuery] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-focus search input when menu opens
+  useEffect(() => {
+    const timer = setTimeout(() => inputRef.current?.focus(), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const searchResults = useMemo(() => {
+    const q = query.toLowerCase().trim();
+    if (!q) return [];
+    return searchablePages.filter((page) => {
+      if (page.label.toLowerCase().includes(q)) return true;
+      return page.keywords.some((kw) => kw.includes(q));
+    });
+  }, [query]);
+
+  const showSearch = query.trim().length > 0;
+
+  return (
+    <div className="lg:hidden border-t border-border/50 bg-white animate-slide-down max-h-[70vh] overflow-y-auto pb-16">
+      <div className="container py-4 space-y-4">
+        {/* Search Bar */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <input
+            ref={inputRef}
+            type="text"
+            placeholder="Search pages... (e.g. baptism, CCD, giving)"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="w-full pl-9 pr-8 py-2.5 text-sm bg-muted/50 border border-border/60 rounded-lg placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all"
+          />
+          {query && (
+            <button
+              onClick={() => setQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              aria-label="Clear search"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+
+        {/* Search Results */}
+        {showSearch && (
+          <div className="space-y-1">
+            {searchResults.length > 0 ? (
+              <>
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70 px-3 mb-1">
+                  {searchResults.length} result{searchResults.length !== 1 ? "s" : ""}
+                </p>
+                {searchResults.map((item) => {
+                  const isActive = location === item.href;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                        isActive
+                          ? "text-primary bg-primary/5 font-medium"
+                          : "text-foreground/80 active:bg-primary/5"
+                      }`}
+                    >
+                      <item.icon className={`w-4 h-4 shrink-0 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
+                      <span className="text-sm">{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </>
+            ) : (
+              <p className="text-sm text-muted-foreground px-3 py-4 text-center">
+                No pages found for "{query}"
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Grouped sections (hidden when searching) */}
+        {!showSearch && (
+          <>
+            {mobileMenuSections.map((section) => (
+              <div key={section.title}>
+                <h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70 px-3 mb-1">
+                  {section.title}
+                </h3>
+                <div className="grid grid-cols-1 gap-0.5">
+                  {section.items.map((item) => {
+                    const isActive = location === item.href || location.startsWith(item.href.split('?')[0] + '?');
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                          isActive
+                            ? "text-primary bg-primary/5 font-medium"
+                            : "text-foreground/80 active:bg-primary/5"
+                        }`}
+                      >
+                        <item.icon className={`w-4 h-4 shrink-0 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
+                        <span className="text-sm">{item.label}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+            {isAuthenticated && isAdmin && (
+              <div>
+                <h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70 px-3 mb-1">
+                  Admin
+                </h3>
+                <Link
+                  href="/admin"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold text-accent"
+                >
+                  <Church className="w-4 h-4 text-accent" />
+                  Admin Dashboard
+                </Link>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -277,52 +438,14 @@ export default function Navigation() {
           </Button>
         </nav>
 
-        {/* Mobile Menu - Grouped sections */}
+        {/* Mobile Menu - Grouped sections with search */}
         {mobileOpen && (
-          <div className="lg:hidden border-t border-border/50 bg-white animate-slide-down max-h-[70vh] overflow-y-auto pb-16">
-            <div className="container py-4 space-y-4">
-              {mobileMenuSections.map((section) => (
-                <div key={section.title}>
-                  <h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70 px-3 mb-1">
-                    {section.title}
-                  </h3>
-                  <div className="grid grid-cols-1 gap-0.5">
-                    {section.items.map((item) => {
-                      const isActive = location === item.href || location.startsWith(item.href.split('?')[0] + '?');
-                      return (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
-                            isActive
-                              ? "text-primary bg-primary/5 font-medium"
-                              : "text-foreground/80 active:bg-primary/5"
-                          }`}
-                        >
-                          <item.icon className={`w-4 h-4 shrink-0 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
-                          <span className="text-sm">{item.label}</span>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
-              {isAuthenticated && user?.role === "admin" && (
-                <div>
-                  <h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70 px-3 mb-1">
-                    Admin
-                  </h3>
-                  <Link
-                    href="/admin"
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold text-accent"
-                  >
-                    <Church className="w-4 h-4 text-accent" />
-                    Admin Dashboard
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
+          <MobileMenu
+            location={location}
+            isAuthenticated={isAuthenticated}
+            isAdmin={user?.role === "admin"}
+            onClose={() => setMobileOpen(false)}
+          />
         )}
       </header>
 
