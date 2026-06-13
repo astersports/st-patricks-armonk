@@ -259,3 +259,4 @@
 - [x] Fix CCD Permissions page blank page bug (useReveal hook containerRef not attached to wrapper div)
 - [x] Replace deprecated google.maps.Marker with AdvancedMarkerElement on Contact page
 - [x] Add search bar to hamburger menu for quick page finding on mobile
+- [x] Enhance mobile search: highlight matching keywords in results + improved empty state

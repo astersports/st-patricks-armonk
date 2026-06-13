@@ -218,13 +218,31 @@ function MobileMenu({ location, isAuthenticated, isAdmin, onClose }: {
   const searchResults = useMemo(() => {
     const q = query.toLowerCase().trim();
     if (!q) return [];
-    return searchablePages.filter((page) => {
-      if (page.label.toLowerCase().includes(q)) return true;
-      return page.keywords.some((kw) => kw.includes(q));
-    });
+    return searchablePages
+      .map((page) => {
+        const labelMatch = page.label.toLowerCase().includes(q);
+        const matchedKeywords = page.keywords.filter((kw) => kw.includes(q));
+        if (!labelMatch && matchedKeywords.length === 0) return null;
+        return { ...page, matchedKeywords, labelMatch };
+      })
+      .filter(Boolean) as (SearchableItem & { matchedKeywords: string[]; labelMatch: boolean })[];
   }, [query]);
 
   const showSearch = query.trim().length > 0;
+
+  // Highlight matching substring in text
+  const highlightMatch = (text: string, q: string) => {
+    if (!q) return text;
+    const idx = text.toLowerCase().indexOf(q.toLowerCase());
+    if (idx === -1) return text;
+    return (
+      <>
+        {text.slice(0, idx)}
+        <mark className="bg-primary/15 text-primary font-medium rounded-sm px-0.5">{text.slice(idx, idx + q.length)}</mark>
+        {text.slice(idx + q.length)}
+      </>
+    );
+  };
 
   return (
     <div className="lg:hidden border-t border-border/50 bg-white animate-slide-down max-h-[70vh] overflow-y-auto pb-16">
@@ -261,6 +279,7 @@ function MobileMenu({ location, isAuthenticated, isAdmin, onClose }: {
                 </p>
                 {searchResults.map((item) => {
                   const isActive = location === item.href;
+                  const q = query.toLowerCase().trim();
                   return (
                     <Link
                       key={item.href}
@@ -272,15 +291,32 @@ function MobileMenu({ location, isAuthenticated, isAdmin, onClose }: {
                       }`}
                     >
                       <item.icon className={`w-4 h-4 shrink-0 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
-                      <span className="text-sm">{item.label}</span>
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-sm">{item.labelMatch ? highlightMatch(item.label, q) : item.label}</span>
+                        {item.matchedKeywords.length > 0 && !item.labelMatch && (
+                          <span className="text-[11px] text-muted-foreground mt-0.5">
+                            Matches: {item.matchedKeywords.slice(0, 3).map((kw, i) => (
+                              <span key={kw}>{i > 0 && ", "}{highlightMatch(kw, q)}</span>
+                            ))}
+                          </span>
+                        )}
+                      </div>
                     </Link>
                   );
                 })}
               </>
             ) : (
-              <p className="text-sm text-muted-foreground px-3 py-4 text-center">
-                No pages found for "{query}"
-              </p>
+              <div className="flex flex-col items-center py-8 px-4">
+                <div className="w-12 h-12 rounded-full bg-muted/60 flex items-center justify-center mb-3">
+                  <Search className="w-5 h-5 text-muted-foreground/50" />
+                </div>
+                <p className="text-sm font-medium text-foreground/70 mb-1">
+                  No pages found
+                </p>
+                <p className="text-xs text-muted-foreground text-center max-w-[220px]">
+                  Try a different keyword like "mass", "baptism", "CCD", or "volunteer"
+                </p>
+              </div>
             )}
           </div>
         )}
