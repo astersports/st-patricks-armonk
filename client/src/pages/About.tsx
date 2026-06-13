@@ -99,45 +99,45 @@ export default function About() {
           <h2 className="reveal font-serif text-2xl sm:text-3xl font-bold text-foreground text-center mb-6 sm:mb-10">
             Get to Know Us
           </h2>
-          <div className="reveal grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto">
+          <div className="reveal grid grid-cols-3 gap-2 sm:gap-6 max-w-4xl mx-auto">
             <Link href="/staff">
               <Card className="hover-lift cursor-pointer h-full border-0 shadow-md">
-                <CardContent className="p-5 sm:p-8 text-center">
-                  <Users className="w-8 h-8 sm:w-10 sm:h-10 text-primary mx-auto mb-3 sm:mb-4" />
-                  <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Staff & Leadership</h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
+                <CardContent className="p-3 sm:p-8 text-center">
+                  <Users className="w-6 h-6 sm:w-10 sm:h-10 text-primary mx-auto mb-2 sm:mb-4" />
+                  <h3 className="font-semibold text-xs sm:text-lg mb-0.5 sm:mb-2">Staff</h3>
+                  <p className="text-[10px] sm:text-sm text-muted-foreground mb-1.5 sm:mb-4 hidden sm:block">
                     Meet our pastor, staff, and parish council members.
                   </p>
-                  <span className="text-sm text-primary font-medium inline-flex items-center gap-1">
-                    View Directory <ArrowRight className="w-3.5 h-3.5" />
+                  <span className="text-[10px] sm:text-sm text-primary font-medium inline-flex items-center gap-0.5">
+                    View <ArrowRight className="w-3 h-3" />
                   </span>
                 </CardContent>
               </Card>
             </Link>
             <Link href="/parish-registration">
               <Card className="hover-lift cursor-pointer h-full border-0 shadow-md">
-                <CardContent className="p-5 sm:p-8 text-center">
-                  <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-accent mx-auto mb-3 sm:mb-4" />
-                  <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">New Parishioners</h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
+                <CardContent className="p-3 sm:p-8 text-center">
+                  <Heart className="w-6 h-6 sm:w-10 sm:h-10 text-accent mx-auto mb-2 sm:mb-4" />
+                  <h3 className="font-semibold text-xs sm:text-lg mb-0.5 sm:mb-2">Register</h3>
+                  <p className="text-[10px] sm:text-sm text-muted-foreground mb-1.5 sm:mb-4 hidden sm:block">
                     Welcome! Register to become part of our parish family.
                   </p>
-                  <span className="text-sm text-primary font-medium inline-flex items-center gap-1">
-                    Register Now <ArrowRight className="w-3.5 h-3.5" />
+                  <span className="text-[10px] sm:text-sm text-primary font-medium inline-flex items-center gap-0.5">
+                    Join <ArrowRight className="w-3 h-3" />
                   </span>
                 </CardContent>
               </Card>
             </Link>
             <Link href="/contact">
               <Card className="hover-lift cursor-pointer h-full border-0 shadow-md">
-                <CardContent className="p-5 sm:p-8 text-center">
-                  <Church className="w-8 h-8 sm:w-10 sm:h-10 text-primary mx-auto mb-3 sm:mb-4" />
-                  <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Visit Us</h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
+                <CardContent className="p-3 sm:p-8 text-center">
+                  <Church className="w-6 h-6 sm:w-10 sm:h-10 text-primary mx-auto mb-2 sm:mb-4" />
+                  <h3 className="font-semibold text-xs sm:text-lg mb-0.5 sm:mb-2">Visit</h3>
+                  <p className="text-[10px] sm:text-sm text-muted-foreground mb-1.5 sm:mb-4 hidden sm:block">
                     29 Cox Ave, Armonk NY 10504. All are welcome.
                   </p>
-                  <span className="text-sm text-primary font-medium inline-flex items-center gap-1">
-                    Get Directions <ArrowRight className="w-3.5 h-3.5" />
+                  <span className="text-[10px] sm:text-sm text-primary font-medium inline-flex items-center gap-0.5">
+                    Map <ArrowRight className="w-3 h-3" />
                   </span>
                 </CardContent>
               </Card>

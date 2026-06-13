@@ -43,7 +43,7 @@ export default function FaithFormation() {
                 </div>
               </div>
 
-              <Accordion type="single" collapsible defaultValue="ccd" className="space-y-4">
+              <Accordion type="single" collapsible className="space-y-4">
                 {/* CCD */}
                 <AccordionItem
                   value="ccd"
@@ -218,39 +218,47 @@ export default function FaithFormation() {
             </div>
 
             {/* Sidebar */}
-            <div className="reveal space-y-5">
+            <div className="reveal space-y-3">
               <Card className="bg-primary text-white shadow-lg border-0">
-                <CardContent className="p-6">
-                  <Phone className="w-8 h-8 text-gold mb-3" />
-                  <h3 className="font-semibold text-lg mb-2">Religious Education Office</h3>
-                  <p className="text-white/80 text-sm mb-3">For registration and program inquiries:</p>
-                  <a href="tel:9145311759" className="font-bold text-lg hover:text-gold transition-colors">(914) 531-1759</a>
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <Phone className="w-5 h-5 text-gold shrink-0" />
+                    <div>
+                      <h3 className="font-semibold text-sm">Religious Education Office</h3>
+                      <p className="text-white/80 text-xs">For registration and program inquiries:</p>
+                    </div>
+                  </div>
+                  <a href="tel:9145311759" className="font-bold text-base mt-2 block hover:text-gold transition-colors">(914) 531-1759</a>
                 </CardContent>
               </Card>
 
               <Card className="hover-glow transition-all">
-                <CardContent className="p-6">
-                  <Calendar className="w-8 h-8 text-primary mb-3" />
-                  <h3 className="font-semibold text-lg mb-2">CCD Calendar</h3>
-                  <p className="text-muted-foreground text-sm mb-3">
-                    View the full Religious Education class schedule, key dates, and special events.
-                  </p>
-                  <Link href="/ccd-calendar" className="text-sm text-primary hover:underline font-medium">View CCD Calendar →</Link>
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <Calendar className="w-5 h-5 text-primary shrink-0" />
+                    <div>
+                      <h3 className="font-semibold text-sm">CCD Calendar</h3>
+                      <p className="text-muted-foreground text-xs">Class schedule, key dates, and special events.</p>
+                    </div>
+                  </div>
+                  <Link href="/ccd-calendar" className="text-xs text-primary hover:underline font-medium mt-2 block">View CCD Calendar →</Link>
                 </CardContent>
               </Card>
 
               <Card className="bg-accent/10 border-accent/20 hover-glow transition-all">
-                <CardContent className="p-6">
-                  <BookOpen className="w-8 h-8 text-accent mb-3" />
-                  <h3 className="font-semibold text-lg mb-2">FORMED</h3>
-                  <p className="text-muted-foreground text-sm mb-3">
-                    Free Catholic content — movies, shows, audiobooks, and more.
-                  </p>
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <BookOpen className="w-5 h-5 text-accent shrink-0" />
+                    <div>
+                      <h3 className="font-semibold text-sm">FORMED</h3>
+                      <p className="text-muted-foreground text-xs">Free Catholic content — movies, shows, audiobooks, and more.</p>
+                    </div>
+                  </div>
                   <a
                     href="https://stpatrickinarmonk.formed.org"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm font-medium text-primary hover:underline"
+                    className="text-xs font-medium text-primary hover:underline mt-2 block"
                   >
                     Visit FORMED →
                   </a>

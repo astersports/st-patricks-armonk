@@ -25,41 +25,57 @@ export default function NewHere() {
         <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-8 text-center">
           What to Expect at Mass
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
           <Card className="border-0 shadow-sm">
-            <CardContent className="p-6">
-              <Clock className="w-8 h-8 text-primary mb-3" />
-              <h3 className="font-semibold text-lg mb-2">Mass Lasts About an Hour</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                A typical Sunday Mass is approximately 60 minutes. It includes readings from Scripture, a homily (short sermon), prayers, and the Eucharist (Communion).
-              </p>
+            <CardContent className="p-3 sm:p-6">
+              <div className="flex items-start gap-3 sm:block">
+                <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-primary shrink-0 sm:mb-3" />
+                <div>
+                  <h3 className="font-semibold text-sm sm:text-lg mb-1 sm:mb-2">Mass Lasts About an Hour</h3>
+                  <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
+                    A typical Sunday Mass is approximately 60 minutes. It includes readings from Scripture, a homily, prayers, and the Eucharist.
+                  </p>
+                </div>
+              </div>
             </CardContent>
           </Card>
           <Card className="border-0 shadow-sm">
-            <CardContent className="p-6">
-              <Users className="w-8 h-8 text-primary mb-3" />
-              <h3 className="font-semibold text-lg mb-2">Come As You Are</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                There's no dress code. Most parishioners wear business casual, but you're welcome in whatever you're comfortable in. Families with young children are always welcome.
-              </p>
+            <CardContent className="p-3 sm:p-6">
+              <div className="flex items-start gap-3 sm:block">
+                <Users className="w-6 h-6 sm:w-8 sm:h-8 text-primary shrink-0 sm:mb-3" />
+                <div>
+                  <h3 className="font-semibold text-sm sm:text-lg mb-1 sm:mb-2">Come As You Are</h3>
+                  <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
+                    There's no dress code. Most parishioners wear business casual, but you're welcome in whatever you're comfortable in.
+                  </p>
+                </div>
+              </div>
             </CardContent>
           </Card>
           <Card className="border-0 shadow-sm">
-            <CardContent className="p-6">
-              <BookOpen className="w-8 h-8 text-primary mb-3" />
-              <h3 className="font-semibold text-lg mb-2">Follow Along Easily</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Missalettes (worship aids) are available in each pew with all the readings and responses. Don't worry about knowing when to stand, sit, or kneel — just follow along.
-              </p>
+            <CardContent className="p-3 sm:p-6">
+              <div className="flex items-start gap-3 sm:block">
+                <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 text-primary shrink-0 sm:mb-3" />
+                <div>
+                  <h3 className="font-semibold text-sm sm:text-lg mb-1 sm:mb-2">Follow Along Easily</h3>
+                  <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
+                    Missalettes are available in each pew with all readings and responses. Just follow along — no pressure.
+                  </p>
+                </div>
+              </div>
             </CardContent>
           </Card>
           <Card className="border-0 shadow-sm">
-            <CardContent className="p-6">
-              <Heart className="w-8 h-8 text-primary mb-3" />
-              <h3 className="font-semibold text-lg mb-2">Everyone Is Welcome</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                If you're not Catholic or haven't received Communion, you're welcome to come forward with arms crossed over your chest to receive a blessing. No pressure, no judgment.
-              </p>
+            <CardContent className="p-3 sm:p-6">
+              <div className="flex items-start gap-3 sm:block">
+                <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-primary shrink-0 sm:mb-3" />
+                <div>
+                  <h3 className="font-semibold text-sm sm:text-lg mb-1 sm:mb-2">Everyone Is Welcome</h3>
+                  <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
+                    Not Catholic? Come forward with arms crossed for a blessing. No pressure, no judgment.
+                  </p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>

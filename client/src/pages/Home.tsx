@@ -173,23 +173,19 @@ export default function Home() {
 
         {/* 4 Journey Cards */}
         <section className="reveal container pb-10 sm:pb-14">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-4">
             {journeyCards.map((card) => (
               <Link key={card.href} href={card.href}>
-                <Card className={`group cursor-pointer h-full border-0 shadow-sm border-l-4 ${card.borderColor} hover:shadow-md transition-all duration-200`}>
-                  <CardContent className="p-4 sm:p-5">
-                    <div className="flex items-start gap-3">
-                      <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${card.accent} flex items-center justify-center shrink-0`}>
-                        <card.icon className={`w-4.5 h-4.5 ${card.iconColor}`} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-foreground text-sm sm:text-base mb-0.5">{card.title}</h3>
-                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{card.description}</p>
-                        <span className="inline-flex items-center gap-1 text-xs font-medium text-primary mt-2 group-hover:gap-1.5 transition-all">
-                          {card.cta} <ArrowRight className="w-3 h-3" />
-                        </span>
-                      </div>
+                <Card className={`group cursor-pointer h-full border-0 shadow-sm border-l-3 ${card.borderColor} hover:shadow-md transition-all duration-200`}>
+                  <CardContent className="p-3 sm:p-5">
+                    <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br ${card.accent} flex items-center justify-center mb-2 sm:mb-3`}>
+                      <card.icon className={`w-4 h-4 sm:w-4.5 sm:h-4.5 ${card.iconColor}`} />
                     </div>
+                    <h3 className="font-semibold text-foreground text-xs sm:text-base mb-0.5">{card.title}</h3>
+                    <p className="text-[11px] sm:text-sm text-muted-foreground leading-snug line-clamp-2">{card.description}</p>
+                    <span className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-medium text-primary mt-1.5 sm:mt-2 group-hover:gap-1.5 transition-all">
+                      {card.cta} <ArrowRight className="w-3 h-3" />
+                    </span>
                   </CardContent>
                 </Card>
               </Link>
