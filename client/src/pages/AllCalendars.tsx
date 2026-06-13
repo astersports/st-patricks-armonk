@@ -2,8 +2,7 @@ import { useMemo, useState } from "react";
 import PageLayout from "@/components/PageLayout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, BookOpen, Dribbble, Clock, MapPin, ArrowLeft } from "lucide-react";
-import { Link } from "wouter";
+import { Calendar, BookOpen, Dribbble, Clock, MapPin, ArrowLeft, ChevronDown } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { format, isToday, isTomorrow, isThisWeek, startOfWeek, addWeeks, isSameWeek } from "date-fns";
 
@@ -14,6 +13,9 @@ const sourceConfig = {
   ccd: { label: "CCD", icon: BookOpen, color: "bg-green-100 text-green-700", border: "border-l-green-600" },
   cyo: { label: "CYO", icon: Dribbble, color: "bg-orange-100 text-orange-700", border: "border-l-orange-500" },
 };
+
+// Groups that should always be expanded (near-term)
+const ALWAYS_EXPANDED = new Set(["Today", "Tomorrow", "This Week", "Next Week"]);
 
 function getWeekGroup(date: Date): string {
   const now = new Date();
@@ -28,6 +30,7 @@ function getWeekGroup(date: Date): string {
 export default function AllCalendars() {
   const { data: allEvents, isLoading } = trpc.googleCalendar.allEvents.useQuery();
   const [activeSource, setActiveSource] = useState<SourceFilter>("all");
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
 
   const handleBack = () => {
     if (window.history.length > 1) {
@@ -35,6 +38,18 @@ export default function AllCalendars() {
     } else {
       window.location.href = "/";
     }
+  };
+
+  const toggleGroup = (label: string) => {
+    setExpandedGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(label)) {
+        next.delete(label);
+      } else {
+        next.add(label);
+      }
+      return next;
+    });
   };
 
   // Filter events by source
@@ -46,7 +61,7 @@ export default function AllCalendars() {
 
   // Group events by time period
   const groupedEvents = useMemo(() => {
-    const groups: { label: string; events: typeof filteredEvents }[] = [];
+    const groups: { label: string; events: typeof filteredEvents; isCollapsible: boolean }[] = [];
     let currentGroup = "";
 
     for (const event of filteredEvents) {
@@ -54,7 +69,7 @@ export default function AllCalendars() {
       const group = getWeekGroup(date);
       if (group !== currentGroup) {
         currentGroup = group;
-        groups.push({ label: group, events: [] });
+        groups.push({ label: group, events: [], isCollapsible: !ALWAYS_EXPANDED.has(group) });
       }
       groups[groups.length - 1].events.push(event);
     }
@@ -172,88 +187,119 @@ export default function AllCalendars() {
             </div>
           ) : (
             <div className="space-y-6">
-              {groupedEvents.map((group) => (
-                <div key={group.label}>
-                  {/* Week/Month Header */}
-                  <div className="sticky top-[52px] z-10 bg-background/95 backdrop-blur-sm py-2 mb-3 border-b border-border/50">
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                      {group.label}
-                    </h3>
-                  </div>
+              {groupedEvents.map((group) => {
+                const isExpanded = !group.isCollapsible || expandedGroups.has(group.label);
 
-                  {/* Events */}
-                  <div className="space-y-2">
-                    {group.events.map((event) => {
-                      const eventDate = new Date(event.startDate);
-                      const endDate = event.endDate ? new Date(event.endDate) : null;
-                      const config = sourceConfig[event.source as keyof typeof sourceConfig];
-
-                      return (
-                        <div
-                          key={event.id}
-                          className={`flex gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg border-l-[3px] ${config.border} bg-card hover:shadow-sm transition-shadow`}
-                        >
-                          {/* Date Badge */}
-                          <div className="flex flex-col items-center justify-center min-w-[44px] sm:min-w-[52px]">
-                            <span className="text-[10px] sm:text-xs font-medium uppercase text-muted-foreground leading-none">
-                              {format(eventDate, "EEE")}
-                            </span>
-                            <span className="text-xl sm:text-2xl font-bold text-foreground leading-tight">
-                              {format(eventDate, "d")}
-                            </span>
-                            <span className="text-[10px] sm:text-xs text-muted-foreground leading-none">
-                              {format(eventDate, "MMM")}
-                            </span>
-                          </div>
-
-                          {/* Event Content */}
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-start justify-between gap-2 mb-0.5">
-                              <h4 className="font-semibold text-sm sm:text-base text-foreground leading-tight">
-                                {event.title}
-                              </h4>
-                              <Badge
-                                variant="secondary"
-                                className={`text-[10px] px-1.5 py-0 shrink-0 ${config.color}`}
-                              >
-                                {config.label}
-                              </Badge>
-                            </div>
-
-                            <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs sm:text-sm text-muted-foreground">
-                              {!event.allDay && (
-                                <span className="flex items-center gap-1">
-                                  <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                                  {format(eventDate, "h:mm a")}
-                                  {endDate && ` – ${format(endDate, "h:mm a")}`}
-                                </span>
-                              )}
-                              {event.allDay && (
-                                <span className="flex items-center gap-1">
-                                  <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                                  All Day
-                                </span>
-                              )}
-                              {event.location && (
-                                <span className="flex items-center gap-1">
-                                  <MapPin className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                                  {event.location}
-                                </span>
-                              )}
-                            </div>
-
-                            {event.description && (
-                              <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-2">
-                                {event.description}
-                              </p>
-                            )}
-                          </div>
+                return (
+                  <div key={group.label}>
+                    {/* Group Header — clickable accordion for month groups */}
+                    {group.isCollapsible ? (
+                      <button
+                        onClick={() => toggleGroup(group.label)}
+                        className="w-full sticky top-[52px] z-10 bg-background/95 backdrop-blur-sm py-2.5 mb-3 border-b border-border/50 flex items-center justify-between group cursor-pointer"
+                      >
+                        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground group-hover:text-foreground transition-colors">
+                          {group.label}
+                        </h3>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[11px] text-muted-foreground/70">
+                            {group.events.length} event{group.events.length !== 1 ? "s" : ""}
+                          </span>
+                          <ChevronDown
+                            className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${
+                              isExpanded ? "rotate-180" : ""
+                            }`}
+                          />
                         </div>
-                      );
-                    })}
+                      </button>
+                    ) : (
+                      <div className="sticky top-[52px] z-10 bg-background/95 backdrop-blur-sm py-2 mb-3 border-b border-border/50">
+                        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                          {group.label}
+                        </h3>
+                      </div>
+                    )}
+
+                    {/* Events — animated expand/collapse for month groups */}
+                    <div
+                      className={`overflow-hidden transition-all duration-300 ease-out ${
+                        isExpanded ? "max-h-[5000px] opacity-100" : "max-h-0 opacity-0"
+                      }`}
+                    >
+                      <div className="space-y-2">
+                        {group.events.map((event) => {
+                          const eventDate = new Date(event.startDate);
+                          const endDate = event.endDate ? new Date(event.endDate) : null;
+                          const config = sourceConfig[event.source as keyof typeof sourceConfig];
+
+                          return (
+                            <div
+                              key={event.id}
+                              className={`flex gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg border-l-[3px] ${config.border} bg-card hover:shadow-sm transition-shadow`}
+                            >
+                              {/* Date Badge */}
+                              <div className="flex flex-col items-center justify-center min-w-[44px] sm:min-w-[52px]">
+                                <span className="text-[10px] sm:text-xs font-medium uppercase text-muted-foreground leading-none">
+                                  {format(eventDate, "EEE")}
+                                </span>
+                                <span className="text-xl sm:text-2xl font-bold text-foreground leading-tight">
+                                  {format(eventDate, "d")}
+                                </span>
+                                <span className="text-[10px] sm:text-xs text-muted-foreground leading-none">
+                                  {format(eventDate, "MMM")}
+                                </span>
+                              </div>
+
+                              {/* Event Content */}
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-start justify-between gap-2 mb-0.5">
+                                  <h4 className="font-semibold text-sm sm:text-base text-foreground leading-tight">
+                                    {event.title}
+                                  </h4>
+                                  <Badge
+                                    variant="secondary"
+                                    className={`text-[10px] px-1.5 py-0 shrink-0 ${config.color}`}
+                                  >
+                                    {config.label}
+                                  </Badge>
+                                </div>
+
+                                <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs sm:text-sm text-muted-foreground">
+                                  {!event.allDay && (
+                                    <span className="flex items-center gap-1">
+                                      <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                                      {format(eventDate, "h:mm a")}
+                                      {endDate && ` – ${format(endDate, "h:mm a")}`}
+                                    </span>
+                                  )}
+                                  {event.allDay && (
+                                    <span className="flex items-center gap-1">
+                                      <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                                      All Day
+                                    </span>
+                                  )}
+                                  {event.location && (
+                                    <span className="flex items-center gap-1">
+                                      <MapPin className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                                      {event.location}
+                                    </span>
+                                  )}
+                                </div>
+
+                                {event.description && (
+                                  <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-2">
+                                    {event.description}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

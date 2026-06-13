@@ -237,3 +237,4 @@
 - [x] Add filter buttons (All, Parish, CCD, CYO) to isolate by source with event counts
 - [x] Update mobile bottom nav, desktop nav, and mobile menu to point to /calendar
 - [x] Update homepage "Coming Up" section to link to combined calendar
+- [x] Make month groups (June 2026, July 2026, etc.) collapsible accordions on combined calendar; keep This Week/Next Week expanded
