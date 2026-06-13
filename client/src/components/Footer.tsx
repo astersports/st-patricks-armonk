@@ -102,7 +102,7 @@ export default function Footer() {
         {/* Powered by Aster Sports */}
         <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-center gap-2">
           <span className="text-xs text-white/40">powered by</span>
-          <a href="https://astersports.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:opacity-80 transition-opacity">
+          <a href="https://astersports.app" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:opacity-80 transition-opacity">
             <img src="/manus-storage/aster_sports_logo_66120ac0.png" alt="Aster Sports" className="h-5 w-5 object-contain" />
             <span className="text-xs font-medium text-gold/80 hover:text-gold transition-colors">Aster Sports</span>
           </a>
