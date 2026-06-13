@@ -1,10 +1,9 @@
 import PageLayout from "@/components/PageLayout";
+import CalendarNav from "@/components/CalendarNav";
 import TimelineFeed, { type TimelineEvent } from "@/components/TimelineFeed";
-import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Calendar, BookOpen, Dumbbell } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { trpc } from "@/lib/trpc";
-import { Link } from "wouter";
 
 export default function ParishCalendar() {
   const { data: icsEvents, isLoading: icsLoading } = trpc.googleCalendar.parishEvents.useQuery();
@@ -36,6 +35,9 @@ export default function ParishCalendar() {
 
   return (
     <PageLayout>
+      {/* Calendar Navigation Bar */}
+      <CalendarNav />
+
       {/* Page Header */}
       <section className="bg-gradient-to-b from-primary/5 to-background py-10 sm:py-12 border-b border-primary/10">
         <div className="container max-w-4xl">
@@ -70,36 +72,6 @@ export default function ParishCalendar() {
               emptyIcon={<Calendar className="w-10 h-10 text-primary/30 mx-auto" />}
             />
           )}
-
-          {/* Other Calendars */}
-          <div className="grid sm:grid-cols-2 gap-3 mt-10 pt-8 border-t border-border/50">
-            <Link href="/ccd-calendar">
-              <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer group">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center shrink-0">
-                    <BookOpen className="w-4.5 h-4.5 text-green-700" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">CCD Calendar</h3>
-                    <p className="text-xs text-muted-foreground">Religious Education schedule</p>
-                  </div>
-                </div>
-              </Card>
-            </Link>
-            <Link href="/cyo-basketball">
-              <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer group">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-orange-100 flex items-center justify-center shrink-0">
-                    <Dumbbell className="w-4.5 h-4.5 text-orange-700" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">CYO Practice</h3>
-                    <p className="text-xs text-muted-foreground">Basketball at St. Francis Hall</p>
-                  </div>
-                </div>
-              </Card>
-            </Link>
-          </div>
         </div>
       </section>
     </PageLayout>

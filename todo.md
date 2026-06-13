@@ -225,3 +225,8 @@
 - [x] Show 2-3 upcoming events in "Coming Up" section (not just one)
 - [x] Add calendar sub-navigation links below events (Parish Calendar, CYO, CCD)
 - [x] Redesign section label/layout so users can navigate to specific calendars without going back to homepage
+
+## Phase 22: Calendar Page Navigation (Back Button + Cross-Links)
+
+- [x] Add back button to all 3 calendar pages (Parish, CCD, CYO)
+- [x] Add calendar switcher tabs/links on each calendar page to jump between Parish, CCD, CYO

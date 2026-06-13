@@ -1,4 +1,5 @@
 import PageLayout from "@/components/PageLayout";
+import CalendarNav from "@/components/CalendarNav";
 import TimelineFeed, { type TimelineEvent } from "@/components/TimelineFeed";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +23,9 @@ export default function CyoBasketball() {
 
   return (
     <PageLayout>
+      {/* Calendar Navigation Bar */}
+      <CalendarNav />
+
       {/* Header */}
       <section className="bg-gradient-to-b from-orange-50 to-background py-10 sm:py-12 border-b border-orange-200/50">
         <div className="container max-w-4xl">

@@ -1,4 +1,5 @@
 import PageLayout from "@/components/PageLayout";
+import CalendarNav from "@/components/CalendarNav";
 import TimelineFeed, { type TimelineEvent } from "@/components/TimelineFeed";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -40,6 +41,9 @@ export default function CcdCalendar() {
 
   return (
     <PageLayout>
+      {/* Calendar Navigation Bar */}
+      <CalendarNav />
+
       {/* Header */}
       <section className="bg-gradient-to-b from-green-50 to-background py-10 sm:py-12 border-b border-primary/10">
         <div className="container max-w-4xl">
