@@ -218,3 +218,4 @@
 - [x] Correct CCD ICS URL to reled@stpatrickinarmonk.org
 - [x] Add CYO ICS URL (stpatrickinarmonk.org_5snqr5qqph11et22r6sk81k67g@group.calendar.google.com)
 - [x] Fix Home.tsx 'Latest News' highlight link to use correct route (/news-events)
+- [x] Change mobile journey cards from horizontal scroll to vertical stack (full-width, icon+text+arrow layout)

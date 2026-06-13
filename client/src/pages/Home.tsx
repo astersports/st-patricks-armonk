@@ -183,21 +183,40 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 4 Journey Cards — horizontal scroll on mobile, 2x2 grid on desktop */}
+        {/* 4 Journey Cards — stacked vertically on mobile, 4-col grid on desktop */}
         <section className="reveal pb-10 sm:pb-14">
-          {/* Mobile: horizontal scroll */}
-          <div className="sm:hidden overflow-x-auto scrollbar-hide px-4">
-            <div className="flex gap-3 w-max pb-2">
+          <div className="container">
+            {/* Mobile: vertical stack (full-width cards) */}
+            <div className="sm:hidden flex flex-col gap-3">
               {journeyCards.map((card) => (
                 <Link key={card.href} href={card.href}>
-                  <Card className={`group cursor-pointer w-[200px] border-0 shadow-sm border-l-3 ${card.borderColor} hover:shadow-md transition-all duration-200 shrink-0`}>
-                    <CardContent className="p-3.5">
-                      <div className={`w-8 h-8 rounded-lg ${card.iconBg} flex items-center justify-center mb-2`}>
-                        <card.icon className={`w-4 h-4 ${card.iconColor}`} />
+                  <Card className={`group cursor-pointer border-0 shadow-sm border-l-3 ${card.borderColor} hover:shadow-md transition-all duration-200`}>
+                    <CardContent className="p-4 flex items-center gap-4">
+                      <div className={`w-10 h-10 rounded-lg ${card.iconBg} flex items-center justify-center shrink-0`}>
+                        <card.icon className={`w-5 h-5 ${card.iconColor}`} />
                       </div>
-                      <h3 className="font-semibold text-foreground text-sm mb-0.5">{card.title}</h3>
-                      <p className="text-[11px] text-muted-foreground leading-snug line-clamp-2">{card.description}</p>
-                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-primary mt-2 group-hover:gap-1.5 transition-all">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-foreground text-sm">{card.title}</h3>
+                        <p className="text-xs text-muted-foreground leading-snug">{card.description}</p>
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+            {/* Desktop: 4-col grid */}
+            <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {journeyCards.map((card) => (
+                <Link key={card.href} href={card.href}>
+                  <Card className={`group cursor-pointer h-full border-0 shadow-sm border-l-3 ${card.borderColor} hover:shadow-md transition-all duration-200`}>
+                    <CardContent className="p-5">
+                      <div className={`w-9 h-9 rounded-lg ${card.iconBg} flex items-center justify-center mb-3`}>
+                        <card.icon className={`w-4.5 h-4.5 ${card.iconColor}`} />
+                      </div>
+                      <h3 className="font-semibold text-foreground text-base mb-1">{card.title}</h3>
+                      <p className="text-sm text-muted-foreground leading-snug line-clamp-2">{card.description}</p>
+                      <span className="inline-flex items-center gap-1 text-xs font-medium text-primary mt-2 group-hover:gap-1.5 transition-all">
                         {card.cta} <ArrowRight className="w-3 h-3" />
                       </span>
                     </CardContent>
@@ -205,25 +224,6 @@ export default function Home() {
                 </Link>
               ))}
             </div>
-          </div>
-          {/* Desktop: 2x2 grid */}
-          <div className="hidden sm:grid container grid-cols-2 lg:grid-cols-4 gap-4">
-            {journeyCards.map((card) => (
-              <Link key={card.href} href={card.href}>
-                <Card className={`group cursor-pointer h-full border-0 shadow-sm border-l-3 ${card.borderColor} hover:shadow-md transition-all duration-200`}>
-                  <CardContent className="p-5">
-                    <div className={`w-9 h-9 rounded-lg ${card.iconBg} flex items-center justify-center mb-3`}>
-                      <card.icon className={`w-4.5 h-4.5 ${card.iconColor}`} />
-                    </div>
-                    <h3 className="font-semibold text-foreground text-base mb-1">{card.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-snug line-clamp-2">{card.description}</p>
-                    <span className="inline-flex items-center gap-1 text-xs font-medium text-primary mt-2 group-hover:gap-1.5 transition-all">
-                      {card.cta} <ArrowRight className="w-3 h-3" />
-                    </span>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
           </div>
         </section>
 
