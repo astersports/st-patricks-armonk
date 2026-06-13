@@ -67,6 +67,10 @@ const sacraments = [
         <p className="text-sm text-muted-foreground leading-relaxed mb-4">
           Contact the parish office at <a href="tel:9142739724" className="text-primary hover:underline">(914) 273-9724</a> to schedule your child's Baptism. Please call at least two months in advance.
         </p>
+        <h4 className="font-semibold text-foreground mb-2">Adult Baptism</h4>
+        <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+          Adults seeking Baptism are welcomed through our <a href="/faith-formation" className="text-primary hover:underline">RCIA program</a> (Rite of Christian Initiation of Adults). RCIA prepares unbaptized adults to receive Baptism, Confirmation, and First Eucharist at the Easter Vigil. Contact the parish office or see our Faith Formation page for details.
+        </p>
         <div className="flex flex-wrap gap-3">
           <a href="/baptism-form"><Button size="sm" className="gap-2"><FileText className="w-3.5 h-3.5" /> Register for Baptism</Button></a>
           <a href="/sponsor-form"><Button size="sm" variant="outline" className="gap-2"><FileText className="w-3.5 h-3.5" /> Sponsor Certificate</Button></a>
@@ -135,6 +139,10 @@ const sacraments = [
         </ul>
         <p className="text-sm text-muted-foreground leading-relaxed mb-4">
           Confirmation is typically celebrated in the spring. Check the <a href="/ccd-calendar" className="text-primary hover:underline">CCD Calendar</a> for the latest schedule.
+        </p>
+        <h4 className="font-semibold text-foreground mb-2">Adult Confirmation</h4>
+        <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+          Adults who were baptized Catholic but never confirmed may prepare for Confirmation through our <a href="/faith-formation" className="text-primary hover:underline">RCIA program</a> or through individual preparation with a priest. Contact the parish office at <a href="tel:9142739724" className="text-primary hover:underline">(914) 273-9724</a> to discuss your situation — we will find the right path for you.
         </p>
         <div className="flex flex-wrap gap-3">
           <a href="/sponsor-form"><Button size="sm" className="gap-2"><FileText className="w-3.5 h-3.5" /> Sponsor Certificate Form</Button></a>

@@ -100,3 +100,16 @@
 - [x] Update all references across site (nav, homepage, parish calendar page)
 - [x] Verify email subscription form works end-to-end (system is built and functional, awaiting first subscribers)
 - [x] Remove subscribe/open-in-google buttons from both calendar pages (view-only)
+
+## Phase 9: Deep Scan Gap Fill (All Digital, No Paper Forms)
+- [x] CCD Permission & Release digital form (bus transport, early dismissal, photo release, medical/allergy, authorized pickup)
+- [x] Parish Registration admin tab (view submissions in Admin dashboard)
+- [x] CCD Permissions admin tab (view submissions in Admin dashboard)
+- [x] Adult Baptism info section on Sacraments page
+- [x] Adult Confirmation info section on Sacraments page
+- [x] Blaze ministry section (7th/8th grade girls, under Faith Formation)
+- [x] Individual ministry descriptions (Project Embrace, FIAT, Share & Care, Stay Connected to the Vine)
+- [x] Church Links section (USCCB Daily Readings, Vatican, Archdiocese, FORMED, Flocknote in footer)
+- [x] First Holy Communion section added to Sacraments page
+- [x] All calendars switched to agenda/schedule view (not grid)
+- [x] CYO calendar uses correct dedicated feed

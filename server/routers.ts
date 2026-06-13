@@ -784,6 +784,67 @@ export const appRouter = router({
       return { success: true };
     }),
   }),
+
+  // CCD Permission & Release Forms
+  ccdPermissions: router({
+    submit: publicProcedure.input(z.object({
+      childFirstName: z.string().min(1),
+      childLastName: z.string().min(1),
+      childGrade: z.string().min(1),
+      parentName: z.string().min(1),
+      parentPhone: z.string().min(1),
+      parentEmail: z.string().email(),
+      needsBusTransport: z.boolean(),
+      busPickupLocation: z.string().optional(),
+      busDropoffLocation: z.string().optional(),
+      busNotes: z.string().optional(),
+      earlyDismissalAuthorized: z.boolean(),
+      earlyDismissalReason: z.string().optional(),
+      earlyDismissalDates: z.string().optional(),
+      authorizedPickup1Name: z.string().min(1),
+      authorizedPickup1Phone: z.string().min(1),
+      authorizedPickup1Relation: z.string().min(1),
+      authorizedPickup2Name: z.string().optional(),
+      authorizedPickup2Phone: z.string().optional(),
+      authorizedPickup2Relation: z.string().optional(),
+      authorizedPickup3Name: z.string().optional(),
+      authorizedPickup3Phone: z.string().optional(),
+      authorizedPickup3Relation: z.string().optional(),
+      allergies: z.string().optional(),
+      medications: z.string().optional(),
+      medicalConditions: z.string().optional(),
+      doctorName: z.string().optional(),
+      doctorPhone: z.string().optional(),
+      insuranceProvider: z.string().optional(),
+      insurancePolicyNumber: z.string().optional(),
+      emergencyContactName: z.string().min(1),
+      emergencyContactPhone: z.string().min(1),
+      emergencyContactRelation: z.string().min(1),
+      photoReleaseConsent: z.boolean(),
+      medicalReleaseConsent: z.boolean(),
+      parentSignature: z.string().min(1),
+      signatureDate: z.string().min(1),
+      schoolYear: z.string().min(1),
+    })).mutation(async ({ input }) => {
+      await db.createCcdPermission(input as any);
+      notifyOwner({
+        title: "New CCD Permission Form Submitted",
+        content: `${input.parentName} submitted a CCD Permission & Release form for ${input.childFirstName} ${input.childLastName} (Grade ${input.childGrade}). Bus: ${input.needsBusTransport ? "Yes" : "No"}, Photo Release: ${input.photoReleaseConsent ? "Yes" : "No"}.`,
+      }).catch(() => {});
+      return { success: true };
+    }),
+    list: adminProcedure.query(async () => {
+      return db.getCcdPermissions();
+    }),
+    updateStatus: adminProcedure.input(z.object({
+      id: z.number(),
+      status: z.enum(["pending", "approved", "flagged"]),
+      adminNotes: z.string().optional(),
+    })).mutation(async ({ input }) => {
+      await db.updateCcdPermissionStatus(input.id, input.status, input.adminNotes);
+      return { success: true };
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

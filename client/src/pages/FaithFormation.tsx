@@ -178,6 +178,42 @@ export default function FaithFormation() {
                     </p>
                   </AccordionContent>
                 </AccordionItem>
+
+                {/* Blaze */}
+                <AccordionItem
+                  value="blaze"
+                  className="reveal border border-border/60 rounded-xl overflow-hidden shadow-sm hover-glow transition-all border-l-4 border-l-[oklch(0.65_0.2_25)]"
+                >
+                  <AccordionTrigger className="px-4 sm:px-6 py-3 sm:py-5 hover:no-underline">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                      <div className="bg-primary/10 p-2 sm:p-2.5 rounded-lg sm:rounded-xl shrink-0">
+                        <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                      </div>
+                      <div className="text-left">
+                        <div className="flex items-center gap-2">
+                          <span className="font-serif text-base sm:text-lg font-semibold text-foreground">Blaze</span>
+                          <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-primary/30 text-primary">7th & 8th Grade Girls</Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-0.5">Walking With Purpose youth ministry for young women</p>
+                      </div>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-4 sm:px-6 pb-4 sm:pb-6">
+                    <p className="text-muted-foreground leading-relaxed mb-3">
+                      Blaze is the youth ministry arm of Walking With Purpose, designed specifically for 7th and 8th grade girls. Through engaging Bible studies, small group discussions, and fellowship, young women grow in their Catholic faith and build lasting friendships rooted in Christ.
+                    </p>
+                    <h4 className="font-semibold text-foreground mb-2">What to Expect</h4>
+                    <ul className="space-y-1.5 text-sm text-muted-foreground mb-4 ml-4">
+                      <li className="flex gap-2"><span className="text-primary">&bull;</span>Age-appropriate Bible study curriculum</li>
+                      <li className="flex gap-2"><span className="text-primary">&bull;</span>Small group discussions led by adult mentors</li>
+                      <li className="flex gap-2"><span className="text-primary">&bull;</span>Fellowship activities and service projects</li>
+                      <li className="flex gap-2"><span className="text-primary">&bull;</span>Meets during the school year (typically bi-weekly)</li>
+                    </ul>
+                    <p className="text-sm text-muted-foreground">
+                      For more information or to register your daughter, contact the Religious Education Office at <a href="tel:9142739724" className="text-primary hover:underline">(914) 273-9724</a>.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
               </Accordion>
             </div>
 

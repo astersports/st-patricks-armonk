@@ -63,6 +63,29 @@ const ministries = [
   },
 ];
 
+const outreachPrograms = [
+  {
+    title: "Project Embrace",
+    description: "A parish outreach ministry that collects and distributes clothing, household items, and necessities to families in need throughout Westchester County. Drop-off bins are located in the church vestibule.",
+    contact: "Lori Schiliro",
+  },
+  {
+    title: "FIAT (Faith In Action Task Force)",
+    description: "Parishioners putting faith into action through hands-on service projects: meal preparation for shelters, home repairs for elderly neighbors, and community clean-up initiatives.",
+    contact: "Parish Office",
+  },
+  {
+    title: "Share & Care",
+    description: "Provides meals, transportation, and practical support to parishioners experiencing illness, bereavement, or other life challenges. A network of volunteers ready to help when you need it most.",
+    contact: "Parish Office",
+  },
+  {
+    title: "Stay Connected to the Vine",
+    description: "A ministry of connection that reaches out to homebound parishioners, those in nursing homes, and anyone who may feel isolated — through visits, phone calls, and cards.",
+    contact: "Parish Office",
+  },
+];
+
 export default function Ministries() {
   const revealRef = useReveal();
 
@@ -143,6 +166,26 @@ export default function Ministries() {
                 </Card>
               ))}
             </div>
+            {/* Outreach Programs */}
+            <div className="mt-10 sm:mt-14">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-1 h-5 sm:h-6 bg-gold rounded-full" />
+                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Charitable Outreach</h2>
+              </div>
+              <p className="text-muted-foreground mb-5 sm:mb-8 ml-4 text-sm sm:text-base">Putting our faith into action through service to those in need.</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                {outreachPrograms.map((program) => (
+                  <Card key={program.title} className="border-l-4 border-l-gold/60 hover-glow transition-all">
+                    <CardContent className="p-4 sm:p-6">
+                      <h3 className="font-semibold text-sm sm:text-lg mb-1 sm:mb-2">{program.title}</h3>
+                      <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">{program.description}</p>
+                      <p className="text-xs text-primary font-medium mt-2">Contact: {program.contact}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
             <Card className="mt-8 bg-primary/5 border-primary/20">
               <CardContent className="p-6 text-center">
                 <p className="text-foreground">

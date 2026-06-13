@@ -35,6 +35,7 @@ const navLinks: NavItem[] = [
       { href: "/faith-formation", label: "Overview" },
       { href: "/ccd-calendar", label: "CCD Calendar" },
       { href: "/ccd-registration", label: "CCD Registration" },
+      { href: "/ccd-permissions", label: "CCD Permission Forms" },
       { href: "/teen-life", label: "Teen Life" },
     ],
   },

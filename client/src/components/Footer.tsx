@@ -80,6 +80,9 @@ export default function Footer() {
                 <a href="https://archny.org" target="_blank" rel="noopener noreferrer" className="text-sm text-white/80 hover:text-gold transition-colors">Archdiocese of New York</a>
                 <a href="https://stpatrickinarmonk.formed.org" target="_blank" rel="noopener noreferrer" className="text-sm text-white/80 hover:text-gold transition-colors">FORMED</a>
                 <a href="https://stpatarmonk.flocknote.com/home" target="_blank" rel="noopener noreferrer" className="text-sm text-white/80 hover:text-gold transition-colors">Flocknote</a>
+                <a href="https://www.usccb.org/bible/readings" target="_blank" rel="noopener noreferrer" className="text-sm text-white/80 hover:text-gold transition-colors">Daily Readings (USCCB)</a>
+                <a href="https://www.vatican.va" target="_blank" rel="noopener noreferrer" className="text-sm text-white/80 hover:text-gold transition-colors">The Vatican</a>
+                <a href="https://thegoodnewsroom.org" target="_blank" rel="noopener noreferrer" className="text-sm text-white/80 hover:text-gold transition-colors">Good Newsroom</a>
               </nav>
             </div>
           </div>

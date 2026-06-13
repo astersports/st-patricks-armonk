@@ -420,3 +420,62 @@ export const parishRegistrations = mysqlTable("parish_registrations", {
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 export type ParishRegistration = typeof parishRegistrations.$inferSelect;
+
+// CCD Permission & Release Forms (bus transport, early dismissal, photo release, medical, authorized pickup)
+export const ccdPermissions = mysqlTable("ccd_permissions", {
+  id: int("id").autoincrement().primaryKey(),
+  // Link to CCD registration
+  ccdRegistrationId: int("ccdRegistrationId"),
+  // Child info
+  childFirstName: varchar("childFirstName", { length: 200 }).notNull(),
+  childLastName: varchar("childLastName", { length: 200 }).notNull(),
+  childGrade: varchar("childGrade", { length: 20 }).notNull(),
+  // Parent/Guardian info
+  parentName: varchar("parentName", { length: 300 }).notNull(),
+  parentPhone: varchar("parentPhone", { length: 30 }).notNull(),
+  parentEmail: varchar("parentEmail", { length: 320 }).notNull(),
+  // Bus Transportation
+  needsBusTransport: boolean("needsBusTransport").default(false).notNull(),
+  busPickupLocation: varchar("busPickupLocation", { length: 500 }),
+  busDropoffLocation: varchar("busDropoffLocation", { length: 500 }),
+  busNotes: text("busNotes"),
+  // Early Dismissal
+  earlyDismissalAuthorized: boolean("earlyDismissalAuthorized").default(false).notNull(),
+  earlyDismissalReason: text("earlyDismissalReason"),
+  earlyDismissalDates: text("earlyDismissalDates"),
+  // Authorized Pickup Persons
+  authorizedPickup1Name: varchar("authorizedPickup1Name", { length: 300 }).notNull(),
+  authorizedPickup1Phone: varchar("authorizedPickup1Phone", { length: 30 }).notNull(),
+  authorizedPickup1Relation: varchar("authorizedPickup1Relation", { length: 100 }).notNull(),
+  authorizedPickup2Name: varchar("authorizedPickup2Name", { length: 300 }),
+  authorizedPickup2Phone: varchar("authorizedPickup2Phone", { length: 30 }),
+  authorizedPickup2Relation: varchar("authorizedPickup2Relation", { length: 100 }),
+  authorizedPickup3Name: varchar("authorizedPickup3Name", { length: 300 }),
+  authorizedPickup3Phone: varchar("authorizedPickup3Phone", { length: 30 }),
+  authorizedPickup3Relation: varchar("authorizedPickup3Relation", { length: 100 }),
+  // Medical/Allergy Information
+  allergies: text("allergies"),
+  medications: text("medications"),
+  medicalConditions: text("medicalConditions"),
+  doctorName: varchar("doctorName", { length: 300 }),
+  doctorPhone: varchar("doctorPhone", { length: 30 }),
+  insuranceProvider: varchar("insuranceProvider", { length: 300 }),
+  insurancePolicyNumber: varchar("insurancePolicyNumber", { length: 100 }),
+  // Emergency Contact (different from parent)
+  emergencyContactName: varchar("emergencyContactName", { length: 300 }).notNull(),
+  emergencyContactPhone: varchar("emergencyContactPhone", { length: 30 }).notNull(),
+  emergencyContactRelation: varchar("emergencyContactRelation", { length: 100 }).notNull(),
+  // Photo/Video Release
+  photoReleaseConsent: boolean("photoReleaseConsent").default(false).notNull(),
+  // Consent & Signature
+  medicalReleaseConsent: boolean("medicalReleaseConsent").default(false).notNull(),
+  parentSignature: varchar("parentSignature", { length: 300 }).notNull(),
+  signatureDate: varchar("signatureDate", { length: 20 }).notNull(),
+  // Status
+  status: mysqlEnum("status", ["pending", "approved", "flagged"]).default("pending").notNull(),
+  adminNotes: text("adminNotes"),
+  schoolYear: varchar("schoolYear", { length: 20 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CcdPermission = typeof ccdPermissions.$inferSelect;

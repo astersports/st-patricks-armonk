@@ -1,7 +1,7 @@
 import { eq, desc, and, gte, lte, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, newsPosts, bulletins, events, emailSubscriptions, ccdRegistrations, cyoTeams, cyoGames, volunteerOpportunities, volunteerSignups, ccdEvents, parishDocuments, baptismRegistrations, sponsorCertificates, marriageInquiries, funeralPrePlanning, teenLifeRegistrations, parishRegistrations } from "../drizzle/schema";
-import type { InsertNewsPost, InsertBulletin, InsertEvent, InsertEmailSubscription, InsertCcdRegistration, InsertCyoTeam, InsertCyoGame, InsertVolunteerOpportunity, InsertVolunteerSignup, InsertCcdEvent, InsertParishDocument, BaptismRegistration, SponsorCertificate, MarriageInquiry, FuneralPrePlanning, TeenLifeRegistration, ParishRegistration } from "../drizzle/schema";
+import { InsertUser, users, newsPosts, bulletins, events, emailSubscriptions, ccdRegistrations, cyoTeams, cyoGames, volunteerOpportunities, volunteerSignups, ccdEvents, parishDocuments, baptismRegistrations, sponsorCertificates, marriageInquiries, funeralPrePlanning, teenLifeRegistrations, parishRegistrations, ccdPermissions } from "../drizzle/schema";
+import type { InsertNewsPost, InsertBulletin, InsertEvent, InsertEmailSubscription, InsertCcdRegistration, InsertCyoTeam, InsertCyoGame, InsertVolunteerOpportunity, InsertVolunteerSignup, InsertCcdEvent, InsertParishDocument, BaptismRegistration, SponsorCertificate, MarriageInquiry, FuneralPrePlanning, TeenLifeRegistration, ParishRegistration, CcdPermission } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -657,4 +657,25 @@ export async function updateParishRegistrationStatus(id: number, status: string,
   const updateData: Record<string, unknown> = { status };
   if (adminNotes !== undefined) updateData.adminNotes = adminNotes;
   await db.update(parishRegistrations).set(updateData).where(eq(parishRegistrations.id, id));
+}
+
+// ===== CCD PERMISSIONS =====
+
+export async function createCcdPermission(data: Omit<CcdPermission, "id" | "createdAt" | "updatedAt" | "status" | "adminNotes">) {
+  const db = await getDb();
+  const result = await db!.insert(ccdPermissions).values(data as any);
+  return result[0].insertId;
+}
+
+export async function getCcdPermissions(schoolYear?: string) {
+  const db = await getDb();
+  if (schoolYear) {
+    return db!.select().from(ccdPermissions).where(eq(ccdPermissions.schoolYear, schoolYear)).orderBy(desc(ccdPermissions.createdAt));
+  }
+  return db!.select().from(ccdPermissions).orderBy(desc(ccdPermissions.createdAt));
+}
+
+export async function updateCcdPermissionStatus(id: number, status: "pending" | "approved" | "flagged", adminNotes?: string) {
+  const db = await getDb();
+  await db!.update(ccdPermissions).set({ status, adminNotes: adminNotes || undefined }).where(eq(ccdPermissions.id, id));
 }

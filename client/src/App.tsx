@@ -30,6 +30,7 @@ import FuneralForm from "./pages/FuneralForm";
 import About from "./pages/About";
 import Staff from "./pages/Staff";
 import ParishRegistration from "./pages/ParishRegistration";
+import CcdPermissions from "./pages/CcdPermissions";
 
 function Router() {
   return (
@@ -46,6 +47,7 @@ function Router() {
       <Route path="/faith-formation" component={FaithFormation} />
       <Route path="/ccd-calendar" component={CcdCalendar} />
       <Route path="/ccd-registration" component={CcdRegistration} />
+      <Route path="/ccd-permissions" component={CcdPermissions} />
       <Route path="/cyo-basketball" component={CyoBasketball} />
       <Route path="/teen-life" component={TeenLife} />
       <Route path="/ministries" component={Ministries} />
