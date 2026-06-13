@@ -67,7 +67,7 @@ export default function Footer() {
           </p>
           <a href="https://www.astersports.io" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 opacity-50 hover:opacity-80 transition-opacity">
             <span className="text-[10px] text-white/60">powered by</span>
-            <img src="/manus-storage/aster_sports_logo_transparent_2ea5247b.png" alt="Aster Sports" className="h-3.5 w-3.5 object-contain" />
+            <img src="/manus-storage/aster_logo_clean_854bf8b0.png" alt="Aster Sports" className="h-3.5 w-3.5 object-contain" />
             <span className="text-[10px] font-medium text-gold/80">Aster Sports</span>
           </a>
         </div>
