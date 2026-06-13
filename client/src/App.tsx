@@ -22,6 +22,7 @@ import Volunteer from "./pages/Volunteer";
 import CcdUnsubscribe from "./pages/CcdUnsubscribe";
 import Sacraments from "./pages/Sacraments";
 import ParishCalendar from "./pages/ParishCalendar";
+import AllCalendars from "./pages/AllCalendars";
 import TeenLife from "./pages/TeenLife";
 import FormsDocuments from "./pages/FormsDocuments";
 import BaptismForm from "./pages/BaptismForm";
@@ -48,6 +49,7 @@ function Router() {
         <Route path="/sacraments" component={Sacraments} />
         <Route path="/news-events" component={NewsEvents} />
         <Route path="/bulletins" component={Bulletins} />
+        <Route path="/calendar" component={AllCalendars} />
         <Route path="/parish-calendar" component={ParishCalendar} />
         <Route path="/faith-formation" component={FaithFormation} />
         <Route path="/ccd-calendar" component={CcdCalendar} />

@@ -150,7 +150,7 @@ export default function Home() {
                 {upcomingEvents && upcomingEvents.length > 0 ? (
                   <div className="divide-y divide-border/30">
                     {upcomingEvents.map((event, idx) => (
-                      <Link key={idx} href="/parish-calendar" className="group">
+                      <Link key={idx} href="/calendar" className="group">
                         <div className="px-4 sm:px-5 py-3 flex items-center gap-3 hover:bg-primary/[0.02] transition-colors">
                           <div className="w-10 h-10 rounded-lg bg-gold/10 flex flex-col items-center justify-center shrink-0">
                             <span className="text-[10px] font-medium text-gold uppercase leading-none">
@@ -175,13 +175,13 @@ export default function Home() {
                     ))}
                   </div>
                 ) : (
-                  <Link href="/parish-calendar" className="group">
+                  <Link href="/calendar" className="group">
                     <div className="px-4 sm:px-5 py-3 flex items-center gap-3 hover:bg-primary/[0.02] transition-colors">
                       <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center shrink-0">
                         <Calendar className="w-5 h-5 text-gold" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-foreground text-sm">View Parish Calendar</p>
+                        <p className="font-semibold text-foreground text-sm">View Full Calendar</p>
                         <p className="text-xs text-muted-foreground">All upcoming events and activities</p>
                       </div>
                       <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:text-primary transition-colors shrink-0" />

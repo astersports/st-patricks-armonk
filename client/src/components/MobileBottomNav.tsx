@@ -3,7 +3,7 @@ import { Clock, Calendar, Heart, MoreHorizontal } from "lucide-react";
 
 const tabs = [
   { href: "/mass-times", label: "Mass Times", icon: Clock },
-  { href: "/parish-calendar", label: "Calendar", icon: Calendar },
+  { href: "/calendar", label: "Calendar", icon: Calendar },
   { href: "/giving", label: "Give", icon: Heart },
   { href: "/__more__", label: "More", icon: MoreHorizontal },
 ];

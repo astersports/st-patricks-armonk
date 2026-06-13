@@ -46,7 +46,7 @@ const navLinks: NavItem[] = [
     label: "Parish Life",
     children: [
       { href: "/news-events", label: "News & Announcements" },
-      { href: "/parish-calendar", label: "Parish Calendar" },
+      { href: "/calendar", label: "Calendar (All Events)" },
       { href: "/bulletins", label: "Weekly Bulletins" },
       { href: "/cyo-basketball", label: "CYO Practice Schedule" },
       { href: "/ministries", label: "Ministries & Devotions" },
@@ -66,7 +66,7 @@ const mobileMenuItems = [
   { href: "/ccd-calendar", label: "CCD Calendar", icon: Calendar },
   { href: "/ccd-registration", label: "CCD Registration", icon: FileText },
   { href: "/news-events", label: "News & Events", icon: Newspaper },
-  { href: "/parish-calendar", label: "Parish Calendar", icon: Calendar },
+  { href: "/calendar", label: "Calendar", icon: Calendar },
   { href: "/bulletins", label: "Weekly Bulletins", icon: BookOpen },
   { href: "/ministries", label: "Ministries & Devotions", icon: HandHeart },
   { href: "/giving", label: "Give Online", icon: Heart },

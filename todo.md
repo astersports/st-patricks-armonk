@@ -230,3 +230,10 @@
 
 - [x] Add back button to all 3 calendar pages (Parish, CCD, CYO)
 - [x] Add calendar switcher tabs/links on each calendar page to jump between Parish, CCD, CYO
+
+## Phase 23: Combined Calendar View with Source Filters
+
+- [x] Create combined calendar page merging Parish + CCD + CYO events at /calendar
+- [x] Add filter buttons (All, Parish, CCD, CYO) to isolate by source with event counts
+- [x] Update mobile bottom nav, desktop nav, and mobile menu to point to /calendar
+- [x] Update homepage "Coming Up" section to link to combined calendar

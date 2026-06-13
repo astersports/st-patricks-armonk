@@ -250,6 +250,42 @@ export const appRouter = router({
       );
       return filtered.slice(0, 3);
     }),
+    allEvents: publicProcedure.query(async () => {
+      const { parseICSFeed, PARISH_CALENDAR_ICS, CCD_CALENDAR_ICS, CYO_CALENDAR_ICS } = await import("./icsParser");
+      const [parish, ccd, cyo, dbParish, dbCcd] = await Promise.all([
+        parseICSFeed(PARISH_CALENDAR_ICS, { daysAhead: 90, maxEvents: 50 }),
+        parseICSFeed(CCD_CALENDAR_ICS, { daysAhead: 90, maxEvents: 50 }),
+        parseICSFeed(CYO_CALENDAR_ICS, { daysAhead: 90, maxEvents: 50 }),
+        db.getUpcomingEvents(),
+        db.getCcdEvents("2026-2027"),
+      ]);
+      const all = [
+        ...parish.map(e => ({ ...e, source: "parish" as const })),
+        ...ccd.map(e => ({ ...e, source: "ccd" as const })),
+        ...cyo.map(e => ({ ...e, source: "cyo" as const })),
+        ...(dbParish || []).map(e => ({
+          id: `db-${e.id}`,
+          title: e.title,
+          description: e.description,
+          location: e.location,
+          startDate: e.startDate,
+          endDate: e.endDate,
+          allDay: e.allDay,
+          source: "parish" as const,
+        })),
+        ...(dbCcd || []).map((e: any) => ({
+          id: `ccd-db-${e.id}`,
+          title: e.title,
+          description: e.description,
+          location: e.location,
+          startDate: e.eventDate,
+          endDate: e.endDate,
+          allDay: false,
+          source: "ccd" as const,
+        })),
+      ].sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+      return all;
+    }),
   }),
 
   // ===== EMAIL SUBSCRIPTIONS =====
