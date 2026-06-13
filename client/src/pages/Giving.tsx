@@ -107,11 +107,21 @@ export default function Giving() {
           </Card>
 
           {/* Cardinals Appeal */}
-          <Card className="reveal mt-5 sm:mt-8 shadow-sm">
+          <Card className="reveal mt-5 sm:mt-8 border-t-4 border-t-[#c41e3a] shadow-sm">
             <CardContent className="p-5 sm:p-8">
-              <h3 className="font-serif text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-center">2026 Cardinal's Appeal</h3>
+              <h3 className="font-serif text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-center text-[#c41e3a]">2026 Cardinals Appeal</h3>
+              <div className="flex flex-col items-center">
+                <div className="bg-white p-4 rounded-xl shadow-sm border mb-4">
+                  <img
+                    src="/manus-storage/cardinals_appeal_qr_1b687357.png"
+                    alt="2026 Cardinals Appeal QR Code"
+                    className="w-40 h-40 sm:w-48 sm:h-48 object-contain"
+                  />
+                </div>
+                <p className="text-sm text-muted-foreground mb-4 text-center">Scan to donate</p>
+              </div>
               <p className="text-muted-foreground text-center max-w-2xl mx-auto leading-relaxed">
-                The Cardinal's Appeal exists to fund the vast educational, charitable, and pastoral outreach 
+                The Cardinals Appeal exists to fund the vast educational, charitable and pastoral outreach 
                 of our diocese, all of which serve to make Christ known to the world.
               </p>
             </CardContent>

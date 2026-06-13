@@ -136,3 +136,4 @@
 ## Phase 11: Powered by Aster Sports Attribution
 
 - [x] Add "Powered by Aster Sports" with logo at the very bottom of the footer (like eCatholic on original site)
+- [x] Add 2026 Cardinals Appeal section with QR code on Giving page
