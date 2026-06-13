@@ -137,7 +137,7 @@ export default function Staff() {
 
       <div ref={revealRef}>
         <section className="container py-8 sm:py-12 md:py-16 max-w-4xl">
-          <Accordion type="multiple" defaultValue={["clergy", "staff", "leadership"]} className="space-y-3">
+          <Accordion type="multiple" defaultValue={[]} className="space-y-3">
             {/* Clergy */}
             <AccordionItem value="clergy" className="reveal border rounded-lg px-4 sm:px-6 bg-card shadow-sm">
               <AccordionTrigger className="py-4 hover:no-underline">
@@ -275,15 +275,17 @@ export default function Staff() {
           {/* Office Hours Banner */}
           <div className="reveal mt-8">
             <Card className="bg-primary/5 border-primary/10">
-              <CardContent className="p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6">
-                <div className="flex items-center gap-2">
+              <CardContent className="p-5 sm:p-6">
+                <div className="flex items-center gap-2 mb-3">
                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                   <span className="text-sm font-medium text-foreground">Office Hours</span>
                 </div>
-                <p className="text-sm text-muted-foreground">Monday – Thursday, 10:00 AM – 5:00 PM | Friday: Closed</p>
-                <a href="tel:9142739724" className="text-sm font-medium text-primary hover:underline ml-auto">
-                  (914) 273-9724
-                </a>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
+                  <p className="text-sm text-muted-foreground">Monday – Thursday, 10:00 AM – 5:00 PM | Friday: Closed</p>
+                  <a href="tel:9142739724" className="text-sm font-medium text-primary hover:underline sm:ml-auto">
+                    (914) 273-9724
+                  </a>
+                </div>
               </CardContent>
             </Card>
           </div>
