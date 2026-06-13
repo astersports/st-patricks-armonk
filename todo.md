@@ -186,3 +186,12 @@
 - [x] Simplify hamburger menu to flat list with icons (no nested accordions)
 - [x] Remove back arrows (not needed with persistent nav)
 - [x] Ensure bottom tab bar doesn't overlap page content
+
+## Phase 18: Homepage Redesign - Storytelling Flow
+
+- [x] Remove old quick-access cards (redundant with bottom tab bar)
+- [x] Add "This Week at St. Patrick's" section (next Mass + upcoming event)
+- [x] Keep Pastor's Welcome quote section
+- [x] Add 4 Journey Cards (New Here, Sacraments, Faith Formation, Get Involved)
+- [x] Keep Subscribe/Flocknote CTA
+- [x] Ensure cohesive visual flow on both mobile and desktop

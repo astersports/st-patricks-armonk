@@ -1,27 +1,62 @@
 import PageLayout from "@/components/PageLayout";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { Clock, BookOpen, Calendar, Heart, ArrowRight, Mail, Users, Church } from "lucide-react";
+import { Clock, ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { useReveal } from "@/hooks/useReveal";
 
-const quickCards = [
-  { icon: Clock, title: "Mass Times", subtitle: "Weekend & weekday schedules", href: "/mass-times", accent: "border-t-[oklch(0.42_0.12_150)]" },
-  { icon: BookOpen, title: "Sacraments", subtitle: "Baptism, Marriage & more", href: "/sacraments", accent: "border-t-[oklch(0.75_0.15_85)]" },
-  { icon: Heart, title: "Give Online", subtitle: "Support our parish mission", href: "/giving", accent: "border-t-[oklch(0.55_0.15_25)]" },
-  { icon: Calendar, title: "Events", subtitle: "What's happening this week", href: "/news-events", accent: "border-t-[oklch(0.5_0.12_250)]" },
+// The 4 journey cards — the main paths a visitor might take
+const journeyCards = [
+  {
+    icon: Users,
+    title: "New Here?",
+    description: "Plan your first visit and learn what to expect at St. Patrick's.",
+    href: "/new-here",
+    cta: "Plan Your Visit",
+    accent: "from-primary/10 to-primary/5",
+    iconColor: "text-primary",
+    borderColor: "border-l-primary",
+  },
+  {
+    icon: Cross,
+    title: "Sacraments",
+    description: "Baptism, First Communion, Confirmation, Marriage, and more.",
+    href: "/sacraments",
+    cta: "Learn More",
+    accent: "from-gold/10 to-gold/5",
+    iconColor: "text-gold",
+    borderColor: "border-l-gold",
+  },
+  {
+    icon: GraduationCap,
+    title: "Faith Formation",
+    description: "Religious education for children, teens, and adults at every stage.",
+    href: "/faith-formation",
+    cta: "Explore Programs",
+    accent: "from-primary/10 to-primary/5",
+    iconColor: "text-primary",
+    borderColor: "border-l-primary",
+  },
+  {
+    icon: Heart,
+    title: "Get Involved",
+    description: "Ministries, volunteering, and ways to serve our community.",
+    href: "/ministries",
+    cta: "Find Your Place",
+    accent: "from-accent/10 to-accent/5",
+    iconColor: "text-accent",
+    borderColor: "border-l-accent",
+  },
 ];
 
 export default function Home() {
   const [email, setEmail] = useState("");
-  const { data: news } = trpc.news.listPublished.useQuery();
-  const { data: upcomingEvents } = trpc.events.listUpcoming.useQuery();
+  const { data: upcomingEvents, isLoading: eventsLoading } = trpc.events.listUpcoming.useQuery();
   const subscribeMutation = trpc.subscriptions.subscribe.useMutation({
     onSuccess: () => {
       toast.success("Successfully subscribed to parish updates!");
@@ -31,10 +66,13 @@ export default function Home() {
   });
   const revealRef = useReveal();
 
+  // Get next upcoming event for "This Week" section
+  const nextEvent = upcomingEvents?.[0];
+
   return (
     <PageLayout>
-      {/* Hero Section */}
-      <section className="relative h-[75vh] min-h-[540px] flex items-center justify-center overflow-hidden">
+      {/* Hero Section — tighter, more focused */}
+      <section className="relative h-[65vh] min-h-[480px] max-h-[600px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img
             src="/manus-storage/church-stained-glass_4e3f2e8c.jpg"
@@ -42,22 +80,21 @@ export default function Home() {
             className="w-full h-full object-cover scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/20" />
         </div>
-        <div className="relative z-10 text-center text-white container">
-          <p className="text-gold font-medium tracking-[0.25em] uppercase text-sm mb-5 animate-fade-in">
+        <div className="relative z-10 text-center text-white container px-6">
+          <p className="text-gold font-medium tracking-[0.25em] uppercase text-xs sm:text-sm mb-4 animate-fade-in">
             Welcome to
           </p>
-          <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-4 animate-fade-in drop-shadow-2xl">
+          <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-3 animate-fade-in drop-shadow-2xl">
             St. Patrick Church
           </h1>
-          <p className="text-xl md:text-2xl text-white/90 font-light mb-2 animate-fade-up stagger-1">
+          <p className="text-lg sm:text-xl text-white/90 font-light animate-fade-up stagger-1">
             Armonk, New York
           </p>
-          <p className="text-white/70 text-base md:text-lg max-w-xl mx-auto mt-4 mb-10 animate-fade-up stagger-2">
+          <p className="text-white/70 text-sm sm:text-base max-w-md mx-auto mt-3 mb-8 animate-fade-up stagger-2">
             A welcoming Catholic community rooted in faith, service, and love.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-up stagger-3">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center animate-fade-up stagger-3">
             <Link href="/mass-times">
               <Button size="lg" className="bg-gold text-black hover:bg-gold/90 font-semibold px-8 press-scale shadow-lg">
                 View Mass Times
@@ -70,207 +107,109 @@ export default function Home() {
             </Link>
           </div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
-      </section>
-
-      {/* Quick Access Cards — colored top border style (Legacy Hoopers inspired) */}
-      <section className="container -mt-14 relative z-20 mb-16">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {quickCards.map((card, i) => (
-            <Link key={card.href} href={card.href}>
-              <Card className={`group cursor-pointer hover-lift border-0 shadow-md border-t-[3px] ${card.accent} animate-fade-up stagger-${i + 1}`}>
-                <CardContent className="p-4 sm:p-5 text-center">
-                  <card.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary mx-auto mb-2 sm:mb-2 transition-transform duration-300 group-hover:scale-110" />
-                  <h3 className="font-semibold text-foreground text-sm sm:text-sm">{card.title}</h3>
-                  <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 hidden sm:block">{card.subtitle}</p>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent" />
       </section>
 
       <div ref={revealRef}>
+        {/* This Week at St. Patrick's — compact, dynamic */}
+        <section className="reveal container -mt-8 relative z-20 mb-10 sm:mb-14">
+          <Card className="border-0 shadow-lg overflow-hidden">
+            <CardContent className="p-0">
+              <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border/50">
+                {/* Next Mass */}
+                <Link href="/mass-times" className="group">
+                  <div className="p-4 sm:p-5 flex items-center gap-4 hover:bg-primary/[0.02] transition-colors">
+                    <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                      <Clock className="w-5 h-5 text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Mass Schedule</p>
+                      <p className="font-semibold text-foreground text-sm sm:text-base">Weekend: Sat 5:30 PM · Sun 8:30, 10:30, 12:30</p>
+                      <p className="text-xs text-muted-foreground">Weekdays: Tue–Fri 8:30 AM</p>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+                  </div>
+                </Link>
+                {/* Upcoming Event */}
+                <Link href="/parish-calendar" className="group">
+                  <div className="p-4 sm:p-5 flex items-center gap-4 hover:bg-primary/[0.02] transition-colors">
+                    <div className="w-11 h-11 rounded-full bg-gold/10 flex items-center justify-center shrink-0">
+                      <Calendar className="w-5 h-5 text-gold" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Coming Up</p>
+                      {nextEvent ? (
+                        <>
+                          <p className="font-semibold text-foreground text-sm sm:text-base truncate">{nextEvent.title}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {format(new Date(nextEvent.startDate), "EEE, MMM d")} · {format(new Date(nextEvent.startDate), "h:mm a")}
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <p className="font-semibold text-foreground text-sm sm:text-base">Parish Calendar</p>
+                          <p className="text-xs text-muted-foreground">View all upcoming events and activities</p>
+                        </>
+                      )}
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+                  </div>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
         {/* Pastor's Welcome */}
-        <section className="reveal container py-10 sm:py-16 mb-4 sm:mb-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-block mb-4">
-              <div className="w-12 h-0.5 bg-gold mx-auto" />
-            </div>
-            <blockquote className="font-serif text-xl sm:text-2xl md:text-3xl text-foreground/90 italic leading-relaxed">
+        <section className="reveal container py-8 sm:py-12 mb-2 sm:mb-6">
+          <div className="max-w-2xl mx-auto text-center">
+            <div className="w-10 h-0.5 bg-gold mx-auto mb-5" />
+            <blockquote className="font-serif text-lg sm:text-xl md:text-2xl text-foreground/90 italic leading-relaxed">
               "Whether you are a lifelong parishioner or visiting for the first time, you are welcome here. St. Patrick's is a place where faith grows, friendships form, and everyone belongs."
             </blockquote>
-            <p className="mt-5 text-muted-foreground font-medium">— Fr. Thadeus Aravindathu, Pastor</p>
-            <Link href="/new-here">
-              <Button variant="ghost" className="mt-4 text-primary hover:text-primary/80 press-scale">
-                New here? Plan your visit <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
-            </Link>
+            <p className="mt-4 text-muted-foreground font-medium text-sm">— Fr. Thadeus Aravindathu, Pastor</p>
           </div>
         </section>
 
-        {/* Latest News Section — with colored left-border accents and pill badges */}
-        <section className="reveal container pb-10 sm:pb-16">
-          <div className="flex items-center justify-between mb-5 sm:mb-8">
-            <div>
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Latest News</h2>
-              <p className="text-muted-foreground mt-0.5 text-sm sm:text-base">Stay connected with our parish community</p>
-            </div>
-            <Link href="/news-events">
-              <Button variant="ghost" className="text-primary hover:text-primary/80 press-scale">
-                View All <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
-            </Link>
-          </div>
-          {news && news.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {news.slice(0, 3).map((post, idx) => (
-                <Card key={post.id} className={`overflow-hidden hover-lift border-0 shadow-sm border-l-4 ${idx === 0 ? "border-l-[oklch(0.42_0.12_150)]" : idx === 1 ? "border-l-[oklch(0.75_0.15_85)]" : "border-l-[oklch(0.5_0.12_250)]"}`}>
-                  {post.imageUrl && (
-                    <div className="h-44 overflow-hidden">
-                      <img src={post.imageUrl} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        {/* 4 Journey Cards */}
+        <section className="reveal container pb-10 sm:pb-14">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            {journeyCards.map((card) => (
+              <Link key={card.href} href={card.href}>
+                <Card className={`group cursor-pointer h-full border-0 shadow-sm border-l-4 ${card.borderColor} hover:shadow-md transition-all duration-200`}>
+                  <CardContent className="p-4 sm:p-5">
+                    <div className="flex items-start gap-3">
+                      <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${card.accent} flex items-center justify-center shrink-0`}>
+                        <card.icon className={`w-4.5 h-4.5 ${card.iconColor}`} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-foreground text-sm sm:text-base mb-0.5">{card.title}</h3>
+                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{card.description}</p>
+                        <span className="inline-flex items-center gap-1 text-xs font-medium text-primary mt-2 group-hover:gap-1.5 transition-all">
+                          {card.cta} <ArrowRight className="w-3 h-3" />
+                        </span>
+                      </div>
                     </div>
-                  )}
-                  <CardContent className="p-5">
-                    <div className="flex items-center gap-2 mb-2">
-                      {idx === 0 && <Badge className="bg-primary/10 text-primary border-0 text-[10px] px-1.5 py-0">Latest</Badge>}
-                      <p className="text-xs text-muted-foreground uppercase tracking-wider">
-                        {post.publishedAt ? format(new Date(post.publishedAt), "MMM d, yyyy") : ""}
-                      </p>
-                    </div>
-                    <h3 className="font-semibold text-base mb-1.5 line-clamp-2">{post.title}</h3>
-                    <p className="text-sm text-muted-foreground line-clamp-2">
-                      {post.excerpt || post.content.substring(0, 120)}
-                    </p>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
-          ) : (
-            <Card className="p-10 text-center border-dashed border-2 bg-secondary/20">
-              <Church className="w-10 h-10 text-primary/30 mx-auto mb-3" />
-              <p className="text-muted-foreground font-medium">Parish news and announcements will appear here.</p>
-              <p className="text-sm text-muted-foreground/70 mt-1">Check back soon or subscribe below for email updates.</p>
-            </Card>
-          )}
-        </section>
-
-        {/* Upcoming Events — with pill badges for timing */}
-        <section className="reveal bg-gradient-to-b from-secondary/40 to-transparent py-10 sm:py-16">
-          <div className="container">
-            <div className="flex items-center justify-between mb-5 sm:mb-8">
-              <div>
-                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Upcoming Events</h2>
-                <p className="text-muted-foreground mt-0.5 text-sm sm:text-base">Join us in faith and fellowship</p>
-              </div>
-              <Link href="/parish-calendar">
-                <Button variant="ghost" className="text-primary hover:text-primary/80 press-scale">
-                  View Calendar <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
               </Link>
-            </div>
-            {upcomingEvents && upcomingEvents.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {upcomingEvents.slice(0, 4).map((event, idx) => {
-                  const eventDate = new Date(event.startDate);
-                  const now = new Date();
-                  const daysUntil = Math.ceil((eventDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-                  const isThisWeek = daysUntil <= 7 && daysUntil >= 0;
-
-                  return (
-                    <Card key={event.id} className={`hover-glow transition-all border-l-4 ${idx % 2 === 0 ? "border-l-[oklch(0.42_0.12_150)]" : "border-l-[oklch(0.75_0.15_85)]"}`}>
-                      <CardContent className="p-5 flex gap-4">
-                        <div className="bg-primary/10 rounded-xl p-3 text-center min-w-[60px] h-fit">
-                          <p className="text-[10px] text-primary font-medium uppercase">
-                            {format(eventDate, "MMM")}
-                          </p>
-                          <p className="text-2xl font-bold text-primary">
-                            {format(eventDate, "d")}
-                          </p>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-semibold text-sm line-clamp-2">{event.title}</h3>
-                            {isThisWeek && (
-                              <Badge className="bg-accent/15 text-accent-foreground border-0 text-[10px] px-1.5 py-0 shrink-0">This Week</Badge>
-                            )}
-                          </div>
-                          <p className="text-xs text-muted-foreground">
-                            {event.location && `${event.location} · `}
-                            {format(eventDate, "h:mm a")}
-                          </p>
-                          {event.description && (
-                            <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{event.description}</p>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-            ) : (
-              <Card className="p-10 text-center border-dashed border-2 bg-white/50">
-                <Calendar className="w-10 h-10 text-primary/30 mx-auto mb-3" />
-                <p className="text-muted-foreground font-medium">No upcoming events at this time.</p>
-                <p className="text-sm text-muted-foreground/70 mt-1">Visit our parish calendar for the full schedule.</p>
-              </Card>
-            )}
-          </div>
-        </section>
-
-        {/* Get Involved */}
-        <section className="reveal py-10 sm:py-16">
-          <div className="container">
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground text-center mb-2">Get Involved</h2>
-            <p className="text-muted-foreground text-center mb-6 sm:mb-10 max-w-lg mx-auto text-sm sm:text-base">
-              There are many ways to grow in faith and serve our community.
-            </p>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-              <Link href="/ccd-calendar">
-                <Card className="p-3 sm:p-5 hover-lift cursor-pointer h-full border-0 shadow-sm">
-                  <Calendar className="w-5 h-5 sm:w-8 sm:h-8 text-primary mb-1.5 sm:mb-3" />
-                  <h3 className="font-semibold text-foreground text-xs sm:text-sm mb-0.5">CCD Calendar</h3>
-                  <p className="text-[10px] sm:text-sm text-muted-foreground hidden sm:block">Religious Education schedule and key dates.</p>
-                </Card>
-              </Link>
-              <Link href="/cyo-basketball">
-                <Card className="p-3 sm:p-5 hover-lift cursor-pointer h-full border-0 shadow-sm">
-                  <Users className="w-5 h-5 sm:w-8 sm:h-8 text-accent mb-1.5 sm:mb-3" />
-                  <h3 className="font-semibold text-foreground text-xs sm:text-sm mb-0.5">CYO Practice</h3>
-                  <p className="text-[10px] sm:text-sm text-muted-foreground hidden sm:block">Practice schedule at St. Francis Hall.</p>
-                </Card>
-              </Link>
-              <Link href="/faith-formation">
-                <Card className="p-3 sm:p-5 hover-lift cursor-pointer h-full border-0 shadow-sm">
-                  <BookOpen className="w-5 h-5 sm:w-8 sm:h-8 text-primary mb-1.5 sm:mb-3" />
-                  <h3 className="font-semibold text-foreground text-xs sm:text-sm mb-0.5">Faith Formation</h3>
-                  <p className="text-[10px] sm:text-sm text-muted-foreground hidden sm:block">Programs for all ages — CCD, RCIA, Bible study.</p>
-                </Card>
-              </Link>
-              <Link href="/volunteer">
-                <Card className="p-3 sm:p-5 hover-lift cursor-pointer h-full border-0 shadow-sm">
-                  <Heart className="w-5 h-5 sm:w-8 sm:h-8 text-accent mb-1.5 sm:mb-3" />
-                  <h3 className="font-semibold text-foreground text-xs sm:text-sm mb-0.5">Volunteer</h3>
-                  <p className="text-[10px] sm:text-sm text-muted-foreground hidden sm:block">Sign up to serve our parish community.</p>
-                </Card>
-              </Link>
-            </div>
+            ))}
           </div>
         </section>
 
         {/* Newsletter Subscription */}
         <section className="reveal container pb-10 sm:pb-16">
           <Card className="bg-gradient-to-br from-primary via-parish-green-dark to-primary overflow-hidden border-0 shadow-xl">
-            <CardContent className="p-5 sm:p-8 md:p-12 flex flex-col md:flex-row items-center gap-5 sm:gap-8">
+            <CardContent className="p-5 sm:p-8 md:p-10 flex flex-col md:flex-row items-center gap-5 sm:gap-8">
               <div className="flex-1">
-                <div className="flex items-center gap-2 mb-3">
-                  <Mail className="w-5 h-5 text-gold" />
-                  <span className="text-gold text-sm font-medium uppercase tracking-wider">Stay Connected</span>
+                <div className="flex items-center gap-2 mb-2">
+                  <Mail className="w-4 h-4 text-gold" />
+                  <span className="text-gold text-xs font-medium uppercase tracking-wider">Stay Connected</span>
                 </div>
-                <h2 className="font-serif text-2xl md:text-3xl font-bold text-white mb-2">
+                <h2 className="font-serif text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1.5">
                   Subscribe to Parish Updates
                 </h2>
-                <p className="text-white/80">
+                <p className="text-white/80 text-sm sm:text-base">
                   Receive weekly bulletins and news directly in your inbox.
                 </p>
               </div>
@@ -298,7 +237,7 @@ export default function Home() {
                     {subscribeMutation.isPending ? "Subscribing..." : "Subscribe"}
                   </Button>
                 </form>
-                <p className="text-white/60 text-sm mt-3">
+                <p className="text-white/60 text-xs sm:text-sm mt-3">
                   Or join us on{" "}
                   <a href="https://stpatarmonk.flocknote.com/home" target="_blank" rel="noopener noreferrer" className="text-gold underline hover:text-gold/80">
                     Flocknote
