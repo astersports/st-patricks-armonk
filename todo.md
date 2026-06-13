@@ -113,3 +113,22 @@
 - [x] First Holy Communion section added to Sacraments page
 - [x] All calendars switched to agenda/schedule view (not grid)
 - [x] CYO calendar uses correct dedicated feed
+
+## Phase 10: Full Site Accuracy & Consistency Audit
+
+- [x] Verify Mass times match original site (Saturday 5:30, Sunday 8:30/10:30/12:30 seasonal, Weekday Tue-Fri 8:30)
+- [x] Verify staff names, roles, and contact info match original site (added emails, fixed Finance Chairman title)
+- [x] Fix CCD grade range inconsistency (confirmed Grades 1-8 from Admissions Policy PDF)
+- [x] Verify CCD class times match original site schedule (Gr 1-2: 3:45-4:45, Gr 3-4: 3:30-4:45, Gr 5-8: Mon 5-6/Wed 6-7)
+- [x] Verify Confession/Reconciliation times match original site (corrected to 4:30-5:15 PM)
+- [x] Verify office hours match original site (Mon-Thu 10-5, Fri Closed)
+- [x] Verify parish phone numbers and addresses match original site (fixed Volunteer page wrong number)
+- [x] Verify all program descriptions match what's actually offered
+- [x] Check Sacraments page content accuracy (Confirmation is 8th grade, 2-year prep in 7th/8th)
+- [x] Verify CYO details accuracy (Grades 3-8, St. Francis Hall, Nov-Mar)
+- [x] Fix all mobile text wrapping issues across all pages (removed truncate, added flex-wrap)
+- [x] Ensure consistent terminology (Religious Education vs CCD) across site
+- [x] Normalize Flocknote URL across all pages (stpatarmonk.flocknote.com/home)
+- [x] Add 12:30 PM seasonal note (Oct-June only) to footer Mass schedule
+- [x] Fix Blaze contact to Religious Ed office number (914) 531-1759
+- [x] Pastor card now shows email address

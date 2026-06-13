@@ -53,6 +53,7 @@ export default function Footer() {
                 <div>
                   <p className="font-medium text-white">Sunday</p>
                   <p>8:30 AM, 10:30 AM, 12:30 PM</p>
+                  <p className="text-xs text-white/60">(12:30 PM: Oct–June only)</p>
                 </div>
               </div>
               <div className="flex items-start gap-2">

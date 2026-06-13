@@ -93,7 +93,7 @@ export default function Contact() {
                     <div>
                       <h3 className="font-semibold mb-1">Stay Connected</h3>
                       <p className="text-muted-foreground">
-                        <a href="https://new.flocknote.com/stpatarmonk" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                        <a href="https://stpatarmonk.flocknote.com/home" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
                           Join us on Flocknote
                         </a>{" "}
                         for parish communications.

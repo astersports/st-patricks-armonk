@@ -116,7 +116,7 @@ export default function NewsEvents() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
-                              <h3 className="font-serif text-lg font-semibold text-foreground truncate">{event.title}</h3>
+                              <h3 className="font-serif text-lg font-semibold text-foreground">{event.title}</h3>
                               {isToday && <Badge className="bg-primary text-white border-0 text-[10px] px-1.5 py-0 shrink-0">Today</Badge>}
                               {isTomorrow && <Badge className="bg-accent/15 text-accent-foreground border-0 text-[10px] px-1.5 py-0 shrink-0">Tomorrow</Badge>}
                               {isThisWeek && !isToday && !isTomorrow && <Badge className="bg-accent/15 text-accent-foreground border-0 text-[10px] px-1.5 py-0 shrink-0">This Week</Badge>}

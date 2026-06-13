@@ -196,7 +196,7 @@ export default function Home() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-semibold text-sm truncate">{event.title}</h3>
+                            <h3 className="font-semibold text-sm line-clamp-2">{event.title}</h3>
                             {isThisWeek && (
                               <Badge className="bg-accent/15 text-accent-foreground border-0 text-[10px] px-1.5 py-0 shrink-0">This Week</Badge>
                             )}

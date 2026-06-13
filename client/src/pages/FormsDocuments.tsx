@@ -59,8 +59,8 @@ function CategorySection({ category }: { category: typeof CATEGORIES[number] }) 
           >
             <Download className="w-4 h-4 text-muted-foreground group-hover:text-primary shrink-0" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">{doc.title}</p>
-              {doc.description && <p className="text-xs text-muted-foreground truncate">{doc.description}</p>}
+              <p className="text-sm font-medium text-foreground">{doc.title}</p>
+              {doc.description && <p className="text-xs text-muted-foreground line-clamp-2">{doc.description}</p>}
             </div>
             <ExternalLink className="w-3 h-3 text-muted-foreground shrink-0" />
           </a>

@@ -63,7 +63,7 @@ export default function MassTimes() {
                       <span className="text-xl font-bold text-primary bg-primary/5 px-3 py-1.5 rounded-lg">10:30 AM</span>
                       <span className="text-xl font-bold text-primary bg-primary/5 px-3 py-1.5 rounded-lg">12:30 PM</span>
                     </div>
-                    <p className="text-sm text-muted-foreground mt-3">12:30 PM Mass: October 5 – June</p>
+                    <p className="text-sm text-muted-foreground mt-3">12:30 PM Mass: October – June</p>
                   </div>
                 </div>
               </CardContent>

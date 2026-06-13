@@ -31,8 +31,8 @@ function DocumentList({ category }: { category: string }) {
           >
             <Download className="w-4 h-4 text-muted-foreground group-hover:text-primary shrink-0" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">{doc.title}</p>
-              {doc.description && <p className="text-xs text-muted-foreground truncate">{doc.description}</p>}
+              <p className="text-sm font-medium text-foreground">{doc.title}</p>
+              {doc.description && <p className="text-xs text-muted-foreground line-clamp-2">{doc.description}</p>}
             </div>
             <ExternalLink className="w-3 h-3 text-muted-foreground shrink-0" />
           </a>
@@ -273,7 +273,7 @@ export default function Sacraments() {
                   <Badge className="bg-primary/10 text-primary border-0 text-[10px] px-1.5 py-0">Weekly</Badge>
                 </div>
                 <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-                  The Sacrament of Reconciliation is available every Saturday from 4:00 PM to 5:00 PM, or by appointment with a priest.
+                  The Sacrament of Reconciliation is available every Saturday from 4:30 PM to 5:15 PM, or by appointment with a priest.
                 </p>
                 <Button variant="outline" size="sm" asChild>
                   <a href="/mass-times">View Full Schedule</a>

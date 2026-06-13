@@ -13,24 +13,24 @@ interface StaffMember {
 
 const staffMembers: StaffMember[] = [
   // Clergy
-  { name: "Father Thadeus Aravindathu", role: "Pastor", phone: "(914) 531-1760", category: "clergy" },
+  { name: "Father Thadeus Aravindathu", role: "Pastor", phone: "(914) 531-1760", email: "Pastor.stpats@outlook.com", category: "clergy" },
   // Staff
-  { name: "Linda Maffia", role: "Office Manager", phone: "(914) 273-9724", category: "staff" },
-  { name: "Sarah Aliotta", role: "Religious Education Coordinator", phone: "(914) 531-1759", category: "staff" },
+  { name: "Linda Maffia", role: "Office Manager", phone: "(914) 273-9724", email: "office@stpatrickinarmonk.org", category: "staff" },
+  { name: "Sarah Aliotta", role: "Religious Education Coordinator", phone: "(914) 531-1759", email: "reled@stpatrickinarmonk.org", category: "staff" },
   { name: "Jo Golden", role: "1st & 2nd Grade Religious Ed Coordinator", category: "staff" },
-  { name: "John Erickson", role: "Religious Ed Assistant", phone: "(914) 531-1760", category: "staff" },
-  { name: "Maureen McNamara", role: "Bulletin Editor", phone: "(914) 531-1760", category: "staff" },
-  { name: "John Failla", role: "Music Director", category: "staff" },
-  { name: "Gwen Torre", role: "Teen Life Ministry Coordinator", category: "staff" },
+  { name: "John Erickson", role: "Religious Ed Assistant", phone: "(914) 531-1760", email: "john.erickson@stpatrickinarmonk.org", category: "staff" },
+  { name: "Maureen McNamara", role: "Bulletin Editor", phone: "(914) 531-1760", email: "bulletin.editor@stpatrickinarmonk.org", category: "staff" },
+  { name: "John Failla", role: "Music Director", email: "MusicAtStPats@gmail.com", category: "staff" },
+  { name: "Gwen Torre", role: "Teen Life Ministry Coordinator", email: "teenlife@stpatrickinarmonk.org", category: "staff" },
   { name: "Jetta Magrone", role: "Rectory Coordinator", category: "staff" },
-  { name: "Tania DeLuca", role: "Bookkeeper", phone: "(914) 273-9724", category: "staff" },
-  { name: "Lori Schiliro", role: "Project Embrace", category: "staff" },
+  { name: "Tania DeLuca", role: "Bookkeeper", phone: "(914) 273-9724", email: "tania@stpatrickinarmonk.org", category: "staff" },
+  { name: "Lori Schiliro", role: "Project Embrace", email: "projectembrace@parishmail.com", category: "staff" },
   // Leadership
-  { name: "Charles Stafford", role: "Parish Council President", category: "leadership" },
+  { name: "Charles Stafford", role: "Parish Council President", email: "ParishCouncilPresident@stpatrickinarmonk.org", category: "leadership" },
   { name: "Colin McBride", role: "Trustee", category: "leadership" },
   { name: "Maria Tedesco", role: "Trustee", category: "leadership" },
-  { name: "John Di Capua", role: "Finance Committee Chairman", category: "leadership" },
-  { name: "Elaine Runne", role: "Parish Council Secretary", category: "leadership" },
+  { name: "John Di Capua", role: "Finance Chairman", category: "leadership" },
+  { name: "Elaine Runne", role: "Parish Council Secretary", email: "ParishCouncilSecretary@stpatrickinarmonk.org", category: "leadership" },
 ];
 
 function StaffCard({ member }: { member: StaffMember }) {
@@ -44,15 +44,24 @@ function StaffCard({ member }: { member: StaffMember }) {
             </span>
           </div>
           <div className="min-w-0">
-            <h3 className="font-semibold text-sm sm:text-base text-foreground truncate">{member.name}</h3>
+            <h3 className="font-semibold text-sm sm:text-base text-foreground">{member.name}</h3>
             <p className="text-xs sm:text-sm text-muted-foreground">{member.role}</p>
             {member.phone && (
               <a
                 href={`tel:${member.phone.replace(/[^\d+]/g, "")}`}
-                className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline mt-2"
+                className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-primary hover:underline mt-1.5"
               >
-                <Phone className="w-3.5 h-3.5" />
+                <Phone className="w-3.5 h-3.5 shrink-0" />
                 {member.phone}
+              </a>
+            )}
+            {member.email && (
+              <a
+                href={`mailto:${member.email}`}
+                className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-primary hover:underline mt-1"
+              >
+                <Mail className="w-3.5 h-3.5 shrink-0" />
+                <span className="break-all">{member.email}</span>
               </a>
             )}
           </div>
@@ -111,6 +120,15 @@ export default function Staff() {
                         >
                           <Phone className="w-3.5 h-3.5" />
                           {clergy[0].phone}
+                        </a>
+                      )}
+                      {clergy[0].email && (
+                        <a
+                          href={`mailto:${clergy[0].email}`}
+                          className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline mt-1"
+                        >
+                          <Mail className="w-3.5 h-3.5" />
+                          {clergy[0].email}
                         </a>
                       )}
                     </div>

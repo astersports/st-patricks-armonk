@@ -45,7 +45,7 @@ export default function Bulletins() {
                         Week of {format(new Date(bulletin.weekDate), "MMMM d, yyyy")}
                       </span>
                     </div>
-                    <h3 className="font-semibold text-lg truncate">{bulletin.title}</h3>
+                    <h3 className="font-semibold text-lg">{bulletin.title}</h3>
                     {bulletin.description && (
                       <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{bulletin.description}</p>
                     )}

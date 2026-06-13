@@ -37,8 +37,9 @@ export default function CcdCalendar() {
                 <Clock className="w-5 h-5 text-primary mt-1 shrink-0" />
                 <div>
                   <h3 className="font-semibold text-foreground mb-1">Class Times</h3>
-                  <p className="text-sm text-muted-foreground">Sundays: 9:15 AM – 10:15 AM</p>
-                  <p className="text-sm text-muted-foreground">Mondays: 4:30 PM – 5:30 PM</p>
+                  <p className="text-sm text-muted-foreground">Mon/Wed: 3:45–4:45 PM (Gr. 1–2)</p>
+                  <p className="text-sm text-muted-foreground">Mon/Wed: 3:30–4:45 PM (Gr. 3–4)</p>
+                  <p className="text-sm text-muted-foreground">Mon 5–6 PM / Wed 6–7 PM (Gr. 5–8)</p>
                 </div>
               </div>
             </Card>

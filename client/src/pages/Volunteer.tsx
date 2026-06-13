@@ -209,7 +209,7 @@ export default function Volunteer() {
                 Interested in volunteering but don't see the right opportunity? Contact the parish office and we'll help you find the perfect way to serve.
               </p>
               <div className="space-y-2 text-sm">
-                <p><strong>Phone:</strong> <a href="tel:9142731414" className="text-primary hover:underline">(914) 273-1414</a></p>
+                <p><strong>Phone:</strong> <a href="tel:9142739724" className="text-primary hover:underline">(914) 273-9724</a></p>
                 <p><strong>Email:</strong> <a href="mailto:office@stpatrickinarmonk.org" className="text-primary hover:underline">office@stpatrickinarmonk.org</a></p>
               </div>
               <div className="mt-4">
