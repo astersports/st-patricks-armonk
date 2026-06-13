@@ -1,82 +1,122 @@
 import PageLayout from "@/components/PageLayout";
 import { Card, CardContent } from "@/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useReveal } from "@/hooks/useReveal";
-import { Phone, Mail, Users } from "lucide-react";
+import { Phone, Mail, Users, Cross, BookOpen, Heart } from "lucide-react";
 
 interface StaffMember {
   name: string;
   role: string;
   phone?: string;
   email?: string;
-  category: "clergy" | "staff" | "leadership";
 }
 
-const staffMembers: StaffMember[] = [
-  // Clergy
-  { name: "Father Thadeus Aravindathu", role: "Pastor", phone: "(914) 531-1760", email: "Pastor.stpats@outlook.com", category: "clergy" },
-  // Staff
-  { name: "Linda Maffia", role: "Office Manager", phone: "(914) 273-9724", email: "office@stpatrickinarmonk.org", category: "staff" },
-  { name: "Sarah Aliotta", role: "Religious Education Coordinator", phone: "(914) 531-1759", email: "reled@stpatrickinarmonk.org", category: "staff" },
-  { name: "Jo Golden", role: "1st & 2nd Grade Religious Ed Coordinator", category: "staff" },
-  { name: "John Erickson", role: "Religious Ed Assistant", phone: "(914) 531-1760", email: "john.erickson@stpatrickinarmonk.org", category: "staff" },
-  { name: "Maureen McNamara", role: "Bulletin Editor", phone: "(914) 531-1760", email: "bulletin.editor@stpatrickinarmonk.org", category: "staff" },
-  { name: "John Failla", role: "Music Director", email: "MusicAtStPats@gmail.com", category: "staff" },
-  { name: "Gwen Torre", role: "Teen Life Ministry Coordinator", email: "teenlife@stpatrickinarmonk.org", category: "staff" },
-  { name: "Jetta Magrone", role: "Rectory Coordinator", category: "staff" },
-  { name: "Tania DeLuca", role: "Bookkeeper", phone: "(914) 273-9724", email: "tania@stpatrickinarmonk.org", category: "staff" },
-  { name: "Lori Schiliro", role: "Project Embrace", email: "projectembrace@parishmail.com", category: "staff" },
-  // Leadership
-  { name: "Charles Stafford", role: "Parish Council President", email: "ParishCouncilPresident@stpatrickinarmonk.org", category: "leadership" },
-  { name: "Colin McBride", role: "Trustee", category: "leadership" },
-  { name: "Maria Tedesco", role: "Trustee", category: "leadership" },
-  { name: "John Di Capua", role: "Finance Chairman", category: "leadership" },
-  { name: "Elaine Runne", role: "Parish Council Secretary", email: "ParishCouncilSecretary@stpatrickinarmonk.org", category: "leadership" },
+interface DepartmentContact {
+  department: string;
+  phone?: string;
+  email?: string;
+}
+
+const clergy: StaffMember[] = [
+  { name: "Father Thadeus Aravindathu", role: "Pastor", phone: "(914) 531-1760", email: "Pastor.stpats@outlook.com" },
 ];
 
-function StaffCard({ member }: { member: StaffMember }) {
+const staff: StaffMember[] = [
+  { name: "Linda Maffia", role: "Office Manager", phone: "(914) 273-9724", email: "office@stpatrickinarmonk.org" },
+  { name: "Sarah Aliotta", role: "Religious Education Coordinator", phone: "(914) 531-1759", email: "reled@stpatrickinarmonk.org" },
+  { name: "Jo Golden", role: "1st & 2nd Grade Religious Ed Coordinator" },
+  { name: "John Erickson", role: "Religious Ed Assistant", phone: "(914) 531-1760", email: "john.erickson@stpatrickinarmonk.org" },
+  { name: "Maureen McNamara", role: "Bulletin Editor", phone: "(914) 531-1760", email: "bulletin.editor@stpatrickinarmonk.org" },
+  { name: "John Failla", role: "Music Director", email: "MusicAtStPats@gmail.com" },
+  { name: "Gwen Torre", role: "Teen Life Ministry Coordinator", email: "teenlife@stpatrickinarmonk.org" },
+  { name: "Jetta Magrone", role: "Rectory Coordinator" },
+  { name: "Tania DeLuca", role: "Bookkeeper", phone: "(914) 273-9724", email: "tania@stpatrickinarmonk.org" },
+  { name: "Lori Schiliro", role: "Project Embrace", email: "projectembrace@parishmail.com" },
+];
+
+const leadership: StaffMember[] = [
+  { name: "Charles Stafford", role: "Parish Council President", email: "ParishCouncilPresident@stpatrickinarmonk.org" },
+  { name: "Colin McBride", role: "Trustee" },
+  { name: "Maria Tedesco", role: "Trustee" },
+  { name: "John Di Capua", role: "Finance Chairman" },
+  { name: "Elaine Runne", role: "Parish Council Secretary", email: "ParishCouncilSecretary@stpatrickinarmonk.org" },
+];
+
+const ministryLeaders: StaffMember[] = [
+  { name: "Ann Silvestri", role: "Lector Coordinator" },
+  { name: "Joan Zaborowsky", role: "Extraordinary Minister of Holy Communion Coordinator" },
+  { name: "Gwen Torre", role: "Altar Server Coordinator" },
+  { name: "Vanessa Flores & Lina Kingston", role: "Food Pantry", email: "FoodPantry@stpatrickinarmonk.org" },
+  { name: "Mike Corelli", role: "St. Francis Hall Scheduling", phone: "(914) 468-5938", email: "gym@stpatrickinarmonk.org" },
+  { name: "Elvis Grgurovic", role: "CYO Basketball Coordinator", email: "gym@stpatrickinarmonk.org" },
+  { name: "Kevin Mannix", role: "CYO Basketball Coordinator", email: "gym@stpatrickinarmonk.org" },
+  { name: "Margaret Poppo & Tania DeLuca", role: "Walking with Purpose", phone: "(914) 273-9483" },
+  { name: "Gina Shea", role: "Contemplative Prayer", phone: "(914) 767-9096", email: "ContemplativePrayer@stpatrickinarmonk.org" },
+  { name: "Lori Schiliro", role: "Project Embrace", email: "projectembrace@parishmail.com" },
+];
+
+const emeritusStaff: StaffMember[] = [
+  { name: "Sr. Mary Rose Golden", role: "Mentor Emeritus, R.I.P." },
+  { name: "Sr. Barbara Heil", role: "Mentor, R.I.P." },
+  { name: "Ann P. O'Sullivan", role: "Dir. of Religious Education, R.I.P." },
+  { name: "Rev. Msgr. John J. Wallace", role: "Founding Pastor, R.I.P." },
+  { name: "Rev. Thomas Tolentino", role: "Associate Pastor, R.I.P." },
+  { name: "Rev. Msgr. Walter L. Schroeder", role: "Pastor, R.I.P." },
+  { name: "Rev. Msgr. Daniel Brady", role: "Resident, R.I.P." },
+  { name: "Rev. John F. Quinn", role: "Pastor, R.I.P." },
+  { name: "Rev. John Christ", role: "In Memory of, R.I.P." },
+];
+
+const departmentContacts: DepartmentContact[] = [
+  { department: "Parish Office", phone: "(914) 273-9724", email: "office@stpatrickinarmonk.org" },
+  { department: "Pastor", phone: "(914) 531-1760", email: "Pastor.stpats@outlook.com" },
+  { department: "Deacon", phone: "(914) 531-1760", email: "john.erickson@stpatrickinarmonk.org" },
+  { department: "Religious Education", phone: "(914) 531-1759", email: "reled@stpatrickinarmonk.org" },
+  { department: "Bulletin", phone: "(914) 531-1760", email: "bulletin.editor@stpatrickinarmonk.org" },
+  { department: "Music Ministry", email: "MusicAtStPats@gmail.com" },
+  { department: "Youth Ministry (Teen Life)", email: "teenlife@stpatrickinarmonk.org" },
+  { department: "Parish Council", email: "ParishCouncilPresident@stpatrickinarmonk.org" },
+  { department: "Food Pantry", email: "FoodPantry@stpatrickinarmonk.org" },
+  { department: "St. Francis Hall / Gym", phone: "(914) 468-5938", email: "gym@stpatrickinarmonk.org" },
+  { department: "Walking with Purpose", phone: "(914) 273-9483" },
+  { department: "Contemplative Prayer", phone: "(914) 767-9096", email: "ContemplativePrayer@stpatrickinarmonk.org" },
+  { department: "Project Embrace", email: "projectembrace@parishmail.com" },
+];
+
+function StaffRow({ member }: { member: StaffMember }) {
   return (
-    <Card className="hover-glow transition-all duration-200">
-      <CardContent className="p-3 sm:p-5">
-        <div className="flex items-start gap-3 sm:gap-4">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-            <span className="text-primary font-serif font-bold text-sm sm:text-lg">
-              {member.name.split(" ").map(n => n[0]).slice(0, 2).join("")}
-            </span>
-          </div>
-          <div className="min-w-0">
-            <h3 className="font-semibold text-sm sm:text-base text-foreground">{member.name}</h3>
-            <p className="text-xs sm:text-sm text-muted-foreground">{member.role}</p>
-            {member.phone && (
-              <a
-                href={`tel:${member.phone.replace(/[^\d+]/g, "")}`}
-                className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-primary hover:underline mt-1.5"
-              >
-                <Phone className="w-3.5 h-3.5 shrink-0" />
-                {member.phone}
-              </a>
-            )}
-            {member.email && (
-              <a
-                href={`mailto:${member.email}`}
-                className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-primary hover:underline mt-1"
-              >
-                <Mail className="w-3.5 h-3.5 shrink-0" />
-                <span className="break-all">{member.email}</span>
-              </a>
-            )}
-          </div>
+    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 py-3 border-b border-border/50 last:border-b-0">
+      <div className="flex items-center gap-3 min-w-0 sm:flex-1">
+        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+          <span className="text-primary font-serif font-bold text-xs">
+            {member.name.split(" ").map(n => n[0]).slice(0, 2).join("")}
+          </span>
         </div>
-      </CardContent>
-    </Card>
+        <div className="min-w-0">
+          <p className="font-medium text-sm text-foreground">{member.name}</p>
+          <p className="text-xs text-muted-foreground">{member.role}</p>
+        </div>
+      </div>
+      <div className="flex flex-wrap gap-x-4 gap-y-1 ml-11 sm:ml-0">
+        {member.phone && (
+          <a href={`tel:${member.phone.replace(/[^\d+]/g, "")}`} className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
+            <Phone className="w-3 h-3" />
+            {member.phone}
+          </a>
+        )}
+        {member.email && (
+          <a href={`mailto:${member.email}`} className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
+            <Mail className="w-3 h-3" />
+            <span className="break-all">{member.email}</span>
+          </a>
+        )}
+      </div>
+    </div>
   );
 }
 
 export default function Staff() {
   const revealRef = useReveal();
-
-  const clergy = staffMembers.filter(m => m.category === "clergy");
-  const staff = staffMembers.filter(m => m.category === "staff");
-  const leadership = staffMembers.filter(m => m.category === "leadership");
 
   return (
     <PageLayout>
@@ -86,7 +126,7 @@ export default function Staff() {
           <div className="max-w-3xl">
             <p className="text-gold font-medium tracking-widest uppercase text-xs sm:text-sm mb-2 sm:mb-3 animate-fade-in">Our Team</p>
             <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4 animate-fade-in">
-              Staff & Leadership
+              Staff & Directory
             </h1>
             <p className="text-base sm:text-lg text-muted-foreground animate-fade-up">
               The dedicated people who serve our parish community every day.
@@ -96,101 +136,154 @@ export default function Staff() {
       </section>
 
       <div ref={revealRef}>
-        <section className="container py-8 sm:py-12 md:py-16">
-          {/* Pastor */}
-          <div className="reveal mb-8 sm:mb-12">
-            <div className="flex items-center gap-2 mb-4 sm:mb-6">
-              <div className="w-1 h-6 bg-primary rounded-full" />
-              <h2 className="font-serif text-2xl font-bold text-foreground">Pastor</h2>
-            </div>
-            <div className="max-w-md">
-              <Card className="border-t-4 border-t-primary shadow-md">
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <span className="text-primary font-serif font-bold text-xl">Fr</span>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-lg text-foreground">{clergy[0].name}</h3>
-                      <p className="text-muted-foreground">{clergy[0].role}</p>
-                      {clergy[0].phone && (
-                        <a
-                          href={`tel:${clergy[0].phone.replace(/[^\d+]/g, "")}`}
-                          className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline mt-2"
-                        >
-                          <Phone className="w-3.5 h-3.5" />
-                          {clergy[0].phone}
-                        </a>
-                      )}
-                      {clergy[0].email && (
-                        <a
-                          href={`mailto:${clergy[0].email}`}
-                          className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline mt-1"
-                        >
-                          <Mail className="w-3.5 h-3.5" />
-                          {clergy[0].email}
-                        </a>
-                      )}
-                    </div>
+        <section className="container py-8 sm:py-12 md:py-16 max-w-4xl">
+          <Accordion type="multiple" defaultValue={["clergy", "staff", "leadership"]} className="space-y-3">
+            {/* Clergy */}
+            <AccordionItem value="clergy" className="reveal border rounded-lg px-4 sm:px-6 bg-card shadow-sm">
+              <AccordionTrigger className="py-4 hover:no-underline">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Cross className="w-4 h-4 text-primary" />
                   </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-
-          {/* Parish Staff */}
-          <div className="reveal mb-8 sm:mb-12">
-            <div className="flex items-center gap-2 mb-4 sm:mb-6">
-              <div className="w-1 h-5 sm:h-6 bg-accent rounded-full" />
-              <h2 className="font-serif text-xl sm:text-2xl font-bold text-foreground">Parish Staff</h2>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-              {staff.map((member) => (
-                <StaffCard key={member.name} member={member} />
-              ))}
-            </div>
-          </div>
-
-          {/* Parish Leadership */}
-          <div className="reveal">
-            <div className="flex items-center gap-2 mb-4 sm:mb-6">
-              <div className="w-1 h-5 sm:h-6 bg-primary rounded-full" />
-              <h2 className="font-serif text-xl sm:text-2xl font-bold text-foreground">Parish Leadership</h2>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-              {leadership.map((member) => (
-                <StaffCard key={member.name} member={member} />
-              ))}
-            </div>
-          </div>
-
-          {/* Contact Info */}
-          <div className="reveal mt-12">
-            <Card className="bg-primary/5 border-primary/10">
-              <CardContent className="p-6 md:p-8">
-                <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
-                  <div className="flex items-center gap-3">
-                    <Phone className="w-5 h-5 text-primary" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Parish Office</p>
-                      <a href="tel:9142739724" className="font-semibold text-foreground hover:text-primary">(914) 273-9724</a>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Phone className="w-5 h-5 text-primary" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Religious Education</p>
-                      <a href="tel:9145311759" className="font-semibold text-foreground hover:text-primary">(914) 531-1759</a>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Mail className="w-5 h-5 text-primary" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Office Hours</p>
-                      <p className="font-semibold text-foreground">Mon–Thu, 10am–5pm</p>
-                    </div>
-                  </div>
+                  <span className="font-serif text-lg font-bold text-foreground">Clergy</span>
                 </div>
+              </AccordionTrigger>
+              <AccordionContent className="pb-4">
+                {clergy.map((member) => (
+                  <StaffRow key={member.name} member={member} />
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* Parish Staff */}
+            <AccordionItem value="staff" className="reveal border rounded-lg px-4 sm:px-6 bg-card shadow-sm">
+              <AccordionTrigger className="py-4 hover:no-underline">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
+                    <Users className="w-4 h-4 text-accent" />
+                  </div>
+                  <span className="font-serif text-lg font-bold text-foreground">Parish Staff</span>
+                  <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">{staff.length}</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pb-4">
+                {staff.map((member) => (
+                  <StaffRow key={member.name} member={member} />
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* Parish Leadership */}
+            <AccordionItem value="leadership" className="reveal border rounded-lg px-4 sm:px-6 bg-card shadow-sm">
+              <AccordionTrigger className="py-4 hover:no-underline">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Users className="w-4 h-4 text-primary" />
+                  </div>
+                  <span className="font-serif text-lg font-bold text-foreground">Parish Leadership</span>
+                  <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">{leadership.length}</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pb-4">
+                {leadership.map((member) => (
+                  <StaffRow key={member.name} member={member} />
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* Ministry Leaders */}
+            <AccordionItem value="ministry" className="reveal border rounded-lg px-4 sm:px-6 bg-card shadow-sm">
+              <AccordionTrigger className="py-4 hover:no-underline">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center">
+                    <Heart className="w-4 h-4 text-gold" />
+                  </div>
+                  <span className="font-serif text-lg font-bold text-foreground">Ministry Leaders</span>
+                  <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">{ministryLeaders.length}</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pb-4">
+                {ministryLeaders.map((member, i) => (
+                  <StaffRow key={`${member.name}-${i}`} member={member} />
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* Emeritus Staff */}
+            <AccordionItem value="emeritus" className="reveal border rounded-lg px-4 sm:px-6 bg-card shadow-sm">
+              <AccordionTrigger className="py-4 hover:no-underline">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                    <BookOpen className="w-4 h-4 text-muted-foreground" />
+                  </div>
+                  <span className="font-serif text-lg font-bold text-foreground">Emeritus Staff</span>
+                  <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">In Memoriam</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pb-4">
+                <div className="space-y-2">
+                  {emeritusStaff.map((member) => (
+                    <div key={member.name} className="flex items-center gap-3 py-2 border-b border-border/30 last:border-b-0">
+                      <div className="w-2 h-2 rounded-full bg-muted-foreground/30 shrink-0" />
+                      <div>
+                        <p className="text-sm font-medium text-foreground">{member.name}</p>
+                        <p className="text-xs text-muted-foreground italic">{member.role}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* Department Directory */}
+            <AccordionItem value="directory" className="reveal border-2 border-primary/20 rounded-lg px-4 sm:px-6 bg-primary/5 shadow-sm">
+              <AccordionTrigger className="py-4 hover:no-underline">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                    <Phone className="w-4 h-4 text-primary" />
+                  </div>
+                  <span className="font-serif text-lg font-bold text-foreground">Department Directory</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pb-4">
+                <p className="text-sm text-muted-foreground mb-4">Quick reference for all parish department contacts.</p>
+                <div className="space-y-0">
+                  {departmentContacts.map((dept) => (
+                    <div key={dept.department} className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 py-3 border-b border-border/50 last:border-b-0">
+                      <p className="font-medium text-sm text-foreground sm:w-48 shrink-0">{dept.department}</p>
+                      <div className="flex flex-wrap gap-x-4 gap-y-1">
+                        {dept.phone && (
+                          <a href={`tel:${dept.phone.replace(/[^\d+]/g, "")}`} className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
+                            <Phone className="w-3 h-3" />
+                            {dept.phone}
+                          </a>
+                        )}
+                        {dept.email && (
+                          <a href={`mailto:${dept.email}`} className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
+                            <Mail className="w-3 h-3" />
+                            <span className="break-all">{dept.email}</span>
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+
+          {/* Office Hours Banner */}
+          <div className="reveal mt-8">
+            <Card className="bg-primary/5 border-primary/10">
+              <CardContent className="p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-sm font-medium text-foreground">Office Hours</span>
+                </div>
+                <p className="text-sm text-muted-foreground">Monday – Thursday, 10:00 AM – 5:00 PM | Friday: Closed</p>
+                <a href="tel:9142739724" className="text-sm font-medium text-primary hover:underline ml-auto">
+                  (914) 273-9724
+                </a>
               </CardContent>
             </Card>
           </div>

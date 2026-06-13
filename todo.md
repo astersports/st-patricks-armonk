@@ -160,3 +160,14 @@
 - [x] Simplify footer YouTube to a "Subscribe on YouTube" button (not icon)
 - [x] Create "New Here?" / "Plan Your Visit" page (directions, what to expect at Mass, welcome message)
 - [x] Add "New Here?" link to navigation
+
+## Phase 15: Staff Page Redesign
+
+- [x] Redesign Staff page with accordion-style grouped sections
+- [x] Add Clergy section (Pastor)
+- [x] Add Parish Staff section (10 members with contact info)
+- [x] Add Parish Leadership section (5 members)
+- [x] Add Ministry Leaders section (10 volunteer coordinators with contact info)
+- [x] Add Emeritus Staff section (9 members, In Memoriam)
+- [x] Add Department Directory accordion with all department emails and phone numbers (13 departments)
+- [x] Add Office Hours banner at bottom
