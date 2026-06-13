@@ -1,7 +1,7 @@
 import PageLayout from "@/components/PageLayout";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { Clock, BookOpen, Calendar, Heart, ArrowRight, Mail, Users, Church } from "lucide-react";
+import { Clock, BookOpen, Calendar, Heart, ArrowRight, Mail, Users, Church, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -111,6 +111,94 @@ export default function Home() {
                 <p className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-primary">100</p>
                 <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Years of Faith</p>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Watch Mass Online */}
+        <section className="reveal container pb-10 sm:pb-16">
+          <div className="flex items-center justify-between mb-5 sm:mb-8">
+            <div>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Watch Mass</h2>
+              <p className="text-muted-foreground mt-0.5 text-sm sm:text-base">Stream our latest liturgy from home</p>
+            </div>
+            <a href="https://www.youtube.com/@stpatricksarmonk" target="_blank" rel="noopener noreferrer">
+              <Button variant="ghost" className="text-primary hover:text-primary/80 press-scale">
+                All Videos <ArrowRight className="w-4 h-4 ml-1" />
+              </Button>
+            </a>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            <div className="lg:col-span-3">
+              <div className="relative aspect-video rounded-xl overflow-hidden shadow-lg bg-black">
+                <iframe
+                  src="https://www.youtube.com/embed/yJTJBZOFziE"
+                  title="Latest Mass - St. Patrick's Armonk"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0 w-full h-full"
+                />
+              </div>
+            </div>
+            <div className="lg:col-span-2 flex flex-col gap-3">
+              <a href="https://www.youtube.com/watch?v=IAAiHmbER-g" target="_blank" rel="noopener noreferrer" className="group">
+                <Card className="hover-lift border-0 shadow-sm">
+                  <CardContent className="p-3 flex gap-3 items-center">
+                    <div className="relative w-24 h-14 rounded-md overflow-hidden shrink-0 bg-muted">
+                      <img src="https://i.ytimg.com/vi/IAAiHmbER-g/hqdefault.jpg" alt="" className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/10 transition-colors">
+                        <Play className="w-5 h-5 text-white fill-white" />
+                      </div>
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium line-clamp-2">10.00AM Mass of First Holy Communion</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">May 2, 2026</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </a>
+              <a href="https://www.youtube.com/watch?v=Ek6NM2FQEAw" target="_blank" rel="noopener noreferrer" className="group">
+                <Card className="hover-lift border-0 shadow-sm">
+                  <CardContent className="p-3 flex gap-3 items-center">
+                    <div className="relative w-24 h-14 rounded-md overflow-hidden shrink-0 bg-muted">
+                      <img src="https://i.ytimg.com/vi/Ek6NM2FQEAw/hqdefault.jpg" alt="" className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/10 transition-colors">
+                        <Play className="w-5 h-5 text-white fill-white" />
+                      </div>
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium line-clamp-2">Confirmation Mass 1:00 PM</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">April 11, 2026</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </a>
+              <a href="https://www.youtube.com/watch?v=fjIzttFMmn0" target="_blank" rel="noopener noreferrer" className="group">
+                <Card className="hover-lift border-0 shadow-sm">
+                  <CardContent className="p-3 flex gap-3 items-center">
+                    <div className="relative w-24 h-14 rounded-md overflow-hidden shrink-0 bg-muted">
+                      <img src="https://i.ytimg.com/vi/fjIzttFMmn0/hqdefault.jpg" alt="" className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/10 transition-colors">
+                        <Play className="w-5 h-5 text-white fill-white" />
+                      </div>
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium line-clamp-2">Easter Mass 10:30 AM</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">April 20, 2026</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </a>
+              <a
+                href="https://www.youtube.com/@stpatricksarmonk"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-auto"
+              >
+                <Button variant="outline" className="w-full press-scale">
+                  <Play className="w-4 h-4 mr-2" /> Subscribe on YouTube
+                </Button>
+              </a>
             </div>
           </div>
         </section>

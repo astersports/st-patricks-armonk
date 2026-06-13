@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, Church, ChevronDown } from "lucide-react";
+import { Menu, X, Church, ChevronDown, ArrowRight } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 
@@ -143,6 +143,17 @@ export default function Navigation() {
           : "bg-white/80 backdrop-blur-sm"
       }`}
     >
+      {/* Announcement Bar */}
+      <div className="bg-primary text-white text-center py-2 px-4">
+        <Link
+          href="/parish-registration"
+          className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium hover:underline transition-all"
+        >
+          <span className="hidden sm:inline">New to St. Patrick's?</span>
+          <span className="font-semibold">Register as a Parishioner</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
+      </div>
       <nav className="container flex items-center justify-between h-16 lg:h-[4.5rem]">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">

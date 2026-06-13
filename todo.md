@@ -146,3 +146,9 @@
 - [x] Faith Formation accordion badges: tighten badge positioning on mobile (already good with flex-wrap)
 - [x] Contact page: improve map placeholder/loading state (added loading animation)
 - [x] Footer: make more compact on mobile (reduced padding and gap)
+
+## Phase 13: YouTube Integration & Registration Banner
+
+- [x] Add sticky announcement bar above nav for "New Parish Registration"
+- [x] Add "Watch Mass" section on homepage with YouTube embed + recent video sidebar
+- [x] Add YouTube icon/link in footer
