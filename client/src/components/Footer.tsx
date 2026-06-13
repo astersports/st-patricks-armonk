@@ -65,10 +65,10 @@ export default function Footer() {
           <p className="text-[11px] text-white/40">
             © {new Date().getFullYear()} Church of St. Patrick in Armonk · <a href="https://archny.org" target="_blank" rel="noopener noreferrer" className="hover:text-gold/60 transition-colors">Archdiocese of New York</a>
           </p>
-          <a href="https://www.astersports.io" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 opacity-50 hover:opacity-80 transition-opacity">
+          <a href="https://www.astersports.io" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 opacity-70 hover:opacity-100 transition-opacity">
             <span className="text-[10px] text-white/60">powered by</span>
-            <img src="/manus-storage/aster_logo_clean_854bf8b0.png" alt="Aster Sports" className="h-3.5 w-3.5 object-contain" />
-            <span className="text-[10px] font-medium text-gold/80">Aster Sports</span>
+            <img src="/manus-storage/aster_logo_white_clean_7501c5ec.png" alt="Aster Sports" className="h-4 w-4 object-contain" />
+            <span className="text-[10px] font-medium text-white/80">Aster Sports</span>
           </a>
         </div>
       </div>
