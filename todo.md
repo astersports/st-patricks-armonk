@@ -177,3 +177,5 @@
 - [x] Fix scroll-to-top on page navigation (pages start at bottom instead of top)
 - [x] Redesign footer to be more compact and visually appealing
 - [x] Replace Aster Sports logo with transparent version that blends with dark green footer
+- [x] Use original gold/orange Aster logo colors (not white) and increase powered-by section size
+- [x] Reduce card padding/spacing on mobile across all pages (Mass Times, Ministries, Devotions)

@@ -106,33 +106,33 @@ export default function Ministries() {
       </section>
 
       <div ref={revealRef}>
-        <section className="container py-8 sm:py-12">
+        <section className="container py-6 sm:py-12">
           {/* Devotions */}
-          <div className="reveal mb-10 sm:mb-16">
+          <div className="reveal mb-8 sm:mb-16">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-1 h-5 sm:h-6 bg-primary rounded-full" />
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Devotions</h2>
+              <h2 className="font-serif text-xl sm:text-3xl font-bold text-foreground">Devotions</h2>
             </div>
-            <p className="text-muted-foreground mb-5 sm:mb-8 ml-4 text-sm sm:text-base">Regular opportunities for prayer and spiritual growth.</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+            <p className="text-muted-foreground mb-4 sm:mb-8 ml-4 text-xs sm:text-base">Regular opportunities for prayer and spiritual growth.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 sm:gap-4">
               {devotions.map((devotion) => (
                 <Card key={devotion.title} className="hover-glow transition-all">
-                  <CardContent className="p-4 sm:p-6 flex gap-3 sm:gap-4">
-                    <div className="bg-primary/10 p-2 sm:p-3 rounded-xl shrink-0">
+                  <CardContent className="p-3 sm:p-6 flex gap-2.5 sm:gap-4">
+                    <div className="bg-primary/10 p-1.5 sm:p-3 rounded-lg sm:rounded-xl shrink-0">
                       <devotion.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-sm sm:text-lg">{devotion.title}</h3>
                       <p className="text-muted-foreground text-xs sm:text-sm">{devotion.description}</p>
-                      <p className="text-primary font-medium text-xs sm:text-sm mt-0.5 sm:mt-1">{devotion.time}</p>
+                      <p className="text-primary font-medium text-xs sm:text-sm mt-0.5">{devotion.time}</p>
                     </div>
                   </CardContent>
                 </Card>
               ))}
             </div>
-            <Card className="mt-4 bg-secondary/50 border-0">
-              <CardContent className="p-6">
-                <p className="text-muted-foreground">
+            <Card className="mt-3 sm:mt-4 bg-secondary/50 border-0">
+              <CardContent className="p-3 sm:p-6">
+                <p className="text-muted-foreground text-xs sm:text-base">
                   <strong className="text-foreground">Stations of the Cross video:</strong>{" "}
                   <a href="https://youtu.be/6faWBZxdE0M" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
                     Watch here →
@@ -146,49 +146,49 @@ export default function Ministries() {
           <div className="reveal">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-1 h-5 sm:h-6 bg-accent rounded-full" />
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Parish Ministries</h2>
+              <h2 className="font-serif text-xl sm:text-3xl font-bold text-foreground">Parish Ministries</h2>
             </div>
-            <p className="text-muted-foreground mb-5 sm:mb-8 ml-4 text-sm sm:text-base">Use your gifts to serve God and our community.</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+            <p className="text-muted-foreground mb-4 sm:mb-8 ml-4 text-xs sm:text-base">Use your gifts to serve God and our community.</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-6">
               {ministries.map((ministry) => (
                 <Card key={ministry.title} className="hover-lift group shadow-sm">
-                  <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-3">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-accent/10 p-2 sm:p-2.5 rounded-xl group-hover:bg-accent/20 transition-colors">
-                        <ministry.icon className="w-5 h-5 text-accent" />
+                  <CardHeader className="p-3 sm:p-6 pb-1.5 sm:pb-3">
+                    <div className="flex items-center gap-2.5 sm:gap-3">
+                      <div className="bg-accent/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl group-hover:bg-accent/20 transition-colors">
+                        <ministry.icon className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
                       </div>
                       <CardTitle className="text-sm sm:text-lg">{ministry.title}</CardTitle>
                     </div>
                   </CardHeader>
-                  <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+                  <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
                     <p className="text-muted-foreground text-xs sm:text-sm">{ministry.description}</p>
                   </CardContent>
                 </Card>
               ))}
             </div>
             {/* Outreach Programs */}
-            <div className="mt-10 sm:mt-14">
+            <div className="mt-8 sm:mt-14">
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-1 h-5 sm:h-6 bg-gold rounded-full" />
-                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Charitable Outreach</h2>
+                <h2 className="font-serif text-xl sm:text-3xl font-bold text-foreground">Charitable Outreach</h2>
               </div>
-              <p className="text-muted-foreground mb-5 sm:mb-8 ml-4 text-sm sm:text-base">Putting our faith into action through service to those in need.</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+              <p className="text-muted-foreground mb-4 sm:mb-8 ml-4 text-xs sm:text-base">Putting our faith into action through service to those in need.</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 sm:gap-4">
                 {outreachPrograms.map((program) => (
                   <Card key={program.title} className="border-l-4 border-l-gold/60 hover-glow transition-all">
-                    <CardContent className="p-4 sm:p-6">
-                      <h3 className="font-semibold text-sm sm:text-lg mb-1 sm:mb-2">{program.title}</h3>
+                    <CardContent className="p-3 sm:p-6">
+                      <h3 className="font-semibold text-sm sm:text-lg mb-1">{program.title}</h3>
                       <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">{program.description}</p>
-                      <p className="text-xs text-primary font-medium mt-2">Contact: {program.contact}</p>
+                      <p className="text-xs text-primary font-medium mt-1.5 sm:mt-2">Contact: {program.contact}</p>
                     </CardContent>
                   </Card>
                 ))}
               </div>
             </div>
 
-            <Card className="mt-8 bg-primary/5 border-primary/20">
-              <CardContent className="p-6 text-center">
-                <p className="text-foreground">
+            <Card className="mt-6 sm:mt-8 bg-primary/5 border-primary/20">
+              <CardContent className="p-4 sm:p-6 text-center">
+                <p className="text-foreground text-sm sm:text-base">
                   Interested in joining a ministry? Contact the parish office at{" "}
                   <a href="tel:9142739724" className="font-semibold text-primary hover:underline">(914) 273-9724</a>
                 </p>
