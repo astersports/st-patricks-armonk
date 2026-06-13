@@ -132,3 +132,7 @@
 - [x] Add 12:30 PM seasonal note (Oct-June only) to footer Mass schedule
 - [x] Fix Blaze contact to Religious Ed office number (914) 531-1759
 - [x] Pastor card now shows email address
+
+## Phase 11: Powered by Aster Sports Attribution
+
+- [x] Add "Powered by Aster Sports" with logo at the very bottom of the footer (like eCatholic on original site)
