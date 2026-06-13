@@ -60,10 +60,10 @@ export default function SponsorForm() {
                 Your sponsor certificate request has been received. The parish office will 
                 review your eligibility and contact you if additional information is needed.
               </p>
-              <Link href="/sacraments">
+              <Link href="/">
                 <Button variant="outline" className="border-green-700 text-green-700 hover:bg-green-50">
                   <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Sacraments
+                  Home
                 </Button>
               </Link>
             </CardContent>
@@ -78,8 +78,8 @@ export default function SponsorForm() {
       {/* Header */}
       <div className="bg-green-900 text-white py-12">
         <div className="container max-w-3xl">
-          <Link href="/sacraments" className="text-green-200 hover:text-white text-sm flex items-center gap-1 mb-4">
-            <ArrowLeft className="w-4 h-4" /> Back to Sacraments
+          <Link href="/" className="text-green-200 hover:text-white text-sm flex items-center gap-1 mb-4">
+            <ArrowLeft className="w-4 h-4" /> Home
           </Link>
           <div className="flex items-center gap-3 mb-3">
             <div className="w-12 h-12 bg-green-800 rounded-full flex items-center justify-center">
@@ -288,8 +288,8 @@ export default function SponsorForm() {
 
           {/* Submit */}
           <div className="flex items-center justify-between">
-            <Link href="/sacraments" className="text-green-700 hover:text-green-900 text-sm">
-              ← Back to Sacraments
+            <Link href="/" className="text-green-700 hover:text-green-900 text-sm">
+              ← Home
             </Link>
             <Button
               type="submit"

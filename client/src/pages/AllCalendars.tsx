@@ -102,7 +102,7 @@ export default function AllCalendars() {
     : `Upcoming ${sourceConfig[activeSource].label} events and activities.`;
 
   return (
-    <PageLayout>
+    <PageLayout hideBackButton>
       {/* Sticky Nav Bar */}
       <div className="bg-background border-b border-border/60 sticky top-0 z-30">
         <div className="container max-w-4xl">

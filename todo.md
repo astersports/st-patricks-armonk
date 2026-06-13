@@ -249,3 +249,4 @@
 - [x] Updated all internal links across site (Nav, FaithFormation, Sacraments, TeenLife)
 - [x] Add "All" button to homepage calendar quick-nav (All, Parish, CCD, CYO)
 - [x] Extend calendar page to show 6 months of events with accordion-style month groups
+- [x] Add back-to-homepage button on all interior pages (not just calendar)
