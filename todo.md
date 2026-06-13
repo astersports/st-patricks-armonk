@@ -171,3 +171,9 @@
 - [x] Add Emeritus Staff section (9 members, In Memoriam)
 - [x] Add Department Directory accordion with all department emails and phone numbers (13 departments)
 - [x] Add Office Hours banner at bottom
+
+## Phase 16: Footer Redesign & Navigation Fix
+
+- [x] Fix scroll-to-top on page navigation (pages start at bottom instead of top)
+- [x] Redesign footer to be more compact and visually appealing
+- [x] Replace Aster Sports logo with transparent version that blends with dark green footer

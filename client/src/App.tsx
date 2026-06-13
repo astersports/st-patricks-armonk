@@ -3,6 +3,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
+import ScrollToTop from "./components/ScrollToTop";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import MassTimes from "./pages/MassTimes";
@@ -35,38 +36,41 @@ import NewHere from "./pages/NewHere";
 
 function Router() {
   return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/about" component={About} />
-      <Route path="/staff" component={Staff} />
-      <Route path="/parish-registration" component={ParishRegistration} />
-      <Route path="/new-here" component={NewHere} />
-      <Route path="/mass-times" component={MassTimes} />
-      <Route path="/sacraments" component={Sacraments} />
-      <Route path="/news-events" component={NewsEvents} />
-      <Route path="/bulletins" component={Bulletins} />
-      <Route path="/parish-calendar" component={ParishCalendar} />
-      <Route path="/faith-formation" component={FaithFormation} />
-      <Route path="/ccd-calendar" component={CcdCalendar} />
-      <Route path="/ccd-registration" component={CcdRegistration} />
-      <Route path="/ccd-permissions" component={CcdPermissions} />
-      <Route path="/cyo-basketball" component={CyoBasketball} />
-      <Route path="/teen-life" component={TeenLife} />
-      <Route path="/ministries" component={Ministries} />
-      <Route path="/volunteer" component={Volunteer} />
-      <Route path="/forms" component={FormsDocuments} />
-      <Route path="/baptism-form" component={BaptismForm} />
-      <Route path="/sponsor-form" component={SponsorForm} />
-      <Route path="/marriage-form" component={MarriageForm} />
-      <Route path="/funeral-form" component={FuneralForm} />
-      <Route path="/giving" component={Giving} />
-      <Route path="/contact" component={Contact} />
-      <Route path="/admin" component={Admin} />
-      <Route path="/unsubscribe/:token" component={Unsubscribe} />
-      <Route path="/ccd-unsubscribe" component={CcdUnsubscribe} />
-      <Route path="/404" component={NotFound} />
-      <Route component={NotFound} />
-    </Switch>
+    <>
+      <ScrollToTop />
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/about" component={About} />
+        <Route path="/staff" component={Staff} />
+        <Route path="/parish-registration" component={ParishRegistration} />
+        <Route path="/new-here" component={NewHere} />
+        <Route path="/mass-times" component={MassTimes} />
+        <Route path="/sacraments" component={Sacraments} />
+        <Route path="/news-events" component={NewsEvents} />
+        <Route path="/bulletins" component={Bulletins} />
+        <Route path="/parish-calendar" component={ParishCalendar} />
+        <Route path="/faith-formation" component={FaithFormation} />
+        <Route path="/ccd-calendar" component={CcdCalendar} />
+        <Route path="/ccd-registration" component={CcdRegistration} />
+        <Route path="/ccd-permissions" component={CcdPermissions} />
+        <Route path="/cyo-basketball" component={CyoBasketball} />
+        <Route path="/teen-life" component={TeenLife} />
+        <Route path="/ministries" component={Ministries} />
+        <Route path="/volunteer" component={Volunteer} />
+        <Route path="/forms" component={FormsDocuments} />
+        <Route path="/baptism-form" component={BaptismForm} />
+        <Route path="/sponsor-form" component={SponsorForm} />
+        <Route path="/marriage-form" component={MarriageForm} />
+        <Route path="/funeral-form" component={FuneralForm} />
+        <Route path="/giving" component={Giving} />
+        <Route path="/contact" component={Contact} />
+        <Route path="/admin" component={Admin} />
+        <Route path="/unsubscribe/:token" component={Unsubscribe} />
+        <Route path="/ccd-unsubscribe" component={CcdUnsubscribe} />
+        <Route path="/404" component={NotFound} />
+        <Route component={NotFound} />
+      </Switch>
+    </>
   );
 }
 
