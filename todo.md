@@ -257,3 +257,4 @@
 - [x] Create database table for CCD permission form submissions
 - [x] Add admin view for submitted CCD permission forms
 - [x] Fix CCD Permissions page blank page bug (useReveal hook containerRef not attached to wrapper div)
+- [x] Replace deprecated google.maps.Marker with AdvancedMarkerElement on Contact page

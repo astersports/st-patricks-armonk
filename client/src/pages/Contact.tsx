@@ -12,7 +12,7 @@ export default function Contact() {
     const position = { lat: 41.1268, lng: -73.7140 };
     map.setCenter(position);
     map.setZoom(15);
-    new google.maps.Marker({
+    new google.maps.marker.AdvancedMarkerElement({
       position,
       map,
       title: "St. Patrick Church, Armonk",
