@@ -1,7 +1,7 @@
 import PageLayout from "@/components/PageLayout";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { Clock, ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Calendar } from "lucide-react";
+import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Calendar, Newspaper } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,40 +15,40 @@ const journeyCards = [
   {
     icon: Users,
     title: "New Here?",
-    description: "Plan your first visit and learn what to expect at St. Patrick's.",
+    description: "Plan your first visit and learn what to expect.",
     href: "/new-here",
     cta: "Plan Your Visit",
-    accent: "from-primary/10 to-primary/5",
+    iconBg: "bg-primary/10",
     iconColor: "text-primary",
     borderColor: "border-l-primary",
   },
   {
     icon: Cross,
     title: "Sacraments",
-    description: "Baptism, First Communion, Confirmation, Marriage, and more.",
+    description: "Baptism, Communion, Confirmation, Marriage.",
     href: "/sacraments",
     cta: "Learn More",
-    accent: "from-gold/10 to-gold/5",
+    iconBg: "bg-gold/10",
     iconColor: "text-gold",
     borderColor: "border-l-gold",
   },
   {
     icon: GraduationCap,
     title: "Faith Formation",
-    description: "Religious education for children, teens, and adults at every stage.",
+    description: "Religious education for all ages.",
     href: "/faith-formation",
     cta: "Explore Programs",
-    accent: "from-primary/10 to-primary/5",
+    iconBg: "bg-primary/10",
     iconColor: "text-primary",
     borderColor: "border-l-primary",
   },
   {
     icon: Heart,
     title: "Get Involved",
-    description: "Ministries, volunteering, and ways to serve our community.",
+    description: "Ministries, volunteering, and community.",
     href: "/ministries",
     cta: "Find Your Place",
-    accent: "from-accent/10 to-accent/5",
+    iconBg: "bg-accent/10",
     iconColor: "text-accent",
     borderColor: "border-l-accent",
   },
@@ -56,7 +56,8 @@ const journeyCards = [
 
 export default function Home() {
   const [email, setEmail] = useState("");
-  const { data: upcomingEvents, isLoading: eventsLoading } = trpc.events.listUpcoming.useQuery();
+  const { data: nextCalEvent } = trpc.googleCalendar.nextEvent.useQuery();
+  const { data: newsItems } = trpc.news.listPublished.useQuery();
   const subscribeMutation = trpc.subscriptions.subscribe.useMutation({
     onSuccess: () => {
       toast.success("Successfully subscribed to parish updates!");
@@ -66,13 +67,13 @@ export default function Home() {
   });
   const revealRef = useReveal();
 
-  // Get next upcoming event for "This Week" section
-  const nextEvent = upcomingEvents?.[0];
+  // Get latest news item
+  const latestNews = newsItems?.[0];
 
   return (
     <PageLayout>
-      {/* Hero Section — tighter, more focused */}
-      <section className="relative h-[65vh] min-h-[480px] max-h-[600px] flex items-center justify-center overflow-hidden">
+      {/* Hero Section */}
+      <section className="relative h-[60vh] min-h-[440px] max-h-[560px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img
             src="/manus-storage/church-stained-glass_4e3f2e8c.jpg"
@@ -111,26 +112,37 @@ export default function Home() {
       </section>
 
       <div ref={revealRef}>
-        {/* This Week at St. Patrick's — compact, dynamic */}
+        {/* News & Events Highlight — replaces the old Mass Schedule bar */}
         <section className="reveal container -mt-8 relative z-20 mb-10 sm:mb-14">
           <Card className="border-0 shadow-lg overflow-hidden">
             <CardContent className="p-0">
               <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border/50">
-                {/* Next Mass */}
-                <Link href="/mass-times" className="group">
+                {/* Latest News */}
+                <Link href="/news-events" className="group">
                   <div className="p-4 sm:p-5 flex items-center gap-4 hover:bg-primary/[0.02] transition-colors">
                     <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <Clock className="w-5 h-5 text-primary" />
+                      <Newspaper className="w-5 h-5 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Mass Schedule</p>
-                      <p className="font-semibold text-foreground text-sm sm:text-base">Weekend: Sat 5:30 PM · Sun 8:30, 10:30, 12:30</p>
-                      <p className="text-xs text-muted-foreground">Weekdays: Tue–Fri 8:30 AM</p>
+                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Latest News</p>
+                      {latestNews ? (
+                        <>
+                          <p className="font-semibold text-foreground text-sm sm:text-base truncate">{latestNews.title}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {format(new Date(latestNews.publishedAt || latestNews.createdAt), "MMM d, yyyy")}
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <p className="font-semibold text-foreground text-sm sm:text-base">News & Announcements</p>
+                          <p className="text-xs text-muted-foreground">Parish updates and community news</p>
+                        </>
+                      )}
                     </div>
                     <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
                   </div>
                 </Link>
-                {/* Upcoming Event */}
+                {/* Upcoming Event from Google Calendar */}
                 <Link href="/parish-calendar" className="group">
                   <div className="p-4 sm:p-5 flex items-center gap-4 hover:bg-primary/[0.02] transition-colors">
                     <div className="w-11 h-11 rounded-full bg-gold/10 flex items-center justify-center shrink-0">
@@ -138,11 +150,11 @@ export default function Home() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Coming Up</p>
-                      {nextEvent ? (
+                      {nextCalEvent ? (
                         <>
-                          <p className="font-semibold text-foreground text-sm sm:text-base truncate">{nextEvent.title}</p>
+                          <p className="font-semibold text-foreground text-sm sm:text-base truncate">{nextCalEvent.title}</p>
                           <p className="text-xs text-muted-foreground">
-                            {format(new Date(nextEvent.startDate), "EEE, MMM d")} · {format(new Date(nextEvent.startDate), "h:mm a")}
+                            {format(new Date(nextCalEvent.startDate), "EEE, MMM d")} · {format(new Date(nextCalEvent.startDate), "h:mm a")}
                           </p>
                         </>
                       ) : (
@@ -171,19 +183,41 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 4 Journey Cards */}
-        <section className="reveal container pb-10 sm:pb-14">
-          <div className="grid grid-cols-2 gap-2.5 sm:gap-4">
+        {/* 4 Journey Cards — horizontal scroll on mobile, 2x2 grid on desktop */}
+        <section className="reveal pb-10 sm:pb-14">
+          {/* Mobile: horizontal scroll */}
+          <div className="sm:hidden overflow-x-auto scrollbar-hide px-4">
+            <div className="flex gap-3 w-max pb-2">
+              {journeyCards.map((card) => (
+                <Link key={card.href} href={card.href}>
+                  <Card className={`group cursor-pointer w-[200px] border-0 shadow-sm border-l-3 ${card.borderColor} hover:shadow-md transition-all duration-200 shrink-0`}>
+                    <CardContent className="p-3.5">
+                      <div className={`w-8 h-8 rounded-lg ${card.iconBg} flex items-center justify-center mb-2`}>
+                        <card.icon className={`w-4 h-4 ${card.iconColor}`} />
+                      </div>
+                      <h3 className="font-semibold text-foreground text-sm mb-0.5">{card.title}</h3>
+                      <p className="text-[11px] text-muted-foreground leading-snug line-clamp-2">{card.description}</p>
+                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-primary mt-2 group-hover:gap-1.5 transition-all">
+                        {card.cta} <ArrowRight className="w-3 h-3" />
+                      </span>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </div>
+          {/* Desktop: 2x2 grid */}
+          <div className="hidden sm:grid container grid-cols-2 lg:grid-cols-4 gap-4">
             {journeyCards.map((card) => (
               <Link key={card.href} href={card.href}>
                 <Card className={`group cursor-pointer h-full border-0 shadow-sm border-l-3 ${card.borderColor} hover:shadow-md transition-all duration-200`}>
-                  <CardContent className="p-3 sm:p-5">
-                    <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br ${card.accent} flex items-center justify-center mb-2 sm:mb-3`}>
-                      <card.icon className={`w-4 h-4 sm:w-4.5 sm:h-4.5 ${card.iconColor}`} />
+                  <CardContent className="p-5">
+                    <div className={`w-9 h-9 rounded-lg ${card.iconBg} flex items-center justify-center mb-3`}>
+                      <card.icon className={`w-4.5 h-4.5 ${card.iconColor}`} />
                     </div>
-                    <h3 className="font-semibold text-foreground text-xs sm:text-base mb-0.5">{card.title}</h3>
-                    <p className="text-[11px] sm:text-sm text-muted-foreground leading-snug line-clamp-2">{card.description}</p>
-                    <span className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-medium text-primary mt-1.5 sm:mt-2 group-hover:gap-1.5 transition-all">
+                    <h3 className="font-semibold text-foreground text-base mb-1">{card.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-snug line-clamp-2">{card.description}</p>
+                    <span className="inline-flex items-center gap-1 text-xs font-medium text-primary mt-2 group-hover:gap-1.5 transition-all">
                       {card.cta} <ArrowRight className="w-3 h-3" />
                     </span>
                   </CardContent>

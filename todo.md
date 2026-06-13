@@ -205,3 +205,16 @@
 - [x] Apply Timeline Feed to CCD Calendar page
 - [x] Apply Timeline Feed to CYO Practice Schedule page (kept Google Calendar embed with consistent styling)
 - [x] Ensure compact and scannable on mobile
+
+## Phase 20: ICS Feed Parsing + Homepage Improvements
+
+- [x] Build server-side ICS parser to fetch and parse Google Calendar .ics feeds
+- [x] Create tRPC endpoint for parsed calendar events (parishEvents, ccdEvents, cyoEvents, nextEvent)
+- [x] Replace Parish Calendar Google iframe with native Timeline Feed from ICS data
+- [x] Replace CCD Calendar Google iframe with native Timeline Feed from ICS data
+- [x] Replace CYO Basketball Google iframe with native Timeline Feed from ICS data
+- [x] Update homepage: replace Mass Schedule info bar with News & Events highlight
+- [x] Update homepage: switch 4 journey cards to horizontal swipeable row on mobile
+- [x] Correct CCD ICS URL to reled@stpatrickinarmonk.org
+- [x] Add CYO ICS URL (stpatrickinarmonk.org_5snqr5qqph11et22r6sk81k67g@group.calendar.google.com)
+- [x] Fix Home.tsx 'Latest News' highlight link to use correct route (/news-events)

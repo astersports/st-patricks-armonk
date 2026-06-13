@@ -1,15 +1,25 @@
-import { useMemo } from "react";
 import PageLayout from "@/components/PageLayout";
 import TimelineFeed, { type TimelineEvent } from "@/components/TimelineFeed";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar, MapPin, Users, Info } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
-// Static CYO practice schedule data (since there's no DB table for CYO, we use the Google Calendar embed approach)
-// For now, show the embedded calendar as a fallback with a note
 export default function CyoBasketball() {
-  // CYO doesn't have a database-backed event list, so we'll keep the Google Calendar
-  // but style the page consistently with the Timeline Feed aesthetic
+  const { data: icsEvents, isLoading } = trpc.googleCalendar.cyoEvents.useQuery();
+
+  // Map ICS events to Timeline Feed format
+  const timelineEvents: TimelineEvent[] = (icsEvents || []).map((e) => ({
+    id: e.id,
+    title: e.title,
+    description: e.description,
+    location: e.location,
+    startDate: e.startDate,
+    endDate: e.endDate,
+    allDay: e.allDay,
+  }));
+
   return (
     <PageLayout>
       {/* Header */}
@@ -45,25 +55,30 @@ export default function CyoBasketball() {
 
       <section className="py-8 sm:py-12">
         <div className="container max-w-4xl">
-          {/* Google Calendar in Timeline-style frame */}
-          <div className="mb-8">
-            <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm py-2 mb-3 border-b border-border/50">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Practice Schedule
-              </h3>
+          {/* Timeline Feed from ICS */}
+          {isLoading ? (
+            <div className="space-y-4">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="flex gap-4 p-4 rounded-lg border">
+                  <Skeleton className="w-12 h-14 rounded" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-5 w-2/3" />
+                    <Skeleton className="h-4 w-1/2" />
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="rounded-xl overflow-hidden border border-border shadow-sm bg-white">
-              <iframe
-                src="https://calendar.google.com/calendar/embed?src=stpatrickinarmonk.org_5snqr5qqph11et22r6sk81k67g%40group.calendar.google.com&ctz=America%2FNew_York&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0&mode=AGENDA"
-                className="w-full border-0"
-                style={{ height: "500px" }}
-                title="CYO Practice Calendar - St. Francis Hall"
-              />
-            </div>
-          </div>
+          ) : (
+            <TimelineFeed
+              events={timelineEvents}
+              showFilters={timelineEvents.length > 5}
+              emptyMessage="No upcoming CYO events scheduled. The season typically runs November through March."
+              emptyIcon={<Calendar className="w-10 h-10 text-orange-300 mx-auto" />}
+            />
+          )}
 
           {/* Info Cards */}
-          <div className="grid sm:grid-cols-2 gap-3">
+          <div className="grid sm:grid-cols-2 gap-3 mt-8">
             <Card className="p-4 border-l-[3px] border-l-orange-500">
               <div className="flex items-start gap-3">
                 <Info className="w-4 h-4 text-orange-600 mt-0.5 shrink-0" />

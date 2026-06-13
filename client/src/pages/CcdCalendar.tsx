@@ -4,23 +4,39 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Calendar, BookOpen, Clock, Bell } from "lucide-react";
+import { BookOpen, Clock } from "lucide-react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 
 export default function CcdCalendar() {
-  const { data: ccdEvents, isLoading } = trpc.ccd.listEvents.useQuery({ schoolYear: "2026-2027" });
+  // Fetch from Google Calendar ICS feed
+  const { data: icsEvents, isLoading: icsLoading } = trpc.googleCalendar.ccdEvents.useQuery();
+  // Also fetch any admin-added CCD events from database
+  const { data: dbEvents, isLoading: dbLoading } = trpc.ccd.listEvents.useQuery({ schoolYear: "2026-2027" });
 
-  const timelineEvents: TimelineEvent[] = (ccdEvents || []).map((e: any) => ({
-    id: e.id,
-    title: e.title,
-    description: e.description,
-    location: e.location,
-    startDate: e.eventDate,
-    endDate: e.endDate,
-    category: e.eventType,
-    grade: e.grade,
-  }));
+  const isLoading = icsLoading || dbLoading;
+
+  // Merge ICS events with database events
+  const timelineEvents: TimelineEvent[] = [
+    ...(dbEvents || []).map((e: any) => ({
+      id: `db-${e.id}`,
+      title: e.title,
+      description: e.description,
+      location: e.location,
+      startDate: e.eventDate,
+      endDate: e.endDate,
+      category: e.eventType,
+      grade: e.grade,
+    })),
+    ...(icsEvents || []).map((e) => ({
+      id: e.id,
+      title: e.title,
+      description: e.description,
+      location: e.location,
+      startDate: e.startDate,
+      endDate: e.endDate,
+    })),
+  ].sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
 
   return (
     <PageLayout>
@@ -82,27 +98,11 @@ export default function CcdCalendar() {
           ) : (
             <TimelineFeed
               events={timelineEvents}
-              categories={["class", "holiday", "special", "sacrament"]}
-              showFilters={true}
-              emptyMessage="No featured CCD events right now. See the full class schedule below."
+              showFilters={timelineEvents.length > 5}
+              emptyMessage="CCD calendar events will be posted when the school year begins."
               emptyIcon={<BookOpen className="w-10 h-10 text-primary/30 mx-auto" />}
             />
           )}
-
-          {/* Google Calendar Embed */}
-          <div className="mt-10 pt-8 border-t border-border/50">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Full Class Schedule</h2>
-            <div className="rounded-xl overflow-hidden border border-border shadow-sm bg-white">
-              <iframe
-                src="https://calendar.google.com/calendar/embed?src=reled%40stpatrickinarmonk.org&ctz=America%2FNew_York&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0&mode=AGENDA"
-                style={{ border: 0 }}
-                width="100%"
-                height="500"
-                className="w-full"
-                title="CCD Calendar"
-              />
-            </div>
-          </div>
 
           {/* Bottom Actions */}
           <div className="mt-10 pt-8 border-t border-border/50">

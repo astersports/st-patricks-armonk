@@ -1,24 +1,38 @@
 import PageLayout from "@/components/PageLayout";
 import TimelineFeed, { type TimelineEvent } from "@/components/TimelineFeed";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar, BookOpen, Dumbbell } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
 
 export default function ParishCalendar() {
-  const { data: events, isLoading } = trpc.events.listUpcoming.useQuery();
+  const { data: icsEvents, isLoading: icsLoading } = trpc.googleCalendar.parishEvents.useQuery();
+  const { data: dbEvents, isLoading: dbLoading } = trpc.events.listUpcoming.useQuery();
 
-  const timelineEvents: TimelineEvent[] = (events || []).map((e) => ({
-    id: e.id,
-    title: e.title,
-    description: e.description,
-    location: e.location,
-    startDate: e.startDate,
-    endDate: e.endDate,
-    allDay: e.allDay,
-  }));
+  const isLoading = icsLoading || dbLoading;
+
+  // Merge ICS events with any admin-added database events
+  const timelineEvents: TimelineEvent[] = [
+    ...(dbEvents || []).map((e) => ({
+      id: `db-${e.id}`,
+      title: e.title,
+      description: e.description,
+      location: e.location,
+      startDate: e.startDate,
+      endDate: e.endDate,
+      allDay: e.allDay,
+    })),
+    ...(icsEvents || []).map((e) => ({
+      id: e.id,
+      title: e.title,
+      description: e.description,
+      location: e.location,
+      startDate: e.startDate,
+      endDate: e.endDate,
+      allDay: e.allDay,
+    })),
+  ].sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
 
   return (
     <PageLayout>
@@ -52,25 +66,10 @@ export default function ParishCalendar() {
             <TimelineFeed
               events={timelineEvents}
               showFilters={true}
-              emptyMessage="No featured events right now. See the full schedule below."
+              emptyMessage="No upcoming events found."
               emptyIcon={<Calendar className="w-10 h-10 text-primary/30 mx-auto" />}
             />
           )}
-
-          {/* Google Calendar Embed */}
-          <div className="mt-10 pt-8 border-t border-border/50">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Full Schedule</h2>
-            <div className="rounded-xl overflow-hidden border border-border shadow-sm bg-white">
-              <iframe
-                src="https://calendar.google.com/calendar/embed?src=stpatrickinarmonk.org_r7off5khpqo4fhbq9r4mf3k1ek%40group.calendar.google.com&ctz=America%2FNew_York&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0&mode=AGENDA"
-                style={{ border: 0 }}
-                width="100%"
-                height="500"
-                className="w-full"
-                title="Parish Calendar"
-              />
-            </div>
-          </div>
 
           {/* Other Calendars */}
           <div className="grid sm:grid-cols-2 gap-3 mt-10 pt-8 border-t border-border/50">

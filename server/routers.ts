@@ -217,6 +217,32 @@ export const appRouter = router({
     }),
   }),
 
+  // ===== GOOGLE CALENDAR (ICS) =====
+  googleCalendar: router({
+    parishEvents: publicProcedure.query(async () => {
+      const { parseICSFeed, PARISH_CALENDAR_ICS } = await import("./icsParser");
+      return parseICSFeed(PARISH_CALENDAR_ICS, { daysAhead: 60, maxEvents: 50 });
+    }),
+    ccdEvents: publicProcedure.query(async () => {
+      const { parseICSFeed, CCD_CALENDAR_ICS } = await import("./icsParser");
+      return parseICSFeed(CCD_CALENDAR_ICS, { daysAhead: 120, maxEvents: 50 });
+    }),
+    cyoEvents: publicProcedure.query(async () => {
+      const { parseICSFeed, CYO_CALENDAR_ICS } = await import("./icsParser");
+      return parseICSFeed(CYO_CALENDAR_ICS, { daysAhead: 120, maxEvents: 50 });
+    }),
+    nextEvent: publicProcedure.query(async () => {
+      const { parseICSFeed, PARISH_CALENDAR_ICS } = await import("./icsParser");
+      const events = await parseICSFeed(PARISH_CALENDAR_ICS, { daysAhead: 14, maxEvents: 20 });
+      // Return the next non-Mass event for the homepage highlight
+      const nonMass = events.find(e => 
+        !e.title.toLowerCase().includes("daily mass") && 
+        !e.title.toLowerCase().includes("sunday mass")
+      );
+      return nonMass || events[0] || null;
+    }),
+  }),
+
   // ===== EMAIL SUBSCRIPTIONS =====
   subscriptions: router({
     subscribe: publicProcedure.input(z.object({
