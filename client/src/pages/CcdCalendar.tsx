@@ -84,10 +84,25 @@ export default function CcdCalendar() {
               events={timelineEvents}
               categories={["class", "holiday", "special", "sacrament"]}
               showFilters={true}
-              emptyMessage="CCD calendar events will be posted soon. Check back for the 2026–2027 schedule."
+              emptyMessage="No featured CCD events right now. See the full class schedule below."
               emptyIcon={<BookOpen className="w-10 h-10 text-primary/30 mx-auto" />}
             />
           )}
+
+          {/* Google Calendar Embed */}
+          <div className="mt-10 pt-8 border-t border-border/50">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Full Class Schedule</h2>
+            <div className="rounded-xl overflow-hidden border border-border shadow-sm bg-white">
+              <iframe
+                src="https://calendar.google.com/calendar/embed?src=reled%40stpatrickinarmonk.org&ctz=America%2FNew_York&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0&mode=AGENDA"
+                style={{ border: 0 }}
+                width="100%"
+                height="500"
+                className="w-full"
+                title="CCD Calendar"
+              />
+            </div>
+          </div>
 
           {/* Bottom Actions */}
           <div className="mt-10 pt-8 border-t border-border/50">
