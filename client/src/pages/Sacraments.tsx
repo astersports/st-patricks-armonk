@@ -82,8 +82,8 @@ const sacraments = [
   {
     id: "first-communion",
     icon: Sparkles,
-    title: "First Holy Communion",
-    subtitle: "Receiving the Body and Blood of Christ for the first time",
+    title: "First Communion",
+    subtitle: "Receiving the Body and Blood of Christ",
     accent: "border-l-[oklch(0.6_0.18_60)]",
     badge: "2nd Grade",
     content: (
@@ -100,10 +100,10 @@ const sacraments = [
           <li className="flex gap-2"><span className="text-primary">&bull;</span>Regular attendance at Sunday Mass throughout the preparation year</li>
         </ul>
         <h4 className="font-semibold text-foreground mb-2">Timeline</h4>
-        <ul className="space-y-1.5 text-sm text-muted-foreground mb-4 ml-4">
-          <li className="flex gap-2"><span className="text-primary">&bull;</span><strong>September:</strong> CCD classes begin; register by August</li>
-          <li className="flex gap-2"><span className="text-primary">&bull;</span><strong>January–February:</strong> First Reconciliation celebrated</li>
-          <li className="flex gap-2"><span className="text-primary">&bull;</span><strong>April–May:</strong> First Holy Communion Mass</li>
+        <ul className="space-y-2 text-sm text-muted-foreground mb-4 ml-4">
+          <li><span className="text-primary">&bull;</span> <strong>Sep:</strong> CCD classes begin (register by Aug)</li>
+          <li><span className="text-primary">&bull;</span> <strong>Jan–Feb:</strong> First Reconciliation</li>
+          <li><span className="text-primary">&bull;</span> <strong>Apr–May:</strong> First Communion Mass</li>
         </ul>
         <h4 className="font-semibold text-foreground mb-2">How to Sign Up</h4>
         <p className="text-sm text-muted-foreground leading-relaxed mb-4">
@@ -185,8 +185,8 @@ const sacraments = [
   {
     id: "funeral",
     icon: Church,
-    title: "Funerals & Bereavement",
-    subtitle: "Commending our loved ones to God's mercy",
+    title: "Funerals",
+    subtitle: "Commending our loved ones to God",
     accent: "border-l-[oklch(0.5_0.12_250)]",
     badge: null,
     content: (
@@ -243,18 +243,18 @@ export default function Sacraments() {
                   className={`reveal border border-border/60 rounded-xl overflow-hidden shadow-sm hover-glow transition-all border-l-4 ${sac.accent}`}
                 >
                   <AccordionTrigger className="px-4 sm:px-6 py-3 sm:py-5 hover:no-underline">
-                    <div className="flex items-center gap-3 sm:gap-4">
-                      <div className="bg-primary/10 p-2 sm:p-2.5 rounded-lg sm:rounded-xl shrink-0">
+                    <div className="flex items-center gap-2.5 sm:gap-4">
+                      <div className="bg-primary/10 p-1.5 sm:p-2.5 rounded-lg shrink-0">
                         <sac.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                       </div>
-                      <div className="text-left">
-                        <div className="flex items-center gap-2">
-                          <span className="font-serif text-base sm:text-lg font-semibold text-foreground">{sac.title}</span>
+                      <div className="text-left min-w-0">
+                        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                          <span className="font-serif text-sm sm:text-lg font-semibold text-foreground">{sac.title}</span>
                           {sac.badge && (
-                            <Badge className="bg-accent/15 text-accent-foreground border-0 text-[10px] px-1.5 py-0">{sac.badge}</Badge>
+                            <Badge className="bg-accent/15 text-accent-foreground border-0 text-[10px] px-1.5 py-0 shrink-0">{sac.badge}</Badge>
                           )}
                         </div>
-                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">{sac.subtitle}</p>
+                        <p className="text-[11px] sm:text-sm text-muted-foreground mt-0.5 line-clamp-1">{sac.subtitle}</p>
                       </div>
                     </div>
                   </AccordionTrigger>
