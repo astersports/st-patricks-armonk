@@ -79,10 +79,10 @@ export default function Home() {
           {quickCards.map((card, i) => (
             <Link key={card.href} href={card.href}>
               <Card className={`group cursor-pointer hover-lift border-0 shadow-md border-t-[3px] ${card.accent} animate-fade-up stagger-${i + 1}`}>
-                <CardContent className="p-3 sm:p-5 text-center">
-                  <card.icon className="w-5 h-5 sm:w-7 sm:h-7 text-primary mx-auto mb-1.5 sm:mb-2 transition-transform duration-300 group-hover:scale-110" />
-                  <h3 className="font-semibold text-foreground text-xs sm:text-sm">{card.title}</h3>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 hidden sm:block">{card.subtitle}</p>
+                <CardContent className="p-4 sm:p-5 text-center">
+                  <card.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary mx-auto mb-2 sm:mb-2 transition-transform duration-300 group-hover:scale-110" />
+                  <h3 className="font-semibold text-foreground text-sm sm:text-sm">{card.title}</h3>
+                  <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 hidden sm:block">{card.subtitle}</p>
                 </CardContent>
               </Card>
             </Link>

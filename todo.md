@@ -137,3 +137,12 @@
 
 - [x] Add "Powered by Aster Sports" with logo at the very bottom of the footer (like eCatholic on original site)
 - [x] Add 2026 Cardinals Appeal section with QR code on Giving page
+
+## Phase 12: Mobile UX Polish for 10/10 Experience
+
+- [x] Homepage quick links: increase icon size and tap target padding on mobile
+- [x] CYO pills: increase font size of location/grades/season pills on mobile
+- [x] Ministries grid: switch to single column on mobile for better readability
+- [x] Faith Formation accordion badges: tighten badge positioning on mobile (already good with flex-wrap)
+- [x] Contact page: improve map placeholder/loading state (added loading animation)
+- [x] Footer: make more compact on mobile (reduced padding and gap)

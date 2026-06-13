@@ -21,17 +21,17 @@ export default function CyoBasketball() {
       {/* Quick Info Bar */}
       <section className="py-4 bg-primary/5 border-b border-border">
         <div className="container">
-          <div className="flex flex-wrap items-center gap-4 md:gap-6 text-sm">
-            <span className="flex items-center gap-1.5 text-muted-foreground">
-              <MapPin className="w-4 h-4 text-primary" />
+          <div className="flex flex-wrap items-center gap-4 md:gap-6 text-sm sm:text-base">
+            <span className="flex items-center gap-2 text-muted-foreground">
+              <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary shrink-0" />
               St. Francis Hall, Armonk
             </span>
-            <span className="flex items-center gap-1.5 text-muted-foreground">
-              <Users className="w-4 h-4 text-primary" />
+            <span className="flex items-center gap-2 text-muted-foreground">
+              <Users className="w-4 h-4 sm:w-5 sm:h-5 text-primary shrink-0" />
               Grades 3–8
             </span>
-            <span className="flex items-center gap-1.5 text-muted-foreground">
-              <Calendar className="w-4 h-4 text-primary" />
+            <span className="flex items-center gap-2 text-muted-foreground">
+              <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-primary shrink-0" />
               Season: Nov – Mar
             </span>
           </div>

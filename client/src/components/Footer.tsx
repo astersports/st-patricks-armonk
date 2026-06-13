@@ -4,8 +4,8 @@ import { Church, Phone, MapPin, Clock } from "lucide-react";
 export default function Footer() {
   return (
     <footer className="bg-parish-green text-white">
-      <div className="container py-12 lg:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="container py-8 sm:py-12 lg:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {/* Church Info */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">

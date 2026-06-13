@@ -149,19 +149,19 @@ export default function Ministries() {
               <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Parish Ministries</h2>
             </div>
             <p className="text-muted-foreground mb-5 sm:mb-8 ml-4 text-sm sm:text-base">Use your gifts to serve God and our community.</p>
-            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
               {ministries.map((ministry) => (
                 <Card key={ministry.title} className="hover-lift group shadow-sm">
-                  <CardHeader className="p-3 sm:p-6 pb-2 sm:pb-3">
-                    <div className="flex items-center gap-2 sm:gap-3">
-                      <div className="bg-accent/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl group-hover:bg-accent/20 transition-colors">
-                        <ministry.icon className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
+                  <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-accent/10 p-2 sm:p-2.5 rounded-xl group-hover:bg-accent/20 transition-colors">
+                        <ministry.icon className="w-5 h-5 text-accent" />
                       </div>
-                      <CardTitle className="text-xs sm:text-lg">{ministry.title}</CardTitle>
+                      <CardTitle className="text-sm sm:text-lg">{ministry.title}</CardTitle>
                     </div>
                   </CardHeader>
-                  <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
-                    <p className="text-muted-foreground text-[10px] sm:text-sm hidden sm:block">{ministry.description}</p>
+                  <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+                    <p className="text-muted-foreground text-xs sm:text-sm">{ministry.description}</p>
                   </CardContent>
                 </Card>
               ))}
