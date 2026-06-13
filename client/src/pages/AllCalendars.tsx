@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PageLayout from "@/components/PageLayout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, BookOpen, Dribbble, Clock, MapPin, ArrowLeft, ChevronDown } from "lucide-react";
+import { Calendar, BookOpen, Dribbble, Clock, MapPin, ArrowLeft, ChevronDown, Home } from "lucide-react";
+import { Link, useSearch } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { format, isToday, isTomorrow, isThisWeek, startOfWeek, addWeeks, isSameWeek } from "date-fns";
 
@@ -29,16 +30,23 @@ function getWeekGroup(date: Date): string {
 
 export default function AllCalendars() {
   const { data: allEvents, isLoading } = trpc.googleCalendar.allEvents.useQuery();
-  const [activeSource, setActiveSource] = useState<SourceFilter>("all");
+  const searchString = useSearch();
+  const params = new URLSearchParams(searchString);
+  const filterParam = params.get("filter") as SourceFilter | null;
+
+  const [activeSource, setActiveSource] = useState<SourceFilter>(
+    filterParam && ["parish", "ccd", "cyo"].includes(filterParam) ? filterParam : "all"
+  );
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
 
-  const handleBack = () => {
-    if (window.history.length > 1) {
-      window.history.back();
-    } else {
-      window.location.href = "/";
+  // Sync filter from URL when navigating between calendar links
+  useEffect(() => {
+    if (filterParam && ["parish", "ccd", "cyo"].includes(filterParam)) {
+      setActiveSource(filterParam);
+    } else if (!filterParam) {
+      setActiveSource("all");
     }
-  };
+  }, [filterParam]);
 
   const toggleGroup = (label: string) => {
     setExpandedGroups((prev) => {
@@ -87,20 +95,26 @@ export default function AllCalendars() {
     };
   }, [allEvents]);
 
+  // Dynamic page title based on active filter
+  const pageTitle = activeSource === "all" ? "Calendar" : `${sourceConfig[activeSource].label} Calendar`;
+  const pageDescription = activeSource === "all"
+    ? "All upcoming events across Parish, CCD, and CYO — in one place."
+    : `Upcoming ${sourceConfig[activeSource].label} events and activities.`;
+
   return (
     <PageLayout>
       {/* Sticky Nav Bar */}
       <div className="bg-background border-b border-border/60 sticky top-0 z-30">
         <div className="container max-w-4xl">
           <div className="flex items-center gap-2 py-2.5">
-            {/* Back button */}
-            <button
-              onClick={handleBack}
+            {/* Back to Home button */}
+            <Link
+              href="/"
               className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors pr-3 border-r border-border/50 shrink-0"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span className="hidden sm:inline">Back</span>
-            </button>
+              <span className="hidden sm:inline">Home</span>
+            </Link>
 
             {/* Source Filter Tabs */}
             <nav className="flex items-center gap-1 ml-1 overflow-x-auto">
@@ -146,9 +160,9 @@ export default function AllCalendars() {
       <section className="bg-gradient-to-b from-primary/5 to-background py-8 sm:py-10 border-b border-primary/10">
         <div className="container max-w-4xl">
           <p className="text-gold font-medium tracking-widest uppercase text-xs mb-2">Stay Connected</p>
-          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-foreground mb-2">Calendar</h1>
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-foreground mb-2">{pageTitle}</h1>
           <p className="text-base sm:text-lg text-muted-foreground max-w-2xl">
-            All upcoming events across Parish, CCD, and CYO — in one place.
+            {pageDescription}
           </p>
         </div>
       </section>

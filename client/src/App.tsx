@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, Redirect } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ScrollToTop from "./components/ScrollToTop";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -15,13 +15,11 @@ import Giving from "./pages/Giving";
 import Contact from "./pages/Contact";
 import Admin from "./pages/Admin";
 import Unsubscribe from "./pages/Unsubscribe";
-import CcdCalendar from "./pages/CcdCalendar";
-import CyoBasketball from "./pages/CyoBasketball";
+// Old calendar pages removed - now redirected to /calendar with filters
 import CcdRegistration from "./pages/CcdRegistration";
 import Volunteer from "./pages/Volunteer";
 import CcdUnsubscribe from "./pages/CcdUnsubscribe";
 import Sacraments from "./pages/Sacraments";
-import ParishCalendar from "./pages/ParishCalendar";
 import AllCalendars from "./pages/AllCalendars";
 import TeenLife from "./pages/TeenLife";
 import FormsDocuments from "./pages/FormsDocuments";
@@ -50,12 +48,12 @@ function Router() {
         <Route path="/news-events" component={NewsEvents} />
         <Route path="/bulletins" component={Bulletins} />
         <Route path="/calendar" component={AllCalendars} />
-        <Route path="/parish-calendar" component={ParishCalendar} />
+        <Route path="/parish-calendar"><Redirect to="/calendar?filter=parish" /></Route>
         <Route path="/faith-formation" component={FaithFormation} />
-        <Route path="/ccd-calendar" component={CcdCalendar} />
+        <Route path="/ccd-calendar"><Redirect to="/calendar?filter=ccd" /></Route>
         <Route path="/ccd-registration" component={CcdRegistration} />
         <Route path="/ccd-permissions" component={CcdPermissions} />
-        <Route path="/cyo-basketball" component={CyoBasketball} />
+        <Route path="/cyo-basketball"><Redirect to="/calendar?filter=cyo" /></Route>
         <Route path="/teen-life" component={TeenLife} />
         <Route path="/ministries" component={Ministries} />
         <Route path="/volunteer" component={Volunteer} />

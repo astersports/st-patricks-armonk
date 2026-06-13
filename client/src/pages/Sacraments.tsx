@@ -111,7 +111,7 @@ const sacraments = [
         </p>
         <div className="flex flex-wrap gap-3">
           <a href="/ccd-registration"><Button size="sm" className="gap-2"><FileText className="w-3.5 h-3.5" /> Register for 2nd Grade CCD</Button></a>
-          <a href="/ccd-calendar"><Button size="sm" variant="outline" className="gap-2"><Sparkles className="w-3.5 h-3.5" /> View CCD Calendar</Button></a>
+          <a href="/calendar?filter=ccd"><Button size="sm" variant="outline" className="gap-2"><Sparkles className="w-3.5 h-3.5" /> View CCD Calendar</Button></a>
         </div>
         <DocumentList category="first-communion" />
       </>
@@ -138,7 +138,7 @@ const sacraments = [
           <li className="flex gap-2"><span className="text-primary">•</span>Retreat experience and interview with a priest or deacon</li>
         </ul>
         <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-          Confirmation is typically celebrated in the spring. Check the <a href="/ccd-calendar" className="text-primary hover:underline">CCD Calendar</a> for the latest schedule.
+          Confirmation is typically celebrated in the spring. Check the <a href="/calendar?filter=ccd" className="text-primary hover:underline">CCD Calendar</a> for the latest schedule.
         </p>
         <h4 className="font-semibold text-foreground mb-2">Adult Confirmation</h4>
         <p className="text-sm text-muted-foreground leading-relaxed mb-4">

@@ -238,3 +238,12 @@
 - [x] Update mobile bottom nav, desktop nav, and mobile menu to point to /calendar
 - [x] Update homepage "Coming Up" section to link to combined calendar
 - [x] Make month groups (June 2026, July 2026, etc.) collapsible accordions on combined calendar; keep This Week/Next Week expanded
+
+## Phase 24: Consolidate Calendar Navigation
+
+- [x] Remove separate /parish-calendar, /ccd-calendar, /cyo-basketball pages (redirected to /calendar?filter=X)
+- [x] Make /calendar the single calendar page with All/Parish/CCD/CYO filter tabs
+- [x] Bottom nav "Calendar" button goes to /calendar
+- [x] Back button on /calendar always goes to homepage (not browser history)
+- [x] Homepage calendar quick-nav (Parish, CCD, CYO) links to /calendar with pre-selected filter
+- [x] Updated all internal links across site (Nav, FaithFormation, Sacraments, TeenLife)

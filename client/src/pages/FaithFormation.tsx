@@ -241,7 +241,7 @@ export default function FaithFormation() {
                       <p className="text-muted-foreground text-xs">Class schedule, key dates, and special events.</p>
                     </div>
                   </div>
-                  <Link href="/ccd-calendar" className="text-xs text-primary hover:underline font-medium mt-2 block">View CCD Calendar →</Link>
+                  <Link href="/calendar?filter=ccd" className="text-xs text-primary hover:underline font-medium mt-2 block">View CCD Calendar →</Link>
                 </CardContent>
               </Card>
 

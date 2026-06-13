@@ -226,7 +226,7 @@ export default function TeenLife() {
                 Teen Life meets regularly throughout the school year. Check the parish calendar for upcoming events and gatherings.
               </p>
               <Button variant="outline" size="sm" asChild>
-                <a href="/parish-calendar">View Calendar</a>
+                <a href="/calendar">View Calendar</a>
               </Button>
             </Card>
             <Card className="p-6">
