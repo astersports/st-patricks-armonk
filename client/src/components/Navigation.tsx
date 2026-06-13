@@ -58,23 +58,58 @@ const navLinks: NavItem[] = [
   { href: "/contact", label: "Contact" },
 ];
 
-// Flat list for the simplified mobile menu
-const mobileMenuItems = [
-  { href: "/mass-times", label: "Mass Times & Confession", icon: Clock },
-  { href: "/sacraments", label: "Sacraments", icon: Cross },
-  { href: "/faith-formation", label: "Faith Formation", icon: GraduationCap },
-  { href: "/calendar?filter=ccd", label: "CCD Calendar", icon: Calendar },
-  { href: "/ccd-registration", label: "CCD Registration", icon: FileText },
-  { href: "/news-events", label: "News & Events", icon: Newspaper },
-  { href: "/calendar", label: "Calendar", icon: Calendar },
-  { href: "/bulletins", label: "Weekly Bulletins", icon: BookOpen },
-  { href: "/ministries", label: "Ministries & Devotions", icon: HandHeart },
-  { href: "/giving", label: "Give Online", icon: Heart },
-  { href: "/volunteer", label: "Volunteer", icon: Users },
-  { href: "/about", label: "About Our Parish", icon: Church },
-  { href: "/staff", label: "Staff & Leadership", icon: Users },
-  { href: "/contact", label: "Contact Us", icon: Phone },
-  { href: "/parish-registration", label: "Register as a Parishioner", icon: UserPlus },
+// Grouped mobile menu matching site flow
+type MobileMenuSection = {
+  title: string;
+  items: { href: string; label: string; icon: typeof Clock }[];
+};
+
+const mobileMenuSections: MobileMenuSection[] = [
+  {
+    title: "Worship",
+    items: [
+      { href: "/mass-times", label: "Mass Times & Confession", icon: Clock },
+      { href: "/sacraments", label: "Sacraments", icon: Cross },
+    ],
+  },
+  {
+    title: "Faith Formation",
+    items: [
+      { href: "/faith-formation", label: "Overview", icon: GraduationCap },
+      { href: "/calendar?filter=ccd", label: "CCD Calendar", icon: Calendar },
+      { href: "/ccd-registration", label: "CCD Registration", icon: FileText },
+      { href: "/ccd-permissions", label: "CCD Permission Forms", icon: FileText },
+      { href: "/teen-life", label: "Teen Life", icon: Users },
+    ],
+  },
+  {
+    title: "Parish Life",
+    items: [
+      { href: "/news-events", label: "News & Announcements", icon: Newspaper },
+      { href: "/calendar", label: "Calendar", icon: Calendar },
+      { href: "/bulletins", label: "Weekly Bulletins", icon: BookOpen },
+      { href: "/calendar?filter=cyo", label: "CYO Schedule", icon: Calendar },
+      { href: "/ministries", label: "Ministries & Devotions", icon: HandHeart },
+      { href: "/volunteer", label: "Volunteer", icon: Users },
+      { href: "/forms", label: "Forms & Documents", icon: FileText },
+    ],
+  },
+  {
+    title: "Give & Connect",
+    items: [
+      { href: "/giving", label: "Give Online", icon: Heart },
+      { href: "/contact", label: "Contact Us", icon: Phone },
+    ],
+  },
+  {
+    title: "About",
+    items: [
+      { href: "/about", label: "Our Parish", icon: Church },
+      { href: "/new-here", label: "New Here? Plan Your Visit", icon: UserPlus },
+      { href: "/staff", label: "Staff & Leadership", icon: Users },
+      { href: "/parish-registration", label: "Register as a Parishioner", icon: UserPlus },
+    ],
+  },
 ];
 
 function DesktopDropdown({ item, location }: { item: NavItem; location: string }) {
@@ -242,29 +277,41 @@ export default function Navigation() {
           </Button>
         </nav>
 
-        {/* Mobile Menu - Flat list */}
+        {/* Mobile Menu - Grouped sections */}
         {mobileOpen && (
           <div className="lg:hidden border-t border-border/50 bg-white animate-slide-down max-h-[70vh] overflow-y-auto pb-16">
-            <div className="container py-3">
-              <div className="grid grid-cols-1 gap-0.5">
-                {mobileMenuItems.map((item) => {
-                  const isActive = location === item.href;
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
-                        isActive
-                          ? "text-primary bg-primary/5 font-medium"
-                          : "text-foreground/80 active:bg-primary/5"
-                      }`}
-                    >
-                      <item.icon className={`w-4 h-4 shrink-0 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
-                      <span className="text-sm">{item.label}</span>
-                    </Link>
-                  );
-                })}
-                {isAuthenticated && user?.role === "admin" && (
+            <div className="container py-4 space-y-4">
+              {mobileMenuSections.map((section) => (
+                <div key={section.title}>
+                  <h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70 px-3 mb-1">
+                    {section.title}
+                  </h3>
+                  <div className="grid grid-cols-1 gap-0.5">
+                    {section.items.map((item) => {
+                      const isActive = location === item.href || location.startsWith(item.href.split('?')[0] + '?');
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                            isActive
+                              ? "text-primary bg-primary/5 font-medium"
+                              : "text-foreground/80 active:bg-primary/5"
+                          }`}
+                        >
+                          <item.icon className={`w-4 h-4 shrink-0 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
+                          <span className="text-sm">{item.label}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+              {isAuthenticated && user?.role === "admin" && (
+                <div>
+                  <h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70 px-3 mb-1">
+                    Admin
+                  </h3>
                   <Link
                     href="/admin"
                     className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold text-accent"
@@ -272,8 +319,8 @@ export default function Navigation() {
                     <Church className="w-4 h-4 text-accent" />
                     Admin Dashboard
                   </Link>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
         )}

@@ -252,3 +252,4 @@
 - [x] Add back-to-homepage button on all interior pages (not just calendar)
 - [x] Fix ICS parser to convert UTC times to Eastern Time (America/New_York) for display
 - [x] Fix Contact page removeChild crash: separate Google Maps mount div from React-rendered loading/error overlay
+- [x] Redesign hamburger menu with grouped sections matching site flow: grouped by category with clear section headers, matching the user's organizational style
