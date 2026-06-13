@@ -6,6 +6,13 @@ import { Calendar, BookOpen, Dribbble, Clock, MapPin, ArrowLeft, ChevronDown, Ho
 import { Link, useSearch } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { format, isToday, isTomorrow, isThisWeek, startOfWeek, addWeeks, isSameWeek } from "date-fns";
+import { TZDate } from "@date-fns/tz";
+
+// Convert a UTC ISO string to a TZDate in Eastern Time for correct display
+const TIMEZONE = "America/New_York";
+function toEastern(isoString: string): Date {
+  return new TZDate(isoString, TIMEZONE);
+}
 
 type SourceFilter = "all" | "parish" | "ccd" | "cyo";
 
@@ -73,7 +80,7 @@ export default function AllCalendars() {
     let currentGroup = "";
 
     for (const event of filteredEvents) {
-      const date = new Date(event.startDate);
+      const date = toEastern(event.startDate);
       const group = getWeekGroup(date);
       if (group !== currentGroup) {
         currentGroup = group;
@@ -242,8 +249,8 @@ export default function AllCalendars() {
                     >
                       <div className="space-y-2">
                         {group.events.map((event) => {
-                          const eventDate = new Date(event.startDate);
-                          const endDate = event.endDate ? new Date(event.endDate) : null;
+                          const eventDate = toEastern(event.startDate);
+                          const endDate = event.endDate ? toEastern(event.endDate) : null;
                           const config = sourceConfig[event.source as keyof typeof sourceConfig];
 
                           return (

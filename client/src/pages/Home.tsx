@@ -8,7 +8,13 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { TZDate } from "@date-fns/tz";
 import { useReveal } from "@/hooks/useReveal";
+
+const TIMEZONE = "America/New_York";
+function toEastern(isoString: string): Date {
+  return new TZDate(isoString, TIMEZONE);
+}
 
 // The 4 journey cards — the main paths a visitor might take
 const journeyCards = [
@@ -154,16 +160,16 @@ export default function Home() {
                         <div className="px-4 sm:px-5 py-3 flex items-center gap-3 hover:bg-primary/[0.02] transition-colors">
                           <div className="w-10 h-10 rounded-lg bg-gold/10 flex flex-col items-center justify-center shrink-0">
                             <span className="text-[10px] font-medium text-gold uppercase leading-none">
-                              {format(new Date(event.startDate), "EEE")}
+                              {format(toEastern(event.startDate), "EEE")}
                             </span>
                             <span className="text-sm font-bold text-gold leading-tight">
-                              {format(new Date(event.startDate), "d")}
+                              {format(toEastern(event.startDate), "d")}
                             </span>
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="font-semibold text-foreground text-sm truncate">{event.title}</p>
                             <p className="text-xs text-muted-foreground">
-                              {format(new Date(event.startDate), "h:mm a")}
+                              {format(toEastern(event.startDate), "h:mm a")}
                               {event.description && (
                                 <span className="ml-1 text-muted-foreground/70">· {event.description.slice(0, 40)}{event.description.length > 40 ? "…" : ""}</span>
                               )}
