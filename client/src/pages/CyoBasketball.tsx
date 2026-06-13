@@ -1,99 +1,104 @@
+import { useMemo } from "react";
 import PageLayout from "@/components/PageLayout";
+import TimelineFeed, { type TimelineEvent } from "@/components/TimelineFeed";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Calendar, MapPin, Users, Info } from "lucide-react";
 
-import { Calendar, MapPin, Clock, Users, Info } from "lucide-react";
-
+// Static CYO practice schedule data (since there's no DB table for CYO, we use the Google Calendar embed approach)
+// For now, show the embedded calendar as a fallback with a note
 export default function CyoBasketball() {
+  // CYO doesn't have a database-backed event list, so we'll keep the Google Calendar
+  // but style the page consistently with the Timeline Feed aesthetic
   return (
     <PageLayout>
       {/* Header */}
-      <section className="bg-gradient-to-b from-green-50 to-white py-8 md:py-12 border-b-4 border-primary">
-        <div className="container">
-          <Badge variant="secondary" className="mb-3 text-xs">ST. FRANCIS HALL</Badge>
-          <h1 className="font-serif text-3xl md:text-5xl text-foreground mb-2">CYO Practice Schedule</h1>
-          <p className="text-muted-foreground text-base md:text-lg max-w-2xl">
-            Practice times and gym availability for St. Patrick's CYO Basketball at St. Francis Hall.
+      <section className="bg-gradient-to-b from-orange-50 to-background py-10 sm:py-12 border-b border-orange-200/50">
+        <div className="container max-w-4xl">
+          <Badge variant="secondary" className="mb-2 text-xs bg-orange-100 text-orange-700">ST. FRANCIS HALL</Badge>
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-foreground mb-2">CYO Practice Schedule</h1>
+          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl">
+            Practice times and gym availability for St. Patrick's CYO Basketball.
           </p>
         </div>
       </section>
 
       {/* Quick Info Bar */}
-      <section className="py-4 bg-primary/5 border-b border-border">
-        <div className="container">
-          <div className="flex flex-wrap items-center gap-4 md:gap-6 text-sm sm:text-base">
-            <span className="flex items-center gap-2 text-muted-foreground">
-              <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary shrink-0" />
+      <section className="py-3 bg-orange-50/50 border-b border-border/50">
+        <div className="container max-w-4xl">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-5 text-sm">
+            <span className="flex items-center gap-1.5 text-muted-foreground">
+              <MapPin className="w-3.5 h-3.5 text-orange-600" />
               St. Francis Hall, Armonk
             </span>
-            <span className="flex items-center gap-2 text-muted-foreground">
-              <Users className="w-4 h-4 sm:w-5 sm:h-5 text-primary shrink-0" />
+            <span className="flex items-center gap-1.5 text-muted-foreground">
+              <Users className="w-3.5 h-3.5 text-orange-600" />
               Grades 3–8
             </span>
-            <span className="flex items-center gap-2 text-muted-foreground">
-              <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-primary shrink-0" />
+            <span className="flex items-center gap-1.5 text-muted-foreground">
+              <Calendar className="w-3.5 h-3.5 text-orange-600" />
               Season: Nov – Mar
             </span>
           </div>
         </div>
       </section>
 
-      {/* Calendar Embed */}
-      <section className="py-8 md:py-12">
-        <div className="container max-w-5xl">
-          <h2 className="font-serif text-xl md:text-2xl text-foreground mb-4">Practice Calendar</h2>
-
-          <Card className="p-1 md:p-3 mb-8">
-            <div className="aspect-[4/3] md:aspect-[16/9] w-full">
+      <section className="py-8 sm:py-12">
+        <div className="container max-w-4xl">
+          {/* Google Calendar in Timeline-style frame */}
+          <div className="mb-8">
+            <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm py-2 mb-3 border-b border-border/50">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Practice Schedule
+              </h3>
+            </div>
+            <div className="rounded-xl overflow-hidden border border-border shadow-sm bg-white">
               <iframe
                 src="https://calendar.google.com/calendar/embed?src=stpatrickinarmonk.org_5snqr5qqph11et22r6sk81k67g%40group.calendar.google.com&ctz=America%2FNew_York&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0&mode=AGENDA"
-                className="w-full h-full rounded-lg border-0"
+                className="w-full border-0"
+                style={{ height: "500px" }}
                 title="CYO Practice Calendar - St. Francis Hall"
               />
             </div>
-          </Card>
+          </div>
 
-          {/* Practice Info Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-            <Card className="p-4 md:p-5 border-l-4 border-l-primary">
+          {/* Info Cards */}
+          <div className="grid sm:grid-cols-2 gap-3">
+            <Card className="p-4 border-l-[3px] border-l-orange-500">
               <div className="flex items-start gap-3">
-                <Clock className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                <Info className="w-4 h-4 text-orange-600 mt-0.5 shrink-0" />
                 <div>
-                  <h3 className="font-semibold text-foreground mb-1">Practice Times</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Practice times vary by team and grade level. Check the calendar above for your team's scheduled gym time at St. Francis Hall.
+                  <h3 className="font-semibold text-sm text-foreground mb-1">Practice Times</h3>
+                  <p className="text-xs text-muted-foreground">
+                    Times vary by team and grade level. Check the schedule above for your team's gym time.
                   </p>
                 </div>
               </div>
             </Card>
-            <Card className="p-4 md:p-5 border-l-4 border-l-accent">
+            <Card className="p-4 border-l-[3px] border-l-orange-500">
               <div className="flex items-start gap-3">
-                <Info className="w-5 h-5 text-accent mt-0.5 shrink-0" />
+                <Info className="w-4 h-4 text-orange-600 mt-0.5 shrink-0" />
                 <div>
-                  <h3 className="font-semibold text-foreground mb-1">Gym Rules</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Non-marking sneakers required. No food or drinks on the court. Players must be picked up promptly after practice ends.
+                  <h3 className="font-semibold text-sm text-foreground mb-1">Gym Rules</h3>
+                  <p className="text-xs text-muted-foreground">
+                    Non-marking sneakers required. No food on court. Prompt pickup after practice.
                   </p>
                 </div>
               </div>
             </Card>
           </div>
 
-          {/* About Section */}
-          <Card className="p-5 md:p-6 bg-green-50/50">
-            <h3 className="font-serif text-lg text-foreground mb-3">About CYO Basketball</h3>
-            <p className="text-sm text-muted-foreground mb-3">
-              The CYO (Catholic Youth Organization) Basketball program at St. Patrick's provides boys and girls in grades 3–8 with the opportunity to develop basketball skills, teamwork, and sportsmanship in a faith-based environment. Practices are held at St. Francis Hall.
-            </p>
-            <p className="text-sm text-muted-foreground mb-4">
-              Season typically runs from November through March. Registration opens in September.
-            </p>
-            <div className="border-t border-border pt-4">
-              <h4 className="font-semibold text-sm text-foreground mb-2">Contact CYO</h4>
-              <div className="space-y-1 text-sm text-muted-foreground">
-                <p><strong>Email:</strong> <a href="mailto:cyo@stpatrickinarmonk.org" className="text-primary hover:underline">cyo@stpatrickinarmonk.org</a></p>
-                <p><strong>Location:</strong> St. Francis Hall, Armonk NY</p>
+          {/* Contact */}
+          <Card className="p-4 sm:p-5 bg-orange-50/50 mt-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h3 className="font-semibold text-foreground text-sm mb-0.5">Contact CYO</h3>
+                <p className="text-xs text-muted-foreground">
+                  <a href="mailto:cyo@stpatrickinarmonk.org" className="text-primary hover:underline">cyo@stpatrickinarmonk.org</a>
+                  {" · "}Registration opens September
+                </p>
               </div>
+              <Badge variant="secondary" className="text-xs self-start sm:self-center">Season: Nov – Mar</Badge>
             </div>
           </Card>
         </div>

@@ -195,3 +195,13 @@
 - [x] Add 4 Journey Cards (New Here, Sacraments, Faith Formation, Get Involved)
 - [x] Keep Subscribe/Flocknote CTA
 - [x] Ensure cohesive visual flow on both mobile and desktop
+
+## Phase 19: Timeline Feed Calendar (All Calendars)
+
+- [x] Build Timeline Feed component with date badges and color-coded categories
+- [x] Add category filter pills (All, Mass, Community, Youth, etc.) for Parish Calendar
+- [x] Group events by week with sticky headers (This Week, Next Week, month names)
+- [x] Apply Timeline Feed to Parish Calendar page (replace Google Calendar embed)
+- [x] Apply Timeline Feed to CCD Calendar page
+- [x] Apply Timeline Feed to CYO Practice Schedule page (kept Google Calendar embed with consistent styling)
+- [x] Ensure compact and scannable on mobile
