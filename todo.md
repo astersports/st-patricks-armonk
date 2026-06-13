@@ -253,3 +253,7 @@
 - [x] Fix ICS parser to convert UTC times to Eastern Time (America/New_York) for display
 - [x] Fix Contact page removeChild crash: separate Google Maps mount div from React-rendered loading/error overlay
 - [x] Redesign hamburger menu with grouped sections matching site flow: grouped by category with clear section headers, matching the user's organizational style
+- [x] Build digital CCD Permission & Release forms (replace empty page with functional online forms)
+- [x] Create database table for CCD permission form submissions
+- [x] Add admin view for submitted CCD permission forms
+- [x] Fix CCD Permissions page blank page bug (useReveal hook containerRef not attached to wrapper div)

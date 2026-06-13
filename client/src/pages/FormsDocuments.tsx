@@ -104,6 +104,7 @@ export default function FormsDocuments() {
               <a href="/marriage-form" className="text-sm font-medium text-primary hover:underline">→ Marriage Inquiry</a>
               <a href="/funeral-form" className="text-sm font-medium text-primary hover:underline">→ Funeral Planning</a>
               <a href="/ccd-registration" className="text-sm font-medium text-primary hover:underline">→ CCD Registration</a>
+              <a href="/ccd-permissions" className="text-sm font-medium text-primary hover:underline">→ CCD Permission & Release</a>
               <a href="/volunteer" className="text-sm font-medium text-primary hover:underline">→ Volunteer Sign-Up</a>
             </div>
           </Card>

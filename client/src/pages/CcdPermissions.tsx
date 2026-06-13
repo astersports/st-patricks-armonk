@@ -15,7 +15,7 @@ import { useReveal } from "@/hooks/useReveal";
 import PageLayout from "@/components/PageLayout";
 
 export default function CcdPermissions() {
-  useReveal();
+  const containerRef = useReveal();
   const [submitted, setSubmitted] = useState(false);
 
   const [form, setForm] = useState({
@@ -102,6 +102,7 @@ export default function CcdPermissions() {
 
   return (
     <PageLayout>
+      <div ref={containerRef}>
       {/* Header */}
       <section className="relative py-8 sm:py-12 md:py-16 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container">
@@ -385,6 +386,7 @@ export default function CcdPermissions() {
           </div>
         </form>
       </section>
+    </div>
     </PageLayout>
   );
 }
