@@ -23,9 +23,9 @@ export default function SponsorForm() {
     sacramentType: "" as "baptism" | "confirmation" | "",
     candidateName: "",
     ceremonyDate: "",
-    isBaptized: true,
-    isConfirmed: true,
-    isActiveCatholic: true,
+    isBaptized: false,
+    isConfirmed: false,
+    isActiveCatholic: false,
     notes: "",
   });
 

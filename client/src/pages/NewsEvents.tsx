@@ -80,8 +80,13 @@ export default function NewsEvents() {
               ) : (
                 <Card className="p-12 text-center border-dashed border-2 bg-secondary/20">
                   <Newspaper className="w-10 h-10 text-primary/30 mx-auto mb-3" />
-                  <h3 className="font-semibold text-lg mb-2">No News Yet</h3>
-                  <p className="text-muted-foreground">Check back soon for parish announcements and news.</p>
+                  <h3 className="font-semibold text-lg mb-2">Parish News Coming Soon</h3>
+                  <p className="text-muted-foreground max-w-sm mx-auto mb-3">
+                    Announcements, event recaps, and community updates will appear here. Stay tuned!
+                  </p>
+                  <a href="https://stpatricksarmonk.flocknote.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+                    Follow us on Flocknote →
+                  </a>
                 </Card>
               )}
             </TabsContent>

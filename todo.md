@@ -269,3 +269,9 @@
 - [x] Redesign Important Dates section to use accordion grouped by month (current month expanded by default)
 - [x] Show ALL important dates (not just next 12)
 - [x] Add any missing dates from the calendar images (fixed Teen Life Graduation Mass date to June 7)
+- [x] Deep scan all pages for visual/content/design issues before pastor review
+- [x] Fix S'mores Teen Life Event date from July 31 to August 1
+- [x] Audit and fix category tags for all important dates (WWP→cyo, social events recategorized, HS Paint & Pizza→teen_life)
+- [x] Fix Sponsor Certificate pre-checked checkboxes (should start unchecked)
+- [x] Improve Bulletins and News empty states with helpful messaging
+- [x] Make footer branding more subtle for pastor review

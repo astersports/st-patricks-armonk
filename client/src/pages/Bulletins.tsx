@@ -61,10 +61,15 @@ export default function Bulletins() {
             ))}
           </div>
         ) : (
-          <Card className="p-12 text-center">
+          <Card className="p-12 text-center border-dashed border-2">
             <FileText className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
-            <h3 className="font-semibold text-lg mb-2">No Bulletins Available</h3>
-            <p className="text-muted-foreground">The weekly bulletin will be posted here each week.</p>
+            <h3 className="font-semibold text-lg mb-2">Weekly Bulletin Coming Soon</h3>
+            <p className="text-muted-foreground max-w-md mx-auto mb-4">
+              The weekly parish bulletin will be posted here each Sunday. In the meantime, you can view past bulletins and stay connected through Flocknote.
+            </p>
+            <a href="https://stpatricksarmonk.flocknote.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+              Visit Flocknote for Updates →
+            </a>
           </Card>
         )}
       </section>
