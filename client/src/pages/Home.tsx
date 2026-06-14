@@ -1,11 +1,11 @@
 import PageLayout from "@/components/PageLayout";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Calendar, Newspaper, BookOpen, Dribbble } from "lucide-react";
+import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Calendar, Newspaper, BookOpen, Dribbble, MapPin, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { TZDate } from "@date-fns/tz";
@@ -64,6 +64,23 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const { data: upcomingEvents } = trpc.googleCalendar.upcomingEvents.useQuery();
   const { data: newsItems } = trpc.news.listPublished.useQuery();
+  const { data: importantDates } = trpc.importantDates.upcoming.useQuery({ limit: 12 });
+
+  // Group important dates by month
+  const groupedDates = useMemo(() => {
+    if (!importantDates || importantDates.length === 0) return [];
+    const groups: { month: string; events: typeof importantDates }[] = [];
+    for (const event of importantDates) {
+      const monthLabel = format(toEastern(event.eventDate as unknown as string), "MMMM yyyy");
+      const existing = groups.find(g => g.month === monthLabel);
+      if (existing) {
+        existing.events.push(event);
+      } else {
+        groups.push({ month: monthLabel, events: [event] });
+      }
+    }
+    return groups;
+  }, [importantDates]);
   const subscribeMutation = trpc.subscriptions.subscribe.useMutation({
     onSuccess: () => {
       toast.success("Successfully subscribed to parish updates!");
@@ -281,6 +298,83 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* Important Dates 2026-2027 */}
+        {groupedDates.length > 0 && (
+          <section className="reveal container pb-10 sm:pb-14">
+            <div className="text-center mb-6 sm:mb-8">
+              <p className="text-[11px] text-gold uppercase tracking-[0.2em] font-medium mb-1">2026–2027</p>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Important Dates</h2>
+              <p className="text-muted-foreground text-sm mt-1">Key parish events and milestones for the year</p>
+            </div>
+            <div className="space-y-6">
+              {groupedDates.map((group) => (
+                <div key={group.month}>
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 pl-1">{group.month}</h3>
+                  <div className="grid gap-2.5 sm:gap-3">
+                    {group.events.map((event) => {
+                      const catColors: Record<string, { dot: string; bg: string; label: string }> = {
+                        ccd: { dot: "bg-green-500", bg: "bg-green-50", label: "CCD" },
+                        cyo: { dot: "bg-orange-500", bg: "bg-orange-50", label: "CYO" },
+                        sacrament: { dot: "bg-purple-500", bg: "bg-purple-50", label: "Sacrament" },
+                        parish: { dot: "bg-primary", bg: "bg-primary/5", label: "Parish" },
+                        teen_life: { dot: "bg-blue-500", bg: "bg-blue-50", label: "Teen Life" },
+                        social: { dot: "bg-amber-500", bg: "bg-amber-50", label: "Social" },
+                      };
+                      const cat = catColors[event.category] || catColors.parish;
+                      const eventDate = toEastern(event.eventDate as unknown as string);
+                      return (
+                        <div
+                          key={event.id}
+                          className={`flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg ${cat.bg} border border-transparent hover:border-border/50 transition-colors`}
+                        >
+                          {/* Date badge */}
+                          <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-lg bg-white shadow-sm flex flex-col items-center justify-center shrink-0">
+                            <span className="text-[10px] font-medium text-muted-foreground uppercase leading-none">
+                              {format(eventDate, "EEE")}
+                            </span>
+                            <span className="text-base sm:text-lg font-bold text-foreground leading-tight">
+                              {format(eventDate, "d")}
+                            </span>
+                          </div>
+                          {/* Content */}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-0.5">
+                              <span className={`w-2 h-2 rounded-full ${cat.dot} shrink-0`} />
+                              <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{cat.label}</span>
+                            </div>
+                            <p className="font-semibold text-foreground text-sm sm:text-base leading-snug">{event.title}</p>
+                            <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-1">
+                              {event.location && (
+                                <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                                  <MapPin className="w-3 h-3" />
+                                  {event.location}
+                                </span>
+                              )}
+                              {event.note && (
+                                <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                                  <Clock className="w-3 h-3" />
+                                  {event.note}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="text-center mt-6">
+              <Link href="/calendar">
+                <Button variant="outline" className="press-scale">
+                  View Full Calendar <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+              </Link>
+            </div>
+          </section>
+        )}
 
         {/* Newsletter Subscription */}
         <section className="reveal container pb-10 sm:pb-16">

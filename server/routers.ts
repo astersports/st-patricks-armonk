@@ -916,6 +916,18 @@ export const appRouter = router({
       return { success: true };
     }),
   }),
+
+  importantDates: router({
+    upcoming: publicProcedure
+      .input(z.object({ limit: z.number().min(1).max(50).optional() }).optional())
+      .query(async ({ input }) => {
+        const limit = input?.limit ?? 12;
+        return db.getUpcomingImportantDates(limit);
+      }),
+    all: adminProcedure.query(async () => {
+      return db.getAllImportantDates();
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

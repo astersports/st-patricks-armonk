@@ -260,3 +260,8 @@
 - [x] Replace deprecated google.maps.Marker with AdvancedMarkerElement on Contact page
 - [x] Add search bar to hamburger menu for quick page finding on mobile
 - [x] Enhance mobile search: highlight matching keywords in results + improved empty state
+- [x] Add Important Dates 2026-2027 section to homepage with parish calendar events from images
+- [x] Create database table for important_dates
+- [x] Seed all events from the uploaded calendar images
+- [x] Create tRPC procedure to fetch upcoming important dates
+- [x] Build well-designed Important Dates section UI on homepage

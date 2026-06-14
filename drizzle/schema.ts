@@ -479,3 +479,21 @@ export const ccdPermissions = mysqlTable("ccd_permissions", {
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 export type CcdPermission = typeof ccdPermissions.$inferSelect;
+
+/**
+ * Important Dates - Key parish events for the year (from printed calendar)
+ * These are high-level milestone dates displayed on the homepage
+ */
+export const importantDates = mysqlTable("important_dates", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 500 }).notNull(),
+  eventDate: timestamp("eventDate").notNull(),
+  location: varchar("location", { length: 300 }),
+  note: text("note"),
+  category: mysqlEnum("category", ["ccd", "cyo", "sacrament", "parish", "teen_life", "social"]).default("parish").notNull(),
+  published: boolean("published").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ImportantDate = typeof importantDates.$inferSelect;
+export type InsertImportantDate = typeof importantDates.$inferInsert;

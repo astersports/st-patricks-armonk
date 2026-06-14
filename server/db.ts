@@ -1,6 +1,6 @@
 import { eq, desc, and, gte, lte, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, newsPosts, bulletins, events, emailSubscriptions, ccdRegistrations, cyoTeams, cyoGames, volunteerOpportunities, volunteerSignups, ccdEvents, parishDocuments, baptismRegistrations, sponsorCertificates, marriageInquiries, funeralPrePlanning, teenLifeRegistrations, parishRegistrations, ccdPermissions } from "../drizzle/schema";
+import { InsertUser, users, newsPosts, bulletins, events, emailSubscriptions, ccdRegistrations, cyoTeams, cyoGames, volunteerOpportunities, volunteerSignups, ccdEvents, parishDocuments, baptismRegistrations, sponsorCertificates, marriageInquiries, funeralPrePlanning, teenLifeRegistrations, parishRegistrations, ccdPermissions, importantDates } from "../drizzle/schema";
 import type { InsertNewsPost, InsertBulletin, InsertEvent, InsertEmailSubscription, InsertCcdRegistration, InsertCyoTeam, InsertCyoGame, InsertVolunteerOpportunity, InsertVolunteerSignup, InsertCcdEvent, InsertParishDocument, BaptismRegistration, SponsorCertificate, MarriageInquiry, FuneralPrePlanning, TeenLifeRegistration, ParishRegistration, CcdPermission } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -678,4 +678,23 @@ export async function getCcdPermissions(schoolYear?: string) {
 export async function updateCcdPermissionStatus(id: number, status: "pending" | "approved" | "flagged", adminNotes?: string) {
   const db = await getDb();
   await db!.update(ccdPermissions).set({ status, adminNotes: adminNotes || undefined }).where(eq(ccdPermissions.id, id));
+}
+
+// ===== IMPORTANT DATES =====
+
+export async function getUpcomingImportantDates(limit = 12) {
+  const db = await getDb();
+  const now = new Date();
+  return db!.select().from(importantDates)
+    .where(and(
+      eq(importantDates.published, true),
+      gte(importantDates.eventDate, now)
+    ))
+    .orderBy(importantDates.eventDate)
+    .limit(limit);
+}
+
+export async function getAllImportantDates() {
+  const db = await getDb();
+  return db!.select().from(importantDates).orderBy(importantDates.eventDate);
 }
