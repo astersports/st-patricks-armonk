@@ -266,3 +266,6 @@
 - [x] Create tRPC procedure to fetch upcoming important dates
 - [x] Build well-designed Important Dates section UI on homepage
 - [x] Fix blank Important Dates section on mobile (useReveal hook didn't observe dynamically added .reveal elements after async data loads)
+- [x] Redesign Important Dates section to use accordion grouped by month (current month expanded by default)
+- [x] Show ALL important dates (not just next 12)
+- [x] Add any missing dates from the calendar images (fixed Teen Life Graduation Mass date to June 7)

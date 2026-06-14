@@ -924,6 +924,9 @@ export const appRouter = router({
         const limit = input?.limit ?? 12;
         return db.getUpcomingImportantDates(limit);
       }),
+    allPublished: publicProcedure.query(async () => {
+      return db.getAllPublishedImportantDates();
+    }),
     all: adminProcedure.query(async () => {
       return db.getAllImportantDates();
     }),

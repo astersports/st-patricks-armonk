@@ -694,6 +694,13 @@ export async function getUpcomingImportantDates(limit = 12) {
     .limit(limit);
 }
 
+export async function getAllPublishedImportantDates() {
+  const db = await getDb();
+  return db!.select().from(importantDates)
+    .where(eq(importantDates.published, true))
+    .orderBy(importantDates.eventDate);
+}
+
 export async function getAllImportantDates() {
   const db = await getDb();
   return db!.select().from(importantDates).orderBy(importantDates.eventDate);
