@@ -265,3 +265,4 @@
 - [x] Seed all events from the uploaded calendar images
 - [x] Create tRPC procedure to fetch upcoming important dates
 - [x] Build well-designed Important Dates section UI on homepage
+- [x] Fix blank Important Dates section on mobile (useReveal hook didn't observe dynamically added .reveal elements after async data loads)
