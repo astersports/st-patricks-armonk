@@ -95,7 +95,7 @@ export default function MarriageForm() {
             <h1 className="font-serif text-3xl md:text-4xl">Marriage Inquiry</h1>
           </div>
           <p className="text-green-200 max-w-xl">
-            Begin the process of celebrating your marriage at St. Patrick's Church. 
+            Begin the process of celebrating your marriage at St. Patrick in Armonk. 
             Please submit this inquiry at least 6 months before your desired wedding date.
           </p>
         </div>
@@ -293,7 +293,7 @@ export default function MarriageForm() {
                   onCheckedChange={(v) => updateField("isParishioner", !!v)}
                 />
                 <Label htmlFor="isParishioner" className="text-sm leading-relaxed cursor-pointer">
-                  At least one of us is a registered parishioner of St. Patrick's Church
+                  At least one of us is a registered parishioner of St. Patrick in Armonk
                 </Label>
               </div>
               <div className="flex items-start gap-3">

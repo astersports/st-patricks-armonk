@@ -280,8 +280,8 @@ export default function Bulletins() {
                       <DropdownMenuItem
                         onClick={() => {
                           const pdfLink = latestBulletin.pdfUrl.startsWith("http") ? latestBulletin.pdfUrl : window.location.origin + latestBulletin.pdfUrl;
-                          const subject = encodeURIComponent(`${latestBulletin.title} — St. Patrick Church, Armonk`);
-                          const body = encodeURIComponent(`Here is this week's parish bulletin from St. Patrick Church in Armonk:\n\n${pdfLink}\n\nVisit our website: ${window.location.origin}/bulletins`);
+                          const subject = encodeURIComponent(`${latestBulletin.title} — St. Patrick in Armonk`);
+                          const body = encodeURIComponent(`Here is this week's parish bulletin from St. Patrick in Armonk:\n\n${pdfLink}\n\nVisit our website: ${window.location.origin}/bulletins`);
                           window.open(`mailto:?subject=${subject}&body=${body}`, "_self");
                         }}
                       >

@@ -53,11 +53,11 @@ const sacraments = [
     content: (
       <>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          Baptism is the first sacrament of initiation into the Catholic Church. Through Baptism, we are freed from sin and reborn as children of God. At St. Patrick's, we celebrate Baptisms on select Sundays after the 12:30 PM Mass.
+          Baptism is the first sacrament of initiation into the Catholic Church. Through Baptism, we are freed from sin and reborn as children of God. At St. Patrick in Armonk, we celebrate Baptisms on select Sundays after the 12:30 PM Mass.
         </p>
         <h4 className="font-semibold text-foreground mb-2">Requirements</h4>
         <ul className="space-y-1.5 text-sm text-muted-foreground mb-4 ml-4">
-          <li className="flex gap-2"><span className="text-primary">•</span>Parents must be registered parishioners of St. Patrick's Church</li>
+          <li className="flex gap-2"><span className="text-primary">•</span>Parents must be registered parishioners of St. Patrick in Armonk</li>
           <li className="flex gap-2"><span className="text-primary">•</span>Parents must attend a Baptism preparation class (held monthly)</li>
           <li className="flex gap-2"><span className="text-primary">•</span>At least one godparent must be a confirmed, practicing Catholic</li>
           <li className="flex gap-2"><span className="text-primary">•</span>Complete the Baptismal Registration Form</li>
@@ -89,7 +89,7 @@ const sacraments = [
     content: (
       <>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          First Holy Communion is one of the most joyful milestones in a child's faith journey. At St. Patrick's, children typically receive their First Communion in the spring of 2nd grade, after completing sacramental preparation through our CCD program.
+          First Holy Communion is one of the most joyful milestones in a child's faith journey. At St. Patrick in Armonk, children typically receive their First Communion in the spring of 2nd grade, after completing sacramental preparation through our CCD program.
         </p>
         <h4 className="font-semibold text-foreground mb-2">Preparation Requirements</h4>
         <ul className="space-y-1.5 text-sm text-muted-foreground mb-4 ml-4">
@@ -127,7 +127,7 @@ const sacraments = [
     content: (
       <>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          Confirmation completes the grace of Baptism and strengthens us to be witnesses of Christ. At St. Patrick's, Confirmation preparation is part of our 8th-grade CCD program, though older teens and adults may also prepare.
+          Confirmation completes the grace of Baptism and strengthens us to be witnesses of Christ. At St. Patrick in Armonk, Confirmation preparation is part of our 8th-grade CCD program, though older teens and adults may also prepare.
         </p>
         <h4 className="font-semibold text-foreground mb-2">Preparation Program</h4>
         <ul className="space-y-1.5 text-sm text-muted-foreground mb-4 ml-4">
@@ -161,7 +161,7 @@ const sacraments = [
     content: (
       <>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          The Sacrament of Marriage is a covenant between a man and a woman, blessed by God. St. Patrick's Church is a beautiful setting for your wedding celebration.
+          The Sacrament of Marriage is a covenant between a man and a woman, blessed by God. St. Patrick in Armonk is a beautiful setting for your wedding celebration.
         </p>
         <h4 className="font-semibold text-foreground mb-2">For Parishioners</h4>
         <ul className="space-y-1.5 text-sm text-muted-foreground mb-4 ml-4">
@@ -173,7 +173,7 @@ const sacraments = [
         </ul>
         <h4 className="font-semibold text-foreground mb-2">For Non-Parishioners</h4>
         <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-          Non-parishioners may request to be married at St. Patrick's. Additional guidelines and fees apply. Please contact the parish office for details.
+          Non-parishioners may request to be married at St. Patrick in Armonk. Additional guidelines and fees apply. Please contact the parish office for details.
         </p>
         <div className="flex flex-wrap gap-3">
           <a href="/marriage-form"><Button size="sm" className="gap-2"><Heart className="w-3.5 h-3.5" /> Marriage Inquiry Form</Button></a>
@@ -192,7 +192,7 @@ const sacraments = [
     content: (
       <>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          The Church's funeral liturgy offers worship, praise, and thanksgiving to God for the gift of life. At St. Patrick's, we walk with families through their time of grief with compassion and prayer.
+          The Church's funeral liturgy offers worship, praise, and thanksgiving to God for the gift of life. At St. Patrick in Armonk, we walk with families through their time of grief with compassion and prayer.
         </p>
         <h4 className="font-semibold text-foreground mb-2">Funeral Arrangements</h4>
         <ul className="space-y-1.5 text-sm text-muted-foreground mb-4 ml-4">

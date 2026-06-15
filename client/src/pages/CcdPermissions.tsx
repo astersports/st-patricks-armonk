@@ -349,7 +349,7 @@ export default function CcdPermissions() {
               <div className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
                 <Checkbox id="photoRelease" checked={form.photoReleaseConsent} onCheckedChange={(v) => setForm({ ...form, photoReleaseConsent: v === true })} className="mt-0.5" />
                 <Label htmlFor="photoRelease" className="cursor-pointer text-sm leading-relaxed">
-                  <span className="font-medium">Photo/Video Release:</span> I grant permission for St. Patrick Church to photograph or video my child during CCD activities for use in parish communications, website, and social media.
+                  <span className="font-medium">Photo/Video Release:</span> I grant permission for St. Patrick in Armonk to photograph or video my child during CCD activities for use in parish communications, website, and social media.
                 </Label>
               </div>
 

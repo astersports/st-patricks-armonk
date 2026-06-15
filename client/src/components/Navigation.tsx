@@ -409,7 +409,7 @@ export default function Navigation() {
             href="/parish-registration"
             className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium hover:underline transition-all"
           >
-            <span className="hidden sm:inline">New to St. Patrick's?</span>
+            <span className="hidden sm:inline">New to St. Patrick in Armonk?</span>
             <span className="font-semibold">Register as a Parishioner</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
@@ -425,7 +425,7 @@ export default function Navigation() {
                 St. Patrick
               </span>
               <span className="text-[10px] text-muted-foreground leading-tight tracking-widest uppercase">
-                Armonk, NY
+                in Armonk
               </span>
             </div>
           </Link>

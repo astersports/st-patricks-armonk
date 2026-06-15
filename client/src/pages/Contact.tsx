@@ -15,7 +15,7 @@ export default function Contact() {
     new google.maps.marker.AdvancedMarkerElement({
       position,
       map,
-      title: "St. Patrick Church, Armonk",
+      title: "St. Patrick in Armonk",
     });
   }, []);
 
@@ -52,7 +52,7 @@ export default function Contact() {
                     <div>
                       <h3 className="font-semibold mb-1">Address</h3>
                       <p className="text-muted-foreground">
-                        Church of St. Patrick<br />
+                        St. Patrick in Armonk<br />
                         29 Cox Ave, Armonk NY 10504<br />
                         P.O. Box 6
                       </p>
@@ -108,7 +108,7 @@ export default function Contact() {
                 <CardContent className="p-6">
                   <h3 className="font-semibold text-lg mb-2">Directions</h3>
                   <p className="text-muted-foreground text-sm">
-                    St. Patrick Church is located on Cox Avenue in Armonk, NY. 
+                    St. Patrick in Armonk is located on Cox Avenue in Armonk, NY. 
                     The church is easily accessible from Route 22 and I-684.
                   </p>
                   <a

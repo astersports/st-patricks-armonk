@@ -94,7 +94,7 @@ export default function Home() {
             Welcome to
           </p>
           <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-3 animate-fade-in drop-shadow-2xl">
-            St. Patrick Church
+            St. Patrick in Armonk
           </h1>
           <p className="text-lg sm:text-xl text-white/90 font-light animate-fade-up stagger-1">
             Armonk, New York
@@ -218,7 +218,7 @@ export default function Home() {
           <div className="max-w-2xl mx-auto text-center">
             <div className="w-10 h-0.5 bg-gold mx-auto mb-5" />
             <blockquote className="font-serif text-lg sm:text-xl md:text-2xl text-foreground/90 italic leading-relaxed">
-              "Whether you are a lifelong parishioner or visiting for the first time, you are welcome here. St. Patrick's is a place where faith grows, friendships form, and everyone belongs."
+              "Whether you are a lifelong parishioner or visiting for the first time, you are welcome here. St. Patrick in Armonk is a place where faith grows, friendships form, and everyone belongs."
             </blockquote>
             <p className="mt-4 text-muted-foreground font-medium text-sm">— Fr. Thadeus Aravindathu, Pastor</p>
           </div>

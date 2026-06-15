@@ -52,7 +52,7 @@ export default function ParishRegistration() {
               <CheckCircle className="w-10 h-10 text-primary" />
             </div>
             <h1 className="font-serif text-3xl font-bold text-foreground mb-4 animate-fade-in">
-              Welcome to St. Patrick's!
+              Welcome to St. Patrick in Armonk!
             </h1>
             <p className="text-muted-foreground text-lg mb-6 animate-fade-up">
               Thank you for registering. Our parish office will be in touch soon to welcome 

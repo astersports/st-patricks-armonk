@@ -19,7 +19,7 @@ export default function About() {
               Our Parish
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed animate-fade-up">
-              For a century, St. Patrick's has been a spiritual home for the Catholic community 
+              For a century, St. Patrick in Armonk has been a spiritual home for the Catholic community 
               of Armonk and surrounding areas — a place of worship, fellowship, and service.
             </p>
           </div>
@@ -50,7 +50,7 @@ export default function About() {
                   generosity of generations of parishioners.
                 </p>
                 <p>
-                  Today, St. Patrick's continues to be a welcoming community rooted in the traditions of the 
+                  Today, St. Patrick in Armonk continues to be a welcoming community rooted in the traditions of the 
                   Catholic faith while embracing the needs of modern families. Our parish is part of the 
                   <a href="https://archny.org" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium"> Archdiocese of New York</a>.
                 </p>

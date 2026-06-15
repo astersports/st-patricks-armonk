@@ -323,3 +323,4 @@
 - [x] Add eCatholic and Vatican website links to the footer bottom bar
 - [x] Update footer: church name to "St. Patrick's Church in Armonk", address to "29 Cox Ave, Armonk NY"
 - [x] Add parish motto "God Bless the Whole World — No Exceptions" to homepage hero section
+- [x] Rebrand entire site: church name is "St. Patrick in Armonk" (updated all pages, nav, footer, email templates, HTML title)

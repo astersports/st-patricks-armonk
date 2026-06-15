@@ -57,7 +57,7 @@ export default function TeenLife() {
             <h1 className="font-serif text-4xl md:text-5xl text-foreground">Teen Life</h1>
           </div>
           <p className="text-lg text-muted-foreground max-w-2xl">
-            A vibrant community for teens at St. Patrick's — faith, fellowship, and fun.
+            A vibrant community for teens at St. Patrick in Armonk — faith, fellowship, and fun.
           </p>
         </div>
       </section>

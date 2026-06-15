@@ -51,7 +51,7 @@ export default function BaptismForm() {
               </div>
               <h2 className="font-serif text-3xl text-green-900 mb-4">Registration Received</h2>
               <p className="text-gray-600 max-w-md mx-auto mb-6">
-                Thank you for registering your child for Baptism at St. Patrick's. 
+                Thank you for registering your child for Baptism at St. Patrick in Armonk. 
                 The parish office will contact you within 3-5 business days to discuss 
                 preparation class dates and schedule the ceremony.
               </p>
@@ -89,7 +89,7 @@ export default function BaptismForm() {
             <h1 className="font-serif text-3xl md:text-4xl">Baptism Registration</h1>
           </div>
           <p className="text-green-200 max-w-xl">
-            Complete this form to register your child for Baptism at St. Patrick's Church. 
+            Complete this form to register your child for Baptism at St. Patrick in Armonk. 
             The parish office will contact you to schedule preparation and the ceremony.
           </p>
         </div>
@@ -290,7 +290,7 @@ export default function BaptismForm() {
           <div className="bg-green-50 border border-green-200 rounded-lg p-5">
             <h3 className="font-semibold text-green-900 mb-2">Requirements Reminder</h3>
             <ul className="text-sm text-green-800 space-y-1 list-disc list-inside">
-              <li>Parents must be registered parishioners of St. Patrick's Church</li>
+              <li>Parents must be registered parishioners of St. Patrick in Armonk</li>
               <li>Parents must attend a Baptism preparation class (held monthly)</li>
               <li>At least one godparent must be a confirmed, practicing Catholic</li>
               <li>A copy of the child's birth certificate will be required</li>

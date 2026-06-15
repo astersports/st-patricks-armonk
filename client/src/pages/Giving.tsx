@@ -76,13 +76,13 @@ export default function Giving() {
               <CardContent className="space-y-4">
                 <p className="text-muted-foreground leading-relaxed">
                   You can also make contributions via Venmo. Simply scan the QR code below with your phone's camera 
-                  or the Venmo app to send your donation directly to St. Patrick Church.
+                  or the Venmo app to send your donation directly to St. Patrick in Armonk.
                 </p>
                 <div className="bg-secondary/50 rounded-xl p-6 flex flex-col items-center">
                   <div className="bg-white p-4 rounded-xl shadow-sm border">
                     <img
                       src="/manus-storage/venmo-qr_0815b899.png"
-                      alt="Venmo QR Code for St. Patrick Church"
+                      alt="Venmo QR Code for St. Patrick in Armonk"
                       className="w-40 h-40 object-contain"
                     />
                   </div>

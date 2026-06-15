@@ -154,7 +154,7 @@ export default function NewHere() {
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="St. Patrick's Church - 29 Cox Ave, Armonk, NY 10504"
+              title="St. Patrick in Armonk - 29 Cox Ave, Armonk, NY 10504"
             />
           </div>
         </div>

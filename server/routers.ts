@@ -1048,16 +1048,16 @@ async function sendNewsNotifications(postId: number, title: string, excerpt: str
       const htmlBody = `
         <div style="font-family: 'Georgia', serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; padding: 20px 0; border-bottom: 2px solid #1a5c2e;">
-            <h1 style="color: #1a5c2e; margin: 0; font-size: 24px;">St. Patrick Church</h1>
+            <h1 style="color: #1a5c2e; margin: 0; font-size: 24px;">St. Patrick in Armonk</h1>
             <p style="color: #666; margin: 5px 0 0; font-size: 12px;">Armonk, New York</p>
           </div>
           <div style="padding: 30px 0;">
             <h2 style="color: #333; font-size: 20px;">${title}</h2>
             <p style="color: #555; line-height: 1.6; font-size: 15px;">${excerpt}</p>
-            <p style="margin-top: 20px;"><a href="/news-events" style="background: #1a5c2e; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Read More</a></p>
+            <p style="margin-top: 20px;"><a href="/news" style="background: #1a5c2e; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Read More</a></p>
           </div>
           <div style="border-top: 1px solid #eee; padding-top: 15px; text-align: center;">
-            <p style="color: #999; font-size: 11px;">Church of St. Patrick | 29 Cox Ave, Armonk NY 10504</p>
+            <p style="color: #999; font-size: 11px;">St. Patrick in Armonk | 29 Cox Ave, Armonk NY 10504</p>
             <p style="color: #999; font-size: 11px;"><a href="${unsubscribeUrl}" style="color: #999;">Unsubscribe from these emails</a></p>
           </div>
         </div>
@@ -1065,7 +1065,7 @@ async function sendNewsNotifications(postId: number, title: string, excerpt: str
 
       const sent = await sendEmailToSubscriber(
         subscriber.email,
-        `St. Patrick Church: ${title}`,
+        `St. Patrick in Armonk: ${title}`,
         htmlBody
       );
       if (sent) sentCount++;
@@ -1102,7 +1102,7 @@ async function sendBulletinNotifications(bulletinId: number, title: string) {
       const htmlBody = `
         <div style="font-family: 'Georgia', serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; padding: 20px 0; border-bottom: 2px solid #1a5c2e;">
-            <h1 style="color: #1a5c2e; margin: 0; font-size: 24px;">St. Patrick Church</h1>
+            <h1 style="color: #1a5c2e; margin: 0; font-size: 24px;">St. Patrick in Armonk</h1>
             <p style="color: #666; margin: 5px 0 0; font-size: 12px;">Armonk, New York</p>
           </div>
           <div style="padding: 30px 0;">
@@ -1111,7 +1111,7 @@ async function sendBulletinNotifications(bulletinId: number, title: string) {
             <p style="margin-top: 20px;"><a href="/bulletins" style="background: #1a5c2e; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">View Bulletin</a></p>
           </div>
           <div style="border-top: 1px solid #eee; padding-top: 15px; text-align: center;">
-            <p style="color: #999; font-size: 11px;">Church of St. Patrick | 29 Cox Ave, Armonk NY 10504</p>
+            <p style="color: #999; font-size: 11px;">St. Patrick in Armonk | 29 Cox Ave, Armonk NY 10504</p>
             <p style="color: #999; font-size: 11px;"><a href="${unsubscribeUrl}" style="color: #999;">Unsubscribe from these emails</a></p>
           </div>
         </div>
@@ -1119,7 +1119,7 @@ async function sendBulletinNotifications(bulletinId: number, title: string) {
 
       const sent = await sendEmailToSubscriber(
         subscriber.email,
-        `St. Patrick Church: New Bulletin - ${title}`,
+        `St. Patrick in Armonk: New Bulletin - ${title}`,
         htmlBody
       );
       if (sent) sentCount++;
@@ -1161,7 +1161,7 @@ export async function sendCcdReminders(events: Array<{ id: number; title: string
       const htmlBody = `
         <div style="font-family: 'Georgia', serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; padding: 20px 0; border-bottom: 2px solid #1a5c2e;">
-            <h1 style="color: #1a5c2e; margin: 0; font-size: 24px;">St. Patrick Church</h1>
+            <h1 style="color: #1a5c2e; margin: 0; font-size: 24px;">St. Patrick in Armonk</h1>
             <p style="color: #666; margin: 5px 0 0; font-size: 12px;">Religious Education Reminder</p>
           </div>
           <div style="padding: 30px 0;">
@@ -1171,7 +1171,7 @@ export async function sendCcdReminders(events: Array<{ id: number; title: string
             <p style="margin-top: 20px;"><a href="/ccd-calendar" style="background: #1a5c2e; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">View Full Calendar</a></p>
           </div>
           <div style="border-top: 1px solid #eee; padding-top: 15px; text-align: center;">
-            <p style="color: #999; font-size: 11px;">Church of St. Patrick | 29 Cox Ave, Armonk NY 10504</p>
+            <p style="color: #999; font-size: 11px;">St. Patrick in Armonk | 29 Cox Ave, Armonk NY 10504</p>
             <p style="color: #999; font-size: 11px;"><a href="${unsubscribeUrl}" style="color: #999;">Unsubscribe from CCD reminders</a></p>
           </div>
         </div>

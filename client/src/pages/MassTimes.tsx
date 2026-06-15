@@ -17,7 +17,7 @@ export default function MassTimes() {
               Mass Times & Confession
             </h1>
             <p className="text-base sm:text-lg text-muted-foreground animate-fade-up">
-              Join us in worship and prayer. All are welcome at St. Patrick Church.
+              Join us in worship and prayer. All are welcome at St. Patrick in Armonk.
             </p>
             <div className="flex flex-wrap items-center gap-4 mt-6 text-sm text-muted-foreground animate-fade-up stagger-1">
               <span className="inline-flex items-center gap-1.5">

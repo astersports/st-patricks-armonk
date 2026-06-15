@@ -60,7 +60,7 @@ export default function CcdRegistration() {
             </div>
             <h1 className="font-serif text-3xl text-foreground mb-4">Registration Submitted!</h1>
             <p className="text-muted-foreground mb-6">
-              Thank you for registering your child for CCD at St. Patrick's. Our Religious Education office will review your submission and contact you with confirmation and class details.
+              Thank you for registering your child for CCD at St. Patrick in Armonk. Our Religious Education office will review your submission and contact you with confirmation and class details.
             </p>
             <p className="text-sm text-muted-foreground mb-8">
               If you have any questions, please contact us at{" "}
@@ -87,7 +87,7 @@ export default function CcdRegistration() {
             <h1 className="font-serif text-4xl md:text-5xl text-foreground">CCD Registration</h1>
           </div>
           <p className="text-muted-foreground text-lg max-w-2xl">
-            Register your child for Religious Education classes at St. Patrick's for the 2026–2027 school year.
+            Register your child for Religious Education classes at St. Patrick in Armonk for the 2026–2027 school year.
           </p>
         </div>
       </section>
@@ -214,7 +214,7 @@ export default function CcdRegistration() {
                 {registerMutation.isPending ? "Submitting..." : "Submit Registration"}
               </Button>
               <p className="text-xs text-muted-foreground text-center">
-                By submitting this form, you are registering your child for CCD classes at St. Patrick's Church, Armonk.
+                By submitting this form, you are registering your child for CCD classes at St. Patrick in Armonk.
                 The Religious Education office will follow up with confirmation.
               </p>
             </div>
