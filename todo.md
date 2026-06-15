@@ -293,3 +293,4 @@
 - [x] Add print-friendly button on Key Dates tab that generates clean bulletin board layout
 - [x] Add News & Announcements / Upcoming Events toggle to homepage Latest News section
 - [x] Fix Events tab to show Key Dates (not Google Calendar events) and remove duplicate KEY DATES section
+- [x] Redesign homepage card: show latest news + next event together (no toggle), with "View All News" and "View All Events" links

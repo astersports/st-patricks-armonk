@@ -1,7 +1,7 @@
 import PageLayout from "@/components/PageLayout";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Calendar, Newspaper, MapPin, Clock } from "lucide-react";
+import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -63,7 +63,6 @@ const journeyCards = [
 
 export default function Home() {
   const [email, setEmail] = useState("");
-  const [homeTab, setHomeTab] = useState<"news" | "events">("news");
   const { data: newsItems } = trpc.news.listPublished.useQuery();
   const { data: allImportantDates } = trpc.importantDates.allPublished.useQuery();
   const subscribeMutation = trpc.subscriptions.subscribe.useMutation({
@@ -120,42 +119,14 @@ export default function Home() {
       </section>
 
       <div ref={revealRef}>
-        {/* What's Happening — upcoming events + calendar sub-nav */}
+        {/* What's Happening — Latest News + Next Event */}
         <section className="reveal container -mt-8 relative z-20 mb-10 sm:mb-14">
           <Card className="border-0 shadow-lg overflow-hidden">
             <CardContent className="p-0">
-              {/* News / Events Toggle */}
-              <div className="px-4 sm:px-5 pt-3 pb-2 border-b border-border/50">
-                <div className="flex gap-1 p-0.5 bg-muted/50 rounded-lg w-fit">
-                  <button
-                    onClick={() => setHomeTab("news")}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all ${
-                      homeTab === "news"
-                        ? "bg-white shadow-sm text-foreground"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    <Newspaper className="w-3.5 h-3.5" />
-                    News
-                  </button>
-                  <button
-                    onClick={() => setHomeTab("events")}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all ${
-                      homeTab === "events"
-                        ? "bg-white shadow-sm text-foreground"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    <Calendar className="w-3.5 h-3.5" />
-                    Events
-                  </button>
-                </div>
-              </div>
-
-              {/* Tab Content */}
-              {homeTab === "news" ? (
+              {/* Latest News */}
+              <div className="border-b border-border/50">
                 <Link href="/news-events" className="group">
-                  <div className="p-4 sm:p-5 flex items-center gap-4 hover:bg-primary/[0.02] transition-colors border-b border-border/50">
+                  <div className="p-4 sm:p-5 flex items-center gap-4 hover:bg-primary/[0.02] transition-colors">
                     <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                       <Newspaper className="w-5 h-5 text-primary" />
                     </div>
@@ -178,75 +149,63 @@ export default function Home() {
                     <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
                   </div>
                 </Link>
-              ) : (
-                <div className="border-b border-border/50">
-                  {allImportantDates && allImportantDates.length > 0 ? (
-                    <div className="divide-y divide-border/30">
-                      {allImportantDates
-                        .filter((e) => new Date(e.eventDate as unknown as string) >= new Date())
-                        .slice(0, 5)
-                        .map((event) => {
-                          const catColors: Record<string, { dot: string }> = {
-                            ccd: { dot: "bg-green-500" },
-                            cyo: { dot: "bg-orange-500" },
-                            sacrament: { dot: "bg-purple-500" },
-                            parish: { dot: "bg-primary" },
-                            teen_life: { dot: "bg-blue-500" },
-                            social: { dot: "bg-amber-500" },
-                          };
-                          const cat = catColors[event.category] || catColors.parish;
-                          const eventDate = toEastern(event.eventDate as unknown as string);
-                          return (
-                            <div key={event.id} className="px-4 sm:px-5 py-3 flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-lg bg-gold/10 flex flex-col items-center justify-center shrink-0">
-                                <span className="text-[10px] font-medium text-gold uppercase leading-none">
-                                  {format(eventDate, "MMM")}
-                                </span>
-                                <span className="text-sm font-bold text-gold leading-tight">
-                                  {format(eventDate, "d")}
-                                </span>
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-1.5">
-                                  <span className={`w-1.5 h-1.5 rounded-full ${cat.dot} shrink-0`} />
-                                  <p className="font-semibold text-foreground text-sm truncate">{event.title}</p>
-                                </div>
-                                <p className="text-xs text-muted-foreground">
-                                  {event.location && <span>{event.location}</span>}
-                                  {event.location && event.note && <span> · </span>}
-                                  {event.note && <span>{event.note}</span>}
-                                </p>
-                              </div>
-                            </div>
-                          );
-                        })}
-                    </div>
-                  ) : (
-                    <div className="px-4 sm:px-5 py-6 text-center text-sm text-muted-foreground">
-                      No upcoming events
-                    </div>
-                  )}
-                  <Link href="/calendar?filter=key-dates" className="group">
-                    <div className="px-4 sm:px-5 py-2.5 flex items-center justify-center gap-1.5 text-xs font-medium text-primary hover:bg-primary/[0.03] transition-colors">
-                      View all key dates <ArrowRight className="w-3 h-3" />
-                    </div>
-                  </Link>
-                </div>
-              )}
+                <Link href="/news-events" className="group">
+                  <div className="px-4 sm:px-5 py-2 flex items-center justify-center gap-1.5 text-xs font-medium text-primary hover:bg-primary/[0.03] transition-colors border-t border-border/30">
+                    View all news <ArrowRight className="w-3 h-3" />
+                  </div>
+                </Link>
+              </div>
 
-              {/* View All Key Dates tile */}
-              <Link href="/calendar?filter=key-dates" className="group">
-                <div className="p-3.5 sm:p-4 flex items-center gap-3 hover:bg-primary/[0.03] transition-colors">
-                  <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                    <Calendar className="w-4.5 h-4.5 text-primary" />
+              {/* Next Event */}
+              <div className="border-b border-border/50">
+                {(() => {
+                  const nextEvent = allImportantDates
+                    ?.filter((e) => new Date(e.eventDate as unknown as string) >= new Date())
+                    ?.[0];
+                  if (!nextEvent) return (
+                    <div className="p-4 sm:p-5 text-center text-sm text-muted-foreground">No upcoming events</div>
+                  );
+                  const catColors: Record<string, { dot: string }> = {
+                    ccd: { dot: "bg-green-500" },
+                    cyo: { dot: "bg-orange-500" },
+                    sacrament: { dot: "bg-purple-500" },
+                    parish: { dot: "bg-primary" },
+                    teen_life: { dot: "bg-blue-500" },
+                    social: { dot: "bg-amber-500" },
+                  };
+                  const cat = catColors[nextEvent.category] || catColors.parish;
+                  const eventDate = toEastern(nextEvent.eventDate as unknown as string);
+                  return (
+                    <div className="p-4 sm:p-5 flex items-center gap-4">
+                      <div className="w-11 h-11 rounded-lg bg-gold/10 flex flex-col items-center justify-center shrink-0">
+                        <span className="text-[10px] font-medium text-gold uppercase leading-none">
+                          {format(eventDate, "MMM")}
+                        </span>
+                        <span className="text-base font-bold text-gold leading-tight">
+                          {format(eventDate, "d")}
+                        </span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Next Event</p>
+                        <div className="flex items-center gap-1.5">
+                          <span className={`w-1.5 h-1.5 rounded-full ${cat.dot} shrink-0`} />
+                          <p className="font-semibold text-foreground text-sm sm:text-base truncate">{nextEvent.title}</p>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          {nextEvent.location && <span>{nextEvent.location}</span>}
+                          {nextEvent.location && nextEvent.note && <span> · </span>}
+                          {nextEvent.note && <span>{nextEvent.note}</span>}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })()}
+                <Link href="/calendar?filter=key-dates" className="group">
+                  <div className="px-4 sm:px-5 py-2 flex items-center justify-center gap-1.5 text-xs font-medium text-primary hover:bg-primary/[0.03] transition-colors border-t border-border/30">
+                    View all events <ArrowRight className="w-3 h-3" />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-foreground text-sm">View All Key Dates</p>
-                    <p className="text-xs text-muted-foreground">Full 2026–2027 parish calendar</p>
-                  </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:text-primary transition-colors shrink-0" />
-                </div>
-              </Link>
+                </Link>
+              </div>
             </CardContent>
           </Card>
         </section>
