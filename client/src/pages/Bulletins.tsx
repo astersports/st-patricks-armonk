@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FileText, Download, Calendar, ExternalLink, ChevronLeft, ChevronRight, Mail, Bell, CheckCircle2, Share2, Link2, Copy, Filter, X } from "lucide-react";
+import { FileText, Download, Calendar, ExternalLink, ChevronLeft, ChevronRight, Mail, Bell, CheckCircle2, Share2, Link2, Copy, Filter, X, Search } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
 import { useState, useMemo } from "react";
@@ -131,6 +131,7 @@ export default function Bulletins() {
   const [selectedYear, setSelectedYear] = useState<string>("all");
   const [selectedMonth, setSelectedMonth] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const latestBulletin = bulletins?.[0];
   const archiveBulletins = bulletins?.slice(1) || [];
@@ -159,15 +160,23 @@ export default function Bulletins() {
     return Array.from(months).sort((a, b) => b - a);
   }, [archiveBulletins, selectedYear]);
 
-  // Filter archive bulletins based on selected year and month
+  // Filter archive bulletins based on selected year, month, and search query
   const filteredBulletins = useMemo(() => {
+    const query = searchQuery.toLowerCase().trim();
     return archiveBulletins.filter((b) => {
       const d = new Date(b.weekDate);
       if (selectedYear !== "all" && d.getFullYear() !== Number(selectedYear)) return false;
       if (selectedMonth !== "all" && d.getMonth() !== Number(selectedMonth)) return false;
+      if (query) {
+        const titleMatch = b.title?.toLowerCase().includes(query);
+        const descMatch = b.description?.toLowerCase().includes(query);
+        const dateStr = format(d, "MMMM d, yyyy").toLowerCase();
+        const dateMatch = dateStr.includes(query);
+        if (!titleMatch && !descMatch && !dateMatch) return false;
+      }
       return true;
     });
-  }, [archiveBulletins, selectedYear, selectedMonth]);
+  }, [archiveBulletins, selectedYear, selectedMonth, searchQuery]);
 
   // Group filtered bulletins by year for display
   const filteredByYear = useMemo(() => {
@@ -182,7 +191,7 @@ export default function Bulletins() {
       .sort((a, b) => b.year - a.year);
   }, [filteredBulletins]);
 
-  const hasActiveFilter = selectedYear !== "all" || selectedMonth !== "all";
+  const hasActiveFilter = selectedYear !== "all" || selectedMonth !== "all" || searchQuery.trim() !== "";
 
   // Pagination
   const totalItems = filteredBulletins.length;
@@ -195,6 +204,7 @@ export default function Bulletins() {
   const clearFilters = () => {
     setSelectedYear("all");
     setSelectedMonth("all");
+    setSearchQuery("");
     setCurrentPage(1);
   };
 
@@ -319,10 +329,10 @@ export default function Bulletins() {
             {/* Subscribe CTA */}
             <BulletinSubscribeCTA />
 
-            {/* Archive Section with Year/Month Filters */}
+            {/* Archive Section with Search and Year/Month Filters */}
             {archiveBulletins.length > 0 && (
               <div>
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                   <h3 className="font-serif text-xl font-semibold text-foreground">Past Bulletins</h3>
                   <div className="flex items-center gap-2 flex-wrap">
                     <Filter className="w-4 h-4 text-muted-foreground hidden sm:block" />
@@ -355,6 +365,26 @@ export default function Bulletins() {
                       </Button>
                     )}
                   </div>
+                </div>
+
+                {/* Search bar */}
+                <div className="relative mb-4">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/60" />
+                  <Input
+                    type="text"
+                    placeholder="Search bulletins by date, title, or keyword..."
+                    value={searchQuery}
+                    onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+                    className="pl-10 h-10"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => { setSearchQuery(""); setCurrentPage(1); }}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/60 hover:text-foreground transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
 
                 {/* Filter summary */}
