@@ -146,7 +146,7 @@ export default function MassTimes() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                  Mass times for Holy Days of Obligation are announced in the weekly bulletin and on the News & Events page. 
+                  Mass times for Holy Days of Obligation are announced in the weekly bulletin and on the News page. 
                   Please check back for upcoming Holy Day schedules.
                 </p>
               </CardContent>
