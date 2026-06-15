@@ -285,3 +285,4 @@
 - [x] Build admin Key Dates management page with table and add/edit dialog
 - [x] Wire admin Key Dates page into dashboard navigation
 - [x] Fix duplicate back/home buttons on Key Dates page (removed custom one, PageLayout already provides it)
+- [x] Make homepage Key Dates events non-clickable (plain list), keep only "View All Key Dates" tile as the link

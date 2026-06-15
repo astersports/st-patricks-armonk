@@ -179,8 +179,8 @@ export default function Home() {
                         const cat = catColors[event.category] || catColors.parish;
                         const eventDate = toEastern(event.eventDate as unknown as string);
                         return (
-                          <Link key={event.id} href="/key-dates" className="group">
-                            <div className="px-4 sm:px-5 py-3 flex items-center gap-3 hover:bg-primary/[0.02] transition-colors">
+                          <div key={event.id}>
+                            <div className="px-4 sm:px-5 py-3 flex items-center gap-3">
                               <div className="w-10 h-10 rounded-lg bg-gold/10 flex flex-col items-center justify-center shrink-0">
                                 <span className="text-[10px] font-medium text-gold uppercase leading-none">
                                   {format(eventDate, "MMM")}
@@ -200,9 +200,8 @@ export default function Home() {
                                   {event.note && <span>{event.note}</span>}
                                 </p>
                               </div>
-                              <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:text-primary transition-colors shrink-0" />
                             </div>
-                          </Link>
+                          </div>
                         );
                       })}
                   </div>
