@@ -124,7 +124,7 @@ function ThisWeeksBulletin() {
               )}
               <p className="text-xs text-primary font-medium mt-2 flex items-center gap-1">
                 <BookOpen className="w-3.5 h-3.5" />
-                Tap to read like a book
+                Tap to read bulletin
               </p>
             </div>
             <div className="flex gap-2 shrink-0">

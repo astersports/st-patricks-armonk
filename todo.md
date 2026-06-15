@@ -361,3 +361,4 @@
 - [x] Slim down mobile pills/cards (journey cards, resource cards) to reduce height on mobile
 - [x] Redesign Catholic Resources into individual source sections with top 3 items each and real-time pulse/last-updated indicators
 - [x] Polish homepage with next-level design inspired by Aster Sports AAU section
+- [x] Fix bulletin book reader: too small on mobile (only shows top corner), replaced page-flip with full-width single-page PDF viewer with swipe navigation
