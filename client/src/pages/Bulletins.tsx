@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FileText, Download, Calendar, ExternalLink, ChevronDown, ChevronUp, Mail, Bell, CheckCircle2, Share2, Link2, Copy, Filter, X } from "lucide-react";
+import { FileText, Download, Calendar, ExternalLink, ChevronLeft, ChevronRight, Mail, Bell, CheckCircle2, Share2, Link2, Copy, Filter, X } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
 import { useState, useMemo } from "react";
@@ -124,10 +124,13 @@ function BulletinSubscribeCTA() {
   );
 }
 
+const ITEMS_PER_PAGE = 20;
+
 export default function Bulletins() {
   const { data: bulletins, isLoading } = trpc.bulletins.listPublished.useQuery();
   const [selectedYear, setSelectedYear] = useState<string>("all");
   const [selectedMonth, setSelectedMonth] = useState<string>("all");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const latestBulletin = bulletins?.[0];
   const archiveBulletins = bulletins?.slice(1) || [];
@@ -181,9 +184,18 @@ export default function Bulletins() {
 
   const hasActiveFilter = selectedYear !== "all" || selectedMonth !== "all";
 
+  // Pagination
+  const totalItems = filteredBulletins.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  const paginatedBulletins = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredBulletins.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredBulletins, currentPage]);
+
   const clearFilters = () => {
     setSelectedYear("all");
     setSelectedMonth("all");
+    setCurrentPage(1);
   };
 
   // For the latest bulletin, determine if it's a local /manus-storage URL or external
@@ -314,7 +326,7 @@ export default function Bulletins() {
                   <h3 className="font-serif text-xl font-semibold text-foreground">Past Bulletins</h3>
                   <div className="flex items-center gap-2 flex-wrap">
                     <Filter className="w-4 h-4 text-muted-foreground hidden sm:block" />
-                    <Select value={selectedYear} onValueChange={(v) => { setSelectedYear(v); setSelectedMonth("all"); }}>
+                    <Select value={selectedYear} onValueChange={(v) => { setSelectedYear(v); setSelectedMonth("all"); setCurrentPage(1); }}>
                       <SelectTrigger className="w-[120px] h-9 text-sm">
                         <SelectValue placeholder="Year" />
                       </SelectTrigger>
@@ -325,7 +337,7 @@ export default function Bulletins() {
                         ))}
                       </SelectContent>
                     </Select>
-                    <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+                    <Select value={selectedMonth} onValueChange={(v) => { setSelectedMonth(v); setCurrentPage(1); }}>
                       <SelectTrigger className="w-[140px] h-9 text-sm">
                         <SelectValue placeholder="Month" />
                       </SelectTrigger>
@@ -364,38 +376,76 @@ export default function Bulletins() {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {filteredByYear.map(({ year, items }) => (
-                      <div key={year}>
-                        {/* Only show year header when viewing all years */}
-                        {selectedYear === "all" && (
-                          <div className="flex items-center gap-2 py-2 px-1 mb-1">
-                            <span className="font-semibold text-lg">{year}</span>
-                            <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-                              {items.length} bulletin{items.length !== 1 ? "s" : ""}
+                    <div className="grid gap-1.5">
+                      {paginatedBulletins.map((bulletin) => (
+                        <a
+                          key={bulletin.id}
+                          href={bulletin.pdfUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group block"
+                        >
+                          <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-muted/50 transition-colors">
+                            <FileText className="w-4 h-4 text-primary/70 shrink-0" />
+                            <span className="flex-1 text-sm font-medium group-hover:text-primary transition-colors">
+                              {format(new Date(bulletin.weekDate), "MMMM d, yyyy")}
                             </span>
+                            <Download className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:text-primary transition-colors shrink-0" />
                           </div>
-                        )}
-                        <div className="grid gap-1.5">
-                          {items.map((bulletin) => (
-                            <a
-                              key={bulletin.id}
-                              href={bulletin.pdfUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="group block"
-                            >
-                              <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-muted/50 transition-colors">
-                                <FileText className="w-4 h-4 text-primary/70 shrink-0" />
-                                <span className="flex-1 text-sm font-medium group-hover:text-primary transition-colors">
-                                  {format(new Date(bulletin.weekDate), "MMMM d, yyyy")}
-                                </span>
-                                <Download className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:text-primary transition-colors shrink-0" />
-                              </div>
-                            </a>
-                          ))}
+                        </a>
+                      ))}
+                    </div>
+
+                    {/* Pagination Controls */}
+                    {totalPages > 1 && (
+                      <div className="flex items-center justify-between pt-4 border-t">
+                        <p className="text-sm text-muted-foreground">
+                          Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, totalItems)} of {totalItems}
+                        </p>
+                        <div className="flex items-center gap-1">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                            disabled={currentPage === 1}
+                            className="h-8 w-8 p-0"
+                          >
+                            <ChevronLeft className="w-4 h-4" />
+                          </Button>
+                          {Array.from({ length: totalPages }, (_, i) => i + 1)
+                            .filter((page) => {
+                              if (totalPages <= 7) return true;
+                              if (page === 1 || page === totalPages) return true;
+                              if (Math.abs(page - currentPage) <= 1) return true;
+                              return false;
+                            })
+                            .map((page, idx, arr) => (
+                              <span key={page} className="flex items-center">
+                                {idx > 0 && arr[idx - 1] !== page - 1 && (
+                                  <span className="px-1 text-muted-foreground text-xs">…</span>
+                                )}
+                                <Button
+                                  variant={currentPage === page ? "default" : "outline"}
+                                  size="sm"
+                                  onClick={() => setCurrentPage(page)}
+                                  className="h-8 w-8 p-0 text-xs"
+                                >
+                                  {page}
+                                </Button>
+                              </span>
+                            ))}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                            disabled={currentPage === totalPages}
+                            className="h-8 w-8 p-0"
+                          >
+                            <ChevronRight className="w-4 h-4" />
+                          </Button>
                         </div>
                       </div>
-                    ))}
+                    )}
                   </div>
                 )}
               </div>
