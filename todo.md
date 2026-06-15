@@ -320,3 +320,4 @@
 - [x] Add underline-slide hover animation to main header navigation links (desktop)
 - [x] Add smooth scroll-to-top button (appears after 400px scroll, positioned above mobile nav)
 - [x] Add "Subscribe to News" CTA at the bottom of the News page (news-only subscription)
+- [x] Add eCatholic and Vatican website links to the footer bottom bar
