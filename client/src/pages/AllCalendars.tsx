@@ -347,12 +347,12 @@ export default function AllCalendars() {
               <span className="hidden sm:inline">Home</span>
             </Link>
 
-            {/* Source Filter Tabs */}
-            <nav className="flex items-center gap-1 ml-1 overflow-x-auto">
+            {/* Source Filter Tabs — wraps on mobile so all tabs are visible */}
+            <nav className="flex flex-wrap items-center gap-1 ml-1">
               {/* Key Dates tab — first */}
               <button
                 onClick={() => setActiveSource("key-dates")}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all shrink-0 ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all ${
                   activeSource === "key-dates"
                     ? "bg-gold/15 text-gold"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -362,13 +362,13 @@ export default function AllCalendars() {
                 Key Dates
               </button>
 
-              {/* Divider */}
-              <div className="w-px h-5 bg-border/60 mx-1 shrink-0" />
+              {/* Divider — hidden on mobile when wrapping */}
+              <div className="w-px h-5 bg-border/60 mx-1 hidden sm:block" />
 
               {/* All Google Calendar events */}
               <button
                 onClick={() => setActiveSource("all")}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all shrink-0 ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all ${
                   activeSource === "all"
                     ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -384,7 +384,7 @@ export default function AllCalendars() {
                     <button
                       key={key}
                       onClick={() => setActiveSource(key)}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all shrink-0 ${
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all ${
                         activeSource === key
                           ? config.color
                           : "text-muted-foreground hover:text-foreground hover:bg-muted/50"

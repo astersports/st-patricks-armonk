@@ -335,3 +335,5 @@
 - [x] Add Readings of the Day section to homepage (Evangelizo.org API, 1-hour cache)
 - [x] Change bulletins archive to horizontal left-to-right scrolling card layout
 - [x] Add "Saint of the Day" card below Daily Readings on homepage (Evangelizo.org API, with image, bio, prayer)
+- [x] Fix Daily Readings body text: strip HTML tags server-side, use whitespace-pre-line on frontend
+- [x] Fix calendar page tab bar on mobile: tabs hidden behind horizontal scroll, CYO not visible — make all tabs visible (wrap or grid)
