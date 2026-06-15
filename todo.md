@@ -340,6 +340,15 @@
 - [x] Add loading skeleton animations for Vatican News and Daily Readings sections on homepage
 - [x] Fix Daily Readings title still showing raw HTML font tags on deployed site (was cached — already fixed, confirmed working)
 - [x] Make top announcement bar a scrolling marquee instead of static text
-- [ ] Create a dedicated photo gallery page with scrolling/carousel images and admin upload
-- [ ] Add "About" to the top navigation section
+- [x] Create a dedicated photo gallery page with scrolling/carousel images and admin upload
+- [x] Add "About" to the top navigation section (was already first nav item with dropdown)
 - [x] Replace Vatican News section with unified Catholic Resources section (live feeds from Vatican News + Good Newsroom, resource cards for Archdiocese of NY, USCCB, Vatican, Good Newsroom)
+- [x] Extend user role enum to support department heads (admin, communications, religious_ed, youth_ministry, sacraments, parish_life, user)
+- [x] Add role-based procedure middleware for department-specific access control
+- [x] Add gallery image upload tRPC mutation (base64 to S3)
+- [x] Build admin sidebar dashboard layout replacing flat tabs
+- [x] Build dashboard home with quick stats overview (pending items, upcoming events, registrations)
+- [x] Build Photo Gallery manager with image upload, album management, publish toggle
+- [x] Migrate all existing manager components into new sidebar structure (News, Bulletins, Events, CCD, CYO, Volunteers, Documents, Subscribers, Sacraments, Registrations, Permissions, Key Dates)
+- [x] Add user/role management section for admin to assign department head roles
+- [x] Mobile-optimized admin sidebar with collapsible navigation

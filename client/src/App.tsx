@@ -13,7 +13,7 @@ import FaithFormation from "./pages/FaithFormation";
 import Ministries from "./pages/Ministries";
 import Giving from "./pages/Giving";
 import Contact from "./pages/Contact";
-import Admin from "./pages/Admin";
+import AdminRouter from "./pages/AdminRouter";
 import Unsubscribe from "./pages/Unsubscribe";
 // Old calendar pages removed - now redirected to /calendar with filters
 import CcdRegistration from "./pages/CcdRegistration";
@@ -69,7 +69,7 @@ function Router() {
         <Route path="/funeral-form" component={FuneralForm} />
         <Route path="/giving" component={Giving} />
         <Route path="/contact" component={Contact} />
-        <Route path="/admin" component={Admin} />
+        <Route path="/admin" component={AdminRouter} nest />
         <Route path="/unsubscribe/:token" component={Unsubscribe} />
         <Route path="/ccd-unsubscribe" component={CcdUnsubscribe} />
         <Route path="/404" component={NotFound} />

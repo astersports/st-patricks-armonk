@@ -9,9 +9,9 @@ import * as db from "./db";
 import { storagePut } from "./storage";
 import { notifyOwner } from "./_core/notification";
 import { ENV } from "./_core/env";
+import { type UserRole, type AdminSection, hasAccess, isStaffRole } from "../shared/roles";
 
-// Owner-only procedure - only the site owner can manage content
-// Uses both role check AND openId verification for maximum security
+// Full admin procedure - only admin or owner can access
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
   const isOwner = ctx.user.openId === ENV.ownerOpenId;
   const isAdmin = ctx.user.role === "admin";
@@ -20,6 +20,27 @@ const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
   }
   return next({ ctx });
 });
+
+// Staff procedure - any staff role (not just admin) can access
+const staffProcedure = protectedProcedure.use(({ ctx, next }) => {
+  const isOwner = ctx.user.openId === ENV.ownerOpenId;
+  if (!isOwner && !isStaffRole(ctx.user.role as UserRole)) {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Staff access required" });
+  }
+  return next({ ctx });
+});
+
+// Section-specific procedure factory
+function sectionProcedure(section: AdminSection) {
+  return protectedProcedure.use(({ ctx, next }) => {
+    const isOwner = ctx.user.openId === ENV.ownerOpenId;
+    const role = ctx.user.role as UserRole;
+    if (!isOwner && !hasAccess(role, section)) {
+      throw new TRPCError({ code: "FORBIDDEN", message: `Access to ${section} denied` });
+    }
+    return next({ ctx });
+  });
+}
 
 export const appRouter = router({
   system: systemRouter,
@@ -987,13 +1008,25 @@ export const appRouter = router({
       .query(async ({ input }) => {
         return db.getPublishedGalleryPhotos(input?.album);
       }),
-    listAll: adminProcedure.query(async () => {
+    listAll: sectionProcedure("gallery").query(async () => {
       return db.getAllGalleryPhotos();
     }),
     albums: publicProcedure.query(async () => {
       return db.getGalleryAlbums();
     }),
-    upload: adminProcedure
+    uploadImage: sectionProcedure("gallery")
+      .input(z.object({
+        fileName: z.string(),
+        fileData: z.string(), // base64
+        contentType: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        const buffer = Buffer.from(input.fileData, "base64");
+        const key = `gallery/${nanoid()}-${input.fileName}`;
+        const { url } = await storagePut(key, buffer, input.contentType);
+        return { url, key };
+      }),
+    upload: sectionProcedure("gallery")
       .input(z.object({
         title: z.string().optional(),
         caption: z.string().optional(),
@@ -1011,7 +1044,7 @@ export const appRouter = router({
         });
         return { success: true };
       }),
-    update: adminProcedure
+    update: sectionProcedure("gallery")
       .input(z.object({
         id: z.number(),
         title: z.string().optional(),
@@ -1025,10 +1058,33 @@ export const appRouter = router({
         await db.updateGalleryPhoto(id, data);
         return { success: true };
       }),
-    delete: adminProcedure
+    delete: sectionProcedure("gallery")
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         await db.deleteGalleryPhoto(input.id);
+        return { success: true };
+      }),
+  }),
+
+  // ===== ADMIN DASHBOARD STATS =====
+  adminStats: router({
+    overview: staffProcedure.query(async () => {
+      return db.getAdminStats();
+    }),
+  }),
+
+  // ===== USER MANAGEMENT =====
+  users: router({
+    list: adminProcedure.query(async () => {
+      return db.getAllUsers();
+    }),
+    updateRole: adminProcedure
+      .input(z.object({
+        userId: z.number(),
+        role: z.enum(["user", "admin", "communications", "religious_ed", "youth_ministry", "sacraments", "parish_life"]),
+      }))
+      .mutation(async ({ input }) => {
+        await db.updateUserRole(input.userId, input.role);
         return { success: true };
       }),
   }),

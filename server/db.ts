@@ -780,9 +780,58 @@ export async function deleteGalleryPhoto(id: number) {
 
 export async function getGalleryAlbums() {
   const db = await getDb();
-  const results = await db!.select({ album: galleryPhotos.album })
+  const results = await db!.select({ album: galleryPhotos.album, count: sql<number>`count(*)` })
     .from(galleryPhotos)
     .where(eq(galleryPhotos.published, true))
     .groupBy(galleryPhotos.album);
-  return results.map(r => r.album).filter(Boolean) as string[];
+  return results.filter(r => r.album).map(r => ({ album: r.album as string, count: r.count }));
+}
+
+// ===== ADMIN STATS =====
+
+export async function getAdminStats() {
+  const db = await getDb();
+  const [newsCount] = await db!.select({ count: sql<number>`count(*)` }).from(newsPosts);
+  const [eventsCount] = await db!.select({ count: sql<number>`count(*)` }).from(events);
+  const [subscriberCount] = await db!.select({ count: sql<number>`count(*)` }).from(emailSubscriptions).where(eq(emailSubscriptions.active, true));
+  const [ccdCount] = await db!.select({ count: sql<number>`count(*)` }).from(ccdRegistrations).where(eq(ccdRegistrations.status, "pending"));
+  const [volunteerCount] = await db!.select({ count: sql<number>`count(*)` }).from(volunteerSignups);
+  const [galleryCount] = await db!.select({ count: sql<number>`count(*)` }).from(galleryPhotos);
+  const [parishRegCount] = await db!.select({ count: sql<number>`count(*)` }).from(parishRegistrations).where(eq(parishRegistrations.status, "pending"));
+  const [baptismCount] = await db!.select({ count: sql<number>`count(*)` }).from(baptismRegistrations).where(eq(baptismRegistrations.status, "pending"));
+  const [marriageCount] = await db!.select({ count: sql<number>`count(*)` }).from(marriageInquiries).where(eq(marriageInquiries.status, "pending"));
+  const [teenLifeCount] = await db!.select({ count: sql<number>`count(*)` }).from(teenLifeRegistrations).where(eq(teenLifeRegistrations.status, "pending"));
+
+  return {
+    totalNews: newsCount.count,
+    totalEvents: eventsCount.count,
+    activeSubscribers: subscriberCount.count,
+    pendingCcdRegistrations: ccdCount.count,
+    totalVolunteerSignups: volunteerCount.count,
+    totalGalleryPhotos: galleryCount.count,
+    pendingParishRegistrations: parishRegCount.count,
+    pendingBaptisms: baptismCount.count,
+    pendingMarriages: marriageCount.count,
+    pendingTeenLife: teenLifeCount.count,
+  };
+}
+
+// ===== USER MANAGEMENT =====
+
+export async function getAllUsers() {
+  const db = await getDb();
+  return db!.select({
+    id: users.id,
+    openId: users.openId,
+    name: users.name,
+    email: users.email,
+    role: users.role,
+    lastSignedIn: users.lastSignedIn,
+    createdAt: users.createdAt,
+  }).from(users).orderBy(desc(users.lastSignedIn));
+}
+
+export async function updateUserRole(userId: number, role: string) {
+  const db = await getDb();
+  await db!.update(users).set({ role: role as any }).where(eq(users.id, userId));
 }

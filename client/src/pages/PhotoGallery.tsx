@@ -65,15 +65,15 @@ export default function PhotoGallery() {
             >
               All Photos
             </Button>
-            {albums.map((album) => (
+            {albums.map((a) => (
               <Button
-                key={album}
-                variant={selectedAlbum === album ? "default" : "outline"}
+                key={a.album}
+                variant={selectedAlbum === a.album ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSelectedAlbum(album)}
+                onClick={() => setSelectedAlbum(a.album)}
                 className="rounded-full text-xs"
               >
-                {album}
+                {a.album} ({a.count})
               </Button>
             ))}
           </div>

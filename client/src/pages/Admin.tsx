@@ -115,7 +115,7 @@ export default function Admin() {
 }
 
 // ===== NEWS MANAGER =====
-function NewsManager() {
+export function NewsManager() {
   const utils = trpc.useUtils();
   const { data: posts, isLoading } = trpc.news.listAll.useQuery();
   const createMutation = trpc.news.create.useMutation({ onSuccess: () => { utils.news.listAll.invalidate(); toast.success("News post created!"); } });
@@ -244,7 +244,7 @@ function NewsManager() {
 }
 
 // ===== BULLETIN MANAGER =====
-function BulletinManager() {
+export function BulletinManager() {
   const utils = trpc.useUtils();
   const { data: bulletins, isLoading } = trpc.bulletins.listAll.useQuery();
   const createMutation = trpc.bulletins.create.useMutation({ onSuccess: () => { utils.bulletins.listAll.invalidate(); toast.success("Bulletin created!"); } });
@@ -390,7 +390,7 @@ function BulletinManager() {
 }
 
 // ===== EVENT MANAGER =====
-function EventManager() {
+export function EventManager() {
   const utils = trpc.useUtils();
   const { data: events, isLoading } = trpc.events.listAll.useQuery();
   const createMutation = trpc.events.create.useMutation({ onSuccess: () => { utils.events.listAll.invalidate(); toast.success("Event created!"); } });
@@ -480,7 +480,7 @@ function EventManager() {
 }
 
 // ===== SUBSCRIBER LIST =====
-function SubscriberList() {
+export function SubscriberList() {
   const { data: subscribers, isLoading } = trpc.subscriptions.listAll.useQuery();
 
   return (
@@ -544,7 +544,7 @@ function SubscriberList() {
 }
 
 // ===== CCD MANAGER =====
-function CcdManager() {
+export function CcdManager() {
   const { data: registrations, isLoading } = trpc.ccd.list.useQuery();
   const { data: ccdEvents, isLoading: eventsLoading } = trpc.ccd.listEvents.useQuery({ schoolYear: "2026-2027" });
   const utils = trpc.useUtils();
@@ -743,7 +743,7 @@ function CcdManager() {
 }
 
 // ===== CYO MANAGER =====
-function CyoManager() {
+export function CyoManager() {
   const utils = trpc.useUtils();
   const { data: teams, isLoading: teamsLoading } = trpc.cyo.listTeams.useQuery();
   const { data: games, isLoading: gamesLoading } = trpc.cyo.listGames.useQuery();
@@ -931,7 +931,7 @@ function CyoManager() {
 }
 
 // ===== VOLUNTEER MANAGER =====
-function VolunteerManager() {
+export function VolunteerManager() {
   const utils = trpc.useUtils();
   const { data: opportunities, isLoading } = trpc.volunteer.listAllOpportunities.useQuery();
   const createMutation = trpc.volunteer.createOpportunity.useMutation({ onSuccess: () => { utils.volunteer.listAllOpportunities.invalidate(); toast.success("Opportunity created!"); setShowForm(false); } });
@@ -1035,7 +1035,7 @@ const DOC_CATEGORIES = [
   { value: "general", label: "General" },
 ];
 
-function DocumentsManager() {
+export function DocumentsManager() {
   const { data: docs, isLoading } = trpc.documents.all.useQuery();
   const utils = trpc.useUtils();
   const uploadMutation = trpc.documents.upload.useMutation();
@@ -1183,7 +1183,7 @@ function DocumentsManager() {
 
 
 // ===== SACRAMENTS MANAGER =====
-function SacramentsManager() {
+export function SacramentsManager() {
   const [activeTab, setActiveTab] = useState<"baptism" | "sponsor" | "marriage" | "funeral">("baptism");
 
   return (
@@ -1424,7 +1424,7 @@ function FuneralSubmissions() {
 }
 
 // ===== PARISH REGISTRATIONS MANAGER =====
-function ParishRegistrationsManager() {
+export function ParishRegistrationsManager() {
   const { data: registrations, isLoading } = trpc.parishRegistration.list.useQuery();
   const updateStatus = trpc.parishRegistration.updateStatus.useMutation({
     onSuccess: () => { toast.success("Status updated"); },
@@ -1475,7 +1475,7 @@ function ParishRegistrationsManager() {
 }
 
 // ===== CCD PERMISSIONS MANAGER =====
-function CcdPermissionsManager() {
+export function CcdPermissionsManager() {
   const { data: permissions, isLoading } = trpc.ccdPermissions.list.useQuery();
   const updateStatus = trpc.ccdPermissions.updateStatus.useMutation({
     onSuccess: () => { toast.success("Status updated"); },
@@ -1535,7 +1535,7 @@ function CcdPermissionsManager() {
 
 
 // ===== KEY DATES MANAGER =====
-function KeyDatesManager() {
+export function KeyDatesManager() {
   const utils = trpc.useUtils();
   const { data: dates, isLoading } = trpc.importantDates.all.useQuery();
   const createMutation = trpc.importantDates.create.useMutation({
