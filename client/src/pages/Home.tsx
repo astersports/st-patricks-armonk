@@ -65,7 +65,6 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [homeTab, setHomeTab] = useState<"news" | "events">("news");
   const { data: newsItems } = trpc.news.listPublished.useQuery();
-  const { data: upcomingEvents } = trpc.events.listUpcoming.useQuery();
   const { data: allImportantDates } = trpc.importantDates.allPublished.useQuery();
   const subscribeMutation = trpc.subscriptions.subscribe.useMutation({
     onSuccess: () => {
@@ -181,86 +180,24 @@ export default function Home() {
                 </Link>
               ) : (
                 <div className="border-b border-border/50">
-                  {upcomingEvents && upcomingEvents.length > 0 ? (
+                  {allImportantDates && allImportantDates.length > 0 ? (
                     <div className="divide-y divide-border/30">
-                      {upcomingEvents.slice(0, 4).map((event: any) => {
-                        const eventDate = new Date(event.startDate);
-                        return (
-                          <div key={event.id} className="px-4 sm:px-5 py-3 flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-gold/10 flex flex-col items-center justify-center shrink-0">
-                              <span className="text-[10px] font-medium text-gold uppercase leading-none">
-                                {format(eventDate, "MMM")}
-                              </span>
-                              <span className="text-sm font-bold text-gold leading-tight">
-                                {format(eventDate, "d")}
-                              </span>
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="font-semibold text-foreground text-sm truncate">{event.title}</p>
-                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                {!event.allDay && (
-                                  <span className="flex items-center gap-0.5">
-                                    <Clock className="w-3 h-3" />
-                                    {format(eventDate, "h:mm a")}
-                                  </span>
-                                )}
-                                {event.location && (
-                                  <span className="flex items-center gap-0.5">
-                                    <MapPin className="w-3 h-3" />
-                                    <span className="truncate max-w-[120px]">{event.location}</span>
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <div className="px-4 sm:px-5 py-6 text-center text-sm text-muted-foreground">
-                      No upcoming events this week
-                    </div>
-                  )}
-                  <Link href="/news-events" className="group">
-                    <div className="px-4 sm:px-5 py-2.5 flex items-center justify-center gap-1.5 text-xs font-medium text-primary hover:bg-primary/[0.03] transition-colors">
-                      View all events <ArrowRight className="w-3 h-3" />
-                    </div>
-                  </Link>
-                </div>
-              )}
-
-              {/* Key Dates — next 5 important parish dates */}
-              <div className="border-b border-border/50">
-                <div className="px-4 sm:px-5 pt-4 pb-2">
-                  <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Key Dates</p>
-                  <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1.5">
-                    <span className="inline-flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-green-500" /><span className="text-[10px] text-muted-foreground">CCD</span></span>
-                    <span className="inline-flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-orange-500" /><span className="text-[10px] text-muted-foreground">CYO</span></span>
-                    <span className="inline-flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-purple-500" /><span className="text-[10px] text-muted-foreground">Sacrament</span></span>
-                    <span className="inline-flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-primary" /><span className="text-[10px] text-muted-foreground">Parish</span></span>
-                    <span className="inline-flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-blue-500" /><span className="text-[10px] text-muted-foreground">Teen Life</span></span>
-                    <span className="inline-flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-amber-500" /><span className="text-[10px] text-muted-foreground">Social</span></span>
-                  </div>
-                </div>
-                {allImportantDates && allImportantDates.length > 0 ? (
-                  <div className="divide-y divide-border/30">
-                    {allImportantDates
-                      .filter((e) => new Date(e.eventDate as unknown as string) >= new Date())
-                      .slice(0, 5)
-                      .map((event) => {
-                        const catColors: Record<string, { dot: string }> = {
-                          ccd: { dot: "bg-green-500" },
-                          cyo: { dot: "bg-orange-500" },
-                          sacrament: { dot: "bg-purple-500" },
-                          parish: { dot: "bg-primary" },
-                          teen_life: { dot: "bg-blue-500" },
-                          social: { dot: "bg-amber-500" },
-                        };
-                        const cat = catColors[event.category] || catColors.parish;
-                        const eventDate = toEastern(event.eventDate as unknown as string);
-                        return (
-                          <div key={event.id}>
-                            <div className="px-4 sm:px-5 py-3 flex items-center gap-3">
+                      {allImportantDates
+                        .filter((e) => new Date(e.eventDate as unknown as string) >= new Date())
+                        .slice(0, 5)
+                        .map((event) => {
+                          const catColors: Record<string, { dot: string }> = {
+                            ccd: { dot: "bg-green-500" },
+                            cyo: { dot: "bg-orange-500" },
+                            sacrament: { dot: "bg-purple-500" },
+                            parish: { dot: "bg-primary" },
+                            teen_life: { dot: "bg-blue-500" },
+                            social: { dot: "bg-amber-500" },
+                          };
+                          const cat = catColors[event.category] || catColors.parish;
+                          const eventDate = toEastern(event.eventDate as unknown as string);
+                          return (
+                            <div key={event.id} className="px-4 sm:px-5 py-3 flex items-center gap-3">
                               <div className="w-10 h-10 rounded-lg bg-gold/10 flex flex-col items-center justify-center shrink-0">
                                 <span className="text-[10px] font-medium text-gold uppercase leading-none">
                                   {format(eventDate, "MMM")}
@@ -281,14 +218,21 @@ export default function Home() {
                                 </p>
                               </div>
                             </div>
-                          </div>
-                        );
-                      })}
-                  </div>
-                ) : (
-                  <div className="px-4 sm:px-5 py-4 text-sm text-muted-foreground">No upcoming dates</div>
-                )}
-              </div>
+                          );
+                        })}
+                    </div>
+                  ) : (
+                    <div className="px-4 sm:px-5 py-6 text-center text-sm text-muted-foreground">
+                      No upcoming events
+                    </div>
+                  )}
+                  <Link href="/calendar?filter=key-dates" className="group">
+                    <div className="px-4 sm:px-5 py-2.5 flex items-center justify-center gap-1.5 text-xs font-medium text-primary hover:bg-primary/[0.03] transition-colors">
+                      View all key dates <ArrowRight className="w-3 h-3" />
+                    </div>
+                  </Link>
+                </div>
+              )}
 
               {/* View All Key Dates tile */}
               <Link href="/calendar?filter=key-dates" className="group">
