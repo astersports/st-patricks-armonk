@@ -47,7 +47,8 @@ function Router() {
         <Route path="/key-dates"><Redirect to="/calendar?filter=key-dates" /></Route>
         <Route path="/mass-times" component={MassTimes} />
         <Route path="/sacraments" component={Sacraments} />
-        <Route path="/news-events" component={NewsEvents} />
+        <Route path="/news" component={NewsEvents} />
+        <Route path="/news-events"><Redirect to="/news" /></Route>
         <Route path="/bulletins" component={Bulletins} />
         <Route path="/calendar" component={AllCalendars} />
         <Route path="/parish-calendar"><Redirect to="/calendar?filter=parish" /></Route>

@@ -42,10 +42,10 @@ const navLinks: NavItem[] = [
     ],
   },
   {
-    href: "/news-events",
+    href: "/news",
     label: "Parish Life",
     children: [
-      { href: "/news-events", label: "News" },
+      { href: "/news", label: "News" },
       { href: "/calendar", label: "Calendar (All Events)" },
       { href: "/bulletins", label: "Weekly Bulletins" },
       { href: "/calendar?filter=cyo", label: "CYO Schedule" },
@@ -69,7 +69,7 @@ const searchablePages: SearchableItem[] = [
   { href: "/ccd-registration", label: "CCD Registration", keywords: ["ccd", "register", "enroll", "religious ed", "sign up", "child"], icon: FileText },
   { href: "/ccd-permissions", label: "CCD Permission Forms", keywords: ["ccd", "permission", "release", "bus", "medical", "allergy", "pickup", "dismissal", "photo"], icon: FileText },
   { href: "/teen-life", label: "Teen Life", keywords: ["teen", "youth", "high school", "confirmation", "young"], icon: Users },
-  { href: "/news-events", label: "News", keywords: ["news", "announcement", "update", "parish"], icon: Newspaper },
+  { href: "/news", label: "News", keywords: ["news", "announcement", "update", "parish"], icon: Newspaper },
   { href: "/calendar", label: "Calendar (All Events)", keywords: ["calendar", "events", "schedule", "upcoming", "parish", "cyo", "ccd"], icon: Calendar },
   { href: "/calendar?filter=key-dates", label: "Key Dates 2026–2027", keywords: ["key dates", "important dates", "parish calendar", "milestones", "annual", "year"], icon: Calendar },
   { href: "/bulletins", label: "Weekly Bulletins", keywords: ["bulletin", "weekly", "pdf", "download", "read"], icon: BookOpen },
@@ -112,7 +112,7 @@ const mobileMenuSections: MobileMenuSection[] = [
   {
     title: "Parish Life",
     items: [
-      { href: "/news-events", label: "News", icon: Newspaper },
+      { href: "/news", label: "News", icon: Newspaper },
       { href: "/calendar", label: "Calendar", icon: Calendar },
       { href: "/bulletins", label: "Weekly Bulletins", icon: BookOpen },
       { href: "/calendar?filter=cyo", label: "CYO Schedule", icon: Calendar },

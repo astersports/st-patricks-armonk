@@ -312,3 +312,4 @@
 - [x] Add search bar to bulletins archive section for keyword filtering
 - [x] Remove "Upcoming Events" section from News & Events page (no longer relevant there)
 - [x] Update navigation menu label from "News & Announcements" to "News" (dropdown, mobile menu, search index, MassTimes reference)
+- [x] Rename route from /news-events to /news with redirect from old URL
