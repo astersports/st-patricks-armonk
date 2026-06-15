@@ -164,6 +164,51 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes kenBurns {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.08); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes crossfade {
+  0%, 33% { opacity: 1; }
+  40%, 93% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* ===== Section background utilities ===== */
+.section-cream {
+  background-color: oklch(0.97 0.01 85);
+}
+.section-dark {
+  background-color: oklch(0.22 0.06 150);
+  color: oklch(0.95 0.01 120);
+}
+.section-dark-green {
+  background-color: oklch(0.28 0.08 150);
+  color: oklch(0.95 0.01 120);
+}
+
+/* Ken Burns hero background */
+.hero-ken-burns {
+  animation: kenBurns 25s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
 /* ===== Micro-interaction utilities ===== */
 @layer utilities {
   /* Button press feedback */
@@ -189,6 +234,19 @@
   }
   .hover-glow:hover {
     box-shadow: 0 0 0 1px oklch(0.42 0.12 150 / 0.15), 0 8px 16px -4px oklch(0.42 0.12 150 / 0.08);
+  }
+
+  /* Interactive card with combined lift + glow */
+  .card-interactive {
+    transition: transform 250ms var(--ease-out), box-shadow 250ms var(--ease-out), border-color 250ms var(--ease-out);
+  }
+  .card-interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px -8px oklch(0.42 0.12 150 / 0.1), 0 4px 8px -4px oklch(0 0 0 / 0.04);
+    border-color: oklch(0.42 0.12 150 / 0.2);
+  }
+  .card-interactive:active {
+    transform: translateY(0) scale(0.99);
   }
 }
 

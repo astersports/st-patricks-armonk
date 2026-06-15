@@ -7,11 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { TZDate } from "@date-fns/tz";
 import { useReveal } from "@/hooks/useReveal";
+import { useScrollReveal, useStaggerReveal } from "@/hooks/useScrollReveal";
 
 const TIMEZONE = "America/New_York";
 function toEastern(isoString: string): Date {
@@ -61,6 +62,138 @@ const journeyCards = [
     borderColor: "border-l-accent",
   },
 ];
+
+// ===== HERO SECTION — Cinematic with Ken Burns + Time Greeting + Next Mass Countdown =====
+function HeroSection() {
+  const [timeGreeting, setTimeGreeting] = useState("");
+  const [nextMassText, setNextMassText] = useState("");
+
+  useEffect(() => {
+    function getGreeting() {
+      const now = new Date();
+      // Convert to Eastern time
+      const eastern = new Date(now.toLocaleString("en-US", { timeZone: TIMEZONE }));
+      const hour = eastern.getHours();
+      if (hour < 12) return "Good Morning";
+      if (hour < 17) return "Good Afternoon";
+      return "Good Evening";
+    }
+
+    function getNextMass() {
+      const now = new Date();
+      const eastern = new Date(now.toLocaleString("en-US", { timeZone: TIMEZONE }));
+      const day = eastern.getDay(); // 0=Sun, 1=Mon, 2=Tue...
+      const hour = eastern.getHours();
+      const min = eastern.getMinutes();
+      const currentMinutes = hour * 60 + min;
+
+      // Mass schedule: Sat 17:30, Sun 8:30 & 10:30, Tue-Fri 8:30
+      type MassSlot = { day: number; hour: number; min: number; label: string };
+      const schedule: MassSlot[] = [
+        { day: 0, hour: 8, min: 30, label: "Sunday 8:30 AM" },
+        { day: 0, hour: 10, min: 30, label: "Sunday 10:30 AM" },
+        { day: 2, hour: 8, min: 30, label: "Tuesday 8:30 AM" },
+        { day: 3, hour: 8, min: 30, label: "Wednesday 8:30 AM" },
+        { day: 4, hour: 8, min: 30, label: "Thursday 8:30 AM" },
+        { day: 5, hour: 8, min: 30, label: "Friday 8:30 AM" },
+        { day: 6, hour: 17, min: 30, label: "Saturday 5:30 PM" },
+      ];
+
+      // Find next mass
+      let minDiff = Infinity;
+      let nextLabel = "";
+      for (const mass of schedule) {
+        let daysAhead = mass.day - day;
+        if (daysAhead < 0) daysAhead += 7;
+        const massMinutes = mass.hour * 60 + mass.min;
+        let diffMinutes = daysAhead * 24 * 60 + (massMinutes - currentMinutes);
+        if (diffMinutes <= 0) diffMinutes += 7 * 24 * 60;
+        if (diffMinutes < minDiff) {
+          minDiff = diffMinutes;
+          nextLabel = mass.label;
+        }
+      }
+
+      if (minDiff < 60) {
+        return `Next Mass in ${minDiff}m — ${nextLabel}`;
+      } else if (minDiff < 24 * 60) {
+        const h = Math.floor(minDiff / 60);
+        const m = minDiff % 60;
+        return `Next Mass in ${h}h ${m}m — ${nextLabel}`;
+      } else {
+        return `Next Mass: ${nextLabel}`;
+      }
+    }
+
+    setTimeGreeting(getGreeting());
+    setNextMassText(getNextMass());
+
+    const interval = setInterval(() => {
+      setTimeGreeting(getGreeting());
+      setNextMassText(getNextMass());
+    }, 60000); // Update every minute
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <section className="relative h-[65vh] min-h-[480px] max-h-[600px] flex items-center justify-center overflow-hidden">
+      {/* Ken Burns background */}
+      <div className="absolute inset-0">
+        <img
+          src="/manus-storage/church-stained-glass_4e3f2e8c.jpg"
+          alt="Church stained glass"
+          className="w-full h-full object-cover hero-ken-burns"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/30 to-black/70" />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 text-center text-white container px-6">
+        {/* Time-of-day greeting */}
+        <p className="text-gold font-medium tracking-[0.2em] uppercase text-xs sm:text-sm mb-3 animate-fade-in">
+          {timeGreeting || "Welcome"}
+        </p>
+        <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-3 animate-fade-in drop-shadow-2xl">
+          St. Patrick in Armonk
+        </h1>
+        <p className="text-lg sm:text-xl text-white/90 font-light animate-fade-up stagger-1">
+          29 Cox Ave, Armonk NY 10504
+        </p>
+        <p className="text-white/90 text-sm sm:text-base italic mt-4 mb-1 animate-fade-up stagger-2 tracking-wide">
+          &ldquo;God Bless the Whole World &mdash; No Exceptions&rdquo;
+        </p>
+        <p className="text-white/70 text-xs sm:text-sm mb-6 animate-fade-up stagger-3 tracking-wide">
+          Pax Christi - St. Patricks Church, Armonk, New York
+        </p>
+
+        {/* Next Mass Countdown */}
+        {nextMassText && (
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-6 animate-fade-up stagger-3">
+            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            <span className="text-white/90 text-xs sm:text-sm font-medium">{nextMassText}</span>
+          </div>
+        )}
+
+        <div className="flex flex-col sm:flex-row gap-3 justify-center animate-fade-up stagger-4">
+          <Link href="/mass-times">
+            <Button size="lg" className="bg-gold text-black hover:bg-gold/90 font-semibold px-8 press-scale shadow-lg">
+              View Mass Times
+            </Button>
+          </Link>
+          <Link href="/giving">
+            <Button size="lg" variant="outline" className="border-white/80 text-white hover:bg-white/10 font-semibold px-8 press-scale">
+              Support Our Parish
+            </Button>
+          </Link>
+        </div>
+      </div>
+
+      {/* Bottom fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
+    </section>
+  );
+}
 
 function ThisWeeksBulletin() {
   const { data: bulletins, isLoading } = trpc.bulletins.listPublished.useQuery();
@@ -354,26 +487,26 @@ function DailyReadingsSkeleton() {
     <div>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
+          <div className="w-8 h-8 rounded-full bg-white/10 animate-pulse" />
           <div className="space-y-1.5">
-            <div className="h-5 w-36 bg-muted rounded animate-pulse" />
-            <div className="h-3 w-52 bg-muted rounded animate-pulse" />
+            <div className="h-5 w-36 bg-white/10 rounded animate-pulse" />
+            <div className="h-3 w-52 bg-white/10 rounded animate-pulse" />
           </div>
         </div>
-        <div className="h-3 w-20 bg-muted rounded animate-pulse" />
+        <div className="h-3 w-20 bg-white/10 rounded animate-pulse" />
       </div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {["First Reading", "Responsorial Psalm", "Gospel"].map((label) => (
-          <div key={label} className="rounded-xl border border-border/50 shadow-sm p-4 space-y-2.5">
-            <div className="h-3 w-24 bg-muted rounded animate-pulse" />
-            <div className="h-3 w-36 bg-muted/70 rounded animate-pulse" />
+          <div key={label} className="rounded-xl border border-white/10 bg-white/5 p-4 space-y-2.5">
+            <div className="h-3 w-24 bg-white/10 rounded animate-pulse" />
+            <div className="h-3 w-36 bg-white/10 rounded animate-pulse" />
             <div className="space-y-1.5 pt-1">
-              <div className="h-3 w-full bg-muted rounded animate-pulse" />
-              <div className="h-3 w-full bg-muted rounded animate-pulse" />
-              <div className="h-3 w-5/6 bg-muted rounded animate-pulse" />
-              <div className="h-3 w-4/5 bg-muted rounded animate-pulse" />
-              <div className="h-3 w-3/4 bg-muted rounded animate-pulse" />
-              <div className="h-3 w-2/3 bg-muted rounded animate-pulse" />
+              <div className="h-3 w-full bg-white/10 rounded animate-pulse" />
+              <div className="h-3 w-full bg-white/10 rounded animate-pulse" />
+              <div className="h-3 w-5/6 bg-white/10 rounded animate-pulse" />
+              <div className="h-3 w-4/5 bg-white/10 rounded animate-pulse" />
+              <div className="h-3 w-3/4 bg-white/10 rounded animate-pulse" />
+              <div className="h-3 w-2/3 bg-white/10 rounded animate-pulse" />
             </div>
           </div>
         ))}
@@ -391,19 +524,17 @@ function DailyReadings() {
 
   if (!readings) {
     return (
-      <Card className="border-border/50">
-        <CardContent className="p-5 text-center">
-          <p className="text-sm text-muted-foreground">Daily readings are temporarily unavailable.</p>
-          <a
-            href="https://bible.usccb.org/daily-bible-reading"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-primary hover:underline mt-2 inline-block"
-          >
-            View on USCCB.org
-          </a>
-        </CardContent>
-      </Card>
+      <div className="rounded-xl border border-white/10 bg-white/5 p-5 text-center">
+        <p className="text-sm text-white/70">Daily readings are temporarily unavailable.</p>
+        <a
+          href="https://bible.usccb.org/daily-bible-reading"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-gold hover:text-gold/80 hover:underline mt-2 inline-block"
+        >
+          View on USCCB.org
+        </a>
+      </div>
     );
   }
 
@@ -411,52 +542,102 @@ function DailyReadings() {
     <div>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center">
             <svg className="w-4 h-4 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
             </svg>
           </div>
           <div>
-            <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">Today's Readings</h2>
-            <p className="text-xs text-muted-foreground">{readings.liturgicTitle}</p>
+            <h2 className="font-serif text-lg sm:text-xl font-bold text-white">Today's Readings</h2>
+            <p className="text-xs text-white/60">{readings.liturgicTitle}</p>
           </div>
         </div>
         <a
           href="https://bible.usccb.org/daily-bible-reading"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs font-medium text-primary hover:text-primary/80 flex items-center gap-1 transition-colors"
+          className="text-xs font-medium text-gold hover:text-gold/80 flex items-center gap-1 transition-colors"
         >
           Full Readings <ArrowRight className="w-3 h-3" />
         </a>
       </div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {/* First Reading */}
-        <Card className="border-border/50 shadow-sm">
-          <CardContent className="p-4">
-            <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">First Reading</p>
-            <p className="text-xs text-muted-foreground mb-2 line-clamp-1">{readings.firstReading.title}</p>
-            <p className="text-sm text-foreground/90 leading-relaxed line-clamp-6 whitespace-pre-line">{readings.firstReading.text}</p>
-          </CardContent>
-        </Card>
+        <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm p-4">
+          <p className="text-xs font-semibold text-gold uppercase tracking-wider mb-1">First Reading</p>
+          <p className="text-xs text-white/50 mb-2 line-clamp-1">{readings.firstReading.title}</p>
+          <p className="text-sm text-white/90 leading-relaxed line-clamp-6 whitespace-pre-line">{readings.firstReading.text}</p>
+        </div>
         {/* Psalm */}
-        <Card className="border-border/50 shadow-sm">
-          <CardContent className="p-4">
-            <p className="text-xs font-semibold text-gold uppercase tracking-wider mb-1">Responsorial Psalm</p>
-            <p className="text-xs text-muted-foreground mb-2 line-clamp-1">{readings.psalm.title}</p>
-            <p className="text-sm text-foreground/90 leading-relaxed line-clamp-6 italic whitespace-pre-line">{readings.psalm.text}</p>
-          </CardContent>
-        </Card>
+        <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm p-4">
+          <p className="text-xs font-semibold text-amber-300 uppercase tracking-wider mb-1">Responsorial Psalm</p>
+          <p className="text-xs text-white/50 mb-2 line-clamp-1">{readings.psalm.title}</p>
+          <p className="text-sm text-white/90 leading-relaxed line-clamp-6 italic whitespace-pre-line">{readings.psalm.text}</p>
+        </div>
         {/* Gospel */}
-        <Card className="border-border/50 shadow-sm sm:col-span-2 lg:col-span-1">
-          <CardContent className="p-4">
-            <p className="text-xs font-semibold text-red-600 uppercase tracking-wider mb-1">Gospel</p>
-            <p className="text-xs text-muted-foreground mb-2 line-clamp-1">{readings.gospel.title}</p>
-            <p className="text-sm text-foreground/90 leading-relaxed line-clamp-6 whitespace-pre-line">{readings.gospel.text}</p>
-          </CardContent>
-        </Card>
+        <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm p-4 sm:col-span-2 lg:col-span-1">
+          <p className="text-xs font-semibold text-red-300 uppercase tracking-wider mb-1">Gospel</p>
+          <p className="text-xs text-white/50 mb-2 line-clamp-1">{readings.gospel.title}</p>
+          <p className="text-sm text-white/90 leading-relaxed line-clamp-6 whitespace-pre-line">{readings.gospel.text}</p>
+        </div>
       </div>
     </div>
+  );
+}
+
+// === JOURNEY CARDS with stagger animation ===
+function JourneyCardsSection() {
+  const { ref, getItemStyle } = useStaggerReveal(journeyCards.length);
+
+  return (
+    <section className="pb-10 sm:pb-14" ref={ref}>
+      <div className="container">
+        {/* Mobile: horizontal scroll snap */}
+        <div className="sm:hidden flex gap-3 overflow-x-auto pb-3 scrollbar-hide snap-x snap-mandatory -mx-4 px-4">
+          {journeyCards.map((card, i) => (
+            <Link key={card.href} href={card.href} className="shrink-0 w-[75vw] snap-start">
+              <Card
+                className={`group cursor-pointer h-full border-0 shadow-sm border-l-3 ${card.borderColor} card-interactive`}
+                style={getItemStyle(i)}
+              >
+                <CardContent className="p-4">
+                  <div className={`w-10 h-10 rounded-lg ${card.iconBg} flex items-center justify-center mb-2.5`}>
+                    <card.icon className={`w-5 h-5 ${card.iconColor}`} />
+                  </div>
+                  <h3 className="font-semibold text-foreground text-sm mb-0.5">{card.title}</h3>
+                  <p className="text-xs text-muted-foreground leading-snug mb-2">{card.description}</p>
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-primary group-hover:gap-1.5 transition-all">
+                    {card.cta} <ArrowRight className="w-3 h-3" />
+                  </span>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+        {/* Desktop: 4-col grid */}
+        <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {journeyCards.map((card, i) => (
+            <Link key={card.href} href={card.href}>
+              <Card
+                className={`group cursor-pointer h-full border-0 shadow-sm border-l-3 ${card.borderColor} hover-lift`}
+                style={getItemStyle(i)}
+              >
+                <CardContent className="p-5">
+                  <div className={`w-9 h-9 rounded-lg ${card.iconBg} flex items-center justify-center mb-3`}>
+                    <card.icon className={`w-4.5 h-4.5 ${card.iconColor}`} />
+                  </div>
+                  <h3 className="font-semibold text-foreground text-base mb-1">{card.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-snug line-clamp-2">{card.description}</p>
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-primary mt-2 group-hover:gap-1.5 transition-all">
+                    {card.cta} <ArrowRight className="w-3 h-3" />
+                  </span>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -667,52 +848,13 @@ export default function Home() {
 
   return (
     <PageLayout>
-      {/* Hero Section */}
-      <section className="relative h-[60vh] min-h-[440px] max-h-[560px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src="/manus-storage/church-stained-glass_4e3f2e8c.jpg"
-            alt="Church stained glass"
-            className="w-full h-full object-cover scale-105"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70" />
-        </div>
-        <div className="relative z-10 text-center text-white container px-6">
-          <p className="text-gold font-medium tracking-[0.25em] uppercase text-xs sm:text-sm mb-4 animate-fade-in">
-            Welcome to
-          </p>
-          <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-3 animate-fade-in drop-shadow-2xl">
-            St. Patrick in Armonk
-          </h1>
-          <p className="text-lg sm:text-xl text-white/90 font-light animate-fade-up stagger-1">
-            29 Cox Ave, Armonk NY 10504
-          </p>
-          <p className="text-white/90 text-sm sm:text-base italic mt-4 mb-1 animate-fade-up stagger-2 tracking-wide">
-            "God Bless the Whole World — No Exceptions"
-          </p>
-          <p className="text-white/70 text-xs sm:text-sm mb-8 animate-fade-up stagger-3 tracking-wide">
-            Pax Christi - St. Patricks Church, Armonk, New York
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center animate-fade-up stagger-3">
-            <Link href="/mass-times">
-              <Button size="lg" className="bg-gold text-black hover:bg-gold/90 font-semibold px-8 press-scale shadow-lg">
-                View Mass Times
-              </Button>
-            </Link>
-            <Link href="/giving">
-              <Button size="lg" variant="outline" className="border-white/80 text-white hover:bg-white/10 font-semibold px-8 press-scale">
-                Support Our Parish
-              </Button>
-            </Link>
-          </div>
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent" />
-      </section>
+      {/* Hero Section — Cinematic with Ken Burns + Time Greeting + Next Mass */}
+      <HeroSection />
 
       <div ref={revealRef}>
         {/* What's Happening — Latest News + Next Event */}
         <section className="reveal container -mt-8 relative z-20 mb-10 sm:mb-14">
-          <Card className="border-0 shadow-lg overflow-hidden">
+          <Card className="border-0 shadow-lg overflow-hidden hover-glow">
             <CardContent className="p-0">
               {/* Latest News */}
               <div className="border-b border-border/50">
@@ -813,48 +955,7 @@ export default function Home() {
         </section>
 
         {/* 4 Journey Cards — stacked vertically on mobile, 4-col grid on desktop */}
-        <section className="reveal pb-10 sm:pb-14">
-          <div className="container">
-            {/* Mobile: vertical stack (full-width cards) */}
-            <div className="sm:hidden flex flex-col gap-3">
-              {journeyCards.map((card) => (
-                <Link key={card.href} href={card.href}>
-                  <Card className={`group cursor-pointer border-0 shadow-sm border-l-3 ${card.borderColor} hover:shadow-md transition-all duration-200`}>
-                    <CardContent className="p-4 flex items-center gap-4">
-                      <div className={`w-10 h-10 rounded-lg ${card.iconBg} flex items-center justify-center shrink-0`}>
-                        <card.icon className={`w-5 h-5 ${card.iconColor}`} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-foreground text-sm">{card.title}</h3>
-                        <p className="text-xs text-muted-foreground leading-snug">{card.description}</p>
-                      </div>
-                      <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-            {/* Desktop: 4-col grid */}
-            <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {journeyCards.map((card) => (
-                <Link key={card.href} href={card.href}>
-                  <Card className={`group cursor-pointer h-full border-0 shadow-sm border-l-3 ${card.borderColor} hover:shadow-md transition-all duration-200`}>
-                    <CardContent className="p-5">
-                      <div className={`w-9 h-9 rounded-lg ${card.iconBg} flex items-center justify-center mb-3`}>
-                        <card.icon className={`w-4.5 h-4.5 ${card.iconColor}`} />
-                      </div>
-                      <h3 className="font-semibold text-foreground text-base mb-1">{card.title}</h3>
-                      <p className="text-sm text-muted-foreground leading-snug line-clamp-2">{card.description}</p>
-                      <span className="inline-flex items-center gap-1 text-xs font-medium text-primary mt-2 group-hover:gap-1.5 transition-all">
-                        {card.cta} <ArrowRight className="w-3 h-3" />
-                      </span>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
+        <JourneyCardsSection />
 
         {/* This Week's Bulletin */}
         <ThisWeeksBulletin />
@@ -865,33 +966,37 @@ export default function Home() {
         </section>
 
         {/* Catholic Resources — Live Feeds by Source */}
-        <section className="reveal container mb-10 sm:mb-14">
-          <CatholicResources />
+        <section className="reveal section-cream py-10 sm:py-14 -mx-4 px-4 sm:-mx-0 sm:px-0">
+          <div className="container">
+            <CatholicResources />
+          </div>
         </section>
 
-        {/* Daily Readings */}
-        <section className="reveal container mb-10 sm:mb-14">
-          <DailyReadings />
+        {/* Daily Readings — Dark Premium Section */}
+        <section className="reveal section-dark-green py-10 sm:py-14 -mx-4 px-4 sm:-mx-0 sm:px-0">
+          <div className="container">
+            <DailyReadings />
+          </div>
         </section>
 
         {/* Saint of the Day */}
-        <section className="reveal container mb-10 sm:mb-14">
+        <section className="reveal container py-10 sm:py-14">
           <SaintOfDayCard />
         </section>
 
-        {/* Newsletter Subscription */}
-        <section className="reveal container pb-10 sm:pb-16">
-          <Card className="bg-gradient-to-br from-primary via-parish-green-dark to-primary overflow-hidden border-0 shadow-xl">
-            <CardContent className="p-5 sm:p-8 md:p-10 flex flex-col md:flex-row items-center gap-5 sm:gap-8">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
+        {/* Newsletter Subscription — Full-width dark CTA */}
+        <section className="reveal section-dark py-12 sm:py-16 -mx-4 px-4 sm:-mx-0 sm:px-0">
+          <div className="container">
+            <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-10 max-w-4xl mx-auto">
+              <div className="flex-1 text-center md:text-left">
+                <div className="flex items-center gap-2 mb-2 justify-center md:justify-start">
                   <Mail className="w-4 h-4 text-gold" />
                   <span className="text-gold text-xs font-medium uppercase tracking-wider">Stay Connected</span>
                 </div>
                 <h2 className="font-serif text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1.5">
                   Subscribe to Parish Updates
                 </h2>
-                <p className="text-white/80 text-sm sm:text-base">
+                <p className="text-white/70 text-sm sm:text-base">
                   Receive weekly bulletins and news directly in your inbox.
                 </p>
               </div>
@@ -908,7 +1013,7 @@ export default function Home() {
                     placeholder="Your email address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="bg-white/10 border-white/30 text-white placeholder:text-white/50 min-w-[250px] focus:border-gold"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/50 min-w-[250px] focus:border-gold focus:ring-gold/30"
                     required
                   />
                   <Button
@@ -919,7 +1024,7 @@ export default function Home() {
                     {subscribeMutation.isPending ? "Subscribing..." : "Subscribe"}
                   </Button>
                 </form>
-                <p className="text-white/60 text-xs sm:text-sm mt-3">
+                <p className="text-white/50 text-xs sm:text-sm mt-3 text-center sm:text-left">
                   Or join us on{" "}
                   <a href="https://stpatarmonk.flocknote.com/home" target="_blank" rel="noopener noreferrer" className="text-gold underline hover:text-gold/80">
                     Flocknote
@@ -927,8 +1032,8 @@ export default function Home() {
                   for text and email updates.
                 </p>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </section>
       </div>
     </PageLayout>

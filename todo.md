@@ -363,3 +363,12 @@
 - [x] Polish homepage with next-level design inspired by Aster Sports AAU section
 - [x] Fix bulletin book reader: too small on mobile (only shows top corner), replaced page-flip with full-width single-page PDF viewer with swipe navigation
 - [x] Fix fullscreen bulletin reader not appearing on iOS (used createPortal to escape stacking context, added iOS scroll lock fix, prominent fullscreen button)
+- [x] Add scroll-triggered entrance animations (fade-in + slide-up) using IntersectionObserver
+- [x] Add micro-interactions: button press scale, card hover lift, staggered card entrances
+- [x] Redesign hero: time-of-day greeting, next mass countdown, Ken Burns zoom on background
+- [x] Add section rhythm: alternating white/cream/dark backgrounds between sections
+- [x] Redesign Daily Readings as dark premium section with elegant serif typography and gold accents
+- [ ] Replace static Latest News with live activity bar (auto-rotating cards showing what's happening now)
+- [x] Redesign newsletter CTA: full-width dark section with pattern background
+- [x] Polish journey cards: horizontal scroll on mobile with snap, animated icons
+- [ ] Polish bulletin card: hero-style featured content treatment
