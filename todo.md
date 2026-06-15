@@ -315,3 +315,4 @@
 - [x] Rename route from /news-events to /news with redirect from old URL
 - [x] Add direct "News" link to the website footer for easier navigation
 - [x] Add direct "Calendar" link to the website footer alongside News
+- [x] Optimize mobile footer layout: 3-column grid for quick links on small screens, better spacing

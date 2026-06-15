@@ -5,35 +5,33 @@ export default function Footer() {
   return (
     <footer className="bg-parish-green text-white">
       {/* Main Footer Content */}
-      <div className="container py-6">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="container py-6 sm:py-8">
+        <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between md:gap-4">
           {/* Left: Church identity */}
-          <div className="flex items-center gap-3">
-            <div>
-              <h3 className="font-serif text-base font-bold text-gold leading-tight">St. Patrick's Church</h3>
-              <div className="flex items-center gap-3 mt-1 text-xs text-white/70">
-                <span className="flex items-center gap-1">
-                  <MapPin className="w-3 h-3 text-gold/60" />
-                  29 Cox Ave, Armonk NY 10504
-                </span>
-                <span className="hidden sm:inline text-white/30">|</span>
-                <a href="tel:9142739724" className="flex items-center gap-1 hover:text-gold transition-colors">
-                  <Phone className="w-3 h-3 text-gold/60 sm:hidden" />
-                  (914) 273-9724
-                </a>
-              </div>
+          <div>
+            <h3 className="font-serif text-base font-bold text-gold leading-tight">St. Patrick's Church</h3>
+            <div className="flex items-center gap-3 mt-1.5 text-xs text-white/70">
+              <span className="flex items-center gap-1">
+                <MapPin className="w-3 h-3 text-gold/60" />
+                29 Cox Ave, Armonk NY 10504
+              </span>
+              <span className="hidden sm:inline text-white/30">|</span>
+              <a href="tel:9142739724" className="flex items-center gap-1 hover:text-gold transition-colors">
+                <Phone className="w-3 h-3 text-gold/60 sm:hidden" />
+                (914) 273-9724
+              </a>
             </div>
           </div>
 
-          {/* Center: Quick links */}
-          <nav className="flex flex-wrap gap-x-5 gap-y-1">
+          {/* Center: Quick links - grid on mobile for clear layout */}
+          <nav className="grid grid-cols-3 gap-x-6 gap-y-2.5 sm:flex sm:flex-wrap sm:gap-x-5 sm:gap-y-1.5">
             <Link href="/mass-times" className="text-xs text-white/70 hover:text-gold transition-colors">Mass Times</Link>
             <Link href="/news" className="text-xs text-white/70 hover:text-gold transition-colors">News</Link>
             <Link href="/calendar" className="text-xs text-white/70 hover:text-gold transition-colors">Calendar</Link>
             <Link href="/giving" className="text-xs text-white/70 hover:text-gold transition-colors">Giving</Link>
             <Link href="/bulletins" className="text-xs text-white/70 hover:text-gold transition-colors">Bulletin</Link>
             <Link href="/contact" className="text-xs text-white/70 hover:text-gold transition-colors">Contact</Link>
-            <Link href="/faith-formation" className="text-xs text-white/70 hover:text-gold transition-colors">Faith Formation</Link>
+            <Link href="/faith-formation" className="text-xs text-white/70 hover:text-gold transition-colors col-span-2 sm:col-span-1">Faith Formation</Link>
           </nav>
 
           {/* Right: Stay connected buttons */}
