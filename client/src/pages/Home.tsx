@@ -362,41 +362,6 @@ export default function Home() {
           </Card>
         </section>
 
-        {/* Vatican News — Official Video Widget + RSS Feed */}
-        <section className="reveal container mb-10 sm:mb-14">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-red-600/10 flex items-center justify-center">
-                <svg className="w-4 h-4 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
-                  <path d="M2 12h20" />
-                </svg>
-              </div>
-              <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">Vatican News</h2>
-            </div>
-            <a
-              href="https://www.vaticannews.va/en.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs font-medium text-primary hover:text-primary/80 flex items-center gap-1 transition-colors"
-            >
-              Visit Vatican News <ArrowRight className="w-3 h-3" />
-            </a>
-          </div>
-          {/* Official Vatican News Video Widget */}
-          <div className="mb-6 rounded-lg overflow-hidden border border-border/50 shadow-sm">
-            <div dangerouslySetInnerHTML={{ __html: '<vaticannews-widget lang="en" fontSize="14"></vaticannews-widget>' }} />
-          </div>
-          {/* RSS Feed below widget */}
-          <VaticanNewsFeed />
-        </section>
-
-        {/* Daily Readings */}
-        <section className="reveal container mb-10 sm:mb-14">
-          <DailyReadings />
-        </section>
-
         {/* Pastor's Welcome */}
         <section className="reveal container py-8 sm:py-12 mb-2 sm:mb-6">
           <div className="max-w-2xl mx-auto text-center">
@@ -450,6 +415,41 @@ export default function Home() {
               ))}
             </div>
           </div>
+        </section>
+
+        {/* Vatican News — Official Video Widget + RSS Feed */}
+        <section className="reveal container mb-10 sm:mb-14">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-red-600/10 flex items-center justify-center">
+                <svg className="w-4 h-4 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                  <path d="M2 12h20" />
+                </svg>
+              </div>
+              <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">Vatican News</h2>
+            </div>
+            <a
+              href="https://www.vaticannews.va/en.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-medium text-primary hover:text-primary/80 flex items-center gap-1 transition-colors"
+            >
+              Visit Vatican News <ArrowRight className="w-3 h-3" />
+            </a>
+          </div>
+          {/* Official Vatican News Video Widget */}
+          <div className="mb-6 rounded-lg overflow-hidden border border-border/50 shadow-sm">
+            <div dangerouslySetInnerHTML={{ __html: '<vaticannews-widget lang="en" fontSize="14"></vaticannews-widget>' }} />
+          </div>
+          {/* RSS Feed below widget */}
+          <VaticanNewsFeed />
+        </section>
+
+        {/* Daily Readings */}
+        <section className="reveal container mb-10 sm:mb-14">
+          <DailyReadings />
         </section>
 
         {/* Newsletter Subscription */}
