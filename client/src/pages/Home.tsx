@@ -1,13 +1,13 @@
 import PageLayout from "@/components/PageLayout";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin, Clock, ExternalLink, Globe, Camera, ImageIcon, BookOpen, Download } from "lucide-react";
+import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin, Clock, ExternalLink, Globe, Camera, ImageIcon, BookOpen, Download, RefreshCw, ChevronDown, Rss } from "lucide-react";
 import BulletinBookReader from "@/components/BulletinBookReader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { TZDate } from "@date-fns/tz";
@@ -460,121 +460,191 @@ function DailyReadings() {
   );
 }
 
+// === CATHOLIC RESOURCES — Aster Sports-inspired per-source live feed ===
+
+const SOURCES = [
+  { key: "goodnewsroom" as const, label: "Archdiocese of NY", sublabel: "The Good Newsroom", color: "bg-emerald-500", borderColor: "border-l-emerald-500", url: "https://thegoodnewsroom.org/" },
+  { key: "vatican" as const, label: "Vatican News", sublabel: "Holy See Press Office", color: "bg-red-600", borderColor: "border-l-red-600", url: "https://www.vaticannews.va/en.html" },
+] as const;
+
+const RESOURCE_LINKS = [
+  { name: "Archdiocese of NY", url: "https://www.archny.org/", category: "Local Church" },
+  { name: "USCCB", url: "https://www.usccb.org/", category: "National" },
+  { name: "Vatican", url: "https://www.vatican.va/content/vatican/en.html", category: "Universal Church" },
+  { name: "Good Newsroom", url: "https://thegoodnewsroom.org/", category: "Local News" },
+];
+
 function CatholicResourcesSkeleton() {
   return (
     <div className="space-y-4">
-      {/* Feed skeleton */}
-      <div className="grid gap-2">
-        {[...Array(4)].map((_, i) => (
-          <div key={i} className="flex gap-3 p-3 rounded-lg">
-            <div className="w-14 h-14 rounded bg-muted animate-pulse shrink-0" />
-            <div className="flex-1 space-y-2 py-0.5">
-              <div className="h-3.5 bg-muted rounded animate-pulse" style={{ width: `${80 - i * 10}%` }} />
-              <div className="h-3 bg-muted/70 rounded animate-pulse" style={{ width: `${55 - i * 5}%` }} />
+      <div className="flex items-center justify-between">
+        <div className="h-5 w-40 bg-muted rounded animate-pulse" />
+        <div className="h-3 w-24 bg-muted rounded animate-pulse" />
+      </div>
+      {[0, 1].map((i) => (
+        <div key={i} className="rounded-xl border border-border/50 p-4 space-y-3">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-muted animate-pulse" />
+            <div className="h-4 w-32 bg-muted rounded animate-pulse" />
+          </div>
+          {[0, 1, 2].map((j) => (
+            <div key={j} className="flex items-center gap-3 py-2 border-t border-border/30">
+              <div className="flex-1 space-y-1.5">
+                <div className="h-3.5 bg-muted rounded animate-pulse" style={{ width: `${85 - j * 12}%` }} />
+                <div className="h-2.5 bg-muted/60 rounded animate-pulse w-20" />
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-      {/* Resource cards skeleton */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {[...Array(4)].map((_, i) => (
-          <div key={i} className="rounded-lg border border-border/50 p-4 space-y-2">
-            <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
-            <div className="h-3.5 bg-muted rounded animate-pulse w-3/4" />
-            <div className="h-2.5 bg-muted/60 rounded animate-pulse w-full" />
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ))}
     </div>
   );
 }
 
-const SOURCE_LABELS: Record<string, { label: string; color: string }> = {
-  vatican: { label: "Vatican News", color: "bg-red-600" },
-  goodnewsroom: { label: "Good Newsroom", color: "bg-primary" },
-};
-
 function CatholicResources() {
-  const { data: feed, isLoading: feedLoading } = trpc.catholicResources.feed.useQuery({ limit: 4 });
-  const { data: links } = trpc.catholicResources.links.useQuery();
+  const { data: vaticanFeed, isLoading: vLoading } = trpc.catholicResources.vatican.useQuery({ limit: 3 });
+  const { data: gnFeed, isLoading: gLoading } = trpc.catholicResources.goodNewsroom.useQuery({ limit: 3 });
+  const [expandedSources, setExpandedSources] = useState<string[]>(["goodnewsroom", "vatican"]);
 
-  if (feedLoading) {
-    return <CatholicResourcesSkeleton />;
-  }
+  const isLoading = vLoading || gLoading;
+  if (isLoading) return <CatholicResourcesSkeleton />;
+
+  const feedsBySource: Record<string, typeof vaticanFeed> = {
+    vatican: vaticanFeed || [],
+    goodnewsroom: gnFeed || [],
+  };
+
+  const totalArticles = (vaticanFeed?.length || 0) + (gnFeed?.length || 0);
+  const lastUpdated = new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+
+  const toggleSource = (key: string) => {
+    setExpandedSources((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+    );
+  };
 
   return (
-    <div className="space-y-6">
-      {/* Live Feed */}
-      {feed && feed.length > 0 && (
-        <div className="grid gap-1.5">
-          {feed.map((article, idx) => {
-            const sourceInfo = SOURCE_LABELS[article.source] || { label: article.source, color: "bg-muted" };
-            return (
-              <a
-                key={idx}
-                href={article.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors border border-transparent hover:border-border/50"
-              >
-                {article.imageUrl ? (
-                  <img
-                    src={article.imageUrl}
-                    alt=""
-                    className="w-14 h-14 rounded object-cover shrink-0 bg-muted"
-                    loading="lazy"
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                  />
-                ) : (
-                  <div className="w-14 h-14 rounded bg-muted/50 shrink-0 flex items-center justify-center">
-                    <Newspaper className="w-5 h-5 text-muted-foreground/50" />
-                  </div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <span className={`inline-block w-1.5 h-1.5 rounded-full ${sourceInfo.color}`} />
-                    <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
-                      {sourceInfo.label}
-                    </span>
-                  </div>
-                  <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
-                    {article.title}
-                  </p>
-                  <p className="text-[10px] text-muted-foreground/70 mt-0.5">
-                    {new Date(article.pubDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                  </p>
-                </div>
-                <ExternalLink className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-primary transition-colors shrink-0 mt-2" />
-              </a>
-            );
-          })}
+    <div>
+      {/* Header with stats bar */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+            <Rss className="w-4 h-4 text-primary" />
+          </div>
+          <div>
+            <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">Catholic Resources</h2>
+            <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+              <span>{SOURCES.length} Sources</span>
+              <span className="text-border">·</span>
+              <span>{totalArticles} Articles</span>
+              <span className="text-border">·</span>
+              <span className="flex items-center gap-1">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
+                </span>
+                Updated {lastUpdated}
+              </span>
+            </div>
+          </div>
         </div>
-      )}
+      </div>
 
-      {/* Resource Cards */}
-      {links && links.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {links.map((resource, idx) => (
-            <a
-              key={idx}
-              href={resource.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group rounded-xl border border-border/50 p-4 hover:border-primary/30 hover:shadow-sm transition-all"
+      {/* Per-source collapsible sections */}
+      <div className="space-y-3">
+        {SOURCES.map((source) => {
+          const articles = feedsBySource[source.key] || [];
+          const isExpanded = expandedSources.includes(source.key);
+          const newCount = articles.filter(
+            (a) => Date.now() - new Date(a.pubDate).getTime() < 24 * 60 * 60 * 1000
+          ).length;
+
+          return (
+            <div
+              key={source.key}
+              className={`rounded-xl border border-border/50 overflow-hidden shadow-sm border-l-4 ${source.borderColor} transition-all`}
             >
-              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mb-2 group-hover:bg-primary/20 transition-colors">
-                <Globe className="w-4 h-4 text-primary" />
-              </div>
-              <p className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors leading-tight">
+              {/* Source Header — clickable to expand/collapse */}
+              <button
+                onClick={() => toggleSource(source.key)}
+                className="w-full flex items-center justify-between px-4 py-3 hover:bg-muted/30 transition-colors"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className={`w-2 h-2 rounded-full ${source.color}`} />
+                  <div className="text-left">
+                    <span className="text-sm font-semibold text-foreground">{source.label}</span>
+                    <span className="text-[10px] text-muted-foreground ml-2 hidden sm:inline">{source.sublabel}</span>
+                  </div>
+                  {newCount > 0 && (
+                    <span className="text-[9px] font-bold uppercase tracking-wider bg-gold/15 text-gold px-1.5 py-0.5 rounded">
+                      {newCount} new
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-muted-foreground">{articles.length} articles</span>
+                  <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
+                </div>
+              </button>
+
+              {/* Articles list */}
+              {isExpanded && articles.length > 0 && (
+                <div className="border-t border-border/30">
+                  {articles.map((article, idx) => (
+                    <a
+                      key={idx}
+                      href={article.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-start gap-3 px-4 py-2.5 hover:bg-muted/40 transition-colors border-b border-border/20 last:border-b-0"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                          {article.title}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground mt-0.5">
+                          {new Date(article.pubDate).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
+                        </p>
+                      </div>
+                      <ExternalLink className="w-3 h-3 text-muted-foreground/30 group-hover:text-primary transition-colors shrink-0 mt-1" />
+                    </a>
+                  ))}
+                  {/* View source link */}
+                  <a
+                    href={source.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-1.5 px-4 py-2 text-[11px] font-medium text-primary hover:bg-primary/5 transition-colors border-t border-border/30"
+                  >
+                    Visit {source.label} <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Quick Links Row */}
+      <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2">
+        {RESOURCE_LINKS.map((resource, idx) => (
+          <a
+            key={idx}
+            href={resource.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-2 rounded-lg border border-border/40 px-3 py-2 hover:border-primary/30 hover:bg-primary/[0.02] transition-all"
+          >
+            <Globe className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+            <div className="min-w-0">
+              <p className="text-[11px] font-medium text-foreground group-hover:text-primary transition-colors truncate">
                 {resource.name}
               </p>
-              <p className="text-[10px] text-muted-foreground mt-1 line-clamp-2 leading-relaxed">
-                {resource.category}
-              </p>
-            </a>
-          ))}
-        </div>
-      )}
+              <p className="text-[9px] text-muted-foreground">{resource.category}</p>
+            </div>
+          </a>
+        ))}
+      </div>
     </div>
   );
 }
@@ -786,26 +856,18 @@ export default function Home() {
           </div>
         </section>
 
+        {/* This Week's Bulletin */}
+        <ThisWeeksBulletin />
+
         {/* Photo Gallery */}
         <section className="reveal container mb-10 sm:mb-14">
           <PhotoGallerySection />
         </section>
 
-        {/* Catholic Resources — Live Feeds + Quick Links */}
+        {/* Catholic Resources — Live Feeds by Source */}
         <section className="reveal container mb-10 sm:mb-14">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                <Globe className="w-4 h-4 text-primary" />
-              </div>
-              <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">Catholic Resources</h2>
-            </div>
-          </div>
           <CatholicResources />
         </section>
-
-        {/* This Week's Bulletin */}
-        <ThisWeeksBulletin />
 
         {/* Daily Readings */}
         <section className="reveal container mb-10 sm:mb-14">

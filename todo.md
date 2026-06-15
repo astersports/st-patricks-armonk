@@ -357,3 +357,7 @@
 - [x] Make marquee announcement bar text editable from admin panel (store in DB, admin UI to update)
 - [x] Add "This Week's Bulletin" card to homepage with book-like page-flip PDF reader (no scrolling, swipe/click pages)
 - [x] Add full-screen toggle and zoom controls to bulletin book reader for better mobile reading experience
+- [x] Move bulletins section above photo gallery on homepage
+- [x] Slim down mobile pills/cards (journey cards, resource cards) to reduce height on mobile
+- [x] Redesign Catholic Resources into individual source sections with top 3 items each and real-time pulse/last-updated indicators
+- [x] Polish homepage with next-level design inspired by Aster Sports AAU section
