@@ -362,3 +362,4 @@
 - [x] Redesign Catholic Resources into individual source sections with top 3 items each and real-time pulse/last-updated indicators
 - [x] Polish homepage with next-level design inspired by Aster Sports AAU section
 - [x] Fix bulletin book reader: too small on mobile (only shows top corner), replaced page-flip with full-width single-page PDF viewer with swipe navigation
+- [x] Fix fullscreen bulletin reader not appearing on iOS (used createPortal to escape stacking context, added iOS scroll lock fix, prominent fullscreen button)
