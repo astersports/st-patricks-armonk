@@ -1,7 +1,8 @@
 import PageLayout from "@/components/PageLayout";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin, Clock, ExternalLink, Globe, Camera, ImageIcon } from "lucide-react";
+import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin, Clock, ExternalLink, Globe, Camera, ImageIcon, BookOpen, Download } from "lucide-react";
+import BulletinBookReader from "@/components/BulletinBookReader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -60,6 +61,91 @@ const journeyCards = [
     borderColor: "border-l-accent",
   },
 ];
+
+function ThisWeeksBulletin() {
+  const { data: bulletins, isLoading } = trpc.bulletins.listPublished.useQuery();
+  const [showReader, setShowReader] = useState(false);
+
+  const latestBulletin = bulletins?.[0];
+
+  if (isLoading) {
+    return (
+      <section className="reveal container mb-10 sm:mb-14">
+        <div className="animate-pulse">
+          <div className="h-6 w-48 bg-muted rounded mb-4" />
+          <div className="h-48 bg-muted rounded-xl" />
+        </div>
+      </section>
+    );
+  }
+
+  if (!latestBulletin) return null;
+
+  const weekDate = new Date(latestBulletin.weekDate);
+
+  return (
+    <section className="reveal container mb-10 sm:mb-14">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+            <BookOpen className="w-4 h-4 text-primary" />
+          </div>
+          <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">This Week's Bulletin</h2>
+        </div>
+        <Link href="/bulletins" className="text-sm text-primary hover:underline font-medium flex items-center gap-1">
+          All Bulletins <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
+      </div>
+
+      {showReader ? (
+        <BulletinBookReader
+          pdfUrl={latestBulletin.pdfUrl}
+          title={latestBulletin.title}
+          onClose={() => setShowReader(false)}
+        />
+      ) : (
+        <Card
+          className="overflow-hidden border-0 shadow-md hover:shadow-lg transition-shadow cursor-pointer group"
+          onClick={() => setShowReader(true)}
+        >
+          <CardContent className="p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-gradient-to-br from-primary to-parish-green-dark flex items-center justify-center shrink-0">
+              <BookOpen className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-muted-foreground mb-0.5">
+                Week of {format(weekDate, "MMMM d, yyyy")}
+              </p>
+              <h3 className="font-serif text-base sm:text-lg font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+                {latestBulletin.title}
+              </h3>
+              {latestBulletin.description && (
+                <p className="text-sm text-muted-foreground mt-0.5 line-clamp-1">{latestBulletin.description}</p>
+              )}
+              <p className="text-xs text-primary font-medium mt-2 flex items-center gap-1">
+                <BookOpen className="w-3.5 h-3.5" />
+                Tap to read like a book
+              </p>
+            </div>
+            <div className="flex gap-2 shrink-0">
+              <a
+                href={latestBulletin.pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Button variant="outline" size="sm" className="gap-1.5">
+                  <Download className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Download</span>
+                </Button>
+              </a>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </section>
+  );
+}
 
 function PhotoGallerySection() {
   const { data: photos, isLoading } = trpc.gallery.listPublished.useQuery(undefined);
@@ -717,6 +803,9 @@ export default function Home() {
           </div>
           <CatholicResources />
         </section>
+
+        {/* This Week's Bulletin */}
+        <ThisWeeksBulletin />
 
         {/* Daily Readings */}
         <section className="reveal container mb-10 sm:mb-14">

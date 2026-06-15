@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { Menu, X, Church, ChevronDown, ArrowRight, Clock, BookOpen, Users, Heart, Calendar, FileText, GraduationCap, Newspaper, Phone, UserPlus, HandHeart, Music, Cross, Search } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { trpc } from "@/lib/trpc";
 import MobileBottomNav from "./MobileBottomNav";
 
 type NavItem = {
@@ -380,6 +381,8 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [location] = useLocation();
   const { user, isAuthenticated } = useAuth();
+  const { data: marqueeData } = trpc.siteSettings.get.useQuery({ key: "marquee_text" });
+  const marqueeText = marqueeData?.value || "New to St. Patrick in Armonk? Register as a Parishioner";
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -415,8 +418,7 @@ export default function Navigation() {
                   href="/parish-registration"
                   className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium hover:underline transition-all"
                 >
-                  <span>New to St. Patrick in Armonk?</span>
-                  <span className="font-semibold">Register as a Parishioner</span>
+                  <span>{marqueeText}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
                 <span className="text-white/40">•</span>

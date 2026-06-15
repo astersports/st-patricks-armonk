@@ -1089,6 +1089,24 @@ export const appRouter = router({
       }),
   }),
 
+  // ===== SITE SETTINGS (admin-editable content) =====
+  siteSettings: router({
+    get: publicProcedure
+      .input(z.object({ key: z.string() }))
+      .query(async ({ input }) => {
+        return { value: await db.getSiteSetting(input.key) };
+      }),
+    getAll: staffProcedure.query(async () => {
+      return db.getAllSiteSettings();
+    }),
+    update: sectionProcedure("settings")
+      .input(z.object({ key: z.string(), value: z.string() }))
+      .mutation(async ({ input }) => {
+        await db.upsertSiteSetting(input.key, input.value);
+        return { success: true };
+      }),
+  }),
+
   // ===== CATHOLIC RESOURCES (live RSS feeds + resource links) =====
   catholicResources: router({
     // Combined feed from Vatican News + Good Newsroom

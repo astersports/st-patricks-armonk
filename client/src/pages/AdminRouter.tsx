@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const DashboardHome = lazy(() => import("./admin/DashboardHome"));
 const GalleryManager = lazy(() => import("./admin/GalleryManager"));
 const UserManager = lazy(() => import("./admin/UserManager"));
+const SettingsManager = lazy(() => import("./admin/SettingsManager"));
 
 // Legacy managers from Admin.tsx (imported eagerly since they're in a single file)
 import {
@@ -56,6 +57,7 @@ export default function AdminRouter() {
           <Route path="/teen-life" component={() => <CyoManager />} />
           <Route path="/sacraments" component={() => <SacramentsManager />} />
           <Route path="/users" component={() => <UserManager />} />
+          <Route path="/settings" component={() => <SettingsManager />} />
           {/* Fallback to dashboard */}
           <Route component={() => <DashboardHome />} />
         </Switch>

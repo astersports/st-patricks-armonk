@@ -354,3 +354,5 @@
 - [x] Mobile-optimized admin sidebar with collapsible navigation
 - [x] Simplify scrolling marquee banner to just "Register as a Parishioner" (remove calendar, gallery, giving links)
 - [x] Add Photo Gallery section to homepage (scrolling gallery display)
+- [x] Make marquee announcement bar text editable from admin panel (store in DB, admin UI to update)
+- [x] Add "This Week's Bulletin" card to homepage with book-like page-flip PDF reader (no scrolling, swipe/click pages)

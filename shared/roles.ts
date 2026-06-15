@@ -31,7 +31,8 @@ export type AdminSection =
   | "teen_life"
   | "sacraments"
   | "documents"
-  | "users";
+  | "users"
+  | "settings";
 
 /**
  * Maps each role to the sections they can access.
@@ -42,9 +43,9 @@ export const ROLE_PERMISSIONS: Record<UserRole, AdminSection[]> = {
     "dashboard", "news", "bulletins", "subscribers", "gallery",
     "events", "calendar", "key_dates", "volunteers", "registrations",
     "ccd_registrations", "ccd_calendar", "ccd_permissions",
-    "cyo", "teen_life", "sacraments", "documents", "users"
+    "cyo", "teen_life", "sacraments", "documents", "users", "settings"
   ],
-  communications: ["dashboard", "news", "bulletins", "subscribers", "gallery"],
+  communications: ["dashboard", "news", "bulletins", "subscribers", "gallery", "settings"],
   religious_ed: ["dashboard", "ccd_registrations", "ccd_calendar", "ccd_permissions", "documents"],
   youth_ministry: ["dashboard", "cyo", "teen_life"],
   sacraments: ["dashboard", "sacraments"],

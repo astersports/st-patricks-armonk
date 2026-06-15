@@ -68,6 +68,14 @@ const navGroups: NavGroup[] = [
       { label: "Sacrament Requests", section: "sacraments", icon: Cross, path: "/admin/sacraments" },
     ],
   },
+  {
+    title: "Administration",
+    section: "settings",
+    items: [
+      { label: "Site Settings", section: "settings", icon: Settings, path: "/admin/settings" },
+      { label: "User Management", section: "users", icon: Users, path: "/admin/users" },
+    ],
+  },
 ];
 
 interface AdminLayoutProps {

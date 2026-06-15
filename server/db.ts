@@ -1,6 +1,6 @@
 import { eq, desc, and, gte, lte, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, newsPosts, bulletins, events, emailSubscriptions, ccdRegistrations, cyoTeams, cyoGames, volunteerOpportunities, volunteerSignups, ccdEvents, parishDocuments, baptismRegistrations, sponsorCertificates, marriageInquiries, funeralPrePlanning, teenLifeRegistrations, parishRegistrations, ccdPermissions, importantDates, galleryPhotos } from "../drizzle/schema";
+import { InsertUser, users, newsPosts, bulletins, events, emailSubscriptions, ccdRegistrations, cyoTeams, cyoGames, volunteerOpportunities, volunteerSignups, ccdEvents, parishDocuments, baptismRegistrations, sponsorCertificates, marriageInquiries, funeralPrePlanning, teenLifeRegistrations, parishRegistrations, ccdPermissions, importantDates, galleryPhotos, siteSettings } from "../drizzle/schema";
 import type { InsertGalleryPhoto } from "../drizzle/schema";
 import type { InsertNewsPost, InsertBulletin, InsertEvent, InsertEmailSubscription, InsertCcdRegistration, InsertCyoTeam, InsertCyoGame, InsertVolunteerOpportunity, InsertVolunteerSignup, InsertCcdEvent, InsertParishDocument, BaptismRegistration, SponsorCertificate, MarriageInquiry, FuneralPrePlanning, TeenLifeRegistration, ParishRegistration, CcdPermission } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -834,4 +834,29 @@ export async function getAllUsers() {
 export async function updateUserRole(userId: number, role: string) {
   const db = await getDb();
   await db!.update(users).set({ role: role as any }).where(eq(users.id, userId));
+}
+
+// ===== Site Settings =====
+export async function getSiteSetting(key: string): Promise<string | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(siteSettings).where(eq(siteSettings.key, key)).limit(1);
+  return rows[0]?.value ?? null;
+}
+
+export async function upsertSiteSetting(key: string, value: string) {
+  const db = await getDb();
+  if (!db) return;
+  const existing = await db.select().from(siteSettings).where(eq(siteSettings.key, key)).limit(1);
+  if (existing.length > 0) {
+    await db.update(siteSettings).set({ value }).where(eq(siteSettings.key, key));
+  } else {
+    await db.insert(siteSettings).values({ key, value });
+  }
+}
+
+export async function getAllSiteSettings() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(siteSettings);
 }
