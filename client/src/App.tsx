@@ -32,6 +32,7 @@ import Staff from "./pages/Staff";
 import ParishRegistration from "./pages/ParishRegistration";
 import CcdPermissions from "./pages/CcdPermissions";
 import NewHere from "./pages/NewHere";
+import KeyDates from "./pages/KeyDates";
 
 function Router() {
   return (
@@ -43,6 +44,7 @@ function Router() {
         <Route path="/staff" component={Staff} />
         <Route path="/parish-registration" component={ParishRegistration} />
         <Route path="/new-here" component={NewHere} />
+        <Route path="/key-dates" component={KeyDates} />
         <Route path="/mass-times" component={MassTimes} />
         <Route path="/sacraments" component={Sacraments} />
         <Route path="/news-events" component={NewsEvents} />

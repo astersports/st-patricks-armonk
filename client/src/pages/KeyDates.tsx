@@ -1,0 +1,168 @@
+import PageLayout from "@/components/PageLayout";
+import { trpc } from "@/lib/trpc";
+import { Calendar, MapPin, Clock, ArrowLeft } from "lucide-react";
+import { Link } from "wouter";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import { useMemo } from "react";
+import { format } from "date-fns";
+import { TZDate } from "@date-fns/tz";
+import { useReveal } from "@/hooks/useReveal";
+
+const TIMEZONE = "America/New_York";
+function toEastern(isoString: string): Date {
+  return new TZDate(isoString, TIMEZONE);
+}
+
+const catColors: Record<string, { dot: string; bg: string; label: string }> = {
+  ccd: { dot: "bg-green-500", bg: "bg-green-50", label: "CCD" },
+  cyo: { dot: "bg-orange-500", bg: "bg-orange-50", label: "CYO" },
+  sacrament: { dot: "bg-purple-500", bg: "bg-purple-50", label: "Sacrament" },
+  parish: { dot: "bg-primary", bg: "bg-primary/5", label: "Parish" },
+  teen_life: { dot: "bg-blue-500", bg: "bg-blue-50", label: "Teen Life" },
+  social: { dot: "bg-amber-500", bg: "bg-amber-50", label: "Social" },
+};
+
+export default function KeyDates() {
+  const { data: allImportantDates, isLoading } = trpc.importantDates.allPublished.useQuery();
+  const revealRef = useReveal();
+
+  const { groupedDates, currentMonthKey } = useMemo(() => {
+    if (!allImportantDates || allImportantDates.length === 0) return { groupedDates: [], currentMonthKey: "" };
+    const groups: { key: string; month: string; year: string; events: typeof allImportantDates }[] = [];
+    const now = new Date();
+    const currentKey = format(now, "yyyy-MM");
+    let foundCurrentMonth = "";
+    for (const event of allImportantDates) {
+      const eventDate = toEastern(event.eventDate as unknown as string);
+      const key = format(eventDate, "yyyy-MM");
+      const monthLabel = format(eventDate, "MMMM");
+      const yearLabel = format(eventDate, "yyyy");
+      const existing = groups.find(g => g.key === key);
+      if (existing) {
+        existing.events.push(event);
+      } else {
+        groups.push({ key, month: monthLabel, year: yearLabel, events: [event] });
+      }
+      if (!foundCurrentMonth && key >= currentKey) {
+        foundCurrentMonth = key;
+      }
+    }
+    if (!foundCurrentMonth && groups.length > 0) {
+      foundCurrentMonth = groups[groups.length - 1].key;
+    }
+    return { groupedDates: groups, currentMonthKey: foundCurrentMonth };
+  }, [allImportantDates]);
+
+  return (
+    <PageLayout>
+      <div ref={revealRef}>
+        {/* Header */}
+        <section className="bg-gradient-to-b from-primary/5 to-transparent pt-8 pb-6 sm:pt-12 sm:pb-8">
+          <div className="container">
+            <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors mb-4">
+              <ArrowLeft className="w-4 h-4" />
+              Back to Home
+            </Link>
+            <div className="text-center">
+              <p className="text-[11px] text-gold uppercase tracking-[0.2em] font-medium mb-1">2026–2027</p>
+              <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground">Key Dates</h1>
+              <p className="text-muted-foreground text-sm sm:text-base mt-2 max-w-lg mx-auto">
+                All important parish events and milestones for the year
+              </p>
+            </div>
+
+            {/* Category legend */}
+            <div className="flex flex-wrap justify-center gap-3 mt-5">
+              {Object.entries(catColors).map(([key, val]) => (
+                <div key={key} className="flex items-center gap-1.5">
+                  <span className={`w-2 h-2 rounded-full ${val.dot}`} />
+                  <span className="text-xs text-muted-foreground">{val.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Accordion */}
+        <section className="reveal container pb-12 sm:pb-16 pt-4">
+          {isLoading ? (
+            <div className="space-y-3">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="h-14 rounded-lg bg-muted animate-pulse" />
+              ))}
+            </div>
+          ) : groupedDates.length > 0 ? (
+            <Accordion type="single" collapsible defaultValue={currentMonthKey} className="rounded-xl border overflow-hidden">
+              {groupedDates.map((group) => (
+                <AccordionItem key={group.key} value={group.key} className="border-b last:border-b-0">
+                  <AccordionTrigger className="px-4 sm:px-5 py-3.5 hover:bg-muted/30 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <Calendar className="w-4 h-4 text-primary shrink-0" />
+                      <span className="font-semibold text-sm sm:text-base">{group.month}</span>
+                      <span className="text-xs text-muted-foreground">{group.year}</span>
+                      <span className="ml-auto text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                        {group.events.length} {group.events.length === 1 ? "event" : "events"}
+                      </span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-3 sm:px-4 pb-3">
+                    <div className="grid gap-2 sm:gap-2.5">
+                      {group.events.map((event) => {
+                        const cat = catColors[event.category] || catColors.parish;
+                        const eventDate = toEastern(event.eventDate as unknown as string);
+                        return (
+                          <div
+                            key={event.id}
+                            className={`flex items-start gap-3 sm:gap-4 p-3 sm:p-3.5 rounded-lg ${cat.bg} border border-transparent hover:border-border/50 transition-colors`}
+                          >
+                            {/* Date badge */}
+                            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-white shadow-sm flex flex-col items-center justify-center shrink-0">
+                              <span className="text-[9px] font-medium text-muted-foreground uppercase leading-none">
+                                {format(eventDate, "EEE")}
+                              </span>
+                              <span className="text-sm sm:text-base font-bold text-foreground leading-tight">
+                                {format(eventDate, "d")}
+                              </span>
+                            </div>
+                            {/* Content */}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-0.5">
+                                <span className={`w-1.5 h-1.5 rounded-full ${cat.dot} shrink-0`} />
+                                <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{cat.label}</span>
+                              </div>
+                              <p className="font-semibold text-foreground text-sm leading-snug">{event.title}</p>
+                              <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-0.5">
+                                {event.location && (
+                                  <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                                    <MapPin className="w-3 h-3" />
+                                    {event.location}
+                                  </span>
+                                )}
+                                {event.note && (
+                                  <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                                    <Clock className="w-3 h-3" />
+                                    {event.note}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          ) : (
+            <div className="text-center py-12 text-muted-foreground">
+              <Calendar className="w-10 h-10 mx-auto mb-3 text-muted-foreground/50" />
+              <p className="font-medium">No key dates available</p>
+              <p className="text-sm mt-1">Check back soon for the updated parish calendar.</p>
+            </div>
+          )}
+        </section>
+      </div>
+    </PageLayout>
+  );
+}

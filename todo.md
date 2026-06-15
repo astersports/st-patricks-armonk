@@ -275,3 +275,5 @@
 - [x] Fix Sponsor Certificate pre-checked checkboxes (should start unchecked)
 - [x] Improve Bulletins and News empty states with helpful messaging
 - [x] Make footer branding more subtle for pastor review
+- [x] Replace "Coming Up" section with next 5 important dates
+- [x] Add a tile/link at the bottom to view the full key dates page (created /key-dates page with full accordion)
