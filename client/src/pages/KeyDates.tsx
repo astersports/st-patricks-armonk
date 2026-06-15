@@ -1,7 +1,6 @@
 import PageLayout from "@/components/PageLayout";
 import { trpc } from "@/lib/trpc";
-import { Calendar, MapPin, Clock, ArrowLeft } from "lucide-react";
-import { Link } from "wouter";
+import { Calendar, MapPin, Clock } from "lucide-react";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { useState, useMemo } from "react";
 import { format } from "date-fns";
@@ -154,10 +153,7 @@ export default function KeyDates() {
         {/* Header */}
         <section className="bg-gradient-to-b from-primary/5 to-transparent pt-8 pb-6 sm:pt-12 sm:pb-8">
           <div className="container">
-            <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors mb-4">
-              <ArrowLeft className="w-4 h-4" />
-              Back to Home
-            </Link>
+
             <div className="text-center">
               <p className="text-[11px] text-gold uppercase tracking-[0.2em] font-medium mb-1">2026–2027</p>
               <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground">Key Dates</h1>

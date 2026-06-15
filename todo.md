@@ -284,3 +284,4 @@
 - [x] Add tRPC admin procedures (create, update, delete) for important dates
 - [x] Build admin Key Dates management page with table and add/edit dialog
 - [x] Wire admin Key Dates page into dashboard navigation
+- [x] Fix duplicate back/home buttons on Key Dates page (removed custom one, PageLayout already provides it)
