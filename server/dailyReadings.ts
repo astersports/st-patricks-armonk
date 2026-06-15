@@ -38,6 +38,23 @@ function stripHtmlTags(html: string): string {
     .trim();
 }
 
+function cleanBodyText(html: string): string {
+  return html
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/p>\s*<p[^>]*>/gi, "\n\n")
+    .replace(/<\/?p[^>]*>/gi, "\n")
+    .replace(/<font[^>]*>/gi, "")
+    .replace(/<\/font>/gi, "")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;/g, "'")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
 async function fetchReading(date: string, type: string, content?: string): Promise<string> {
   const params = new URLSearchParams({ date, type, lang: "AM" });
   if (content) params.set("content", content);
@@ -77,13 +94,13 @@ export async function getDailyReadings(): Promise<DailyReadingsData | null> {
     const data: DailyReadingsData = {
       date: today,
       liturgicTitle: stripHtmlTags(liturgicTitle) || "Daily Readings",
-      firstReading: { title: stripHtmlTags(frTitle) || "First Reading", text: frText },
-      psalm: { title: stripHtmlTags(psTitle) || "Responsorial Psalm", text: psText },
-      gospel: { title: stripHtmlTags(gspTitle) || "Gospel", text: gspText },
+      firstReading: { title: stripHtmlTags(frTitle) || "First Reading", text: cleanBodyText(frText) },
+      psalm: { title: stripHtmlTags(psTitle) || "Responsorial Psalm", text: cleanBodyText(psText) },
+      gospel: { title: stripHtmlTags(gspTitle) || "Gospel", text: cleanBodyText(gspText) },
     };
 
     if (srText) {
-      data.secondReading = { title: stripHtmlTags(srTitle) || "Second Reading", text: srText };
+      data.secondReading = { title: stripHtmlTags(srTitle) || "Second Reading", text: cleanBodyText(srText) };
     }
 
     cache = { data, fetchedAt: Date.now(), dateKey: today };

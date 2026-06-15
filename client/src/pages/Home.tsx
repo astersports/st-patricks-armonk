@@ -201,7 +201,7 @@ function DailyReadings() {
           <CardContent className="p-4">
             <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">First Reading</p>
             <p className="text-xs text-muted-foreground mb-2 line-clamp-1">{readings.firstReading.title}</p>
-            <div className="text-sm text-foreground/90 leading-relaxed line-clamp-6" dangerouslySetInnerHTML={{ __html: readings.firstReading.text }} />
+            <p className="text-sm text-foreground/90 leading-relaxed line-clamp-6 whitespace-pre-line">{readings.firstReading.text}</p>
           </CardContent>
         </Card>
         {/* Psalm */}
@@ -209,7 +209,7 @@ function DailyReadings() {
           <CardContent className="p-4">
             <p className="text-xs font-semibold text-gold uppercase tracking-wider mb-1">Responsorial Psalm</p>
             <p className="text-xs text-muted-foreground mb-2 line-clamp-1">{readings.psalm.title}</p>
-            <div className="text-sm text-foreground/90 leading-relaxed line-clamp-6 italic" dangerouslySetInnerHTML={{ __html: readings.psalm.text }} />
+            <p className="text-sm text-foreground/90 leading-relaxed line-clamp-6 italic whitespace-pre-line">{readings.psalm.text}</p>
           </CardContent>
         </Card>
         {/* Gospel */}
@@ -217,7 +217,7 @@ function DailyReadings() {
           <CardContent className="p-4">
             <p className="text-xs font-semibold text-red-600 uppercase tracking-wider mb-1">Gospel</p>
             <p className="text-xs text-muted-foreground mb-2 line-clamp-1">{readings.gospel.title}</p>
-            <div className="text-sm text-foreground/90 leading-relaxed line-clamp-6" dangerouslySetInnerHTML={{ __html: readings.gospel.text }} />
+            <p className="text-sm text-foreground/90 leading-relaxed line-clamp-6 whitespace-pre-line">{readings.gospel.text}</p>
           </CardContent>
         </Card>
       </div>
