@@ -4,7 +4,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
-import { FileText, Download, Calendar, ExternalLink, ChevronDown, ChevronUp, Mail, Bell, CheckCircle2 } from "lucide-react";
+import { FileText, Download, Calendar, ExternalLink, ChevronDown, ChevronUp, Mail, Bell, CheckCircle2, Share2, Link2, Copy } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
@@ -202,6 +203,46 @@ export default function Bulletins() {
                       <span className="sm:hidden">PDF</span>
                     </Button>
                   </a>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="gap-2">
+                        <Share2 className="w-4 h-4" />
+                        <span className="hidden sm:inline">Share</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-52">
+                      <DropdownMenuItem
+                        onClick={() => {
+                          navigator.clipboard.writeText(latestBulletin.pdfUrl.startsWith("http") ? latestBulletin.pdfUrl : window.location.origin + latestBulletin.pdfUrl);
+                          toast.success("Link copied to clipboard");
+                        }}
+                      >
+                        <Link2 className="w-4 h-4 mr-2" />
+                        Copy PDF Link
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          const pdfLink = latestBulletin.pdfUrl.startsWith("http") ? latestBulletin.pdfUrl : window.location.origin + latestBulletin.pdfUrl;
+                          const subject = encodeURIComponent(`${latestBulletin.title} — St. Patrick Church, Armonk`);
+                          const body = encodeURIComponent(`Here is this week's parish bulletin from St. Patrick Church in Armonk:\n\n${pdfLink}\n\nVisit our website: ${window.location.origin}/bulletins`);
+                          window.open(`mailto:?subject=${subject}&body=${body}`, "_self");
+                        }}
+                      >
+                        <Mail className="w-4 h-4 mr-2" />
+                        Share via Email
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          const pageUrl = window.location.origin + "/bulletins";
+                          navigator.clipboard.writeText(pageUrl);
+                          toast.success("Page link copied to clipboard");
+                        }}
+                      >
+                        <Copy className="w-4 h-4 mr-2" />
+                        Copy Page Link
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
 
