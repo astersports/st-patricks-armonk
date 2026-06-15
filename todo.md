@@ -321,3 +321,4 @@
 - [x] Add smooth scroll-to-top button (appears after 400px scroll, positioned above mobile nav)
 - [x] Add "Subscribe to News" CTA at the bottom of the News page (news-only subscription)
 - [x] Add eCatholic and Vatican website links to the footer bottom bar
+- [x] Update footer: church name to "St. Patrick's Church in Armonk", address to "29 Cox Ave, Armonk NY"

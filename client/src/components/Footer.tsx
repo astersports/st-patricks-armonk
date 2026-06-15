@@ -9,11 +9,11 @@ export default function Footer() {
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between md:gap-4">
           {/* Left: Church identity */}
           <div>
-            <h3 className="font-serif text-base font-bold text-gold leading-tight">St. Patrick's Church</h3>
+            <h3 className="font-serif text-base font-bold text-gold leading-tight">St. Patrick's Church in Armonk</h3>
             <div className="flex items-center gap-3 mt-1.5 text-xs text-white/70">
               <span className="flex items-center gap-1">
                 <MapPin className="w-3 h-3 text-gold/60" />
-                29 Cox Ave, Armonk NY 10504
+                29 Cox Ave, Armonk NY
               </span>
               <span className="hidden sm:inline text-white/30">|</span>
               <a href="tel:9142739724" className="flex items-center gap-1 hover:text-gold transition-colors">
