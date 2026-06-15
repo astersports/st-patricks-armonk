@@ -356,3 +356,4 @@
 - [x] Add Photo Gallery section to homepage (scrolling gallery display)
 - [x] Make marquee announcement bar text editable from admin panel (store in DB, admin UI to update)
 - [x] Add "This Week's Bulletin" card to homepage with book-like page-flip PDF reader (no scrolling, swipe/click pages)
+- [x] Add full-screen toggle and zoom controls to bulletin book reader for better mobile reading experience
