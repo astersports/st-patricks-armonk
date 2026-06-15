@@ -286,3 +286,7 @@
 - [x] Wire admin Key Dates page into dashboard navigation
 - [x] Fix duplicate back/home buttons on Key Dates page (removed custom one, PageLayout already provides it)
 - [x] Make homepage Key Dates events non-clickable (plain list), keep only "View All Key Dates" tile as the link
+- [x] Redesign Calendar/Key Dates: merge Key Dates as a tab within the Calendar page
+- [x] Update bottom nav "Calendar" to go to unified Calendar page with Key Dates + Full Calendar tabs
+- [x] Remove standalone /key-dates route (redirect to /calendar?filter=key-dates)
+- [x] Write recommendation note for pastor about consolidating Google Calendars into one with labels

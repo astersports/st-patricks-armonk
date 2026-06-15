@@ -211,7 +211,7 @@ export default function Home() {
               </div>
 
               {/* View All Key Dates tile */}
-              <Link href="/key-dates" className="group">
+              <Link href="/calendar?filter=key-dates" className="group">
                 <div className="p-3.5 sm:p-4 flex items-center gap-3 hover:bg-primary/[0.03] transition-colors">
                   <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                     <Calendar className="w-4.5 h-4.5 text-primary" />
