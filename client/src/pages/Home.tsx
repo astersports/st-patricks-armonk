@@ -61,16 +61,44 @@ const journeyCards = [
   },
 ];
 
+function SaintOfDaySkeleton() {
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
+          <div className="h-5 w-32 bg-muted rounded animate-pulse" />
+        </div>
+        <div className="h-3 w-20 bg-muted rounded animate-pulse" />
+      </div>
+      <div className="rounded-xl border border-border/50 shadow-sm p-5 sm:p-6">
+        <div className="flex gap-4 sm:gap-6">
+          <div className="hidden sm:block w-24 h-32 rounded-lg bg-muted animate-pulse shrink-0" />
+          <div className="flex-1 space-y-3">
+            <div className="h-5 w-3/4 bg-muted rounded animate-pulse" />
+            <div className="h-3 w-1/2 bg-muted rounded animate-pulse" />
+            <div className="space-y-2 pt-1">
+              <div className="h-3 w-full bg-muted rounded animate-pulse" />
+              <div className="h-3 w-full bg-muted rounded animate-pulse" />
+              <div className="h-3 w-5/6 bg-muted rounded animate-pulse" />
+              <div className="h-3 w-2/3 bg-muted rounded animate-pulse" />
+            </div>
+            <div className="pt-2 pl-3 border-l-2 border-muted space-y-1.5">
+              <div className="h-3 w-full bg-muted rounded animate-pulse" />
+              <div className="h-3 w-4/5 bg-muted rounded animate-pulse" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function SaintOfDayCard() {
   const { data: saint, isLoading } = trpc.saintOfDay.today.useQuery();
 
   if (isLoading) {
-    return (
-      <div className="animate-pulse space-y-3">
-        <div className="h-5 bg-muted rounded w-1/2" />
-        <div className="h-20 bg-muted rounded" />
-      </div>
-    );
+    return <SaintOfDaySkeleton />;
   }
 
   if (!saint || !saint.featuredSaint) {
@@ -141,17 +169,44 @@ function SaintOfDayCard() {
   );
 }
 
+function DailyReadingsSkeleton() {
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
+          <div className="space-y-1.5">
+            <div className="h-5 w-36 bg-muted rounded animate-pulse" />
+            <div className="h-3 w-52 bg-muted rounded animate-pulse" />
+          </div>
+        </div>
+        <div className="h-3 w-20 bg-muted rounded animate-pulse" />
+      </div>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {["First Reading", "Responsorial Psalm", "Gospel"].map((label) => (
+          <div key={label} className="rounded-xl border border-border/50 shadow-sm p-4 space-y-2.5">
+            <div className="h-3 w-24 bg-muted rounded animate-pulse" />
+            <div className="h-3 w-36 bg-muted/70 rounded animate-pulse" />
+            <div className="space-y-1.5 pt-1">
+              <div className="h-3 w-full bg-muted rounded animate-pulse" />
+              <div className="h-3 w-full bg-muted rounded animate-pulse" />
+              <div className="h-3 w-5/6 bg-muted rounded animate-pulse" />
+              <div className="h-3 w-4/5 bg-muted rounded animate-pulse" />
+              <div className="h-3 w-3/4 bg-muted rounded animate-pulse" />
+              <div className="h-3 w-2/3 bg-muted rounded animate-pulse" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function DailyReadings() {
   const { data: readings, isLoading } = trpc.dailyReadings.today.useQuery();
 
   if (isLoading) {
-    return (
-      <div className="animate-pulse space-y-3">
-        <div className="h-5 bg-muted rounded w-2/3" />
-        <div className="h-4 bg-muted rounded w-1/2" />
-        <div className="h-20 bg-muted rounded" />
-      </div>
-    );
+    return <DailyReadingsSkeleton />;
   }
 
   if (!readings) {
@@ -225,23 +280,29 @@ function DailyReadings() {
   );
 }
 
+function VaticanNewsFeedSkeleton() {
+  return (
+    <div className="grid gap-2">
+      {[...Array(5)].map((_, i) => (
+        <div key={i} className="flex gap-3 p-3 rounded-lg border border-transparent">
+          <div className="w-16 h-16 rounded bg-muted animate-pulse shrink-0" />
+          <div className="flex-1 space-y-2 py-0.5">
+            <div className="h-3.5 bg-muted rounded animate-pulse" style={{ width: `${75 - i * 8}%` }} />
+            <div className="h-3 bg-muted/70 rounded animate-pulse" style={{ width: `${60 - i * 5}%` }} />
+            <div className="h-2.5 bg-muted/50 rounded animate-pulse w-16 mt-1" />
+          </div>
+          <div className="w-3.5 h-3.5 rounded bg-muted/50 animate-pulse shrink-0 mt-1" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function VaticanNewsFeed() {
   const { data: articles, isLoading } = trpc.vaticanNews.latest.useQuery({ limit: 5 });
 
   if (isLoading) {
-    return (
-      <div className="grid gap-3">
-        {[...Array(3)].map((_, i) => (
-          <div key={i} className="animate-pulse flex gap-3 p-3 rounded-lg bg-muted/30">
-            <div className="w-16 h-16 rounded bg-muted shrink-0" />
-            <div className="flex-1 space-y-2 py-1">
-              <div className="h-3 bg-muted rounded w-3/4" />
-              <div className="h-3 bg-muted rounded w-1/2" />
-            </div>
-          </div>
-        ))}
-      </div>
-    );
+    return <VaticanNewsFeedSkeleton />;
   }
 
   if (!articles || articles.length === 0) {

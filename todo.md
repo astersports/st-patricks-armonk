@@ -337,3 +337,4 @@
 - [x] Add "Saint of the Day" card below Daily Readings on homepage (Evangelizo.org API, with image, bio, prayer)
 - [x] Fix Daily Readings body text: strip HTML tags server-side, use whitespace-pre-line on frontend
 - [x] Fix calendar page tab bar on mobile: tabs hidden behind horizontal scroll, CYO not visible — make all tabs visible (wrap or grid)
+- [x] Add loading skeleton animations for Vatican News and Daily Readings sections on homepage
