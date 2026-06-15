@@ -255,3 +255,92 @@
     transform: none;
   }
 }
+
+/* Print-friendly layout for Key Dates bulletin board */
+@media print {
+  /* Hide all chrome: nav, footer, bottom bar, sticky header, filter pills */
+  nav,
+  footer,
+  .print\:hidden,
+  [class*="MobileBottomNav"],
+  [class*="sticky"] {
+    display: none !important;
+  }
+
+  /* Reset page layout */
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+  }
+
+  main {
+    padding: 0 !important;
+  }
+
+  /* Force all accordion content visible */
+  [data-state="closed"] > [data-radix-accordion-content] {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+  }
+
+  [data-radix-accordion-content][data-state="closed"] {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+    animation: none !important;
+  }
+
+  /* Remove shadows, borders, and rounded corners for clean print */
+  .rounded-xl,
+  .rounded-lg {
+    border-radius: 0 !important;
+  }
+
+  .shadow-sm,
+  .shadow {
+    box-shadow: none !important;
+  }
+
+  /* Make page header compact for print */
+  section[class*="gradient"] {
+    background: none !important;
+    border: none !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  /* Compact event rows */
+  .container {
+    max-width: 100% !important;
+    padding-left: 0.5cm !important;
+    padding-right: 0.5cm !important;
+  }
+
+  /* Add title for print header */
+  h1 {
+    font-size: 18pt !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  /* Avoid page breaks inside event cards */
+  [class*="divide-y"] > div {
+    break-inside: avoid;
+  }
+
+  /* Category dots should print in color */
+  [class*="rounded-full"] {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Ensure color prints for category indicators */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import PageLayout from "@/components/PageLayout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, BookOpen, Dribbble, Clock, MapPin, ArrowLeft, ChevronDown, Star } from "lucide-react";
+import { Calendar, BookOpen, Dribbble, Clock, MapPin, ArrowLeft, ChevronDown, Star, Printer } from "lucide-react";
 import { Link, useSearch } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { format, isToday, isTomorrow, isThisWeek, startOfWeek, addWeeks, isSameWeek } from "date-fns";
@@ -414,6 +414,15 @@ export default function AllCalendars() {
           <p className="text-base sm:text-lg text-muted-foreground max-w-2xl">
             {pageDescription}
           </p>
+          {isKeyDates && (
+            <button
+              onClick={() => window.print()}
+              className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-white text-sm font-medium text-foreground hover:bg-muted/50 transition-colors print:hidden"
+            >
+              <Printer className="w-4 h-4" />
+              Print for Bulletin Board
+            </button>
+          )}
         </div>
       </section>
 

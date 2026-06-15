@@ -290,3 +290,4 @@
 - [x] Update bottom nav "Calendar" to go to unified Calendar page with Key Dates + Full Calendar tabs
 - [x] Remove standalone /key-dates route (redirect to /calendar?filter=key-dates)
 - [x] Write recommendation note for pastor about consolidating Google Calendars into one with labels
+- [x] Add print-friendly button on Key Dates tab that generates clean bulletin board layout
