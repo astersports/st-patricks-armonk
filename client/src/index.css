@@ -282,6 +282,26 @@
   }
 }
 
+/* ===== Scrolling Announcement Marquee ===== */
+@keyframes marquee-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.announcement-marquee {
+  animation: marquee-scroll 30s linear infinite;
+}
+
+.announcement-marquee:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .announcement-marquee {
+    animation: none;
+  }
+}
+
 /* Print-friendly layout for Key Dates bulletin board */
 @media print {
   /* Hide all chrome: nav, footer, bottom bar, sticky header, filter pills */

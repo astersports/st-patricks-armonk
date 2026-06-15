@@ -980,12 +980,95 @@ export const appRouter = router({
       }),
   }),
 
-  // ===== VATICAN NEWS (live RSS feed) =====
+  // ===== PHOTO GALLERY =====
+  gallery: router({
+    listPublished: publicProcedure
+      .input(z.object({ album: z.string().optional() }).optional())
+      .query(async ({ input }) => {
+        return db.getPublishedGalleryPhotos(input?.album);
+      }),
+    listAll: adminProcedure.query(async () => {
+      return db.getAllGalleryPhotos();
+    }),
+    albums: publicProcedure.query(async () => {
+      return db.getGalleryAlbums();
+    }),
+    upload: adminProcedure
+      .input(z.object({
+        title: z.string().optional(),
+        caption: z.string().optional(),
+        album: z.string().optional(),
+        imageUrl: z.string(),
+        imageKey: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        await db.createGalleryPhoto({
+          title: input.title || null,
+          caption: input.caption || null,
+          album: input.album || null,
+          imageUrl: input.imageUrl,
+          imageKey: input.imageKey,
+        });
+        return { success: true };
+      }),
+    update: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        title: z.string().optional(),
+        caption: z.string().optional(),
+        album: z.string().optional(),
+        sortOrder: z.number().optional(),
+        published: z.boolean().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        await db.updateGalleryPhoto(id, data);
+        return { success: true };
+      }),
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.deleteGalleryPhoto(input.id);
+        return { success: true };
+      }),
+  }),
+
+  // ===== CATHOLIC RESOURCES (live RSS feeds + resource links) =====
+  catholicResources: router({
+    // Combined feed from Vatican News + Good Newsroom
+    feed: publicProcedure
+      .input(z.object({ limit: z.number().min(1).max(10).default(4) }).optional())
+      .query(async ({ input }) => {
+        const { fetchAllFeeds } = await import("./catholicResources");
+        return fetchAllFeeds(input?.limit ?? 4);
+      }),
+    // Vatican News only
+    vatican: publicProcedure
+      .input(z.object({ limit: z.number().min(1).max(10).default(5) }).optional())
+      .query(async ({ input }) => {
+        const { fetchVaticanNews } = await import("./catholicResources");
+        return fetchVaticanNews(input?.limit ?? 5);
+      }),
+    // Good Newsroom only
+    goodNewsroom: publicProcedure
+      .input(z.object({ limit: z.number().min(1).max(10).default(5) }).optional())
+      .query(async ({ input }) => {
+        const { fetchGoodNewsroom } = await import("./catholicResources");
+        return fetchGoodNewsroom(input?.limit ?? 5);
+      }),
+    // Static resource links
+    links: publicProcedure.query(async () => {
+      const { CATHOLIC_RESOURCES } = await import("./catholicResources");
+      return CATHOLIC_RESOURCES;
+    }),
+  }),
+
+  // Keep backward compat for vaticanNews
   vaticanNews: router({
     latest: publicProcedure
       .input(z.object({ limit: z.number().min(1).max(10).default(5) }).optional())
       .query(async ({ input }) => {
-        const { fetchVaticanNews } = await import("./vaticanNews");
+        const { fetchVaticanNews } = await import("./catholicResources");
         return fetchVaticanNews(input?.limit ?? 5);
       }),
   }),

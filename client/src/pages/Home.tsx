@@ -1,7 +1,7 @@
 import PageLayout from "@/components/PageLayout";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin, Clock } from "lucide-react";
+import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin, Clock, ExternalLink, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -280,73 +280,121 @@ function DailyReadings() {
   );
 }
 
-function VaticanNewsFeedSkeleton() {
+function CatholicResourcesSkeleton() {
   return (
-    <div className="grid gap-2">
-      {[...Array(5)].map((_, i) => (
-        <div key={i} className="flex gap-3 p-3 rounded-lg border border-transparent">
-          <div className="w-16 h-16 rounded bg-muted animate-pulse shrink-0" />
-          <div className="flex-1 space-y-2 py-0.5">
-            <div className="h-3.5 bg-muted rounded animate-pulse" style={{ width: `${75 - i * 8}%` }} />
-            <div className="h-3 bg-muted/70 rounded animate-pulse" style={{ width: `${60 - i * 5}%` }} />
-            <div className="h-2.5 bg-muted/50 rounded animate-pulse w-16 mt-1" />
+    <div className="space-y-4">
+      {/* Feed skeleton */}
+      <div className="grid gap-2">
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="flex gap-3 p-3 rounded-lg">
+            <div className="w-14 h-14 rounded bg-muted animate-pulse shrink-0" />
+            <div className="flex-1 space-y-2 py-0.5">
+              <div className="h-3.5 bg-muted rounded animate-pulse" style={{ width: `${80 - i * 10}%` }} />
+              <div className="h-3 bg-muted/70 rounded animate-pulse" style={{ width: `${55 - i * 5}%` }} />
+            </div>
           </div>
-          <div className="w-3.5 h-3.5 rounded bg-muted/50 animate-pulse shrink-0 mt-1" />
-        </div>
-      ))}
+        ))}
+      </div>
+      {/* Resource cards skeleton */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="rounded-lg border border-border/50 p-4 space-y-2">
+            <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
+            <div className="h-3.5 bg-muted rounded animate-pulse w-3/4" />
+            <div className="h-2.5 bg-muted/60 rounded animate-pulse w-full" />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
 
-function VaticanNewsFeed() {
-  const { data: articles, isLoading } = trpc.vaticanNews.latest.useQuery({ limit: 5 });
+const SOURCE_LABELS: Record<string, { label: string; color: string }> = {
+  vatican: { label: "Vatican News", color: "bg-red-600" },
+  goodnewsroom: { label: "Good Newsroom", color: "bg-primary" },
+};
 
-  if (isLoading) {
-    return <VaticanNewsFeedSkeleton />;
-  }
+function CatholicResources() {
+  const { data: feed, isLoading: feedLoading } = trpc.catholicResources.feed.useQuery({ limit: 4 });
+  const { data: links } = trpc.catholicResources.links.useQuery();
 
-  if (!articles || articles.length === 0) {
-    return (
-      <p className="text-sm text-muted-foreground text-center py-4">
-        Unable to load Vatican News at this time.
-      </p>
-    );
+  if (feedLoading) {
+    return <CatholicResourcesSkeleton />;
   }
 
   return (
-    <div className="grid gap-2">
-      {articles.map((article, idx) => (
-        <a
-          key={idx}
-          href={article.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group flex gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors border border-transparent hover:border-border/50"
-        >
-          {article.imageUrl && (
-            <img
-              src={article.imageUrl}
-              alt=""
-              className="w-16 h-16 rounded object-cover shrink-0 bg-muted"
-              loading="lazy"
-            />
-          )}
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
-              {article.title}
-            </p>
-            {article.description && (
-              <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
-                {article.description}
+    <div className="space-y-6">
+      {/* Live Feed */}
+      {feed && feed.length > 0 && (
+        <div className="grid gap-1.5">
+          {feed.map((article, idx) => {
+            const sourceInfo = SOURCE_LABELS[article.source] || { label: article.source, color: "bg-muted" };
+            return (
+              <a
+                key={idx}
+                href={article.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors border border-transparent hover:border-border/50"
+              >
+                {article.imageUrl ? (
+                  <img
+                    src={article.imageUrl}
+                    alt=""
+                    className="w-14 h-14 rounded object-cover shrink-0 bg-muted"
+                    loading="lazy"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                  />
+                ) : (
+                  <div className="w-14 h-14 rounded bg-muted/50 shrink-0 flex items-center justify-center">
+                    <Newspaper className="w-5 h-5 text-muted-foreground/50" />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <span className={`inline-block w-1.5 h-1.5 rounded-full ${sourceInfo.color}`} />
+                    <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                      {sourceInfo.label}
+                    </span>
+                  </div>
+                  <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                    {article.title}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground/70 mt-0.5">
+                    {new Date(article.pubDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                  </p>
+                </div>
+                <ExternalLink className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-primary transition-colors shrink-0 mt-2" />
+              </a>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Resource Cards */}
+      {links && links.length > 0 && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {links.map((resource, idx) => (
+            <a
+              key={idx}
+              href={resource.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group rounded-xl border border-border/50 p-4 hover:border-primary/30 hover:shadow-sm transition-all"
+            >
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mb-2 group-hover:bg-primary/20 transition-colors">
+                <Globe className="w-4 h-4 text-primary" />
+              </div>
+              <p className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors leading-tight">
+                {resource.name}
               </p>
-            )}
-            <p className="text-[10px] text-muted-foreground/70 mt-1">
-              {new Date(article.pubDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-            </p>
-          </div>
-          <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:text-primary transition-colors shrink-0 mt-1" />
-        </a>
-      ))}
+              <p className="text-[10px] text-muted-foreground mt-1 line-clamp-2 leading-relaxed">
+                {resource.category}
+              </p>
+            </a>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -558,34 +606,17 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Vatican News — Official Video Widget + RSS Feed */}
+        {/* Catholic Resources — Live Feeds + Quick Links */}
         <section className="reveal container mb-10 sm:mb-14">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-red-600/10 flex items-center justify-center">
-                <svg className="w-4 h-4 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
-                  <path d="M2 12h20" />
-                </svg>
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                <Globe className="w-4 h-4 text-primary" />
               </div>
-              <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">Vatican News</h2>
+              <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">Catholic Resources</h2>
             </div>
-            <a
-              href="https://www.vaticannews.va/en.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs font-medium text-primary hover:text-primary/80 flex items-center gap-1 transition-colors"
-            >
-              Visit Vatican News <ArrowRight className="w-3 h-3" />
-            </a>
           </div>
-          {/* Official Vatican News Video Widget */}
-          <div className="mb-6 rounded-lg overflow-hidden border border-border/50 shadow-sm">
-            <div dangerouslySetInnerHTML={{ __html: '<vaticannews-widget lang="en" fontSize="14"></vaticannews-widget>' }} />
-          </div>
-          {/* RSS Feed below widget */}
-          <VaticanNewsFeed />
+          <CatholicResources />
         </section>
 
         {/* Daily Readings */}

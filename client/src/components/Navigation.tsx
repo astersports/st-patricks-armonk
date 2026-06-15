@@ -47,6 +47,7 @@ const navLinks: NavItem[] = [
     children: [
       { href: "/news", label: "News" },
       { href: "/calendar", label: "Calendar (All Events)" },
+      { href: "/gallery", label: "Photo Gallery" },
       { href: "/bulletins", label: "Weekly Bulletins" },
       { href: "/calendar?filter=cyo", label: "CYO Schedule" },
       { href: "/ministries", label: "Ministries & Devotions" },
@@ -79,6 +80,7 @@ const searchablePages: SearchableItem[] = [
   { href: "/forms", label: "Forms & Documents", keywords: ["form", "document", "download", "pdf", "application"], icon: FileText },
   { href: "/giving", label: "Give Online", keywords: ["give", "donate", "offering", "weshare", "venmo", "tithe", "stewardship", "cardinal", "appeal"], icon: Heart },
   { href: "/contact", label: "Contact Us", keywords: ["contact", "phone", "email", "address", "office", "hours", "directions", "map"], icon: Phone },
+  { href: "/gallery", label: "Photo Gallery", keywords: ["photo", "gallery", "pictures", "images", "events", "album"], icon: Church },
   { href: "/about", label: "Our Parish", keywords: ["about", "parish", "history", "armonk", "cross", "community"], icon: Church },
   { href: "/new-here", label: "New Here? Plan Your Visit", keywords: ["new", "visit", "welcome", "first time", "directions", "what to expect"], icon: UserPlus },
   { href: "/staff", label: "Staff & Leadership", keywords: ["staff", "pastor", "priest", "deacon", "director", "leadership", "team", "contact"], icon: Users },
@@ -114,6 +116,7 @@ const mobileMenuSections: MobileMenuSection[] = [
     items: [
       { href: "/news", label: "News", icon: Newspaper },
       { href: "/calendar", label: "Calendar", icon: Calendar },
+      { href: "/gallery", label: "Photo Gallery", icon: Church },
       { href: "/bulletins", label: "Weekly Bulletins", icon: BookOpen },
       { href: "/calendar?filter=cyo", label: "CYO Schedule", icon: Calendar },
       { href: "/ministries", label: "Ministries & Devotions", icon: HandHeart },
@@ -403,16 +406,48 @@ export default function Navigation() {
             : "bg-white/80 backdrop-blur-sm"
         }`}
       >
-        {/* Announcement Bar */}
-        <div className="bg-primary text-white text-center py-2 px-4">
-          <Link
-            href="/parish-registration"
-            className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium hover:underline transition-all"
-          >
-            <span className="hidden sm:inline">New to St. Patrick in Armonk?</span>
-            <span className="font-semibold">Register as a Parishioner</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
+        {/* Scrolling Announcement Bar */}
+        <div className="bg-primary text-white py-2 overflow-hidden relative">
+          <div className="announcement-marquee flex whitespace-nowrap">
+            {[0, 1].map((i) => (
+              <div key={i} className="flex items-center gap-8 px-4 shrink-0 announcement-marquee-content">
+                <Link
+                  href="/parish-registration"
+                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium hover:underline transition-all"
+                >
+                  <span>New to St. Patrick in Armonk?</span>
+                  <span className="font-semibold">Register as a Parishioner</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+                <span className="text-white/40">•</span>
+                <Link
+                  href="/calendar"
+                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium hover:underline transition-all"
+                >
+                  <span className="font-semibold">View Parish Calendar</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+                <span className="text-white/40">•</span>
+                <Link
+                  href="/gallery"
+                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium hover:underline transition-all"
+                >
+                  <span className="font-semibold">Photo Gallery</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+                <span className="text-white/40">•</span>
+                <Link
+                  href="/giving"
+                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium hover:underline transition-all"
+                >
+                  <span>Support Our Parish —</span>
+                  <span className="font-semibold">Give Online</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+                <span className="text-white/40">•</span>
+              </div>
+            ))}
+          </div>
         </div>
         <nav className="container flex items-center justify-between h-16 lg:h-[4.5rem]">
           {/* Logo */}

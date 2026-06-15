@@ -497,3 +497,21 @@ export const importantDates = mysqlTable("important_dates", {
 });
 export type ImportantDate = typeof importantDates.$inferSelect;
 export type InsertImportantDate = typeof importantDates.$inferInsert;
+
+/**
+ * Photo Gallery - parish event photos uploaded by admin
+ */
+export const galleryPhotos = mysqlTable("gallery_photos", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 300 }),
+  caption: text("caption"),
+  imageUrl: text("imageUrl").notNull(),
+  imageKey: varchar("imageKey", { length: 500 }).notNull(),
+  album: varchar("album", { length: 200 }),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  published: boolean("published").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type GalleryPhoto = typeof galleryPhotos.$inferSelect;
+export type InsertGalleryPhoto = typeof galleryPhotos.$inferInsert;

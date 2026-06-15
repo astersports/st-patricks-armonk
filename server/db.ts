@@ -1,6 +1,7 @@
 import { eq, desc, and, gte, lte, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, newsPosts, bulletins, events, emailSubscriptions, ccdRegistrations, cyoTeams, cyoGames, volunteerOpportunities, volunteerSignups, ccdEvents, parishDocuments, baptismRegistrations, sponsorCertificates, marriageInquiries, funeralPrePlanning, teenLifeRegistrations, parishRegistrations, ccdPermissions, importantDates } from "../drizzle/schema";
+import { InsertUser, users, newsPosts, bulletins, events, emailSubscriptions, ccdRegistrations, cyoTeams, cyoGames, volunteerOpportunities, volunteerSignups, ccdEvents, parishDocuments, baptismRegistrations, sponsorCertificates, marriageInquiries, funeralPrePlanning, teenLifeRegistrations, parishRegistrations, ccdPermissions, importantDates, galleryPhotos } from "../drizzle/schema";
+import type { InsertGalleryPhoto } from "../drizzle/schema";
 import type { InsertNewsPost, InsertBulletin, InsertEvent, InsertEmailSubscription, InsertCcdRegistration, InsertCyoTeam, InsertCyoGame, InsertVolunteerOpportunity, InsertVolunteerSignup, InsertCcdEvent, InsertParishDocument, BaptismRegistration, SponsorCertificate, MarriageInquiry, FuneralPrePlanning, TeenLifeRegistration, ParishRegistration, CcdPermission } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -741,4 +742,47 @@ export async function updateImportantDate(id: number, data: {
 export async function deleteImportantDate(id: number) {
   const db = await getDb();
   await db!.delete(importantDates).where(eq(importantDates.id, id));
+}
+
+// ===== GALLERY PHOTOS =====
+
+export async function getPublishedGalleryPhotos(album?: string) {
+  const db = await getDb();
+  if (album) {
+    return db!.select().from(galleryPhotos)
+      .where(and(eq(galleryPhotos.published, true), eq(galleryPhotos.album, album)))
+      .orderBy(desc(galleryPhotos.createdAt));
+  }
+  return db!.select().from(galleryPhotos)
+    .where(eq(galleryPhotos.published, true))
+    .orderBy(desc(galleryPhotos.createdAt));
+}
+
+export async function getAllGalleryPhotos() {
+  const db = await getDb();
+  return db!.select().from(galleryPhotos).orderBy(desc(galleryPhotos.createdAt));
+}
+
+export async function createGalleryPhoto(data: InsertGalleryPhoto) {
+  const db = await getDb();
+  await db!.insert(galleryPhotos).values(data);
+}
+
+export async function updateGalleryPhoto(id: number, data: Partial<Pick<InsertGalleryPhoto, "title" | "caption" | "album" | "sortOrder" | "published">>) {
+  const db = await getDb();
+  await db!.update(galleryPhotos).set(data).where(eq(galleryPhotos.id, id));
+}
+
+export async function deleteGalleryPhoto(id: number) {
+  const db = await getDb();
+  await db!.delete(galleryPhotos).where(eq(galleryPhotos.id, id));
+}
+
+export async function getGalleryAlbums() {
+  const db = await getDb();
+  const results = await db!.select({ album: galleryPhotos.album })
+    .from(galleryPhotos)
+    .where(eq(galleryPhotos.published, true))
+    .groupBy(galleryPhotos.album);
+  return results.map(r => r.album).filter(Boolean) as string[];
 }

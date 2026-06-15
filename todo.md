@@ -338,3 +338,8 @@
 - [x] Fix Daily Readings body text: strip HTML tags server-side, use whitespace-pre-line on frontend
 - [x] Fix calendar page tab bar on mobile: tabs hidden behind horizontal scroll, CYO not visible — make all tabs visible (wrap or grid)
 - [x] Add loading skeleton animations for Vatican News and Daily Readings sections on homepage
+- [x] Fix Daily Readings title still showing raw HTML font tags on deployed site (was cached — already fixed, confirmed working)
+- [x] Make top announcement bar a scrolling marquee instead of static text
+- [ ] Create a dedicated photo gallery page with scrolling/carousel images and admin upload
+- [ ] Add "About" to the top navigation section
+- [x] Replace Vatican News section with unified Catholic Resources section (live feeds from Vatican News + Good Newsroom, resource cards for Archdiocese of NY, USCCB, Vatican, Good Newsroom)
