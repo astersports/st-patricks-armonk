@@ -318,3 +318,4 @@
 - [x] Optimize mobile footer layout: 3-column grid for quick links on small screens, better spacing
 - [x] Add subtle hover animations to footer links (translate-x nudge) and buttons (scale on hover/active)
 - [x] Add underline-slide hover animation to main header navigation links (desktop)
+- [x] Add smooth scroll-to-top button (appears after 400px scroll, positioned above mobile nav)

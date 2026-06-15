@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { ArrowLeft } from "lucide-react";
 import Navigation from "./Navigation";
 import Footer from "./Footer";
+import ScrollToTopButton from "./ScrollToTopButton";
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -33,6 +34,7 @@ export default function PageLayout({ children, hideBackButton }: PageLayoutProps
       )}
       <main className="flex-1">{children}</main>
       <Footer />
+      <ScrollToTopButton />
       {/* Spacer for mobile bottom tab bar + safe area */}
       <div className="lg:hidden h-14" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }} />
     </div>
