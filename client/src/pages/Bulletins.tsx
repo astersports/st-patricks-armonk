@@ -4,11 +4,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
-import { FileText, Download, Calendar, ExternalLink, ChevronDown, ChevronUp, Mail, Bell, CheckCircle2, Share2, Link2, Copy } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { FileText, Download, Calendar, ExternalLink, ChevronDown, ChevronUp, Mail, Bell, CheckCircle2, Share2, Link2, Copy, Filter, X } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
+
+const MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
 
 function BulletinSubscribeCTA() {
   const [email, setEmail] = useState("");
@@ -57,12 +63,10 @@ function BulletinSubscribeCTA() {
 
   return (
     <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/5 via-primary/3 to-transparent border border-primary/10 p-8 sm:p-10">
-      {/* Decorative background element */}
       <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl" />
       <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-primary/5 rounded-full blur-3xl" />
 
       <div className="relative flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-10">
-        {/* Left: Copy */}
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-3">
             <div className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10">
@@ -76,7 +80,6 @@ function BulletinSubscribeCTA() {
           </p>
         </div>
 
-        {/* Right: Form */}
         <div className="w-full lg:w-auto lg:min-w-[340px]">
           <form onSubmit={handleSubmit} className="space-y-3">
             <div className="relative">
@@ -123,15 +126,50 @@ function BulletinSubscribeCTA() {
 
 export default function Bulletins() {
   const { data: bulletins, isLoading } = trpc.bulletins.listPublished.useQuery();
-  const [expandedYears, setExpandedYears] = useState<Set<number>>(new Set());
+  const [selectedYear, setSelectedYear] = useState<string>("all");
+  const [selectedMonth, setSelectedMonth] = useState<string>("all");
 
   const latestBulletin = bulletins?.[0];
   const archiveBulletins = bulletins?.slice(1) || [];
 
-  // Group archive by year
-  const archiveByYear = useMemo(() => {
-    const groups: Record<number, typeof archiveBulletins> = {};
+  // Get available years from archive
+  const availableYears = useMemo(() => {
+    const years = new Set<number>();
     archiveBulletins.forEach((b) => {
+      years.add(new Date(b.weekDate).getFullYear());
+    });
+    return Array.from(years).sort((a, b) => b - a);
+  }, [archiveBulletins]);
+
+  // Get available months for the selected year
+  const availableMonths = useMemo(() => {
+    if (selectedYear === "all") {
+      return Array.from({ length: 12 }, (_, i) => i);
+    }
+    const months = new Set<number>();
+    archiveBulletins.forEach((b) => {
+      const d = new Date(b.weekDate);
+      if (d.getFullYear() === Number(selectedYear)) {
+        months.add(d.getMonth());
+      }
+    });
+    return Array.from(months).sort((a, b) => b - a);
+  }, [archiveBulletins, selectedYear]);
+
+  // Filter archive bulletins based on selected year and month
+  const filteredBulletins = useMemo(() => {
+    return archiveBulletins.filter((b) => {
+      const d = new Date(b.weekDate);
+      if (selectedYear !== "all" && d.getFullYear() !== Number(selectedYear)) return false;
+      if (selectedMonth !== "all" && d.getMonth() !== Number(selectedMonth)) return false;
+      return true;
+    });
+  }, [archiveBulletins, selectedYear, selectedMonth]);
+
+  // Group filtered bulletins by year for display
+  const filteredByYear = useMemo(() => {
+    const groups: Record<number, typeof filteredBulletins> = {};
+    filteredBulletins.forEach((b) => {
       const year = new Date(b.weekDate).getFullYear();
       if (!groups[year]) groups[year] = [];
       groups[year].push(b);
@@ -139,20 +177,17 @@ export default function Bulletins() {
     return Object.entries(groups)
       .map(([year, items]) => ({ year: Number(year), items }))
       .sort((a, b) => b.year - a.year);
-  }, [archiveBulletins]);
+  }, [filteredBulletins]);
 
-  const toggleYear = (year: number) => {
-    setExpandedYears((prev) => {
-      const next = new Set(prev);
-      if (next.has(year)) next.delete(year);
-      else next.add(year);
-      return next;
-    });
+  const hasActiveFilter = selectedYear !== "all" || selectedMonth !== "all";
+
+  const clearFilters = () => {
+    setSelectedYear("all");
+    setSelectedMonth("all");
   };
 
   // For the latest bulletin, determine if it's a local /manus-storage URL or external
   const isLocalPdf = latestBulletin?.pdfUrl?.startsWith("/manus-storage/");
-  // Use Google Docs viewer for external PDFs (eCatholic), direct iframe for local
   const viewerUrl = latestBulletin
     ? isLocalPdf
       ? `${latestBulletin.pdfUrl}#toolbar=1&navpanes=0`
@@ -272,30 +307,76 @@ export default function Bulletins() {
             {/* Subscribe CTA */}
             <BulletinSubscribeCTA />
 
-            {/* Archive Section — Grouped by Year */}
-            {archiveByYear.length > 0 && (
+            {/* Archive Section with Year/Month Filters */}
+            {archiveBulletins.length > 0 && (
               <div>
-                <h3 className="font-serif text-xl font-semibold mb-4 text-muted-foreground">Past Bulletins</h3>
-                <div className="space-y-3">
-                  {archiveByYear.map(({ year, items }) => {
-                    const isExpanded = expandedYears.has(year);
-                    const displayItems = isExpanded ? items : items.slice(0, 4);
-                    return (
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                  <h3 className="font-serif text-xl font-semibold text-foreground">Past Bulletins</h3>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Filter className="w-4 h-4 text-muted-foreground hidden sm:block" />
+                    <Select value={selectedYear} onValueChange={(v) => { setSelectedYear(v); setSelectedMonth("all"); }}>
+                      <SelectTrigger className="w-[120px] h-9 text-sm">
+                        <SelectValue placeholder="Year" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Years</SelectItem>
+                        {availableYears.map((year) => (
+                          <SelectItem key={year} value={String(year)}>{year}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+                      <SelectTrigger className="w-[140px] h-9 text-sm">
+                        <SelectValue placeholder="Month" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Months</SelectItem>
+                        {availableMonths.map((month) => (
+                          <SelectItem key={month} value={String(month)}>{MONTH_NAMES[month]}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {hasActiveFilter && (
+                      <Button variant="ghost" size="sm" onClick={clearFilters} className="h-9 px-2 text-muted-foreground hover:text-foreground">
+                        <X className="w-4 h-4 mr-1" />
+                        Clear
+                      </Button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Filter summary */}
+                {hasActiveFilter && (
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Showing {filteredBulletins.length} bulletin{filteredBulletins.length !== 1 ? "s" : ""}
+                    {selectedYear !== "all" && ` from ${selectedYear}`}
+                    {selectedMonth !== "all" && ` in ${MONTH_NAMES[Number(selectedMonth)]}`}
+                  </p>
+                )}
+
+                {filteredBulletins.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <FileText className="w-8 h-8 mx-auto mb-2 opacity-40" />
+                    <p className="text-sm">No bulletins found for this period.</p>
+                    <Button variant="link" size="sm" onClick={clearFilters} className="mt-2">
+                      Clear filters
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {filteredByYear.map(({ year, items }) => (
                       <div key={year}>
-                        <button
-                          onClick={() => toggleYear(year)}
-                          className="flex items-center gap-2 w-full text-left py-2 px-1 hover:bg-muted/30 rounded-lg transition-colors"
-                        >
-                          <span className="font-semibold text-lg">{year}</span>
-                          <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-                            {items.length} bulletins
-                          </span>
-                          <span className="ml-auto">
-                            {isExpanded ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
-                          </span>
-                        </button>
-                        <div className="space-y-1.5 mt-1">
-                          {displayItems.map((bulletin) => (
+                        {/* Only show year header when viewing all years */}
+                        {selectedYear === "all" && (
+                          <div className="flex items-center gap-2 py-2 px-1 mb-1">
+                            <span className="font-semibold text-lg">{year}</span>
+                            <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                              {items.length} bulletin{items.length !== 1 ? "s" : ""}
+                            </span>
+                          </div>
+                        )}
+                        <div className="grid gap-1.5">
+                          {items.map((bulletin) => (
                             <a
                               key={bulletin.id}
                               href={bulletin.pdfUrl}
@@ -305,26 +386,18 @@ export default function Bulletins() {
                             >
                               <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-muted/50 transition-colors">
                                 <FileText className="w-4 h-4 text-primary/70 shrink-0" />
-                                <span className="flex-1 text-sm font-medium group-hover:text-primary transition-colors truncate">
+                                <span className="flex-1 text-sm font-medium group-hover:text-primary transition-colors">
                                   {format(new Date(bulletin.weekDate), "MMMM d, yyyy")}
                                 </span>
                                 <Download className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:text-primary transition-colors shrink-0" />
                               </div>
                             </a>
                           ))}
-                          {!isExpanded && items.length > 4 && (
-                            <button
-                              onClick={() => toggleYear(year)}
-                              className="text-xs text-primary font-medium px-3 py-1.5 hover:underline"
-                            >
-                              Show all {items.length} bulletins from {year}
-                            </button>
-                          )}
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>

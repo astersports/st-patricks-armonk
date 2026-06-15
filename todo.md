@@ -307,3 +307,4 @@
 - [x] Write tests for bulletin upload/list/delete procedures
 - [x] Add "Subscribe to Bulletin" CTA section on Bulletins page (inline email signup form)
 - [x] Add "Share this bulletin" dropdown button (Copy PDF Link, Share via Email, Copy Page Link)
+- [x] Add year and month filter to Bulletins archive section for easy browsing
