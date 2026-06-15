@@ -168,9 +168,9 @@ function DesktopDropdown({ item, location }: { item: NavItem; location: string }
     >
       <Link
         href={item.href}
-        className={`flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150 ${
+        className={`nav-link-underline flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150 ${
           isActive
-            ? "text-primary"
+            ? "text-primary active"
             : "text-foreground/70 hover:text-primary"
         }`}
       >
@@ -439,9 +439,9 @@ export default function Navigation() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150 ${
+                  className={`nav-link-underline px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150 ${
                     location === link.href
-                      ? "text-primary"
+                      ? "text-primary active"
                       : "text-foreground/70 hover:text-primary"
                   }`}
                 >

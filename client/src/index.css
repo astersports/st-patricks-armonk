@@ -218,6 +218,29 @@
   }
 }
 
+/* ===== Nav link underline-slide animation ===== */
+.nav-link-underline {
+  position: relative;
+}
+.nav-link-underline::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-primary, oklch(0.35 0.15 145));
+  border-radius: 1px;
+  transform: translateX(-50%);
+  transition: width 200ms var(--ease-out);
+}
+.nav-link-underline:hover::after {
+  width: 70%;
+}
+.nav-link-underline.active::after {
+  width: 70%;
+}
+
 /* ===== Reduced motion ===== */
 /* ===== Mobile Card Compaction ===== */
 @media (max-width: 639px) {
@@ -253,6 +276,9 @@
   }
   .hover-lift:hover {
     transform: none;
+  }
+  .nav-link-underline::after {
+    transition: none !important;
   }
 }
 
