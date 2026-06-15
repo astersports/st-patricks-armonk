@@ -979,6 +979,16 @@ export const appRouter = router({
         return { success: true };
       }),
   }),
+
+  // ===== VATICAN NEWS (live RSS feed) =====
+  vaticanNews: router({
+    latest: publicProcedure
+      .input(z.object({ limit: z.number().min(1).max(10).default(5) }).optional())
+      .query(async ({ input }) => {
+        const { fetchVaticanNews } = await import("./vaticanNews");
+        return fetchVaticanNews(input?.limit ?? 5);
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

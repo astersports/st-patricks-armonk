@@ -61,6 +61,71 @@ const journeyCards = [
   },
 ];
 
+function VaticanNewsFeed() {
+  const { data: articles, isLoading } = trpc.vaticanNews.latest.useQuery({ limit: 5 });
+
+  if (isLoading) {
+    return (
+      <div className="grid gap-3">
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="animate-pulse flex gap-3 p-3 rounded-lg bg-muted/30">
+            <div className="w-16 h-16 rounded bg-muted shrink-0" />
+            <div className="flex-1 space-y-2 py-1">
+              <div className="h-3 bg-muted rounded w-3/4" />
+              <div className="h-3 bg-muted rounded w-1/2" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (!articles || articles.length === 0) {
+    return (
+      <p className="text-sm text-muted-foreground text-center py-4">
+        Unable to load Vatican News at this time.
+      </p>
+    );
+  }
+
+  return (
+    <div className="grid gap-2">
+      {articles.map((article, idx) => (
+        <a
+          key={idx}
+          href={article.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors border border-transparent hover:border-border/50"
+        >
+          {article.imageUrl && (
+            <img
+              src={article.imageUrl}
+              alt=""
+              className="w-16 h-16 rounded object-cover shrink-0 bg-muted"
+              loading="lazy"
+            />
+          )}
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+              {article.title}
+            </p>
+            {article.description && (
+              <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
+                {article.description}
+              </p>
+            )}
+            <p className="text-[10px] text-muted-foreground/70 mt-1">
+              {new Date(article.pubDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+            </p>
+          </div>
+          <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:text-primary transition-colors shrink-0 mt-1" />
+        </a>
+      ))}
+    </div>
+  );
+}
+
 export default function Home() {
   const [email, setEmail] = useState("");
   const { data: newsItems } = trpc.news.listPublished.useQuery();
@@ -97,13 +162,13 @@ export default function Home() {
             St. Patrick in Armonk
           </h1>
           <p className="text-lg sm:text-xl text-white/90 font-light animate-fade-up stagger-1">
-            Armonk, New York
+            29 Cox Ave, Armonk NY 10504
           </p>
-          <p className="text-white/90 text-sm sm:text-base italic mt-4 mb-2 animate-fade-up stagger-2 tracking-wide">
+          <p className="text-white/90 text-sm sm:text-base italic mt-4 mb-1 animate-fade-up stagger-2 tracking-wide">
             "God Bless the Whole World — No Exceptions"
           </p>
-          <p className="text-white/60 text-xs sm:text-sm max-w-md mx-auto mb-8 animate-fade-up stagger-3">
-            A welcoming Catholic community rooted in faith, service, and love.
+          <p className="text-white/70 text-xs sm:text-sm mb-8 animate-fade-up stagger-3 tracking-wide">
+            Pax Christi - St. Patricks Church, Armonk, New York
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center animate-fade-up stagger-3">
             <Link href="/mass-times">
@@ -211,6 +276,31 @@ export default function Home() {
               </div>
             </CardContent>
           </Card>
+        </section>
+
+        {/* Vatican News — Live Feed */}
+        <section className="reveal container mb-10 sm:mb-14">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-red-600/10 flex items-center justify-center">
+                <svg className="w-4 h-4 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                  <path d="M2 12h20" />
+                </svg>
+              </div>
+              <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">Vatican News</h2>
+            </div>
+            <a
+              href="https://www.vaticannews.va/en.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-medium text-primary hover:text-primary/80 flex items-center gap-1 transition-colors"
+            >
+              Visit Vatican News <ArrowRight className="w-3 h-3" />
+            </a>
+          </div>
+          <VaticanNewsFeed />
         </section>
 
         {/* Pastor's Welcome */}

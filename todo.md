@@ -324,3 +324,8 @@
 - [x] Update footer: church name to "St. Patrick's Church in Armonk", address to "29 Cox Ave, Armonk NY"
 - [x] Add parish motto "God Bless the Whole World — No Exceptions" to homepage hero section
 - [x] Rebrand entire site: church name is "St. Patrick in Armonk" (updated all pages, nav, footer, email templates, HTML title)
+- [x] Update VITE_APP_TITLE to "St. Patrick in Armonk" (user must update in Settings > Secrets)
+- [x] Fix homepage motto to full version: "God Bless the Whole World — No Exceptions / Pax Christi - St. Patricks Church, Armonk, New York"
+- [x] Replace "Armonk, New York" with "29 Cox Ave, Armonk NY 10504" on homepage and footer
+- [x] Remove "A welcoming Catholic community rooted in faith, service, and love." tagline
+- [x] Add real-time Vatican News feed to homepage (live RSS from vaticannews.va, 30-min cache, 5 articles)
