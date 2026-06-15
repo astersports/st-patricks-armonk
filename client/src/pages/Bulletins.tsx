@@ -3,9 +3,122 @@ import { trpc } from "@/lib/trpc";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FileText, Download, Calendar, ExternalLink, ChevronDown, ChevronUp } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { FileText, Download, Calendar, ExternalLink, ChevronDown, ChevronUp, Mail, Bell, CheckCircle2 } from "lucide-react";
 import { format } from "date-fns";
 import { useState, useMemo } from "react";
+import { toast } from "sonner";
+
+function BulletinSubscribeCTA() {
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const subscribeMutation = trpc.subscriptions.subscribe.useMutation({
+    onSuccess: (data) => {
+      setSubmitted(true);
+      toast.success(data.message || "You're subscribed!");
+    },
+    onError: (err) => {
+      toast.error(err.message || "Something went wrong. Please try again.");
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) {
+      toast.error("Please enter your email address");
+      return;
+    }
+    subscribeMutation.mutate({
+      email,
+      name: name || undefined,
+      subscribedToBulletins: true,
+      subscribedToNews: true,
+    });
+  };
+
+  if (submitted) {
+    return (
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/5 via-primary/3 to-transparent border border-primary/10 p-8 sm:p-10">
+        <div className="text-center max-w-md mx-auto">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-4">
+            <CheckCircle2 className="w-7 h-7 text-primary" />
+          </div>
+          <h3 className="font-serif text-xl font-bold mb-2">You're Subscribed!</h3>
+          <p className="text-muted-foreground text-sm">
+            You'll receive the weekly bulletin and parish news in your inbox every Sunday.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/5 via-primary/3 to-transparent border border-primary/10 p-8 sm:p-10">
+      {/* Decorative background element */}
+      <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl" />
+      <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-primary/5 rounded-full blur-3xl" />
+
+      <div className="relative flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-10">
+        {/* Left: Copy */}
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10">
+              <Bell className="w-4.5 h-4.5 text-primary" />
+            </div>
+            <span className="text-xs font-semibold uppercase tracking-wider text-primary">Never Miss a Bulletin</span>
+          </div>
+          <h3 className="font-serif text-xl sm:text-2xl font-bold mb-2">Get the Bulletin in Your Inbox</h3>
+          <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+            Subscribe to receive the weekly parish bulletin and news updates every Sunday morning — no account needed.
+          </p>
+        </div>
+
+        {/* Right: Form */}
+        <div className="w-full lg:w-auto lg:min-w-[340px]">
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/60" />
+              <Input
+                type="email"
+                placeholder="Your email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="pl-10 h-11"
+                required
+              />
+            </div>
+            <Input
+              type="text"
+              placeholder="Your name (optional)"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="h-11"
+            />
+            <Button
+              type="submit"
+              className="w-full h-11 gap-2 font-medium"
+              disabled={subscribeMutation.isPending}
+            >
+              {subscribeMutation.isPending ? (
+                "Subscribing..."
+              ) : (
+                <>
+                  <Mail className="w-4 h-4" />
+                  Subscribe to Weekly Bulletin
+                </>
+              )}
+            </Button>
+            <p className="text-xs text-muted-foreground/70 text-center">
+              Unsubscribe anytime. We respect your privacy.
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Bulletins() {
   const { data: bulletins, isLoading } = trpc.bulletins.listPublished.useQuery();
@@ -114,6 +227,9 @@ export default function Bulletins() {
                 </a>
               </div>
             </div>
+
+            {/* Subscribe CTA */}
+            <BulletinSubscribeCTA />
 
             {/* Archive Section — Grouped by Year */}
             {archiveByYear.length > 0 && (

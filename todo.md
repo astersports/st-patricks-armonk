@@ -305,3 +305,4 @@
 - [x] Bulletins page: show archive list of past bulletins below
 - [x] Import existing bulletins from original St. Patrick's website (559 bulletins from 2015-2026)
 - [x] Write tests for bulletin upload/list/delete procedures
+- [x] Add "Subscribe to Bulletin" CTA section on Bulletins page (inline email signup form)
