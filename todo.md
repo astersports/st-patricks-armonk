@@ -329,3 +329,8 @@
 - [x] Replace "Armonk, New York" with "29 Cox Ave, Armonk NY 10504" on homepage and footer
 - [x] Remove "A welcoming Catholic community rooted in faith, service, and love." tagline
 - [x] Add real-time Vatican News feed to homepage (live RSS from vaticannews.va, 30-min cache, 5 articles)
+- [x] Review last 5 bulletins for cross-reference information (confirmed staff, Mass times, events)
+- [x] Add Fr. John Vigilanti (Weekend Associate) to clergy staff section
+- [x] Embed official Vatican News video widget on homepage (vaticannews-widget web component + RSS feed)
+- [x] Add Readings of the Day section to homepage (Evangelizo.org API, 1-hour cache)
+- [x] Change bulletins archive to horizontal left-to-right scrolling card layout

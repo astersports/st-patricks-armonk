@@ -406,74 +406,83 @@ export default function Bulletins() {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    <div className="grid gap-1.5">
-                      {paginatedBulletins.map((bulletin) => (
-                        <a
-                          key={bulletin.id}
-                          href={bulletin.pdfUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="group block"
+                    {/* Horizontal scrolling bulletin cards */}
+                    <div className="relative">
+                      {/* Left scroll arrow */}
+                      {currentPage > 1 && (
+                        <button
+                          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 w-8 h-8 rounded-full bg-background border shadow-md flex items-center justify-center hover:bg-muted transition-colors"
                         >
-                          <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-muted/50 transition-colors">
-                            <FileText className="w-4 h-4 text-primary/70 shrink-0" />
-                            <span className="flex-1 text-sm font-medium group-hover:text-primary transition-colors">
-                              {format(new Date(bulletin.weekDate), "MMMM d, yyyy")}
-                            </span>
-                            <Download className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:text-primary transition-colors shrink-0" />
-                          </div>
-                        </a>
-                      ))}
+                          <ChevronLeft className="w-4 h-4" />
+                        </button>
+                      )}
+
+                      <div className="flex gap-3 overflow-x-auto pb-3 scrollbar-thin snap-x snap-mandatory">
+                        {paginatedBulletins.map((bulletin) => (
+                          <a
+                            key={bulletin.id}
+                            href={bulletin.pdfUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group snap-start shrink-0 w-[160px] sm:w-[180px]"
+                          >
+                            <div className="flex flex-col items-center gap-2 p-4 rounded-xl border bg-card hover:bg-muted/50 hover:border-primary/30 hover:shadow-md transition-all duration-200">
+                              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                                <FileText className="w-6 h-6 text-primary" />
+                              </div>
+                              <div className="text-center">
+                                <p className="text-xs font-bold text-foreground">
+                                  {format(new Date(bulletin.weekDate), "MMM d")}
+                                </p>
+                                <p className="text-[11px] text-muted-foreground">
+                                  {format(new Date(bulletin.weekDate), "yyyy")}
+                                </p>
+                              </div>
+                              <div className="flex items-center gap-1 text-[10px] text-muted-foreground/70 group-hover:text-primary transition-colors">
+                                <Download className="w-3 h-3" />
+                                <span>PDF</span>
+                              </div>
+                            </div>
+                          </a>
+                        ))}
+                      </div>
+
+                      {/* Right scroll arrow */}
+                      {currentPage < totalPages && (
+                        <button
+                          onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 w-8 h-8 rounded-full bg-background border shadow-md flex items-center justify-center hover:bg-muted transition-colors"
+                        >
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+                      )}
                     </div>
 
-                    {/* Pagination Controls */}
+                    {/* Page indicator */}
                     {totalPages > 1 && (
-                      <div className="flex items-center justify-between pt-4 border-t">
-                        <p className="text-sm text-muted-foreground">
-                          Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, totalItems)} of {totalItems}
-                        </p>
-                        <div className="flex items-center gap-1">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                            disabled={currentPage === 1}
-                            className="h-8 w-8 p-0"
-                          >
-                            <ChevronLeft className="w-4 h-4" />
-                          </Button>
-                          {Array.from({ length: totalPages }, (_, i) => i + 1)
-                            .filter((page) => {
-                              if (totalPages <= 7) return true;
-                              if (page === 1 || page === totalPages) return true;
-                              if (Math.abs(page - currentPage) <= 1) return true;
-                              return false;
-                            })
-                            .map((page, idx, arr) => (
-                              <span key={page} className="flex items-center">
-                                {idx > 0 && arr[idx - 1] !== page - 1 && (
-                                  <span className="px-1 text-muted-foreground text-xs">…</span>
-                                )}
-                                <Button
-                                  variant={currentPage === page ? "default" : "outline"}
-                                  size="sm"
-                                  onClick={() => setCurrentPage(page)}
-                                  className="h-8 w-8 p-0 text-xs"
-                                >
-                                  {page}
-                                </Button>
-                              </span>
-                            ))}
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                            disabled={currentPage === totalPages}
-                            className="h-8 w-8 p-0"
-                          >
-                            <ChevronRight className="w-4 h-4" />
-                          </Button>
-                        </div>
+                      <div className="flex items-center justify-center gap-3 pt-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                          disabled={currentPage === 1}
+                          className="h-8 px-3 text-xs"
+                        >
+                          <ChevronLeft className="w-3 h-3 mr-1" /> Newer
+                        </Button>
+                        <span className="text-xs text-muted-foreground">
+                          Page {currentPage} of {totalPages}
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                          disabled={currentPage === totalPages}
+                          className="h-8 px-3 text-xs"
+                        >
+                          Older <ChevronRight className="w-3 h-3 ml-1" />
+                        </Button>
                       </div>
                     )}
                   </div>

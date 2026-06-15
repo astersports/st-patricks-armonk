@@ -989,6 +989,14 @@ export const appRouter = router({
         return fetchVaticanNews(input?.limit ?? 5);
       }),
   }),
+
+  // ===== DAILY READINGS (Evangelizo.org) =====
+  dailyReadings: router({
+    today: publicProcedure.query(async () => {
+      const { getDailyReadings } = await import("./dailyReadings");
+      return getDailyReadings();
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

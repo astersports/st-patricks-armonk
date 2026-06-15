@@ -19,6 +19,7 @@ interface DepartmentContact {
 
 const clergy: StaffMember[] = [
   { name: "Father Thadeus Aravindathu", role: "Pastor", phone: "(914) 531-1760", email: "Pastor.stpats@outlook.com" },
+  { name: "Father John Vigilanti", role: "Weekend Associate" },
 ];
 
 const staff: StaffMember[] = [

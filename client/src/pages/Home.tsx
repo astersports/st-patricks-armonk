@@ -61,6 +61,90 @@ const journeyCards = [
   },
 ];
 
+function DailyReadings() {
+  const { data: readings, isLoading } = trpc.dailyReadings.today.useQuery();
+
+  if (isLoading) {
+    return (
+      <div className="animate-pulse space-y-3">
+        <div className="h-5 bg-muted rounded w-2/3" />
+        <div className="h-4 bg-muted rounded w-1/2" />
+        <div className="h-20 bg-muted rounded" />
+      </div>
+    );
+  }
+
+  if (!readings) {
+    return (
+      <Card className="border-border/50">
+        <CardContent className="p-5 text-center">
+          <p className="text-sm text-muted-foreground">Daily readings are temporarily unavailable.</p>
+          <a
+            href="https://bible.usccb.org/daily-bible-reading"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-primary hover:underline mt-2 inline-block"
+          >
+            View on USCCB.org
+          </a>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center">
+            <svg className="w-4 h-4 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
+            </svg>
+          </div>
+          <div>
+            <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">Today's Readings</h2>
+            <p className="text-xs text-muted-foreground">{readings.liturgicTitle}</p>
+          </div>
+        </div>
+        <a
+          href="https://bible.usccb.org/daily-bible-reading"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs font-medium text-primary hover:text-primary/80 flex items-center gap-1 transition-colors"
+        >
+          Full Readings <ArrowRight className="w-3 h-3" />
+        </a>
+      </div>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {/* First Reading */}
+        <Card className="border-border/50 shadow-sm">
+          <CardContent className="p-4">
+            <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">First Reading</p>
+            <p className="text-xs text-muted-foreground mb-2 line-clamp-1">{readings.firstReading.title}</p>
+            <div className="text-sm text-foreground/90 leading-relaxed line-clamp-6" dangerouslySetInnerHTML={{ __html: readings.firstReading.text }} />
+          </CardContent>
+        </Card>
+        {/* Psalm */}
+        <Card className="border-border/50 shadow-sm">
+          <CardContent className="p-4">
+            <p className="text-xs font-semibold text-gold uppercase tracking-wider mb-1">Responsorial Psalm</p>
+            <p className="text-xs text-muted-foreground mb-2 line-clamp-1">{readings.psalm.title}</p>
+            <div className="text-sm text-foreground/90 leading-relaxed line-clamp-6 italic" dangerouslySetInnerHTML={{ __html: readings.psalm.text }} />
+          </CardContent>
+        </Card>
+        {/* Gospel */}
+        <Card className="border-border/50 shadow-sm sm:col-span-2 lg:col-span-1">
+          <CardContent className="p-4">
+            <p className="text-xs font-semibold text-red-600 uppercase tracking-wider mb-1">Gospel</p>
+            <p className="text-xs text-muted-foreground mb-2 line-clamp-1">{readings.gospel.title}</p>
+            <div className="text-sm text-foreground/90 leading-relaxed line-clamp-6" dangerouslySetInnerHTML={{ __html: readings.gospel.text }} />
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
 function VaticanNewsFeed() {
   const { data: articles, isLoading } = trpc.vaticanNews.latest.useQuery({ limit: 5 });
 
@@ -278,7 +362,7 @@ export default function Home() {
           </Card>
         </section>
 
-        {/* Vatican News — Live Feed */}
+        {/* Vatican News — Official Video Widget + RSS Feed */}
         <section className="reveal container mb-10 sm:mb-14">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
@@ -300,7 +384,17 @@ export default function Home() {
               Visit Vatican News <ArrowRight className="w-3 h-3" />
             </a>
           </div>
+          {/* Official Vatican News Video Widget */}
+          <div className="mb-6 rounded-lg overflow-hidden border border-border/50 shadow-sm">
+            <div dangerouslySetInnerHTML={{ __html: '<vaticannews-widget lang="en" fontSize="14"></vaticannews-widget>' }} />
+          </div>
+          {/* RSS Feed below widget */}
           <VaticanNewsFeed />
+        </section>
+
+        {/* Daily Readings */}
+        <section className="reveal container mb-10 sm:mb-14">
+          <DailyReadings />
         </section>
 
         {/* Pastor's Welcome */}
