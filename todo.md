@@ -280,3 +280,7 @@
 - [x] Add category filter pills to Key Dates page (All, CCD, CYO, Sacrament, Parish, Teen Life, Social)
 - [x] Add color key legend to homepage Key Dates section
 - [x] Key Dates page: expand all months when a category filter is active, collapse to nearest month when "All" is selected
+- [x] Admin CRUD page for Key Dates: add, edit, delete important dates from dashboard
+- [x] Add tRPC admin procedures (create, update, delete) for important dates
+- [x] Build admin Key Dates management page with table and add/edit dialog
+- [x] Wire admin Key Dates page into dashboard navigation
