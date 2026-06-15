@@ -153,6 +153,14 @@ export default function Home() {
               <div className="border-b border-border/50">
                 <div className="px-4 sm:px-5 pt-4 pb-2">
                   <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Key Dates</p>
+                  <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1.5">
+                    <span className="inline-flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-green-500" /><span className="text-[10px] text-muted-foreground">CCD</span></span>
+                    <span className="inline-flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-orange-500" /><span className="text-[10px] text-muted-foreground">CYO</span></span>
+                    <span className="inline-flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-purple-500" /><span className="text-[10px] text-muted-foreground">Sacrament</span></span>
+                    <span className="inline-flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-primary" /><span className="text-[10px] text-muted-foreground">Parish</span></span>
+                    <span className="inline-flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-blue-500" /><span className="text-[10px] text-muted-foreground">Teen Life</span></span>
+                    <span className="inline-flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-amber-500" /><span className="text-[10px] text-muted-foreground">Social</span></span>
+                  </div>
                 </div>
                 {allImportantDates && allImportantDates.length > 0 ? (
                   <div className="divide-y divide-border/30">

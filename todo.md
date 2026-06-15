@@ -278,3 +278,5 @@
 - [x] Replace "Coming Up" section with next 5 important dates
 - [x] Add a tile/link at the bottom to view the full key dates page (created /key-dates page with full accordion)
 - [x] Add category filter pills to Key Dates page (All, CCD, CYO, Sacrament, Parish, Teen Life, Social)
+- [x] Add color key legend to homepage Key Dates section
+- [x] Key Dates page: expand all months when a category filter is active, collapse to nearest month when "All" is selected

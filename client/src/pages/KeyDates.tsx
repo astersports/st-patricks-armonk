@@ -32,6 +32,74 @@ const catColors: Record<string, { dot: string; bg: string; label: string }> = {
   social: { dot: "bg-amber-500", bg: "bg-amber-50", label: "Social" },
 };
 
+type MonthGroupData = {
+  key: string;
+  month: string;
+  year: string;
+  events: Array<{ id: number; title: string; eventDate: unknown; category: string; location: string | null; note: string | null }>;
+};
+
+function MonthGroup({ group }: { group: MonthGroupData }) {
+  return (
+    <AccordionItem value={group.key} className="border-b last:border-b-0">
+      <AccordionTrigger className="px-4 sm:px-5 py-3.5 hover:bg-muted/30 transition-colors">
+        <div className="flex items-center gap-3">
+          <Calendar className="w-4 h-4 text-primary shrink-0" />
+          <span className="font-semibold text-sm sm:text-base">{group.month}</span>
+          <span className="text-xs text-muted-foreground">{group.year}</span>
+          <span className="ml-auto text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+            {group.events.length} {group.events.length === 1 ? "event" : "events"}
+          </span>
+        </div>
+      </AccordionTrigger>
+      <AccordionContent className="px-3 sm:px-4 pb-3">
+        <div className="grid gap-2 sm:gap-2.5">
+          {group.events.map((event) => {
+            const cat = catColors[event.category] || catColors.parish;
+            const eventDate = toEastern(event.eventDate as unknown as string);
+            return (
+              <div
+                key={event.id}
+                className={`flex items-start gap-3 sm:gap-4 p-3 sm:p-3.5 rounded-lg ${cat.bg} border border-transparent hover:border-border/50 transition-colors`}
+              >
+                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-white shadow-sm flex flex-col items-center justify-center shrink-0">
+                  <span className="text-[9px] font-medium text-muted-foreground uppercase leading-none">
+                    {format(eventDate, "EEE")}
+                  </span>
+                  <span className="text-sm sm:text-base font-bold text-foreground leading-tight">
+                    {format(eventDate, "d")}
+                  </span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <span className={`w-1.5 h-1.5 rounded-full ${cat.dot} shrink-0`} />
+                    <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{cat.label}</span>
+                  </div>
+                  <p className="font-semibold text-foreground text-sm leading-snug">{event.title}</p>
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-0.5">
+                    {event.location && (
+                      <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                        <MapPin className="w-3 h-3" />
+                        {event.location}
+                      </span>
+                    )}
+                    {event.note && (
+                      <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                        <Clock className="w-3 h-3" />
+                        {event.note}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </AccordionContent>
+    </AccordionItem>
+  );
+}
+
 export default function KeyDates() {
   const { data: allImportantDates, isLoading } = trpc.importantDates.allPublished.useQuery();
   const revealRef = useReveal();
@@ -141,68 +209,19 @@ export default function KeyDates() {
               ))}
             </div>
           ) : groupedDates.length > 0 ? (
-            <Accordion type="single" collapsible defaultValue={currentMonthKey} key={activeFilter} className="rounded-xl border overflow-hidden">
-              {groupedDates.map((group) => (
-                <AccordionItem key={group.key} value={group.key} className="border-b last:border-b-0">
-                  <AccordionTrigger className="px-4 sm:px-5 py-3.5 hover:bg-muted/30 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <Calendar className="w-4 h-4 text-primary shrink-0" />
-                      <span className="font-semibold text-sm sm:text-base">{group.month}</span>
-                      <span className="text-xs text-muted-foreground">{group.year}</span>
-                      <span className="ml-auto text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-                        {group.events.length} {group.events.length === 1 ? "event" : "events"}
-                      </span>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="px-3 sm:px-4 pb-3">
-                    <div className="grid gap-2 sm:gap-2.5">
-                      {group.events.map((event) => {
-                        const cat = catColors[event.category] || catColors.parish;
-                        const eventDate = toEastern(event.eventDate as unknown as string);
-                        return (
-                          <div
-                            key={event.id}
-                            className={`flex items-start gap-3 sm:gap-4 p-3 sm:p-3.5 rounded-lg ${cat.bg} border border-transparent hover:border-border/50 transition-colors`}
-                          >
-                            {/* Date badge */}
-                            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-white shadow-sm flex flex-col items-center justify-center shrink-0">
-                              <span className="text-[9px] font-medium text-muted-foreground uppercase leading-none">
-                                {format(eventDate, "EEE")}
-                              </span>
-                              <span className="text-sm sm:text-base font-bold text-foreground leading-tight">
-                                {format(eventDate, "d")}
-                              </span>
-                            </div>
-                            {/* Content */}
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 mb-0.5">
-                                <span className={`w-1.5 h-1.5 rounded-full ${cat.dot} shrink-0`} />
-                                <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{cat.label}</span>
-                              </div>
-                              <p className="font-semibold text-foreground text-sm leading-snug">{event.title}</p>
-                              <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-0.5">
-                                {event.location && (
-                                  <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                                    <MapPin className="w-3 h-3" />
-                                    {event.location}
-                                  </span>
-                                )}
-                                {event.note && (
-                                  <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                                    <Clock className="w-3 h-3" />
-                                    {event.note}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+            activeFilter === "all" ? (
+              <Accordion type="single" collapsible defaultValue={currentMonthKey} key={activeFilter} className="rounded-xl border overflow-hidden">
+                {groupedDates.map((group) => (
+                  <MonthGroup key={group.key} group={group} />
+                ))}
+              </Accordion>
+            ) : (
+              <Accordion type="multiple" defaultValue={groupedDates.map(g => g.key)} key={activeFilter} className="rounded-xl border overflow-hidden">
+                {groupedDates.map((group) => (
+                  <MonthGroup key={group.key} group={group} />
+                ))}
+              </Accordion>
+            )
           ) : (
             <div className="text-center py-12 text-muted-foreground">
               <Calendar className="w-10 h-10 mx-auto mb-3 text-muted-foreground/50" />
