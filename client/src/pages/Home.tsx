@@ -61,6 +61,86 @@ const journeyCards = [
   },
 ];
 
+function SaintOfDayCard() {
+  const { data: saint, isLoading } = trpc.saintOfDay.today.useQuery();
+
+  if (isLoading) {
+    return (
+      <div className="animate-pulse space-y-3">
+        <div className="h-5 bg-muted rounded w-1/2" />
+        <div className="h-20 bg-muted rounded" />
+      </div>
+    );
+  }
+
+  if (!saint || !saint.featuredSaint) {
+    return null;
+  }
+
+  const { featuredSaint, saints } = saint;
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center">
+            <svg className="w-4 h-4 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="8" r="5" />
+              <path d="M12 13v8" />
+              <path d="M9 18h6" />
+            </svg>
+          </div>
+          <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">Saint of the Day</h2>
+        </div>
+        <a
+          href="https://www.evangelizo.org"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs font-medium text-primary hover:text-primary/80 flex items-center gap-1 transition-colors"
+        >
+          Evangelizo.org <ArrowRight className="w-3 h-3" />
+        </a>
+      </div>
+      <Card className="border-border/50 shadow-sm overflow-hidden">
+        <CardContent className="p-5 sm:p-6">
+          <div className="flex gap-4 sm:gap-6">
+            {featuredSaint.imageUrl && (
+              <div className="hidden sm:block flex-shrink-0">
+                <img
+                  src={featuredSaint.imageUrl}
+                  alt={featuredSaint.name}
+                  className="w-24 h-32 object-cover rounded-lg shadow-sm"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                />
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <h3 className="font-serif text-base sm:text-lg font-bold text-foreground mb-1">
+                {featuredSaint.name}
+              </h3>
+              {saints.length > 1 && (
+                <p className="text-xs text-muted-foreground mb-2">
+                  Also commemorated: {saints.filter(s => s !== featuredSaint.name && !featuredSaint.name.includes(s)).slice(0, 3).join(", ")}
+                </p>
+              )}
+              {featuredSaint.biography && (
+                <p className="text-sm text-foreground/85 leading-relaxed line-clamp-4">
+                  {featuredSaint.biography}
+                </p>
+              )}
+              {featuredSaint.prayer && (
+                <blockquote className="mt-3 pl-3 border-l-2 border-gold/40 italic text-sm text-muted-foreground line-clamp-3">
+                  {featuredSaint.prayer}
+                </blockquote>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
 function DailyReadings() {
   const { data: readings, isLoading } = trpc.dailyReadings.today.useQuery();
 
@@ -450,6 +530,11 @@ export default function Home() {
         {/* Daily Readings */}
         <section className="reveal container mb-10 sm:mb-14">
           <DailyReadings />
+        </section>
+
+        {/* Saint of the Day */}
+        <section className="reveal container mb-10 sm:mb-14">
+          <SaintOfDayCard />
         </section>
 
         {/* Newsletter Subscription */}

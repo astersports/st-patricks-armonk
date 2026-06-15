@@ -334,3 +334,4 @@
 - [x] Embed official Vatican News video widget on homepage (vaticannews-widget web component + RSS feed)
 - [x] Add Readings of the Day section to homepage (Evangelizo.org API, 1-hour cache)
 - [x] Change bulletins archive to horizontal left-to-right scrolling card layout
+- [x] Add "Saint of the Day" card below Daily Readings on homepage (Evangelizo.org API, with image, bio, prayer)

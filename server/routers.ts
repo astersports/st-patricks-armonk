@@ -997,6 +997,14 @@ export const appRouter = router({
       return getDailyReadings();
     }),
   }),
+
+  // ===== SAINT OF THE DAY (Evangelizo.org) =====
+  saintOfDay: router({
+    today: publicProcedure.query(async () => {
+      const { getSaintOfDay } = await import("./saintOfDay");
+      return getSaintOfDay();
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
