@@ -137,7 +137,7 @@ export async function deleteBulletin(id: number) {
   await db.delete(bulletins).where(eq(bulletins.id, id));
 }
 
-export async function getPublishedBulletins(limit = 20) {
+export async function getPublishedBulletins(limit = 100) {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(bulletins)

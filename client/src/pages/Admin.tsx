@@ -256,10 +256,20 @@ function BulletinManager() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [weekDate, setWeekDate] = useState("");
-  const [published, setPublished] = useState(false);
+  const [published, setPublished] = useState(true);
   const [pdfUrl, setPdfUrl] = useState("");
   const [pdfKey, setPdfKey] = useState("");
   const [uploading, setUploading] = useState(false);
+
+  // Auto-generate title when date changes
+  const handleWeekDateChange = (dateStr: string) => {
+    setWeekDate(dateStr);
+    if (dateStr) {
+      const d = new Date(dateStr + "T12:00:00");
+      const formatted = d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+      setTitle(`Bulletin — ${formatted}`);
+    }
+  };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -291,7 +301,7 @@ function BulletinManager() {
   const handleCreate = () => {
     if (!title || !pdfUrl || !weekDate) { toast.error("Title, PDF, and week date required"); return; }
     createMutation.mutate({ title, description: description || undefined, pdfUrl, pdfKey, weekDate, published });
-    setTitle(""); setDescription(""); setWeekDate(""); setPdfUrl(""); setPdfKey(""); setPublished(false); setShowForm(false);
+    setTitle(""); setDescription(""); setWeekDate(""); setPdfUrl(""); setPdfKey(""); setPublished(true); setShowForm(false);
   };
 
   return (
@@ -306,12 +316,12 @@ function BulletinManager() {
       {showForm && (
         <Card className="border-primary/30">
           <CardContent className="p-6 space-y-4">
-            <Input placeholder="Bulletin title (e.g., 'Bulletin - June 15, 2026')" value={title} onChange={(e) => setTitle(e.target.value)} />
-            <Input placeholder="Description (optional)" value={description} onChange={(e) => setDescription(e.target.value)} />
             <div>
-              <Label className="mb-2 block">Week Date</Label>
-              <Input type="date" value={weekDate} onChange={(e) => setWeekDate(e.target.value)} />
+              <Label className="mb-2 block">Week Date (Sunday)</Label>
+              <Input type="date" value={weekDate} onChange={(e) => handleWeekDateChange(e.target.value)} />
             </div>
+            <Input placeholder="Bulletin title (auto-generated from date, or edit)" value={title} onChange={(e) => setTitle(e.target.value)} />
+            <Input placeholder="Description (optional)" value={description} onChange={(e) => setDescription(e.target.value)} />
             <div>
               <Label className="mb-2 block">Upload PDF</Label>
               <div className="flex items-center gap-3">

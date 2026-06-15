@@ -294,3 +294,14 @@
 - [x] Add News & Announcements / Upcoming Events toggle to homepage Latest News section
 - [x] Fix Events tab to show Key Dates (not Google Calendar events) and remove duplicate KEY DATES section
 - [x] Redesign homepage card: show latest news + next event together (no toggle), with "View All News" and "View All Events" links
+
+## Phase: Admin Bulletin Upload & Display
+
+- [x] Admin dashboard: add bulletin PDF upload form (title, date, file picker)
+- [x] Store uploaded bulletin PDFs in S3 via storagePut
+- [x] Save bulletin metadata (title, date, file URL/key) in database
+- [x] Display list of all uploaded bulletins in admin with delete option
+- [x] Bulletins page: show latest bulletin PDF prominently with embedded viewer
+- [x] Bulletins page: show archive list of past bulletins below
+- [x] Import existing bulletins from original St. Patrick's website (559 bulletins from 2015-2026)
+- [x] Write tests for bulletin upload/list/delete procedures

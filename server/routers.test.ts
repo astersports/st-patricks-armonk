@@ -108,6 +108,13 @@ describe("router structure", () => {
     expect(appRouter.bulletins.listPublished).toBeDefined();
   });
 
+  it("has bulletins router with create, update, delete, uploadPdf procedures", () => {
+    expect(appRouter.bulletins.create).toBeDefined();
+    expect(appRouter.bulletins.update).toBeDefined();
+    expect(appRouter.bulletins.delete).toBeDefined();
+    expect(appRouter.bulletins.uploadPdf).toBeDefined();
+  });
+
   it("has subscriptions router with subscribe procedure", () => {
     expect(appRouter.subscriptions).toBeDefined();
     expect(appRouter.subscriptions.subscribe).toBeDefined();
@@ -126,6 +133,22 @@ describe("admin access control", () => {
     const caller = appRouter.createCaller(ctx);
     await expect(
       caller.news.create({ title: "Test", content: "Test content", published: false })
+    ).rejects.toThrow();
+  });
+
+  it("rejects non-admin users from bulletins.create", async () => {
+    const { ctx } = createRegularUserContext();
+    const caller = appRouter.createCaller(ctx);
+    await expect(
+      caller.bulletins.create({ title: "Test", pdfUrl: "/test.pdf", pdfKey: "key", weekDate: "2026-06-15", published: false })
+    ).rejects.toThrow();
+  });
+
+  it("rejects unauthenticated users from bulletins.uploadPdf", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    await expect(
+      caller.bulletins.uploadPdf({ fileName: "test.pdf", fileBase64: "dGVzdA==", contentType: "application/pdf" })
     ).rejects.toThrow();
   });
 });
