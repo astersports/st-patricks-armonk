@@ -29,6 +29,7 @@ export default function Footer() {
           <nav className="flex flex-wrap gap-x-5 gap-y-1">
             <Link href="/mass-times" className="text-xs text-white/70 hover:text-gold transition-colors">Mass Times</Link>
             <Link href="/news" className="text-xs text-white/70 hover:text-gold transition-colors">News</Link>
+            <Link href="/calendar" className="text-xs text-white/70 hover:text-gold transition-colors">Calendar</Link>
             <Link href="/giving" className="text-xs text-white/70 hover:text-gold transition-colors">Giving</Link>
             <Link href="/bulletins" className="text-xs text-white/70 hover:text-gold transition-colors">Bulletin</Link>
             <Link href="/contact" className="text-xs text-white/70 hover:text-gold transition-colors">Contact</Link>

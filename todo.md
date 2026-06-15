@@ -314,3 +314,4 @@
 - [x] Update navigation menu label from "News & Announcements" to "News" (dropdown, mobile menu, search index, MassTimes reference)
 - [x] Rename route from /news-events to /news with redirect from old URL
 - [x] Add direct "News" link to the website footer for easier navigation
+- [x] Add direct "Calendar" link to the website footer alongside News
