@@ -3,7 +3,7 @@ import { trpc } from "@/lib/trpc";
 import { Calendar, MapPin, Clock, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import { format } from "date-fns";
 import { TZDate } from "@date-fns/tz";
 import { useReveal } from "@/hooks/useReveal";
@@ -12,6 +12,16 @@ const TIMEZONE = "America/New_York";
 function toEastern(isoString: string): Date {
   return new TZDate(isoString, TIMEZONE);
 }
+
+const categories = [
+  { key: "all", label: "All", dot: "bg-foreground" },
+  { key: "ccd", label: "CCD", dot: "bg-green-500" },
+  { key: "cyo", label: "CYO", dot: "bg-orange-500" },
+  { key: "sacrament", label: "Sacrament", dot: "bg-purple-500" },
+  { key: "parish", label: "Parish", dot: "bg-primary" },
+  { key: "teen_life", label: "Teen Life", dot: "bg-blue-500" },
+  { key: "social", label: "Social", dot: "bg-amber-500" },
+] as const;
 
 const catColors: Record<string, { dot: string; bg: string; label: string }> = {
   ccd: { dot: "bg-green-500", bg: "bg-green-50", label: "CCD" },
@@ -25,14 +35,21 @@ const catColors: Record<string, { dot: string; bg: string; label: string }> = {
 export default function KeyDates() {
   const { data: allImportantDates, isLoading } = trpc.importantDates.allPublished.useQuery();
   const revealRef = useReveal();
+  const [activeFilter, setActiveFilter] = useState<string>("all");
+
+  const filteredDates = useMemo(() => {
+    if (!allImportantDates) return [];
+    if (activeFilter === "all") return allImportantDates;
+    return allImportantDates.filter(e => e.category === activeFilter);
+  }, [allImportantDates, activeFilter]);
 
   const { groupedDates, currentMonthKey } = useMemo(() => {
-    if (!allImportantDates || allImportantDates.length === 0) return { groupedDates: [], currentMonthKey: "" };
-    const groups: { key: string; month: string; year: string; events: typeof allImportantDates }[] = [];
+    if (filteredDates.length === 0) return { groupedDates: [], currentMonthKey: "" };
+    const groups: { key: string; month: string; year: string; events: typeof filteredDates }[] = [];
     const now = new Date();
     const currentKey = format(now, "yyyy-MM");
     let foundCurrentMonth = "";
-    for (const event of allImportantDates) {
+    for (const event of filteredDates) {
       const eventDate = toEastern(event.eventDate as unknown as string);
       const key = format(eventDate, "yyyy-MM");
       const monthLabel = format(eventDate, "MMMM");
@@ -51,6 +68,16 @@ export default function KeyDates() {
       foundCurrentMonth = groups[groups.length - 1].key;
     }
     return { groupedDates: groups, currentMonthKey: foundCurrentMonth };
+  }, [filteredDates]);
+
+  // Count events per category for badge numbers
+  const categoryCounts = useMemo(() => {
+    if (!allImportantDates) return {};
+    const counts: Record<string, number> = { all: allImportantDates.length };
+    for (const event of allImportantDates) {
+      counts[event.category] = (counts[event.category] || 0) + 1;
+    }
+    return counts;
   }, [allImportantDates]);
 
   return (
@@ -71,14 +98,36 @@ export default function KeyDates() {
               </p>
             </div>
 
-            {/* Category legend */}
-            <div className="flex flex-wrap justify-center gap-3 mt-5">
-              {Object.entries(catColors).map(([key, val]) => (
-                <div key={key} className="flex items-center gap-1.5">
-                  <span className={`w-2 h-2 rounded-full ${val.dot}`} />
-                  <span className="text-xs text-muted-foreground">{val.label}</span>
-                </div>
-              ))}
+            {/* Category filter pills */}
+            <div className="flex flex-wrap justify-center gap-2 mt-6">
+              {categories.map((cat) => {
+                const isActive = activeFilter === cat.key;
+                const count = categoryCounts[cat.key] || 0;
+                return (
+                  <button
+                    key={cat.key}
+                    onClick={() => setActiveFilter(cat.key)}
+                    className={`
+                      inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium
+                      transition-all duration-200 press-scale border
+                      ${isActive
+                        ? "bg-primary text-white border-primary shadow-sm"
+                        : "bg-white text-muted-foreground border-border hover:border-primary/30 hover:text-foreground"
+                      }
+                    `}
+                  >
+                    {cat.key !== "all" && (
+                      <span className={`w-2 h-2 rounded-full ${isActive ? "bg-white/80" : cat.dot}`} />
+                    )}
+                    <span>{cat.label}</span>
+                    {count > 0 && (
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${isActive ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"}`}>
+                        {count}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -92,7 +141,7 @@ export default function KeyDates() {
               ))}
             </div>
           ) : groupedDates.length > 0 ? (
-            <Accordion type="single" collapsible defaultValue={currentMonthKey} className="rounded-xl border overflow-hidden">
+            <Accordion type="single" collapsible defaultValue={currentMonthKey} key={activeFilter} className="rounded-xl border overflow-hidden">
               {groupedDates.map((group) => (
                 <AccordionItem key={group.key} value={group.key} className="border-b last:border-b-0">
                   <AccordionTrigger className="px-4 sm:px-5 py-3.5 hover:bg-muted/30 transition-colors">
@@ -157,8 +206,20 @@ export default function KeyDates() {
           ) : (
             <div className="text-center py-12 text-muted-foreground">
               <Calendar className="w-10 h-10 mx-auto mb-3 text-muted-foreground/50" />
-              <p className="font-medium">No key dates available</p>
-              <p className="text-sm mt-1">Check back soon for the updated parish calendar.</p>
+              <p className="font-medium">No events found</p>
+              <p className="text-sm mt-1">
+                {activeFilter !== "all"
+                  ? "No events in this category. Try selecting a different filter."
+                  : "Check back soon for the updated parish calendar."}
+              </p>
+              {activeFilter !== "all" && (
+                <button
+                  onClick={() => setActiveFilter("all")}
+                  className="mt-3 text-sm text-primary hover:underline font-medium"
+                >
+                  Show all dates
+                </button>
+              )}
             </div>
           )}
         </section>

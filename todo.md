@@ -277,3 +277,4 @@
 - [x] Make footer branding more subtle for pastor review
 - [x] Replace "Coming Up" section with next 5 important dates
 - [x] Add a tile/link at the bottom to view the full key dates page (created /key-dates page with full accordion)
+- [x] Add category filter pills to Key Dates page (All, CCD, CYO, Sacrament, Parish, Teen Life, Social)
