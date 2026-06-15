@@ -25,6 +25,19 @@ function getTodayDateString(): string {
   return `${year}${month}${day}`;
 }
 
+function stripHtmlTags(html: string): string {
+  return html
+    .replace(/<font[^>]*>/gi, "")
+    .replace(/<\/font>/gi, "")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;/g, "'")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .trim();
+}
+
 async function fetchReading(date: string, type: string, content?: string): Promise<string> {
   const params = new URLSearchParams({ date, type, lang: "AM" });
   if (content) params.set("content", content);
@@ -63,14 +76,14 @@ export async function getDailyReadings(): Promise<DailyReadingsData | null> {
 
     const data: DailyReadingsData = {
       date: today,
-      liturgicTitle: liturgicTitle || "Daily Readings",
-      firstReading: { title: frTitle || "First Reading", text: frText },
-      psalm: { title: psTitle || "Responsorial Psalm", text: psText },
-      gospel: { title: gspTitle || "Gospel", text: gspText },
+      liturgicTitle: stripHtmlTags(liturgicTitle) || "Daily Readings",
+      firstReading: { title: stripHtmlTags(frTitle) || "First Reading", text: frText },
+      psalm: { title: stripHtmlTags(psTitle) || "Responsorial Psalm", text: psText },
+      gospel: { title: stripHtmlTags(gspTitle) || "Gospel", text: gspText },
     };
 
     if (srText) {
-      data.secondReading = { title: srTitle || "Second Reading", text: srText };
+      data.secondReading = { title: stripHtmlTags(srTitle) || "Second Reading", text: srText };
     }
 
     cache = { data, fetchedAt: Date.now(), dateKey: today };
