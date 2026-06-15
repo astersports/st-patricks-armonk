@@ -195,6 +195,123 @@ function HeroSection() {
   );
 }
 
+// === LIVE ACTIVITY BAR — Auto-rotating latest news + upcoming events ===
+function LiveActivityBar({ latestNews, allImportantDates }: { latestNews: any; allImportantDates: any[] | undefined }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Build activity items from news + events
+  const items = useMemo(() => {
+    const result: { type: "news" | "event"; title: string; subtitle: string; href: string; icon: "news" | "calendar"; dot?: string }[] = [];
+    
+    if (latestNews) {
+      result.push({
+        type: "news",
+        title: latestNews.title,
+        subtitle: format(new Date(latestNews.publishedAt || latestNews.createdAt), "MMM d, yyyy"),
+        href: "/news",
+        icon: "news",
+      });
+    }
+
+    const upcomingEvents = allImportantDates
+      ?.filter((e) => new Date(e.eventDate as unknown as string) >= new Date())
+      ?.slice(0, 3) || [];
+
+    const catDots: Record<string, string> = {
+      ccd: "bg-green-500", cyo: "bg-orange-500", sacrament: "bg-purple-500",
+      parish: "bg-primary", teen_life: "bg-blue-500", social: "bg-amber-500",
+    };
+
+    upcomingEvents.forEach((evt) => {
+      const eventDate = toEastern(evt.eventDate as unknown as string);
+      result.push({
+        type: "event",
+        title: evt.title,
+        subtitle: format(eventDate, "EEE, MMM d") + (evt.location ? ` · ${evt.location}` : ""),
+        href: "/calendar?filter=key-dates",
+        icon: "calendar",
+        dot: catDots[evt.category] || catDots.parish,
+      });
+    });
+
+    return result;
+  }, [latestNews, allImportantDates]);
+
+  // Auto-rotate every 5 seconds
+  useEffect(() => {
+    if (items.length <= 1) return;
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % items.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [items.length]);
+
+  if (items.length === 0) return null;
+
+  const current = items[activeIndex];
+
+  return (
+    <section className="reveal container -mt-8 relative z-20 mb-10 sm:mb-14">
+      <Card className="border-0 shadow-lg overflow-hidden hover-glow">
+        <CardContent className="p-0">
+          {/* Activity content with crossfade */}
+          <Link href={current.href} className="group block">
+            <div className="p-4 sm:p-5 flex items-center gap-4 hover:bg-primary/[0.02] transition-colors">
+              <div className={`w-11 h-11 rounded-full flex items-center justify-center shrink-0 ${
+                current.icon === "news" ? "bg-primary/10" : "bg-gold/10"
+              }`}>
+                {current.icon === "news" ? (
+                  <Newspaper className="w-5 h-5 text-primary" />
+                ) : (
+                  <Clock className="w-5 h-5 text-gold" />
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">
+                    {current.type === "news" ? "Latest News" : "Coming Up"}
+                  </p>
+                  {current.dot && <span className={`w-1.5 h-1.5 rounded-full ${current.dot}`} />}
+                </div>
+                <p className="font-semibold text-foreground text-sm sm:text-base truncate">{current.title}</p>
+                <p className="text-xs text-muted-foreground">{current.subtitle}</p>
+              </div>
+              <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+            </div>
+          </Link>
+
+          {/* Progress dots + quick links */}
+          <div className="px-4 sm:px-5 py-2.5 border-t border-border/30 flex items-center justify-between">
+            {/* Dots indicator */}
+            <div className="flex items-center gap-1.5">
+              {items.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveIndex(i)}
+                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                    i === activeIndex ? "bg-primary w-4" : "bg-border hover:bg-muted-foreground/50"
+                  }`}
+                  aria-label={`View item ${i + 1}`}
+                />
+              ))}
+            </div>
+            {/* Quick links */}
+            <div className="flex items-center gap-3">
+              <Link href="/news" className="text-xs font-medium text-primary hover:text-primary/80 transition-colors">
+                All News
+              </Link>
+              <span className="text-border">|</span>
+              <Link href="/calendar?filter=key-dates" className="text-xs font-medium text-primary hover:text-primary/80 transition-colors">
+                All Events
+              </Link>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </section>
+  );
+}
+
 function ThisWeeksBulletin() {
   const { data: bulletins, isLoading } = trpc.bulletins.listPublished.useQuery();
   const [showReader, setShowReader] = useState(false);
@@ -206,7 +323,7 @@ function ThisWeeksBulletin() {
       <section className="reveal container mb-10 sm:mb-14">
         <div className="animate-pulse">
           <div className="h-6 w-48 bg-muted rounded mb-4" />
-          <div className="h-48 bg-muted rounded-xl" />
+          <div className="h-32 bg-muted rounded-xl" />
         </div>
       </section>
     );
@@ -238,40 +355,46 @@ function ThisWeeksBulletin() {
         />
       ) : (
         <Card
-          className="overflow-hidden border-0 shadow-md hover:shadow-lg transition-shadow cursor-pointer group"
+          className="overflow-hidden border-0 shadow-lg cursor-pointer group card-interactive bg-gradient-to-r from-primary/[0.03] via-transparent to-gold/[0.03]"
           onClick={() => setShowReader(true)}
         >
-          <CardContent className="p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-gradient-to-br from-primary to-parish-green-dark flex items-center justify-center shrink-0">
-              <BookOpen className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs text-muted-foreground mb-0.5">
-                Week of {format(weekDate, "MMMM d, yyyy")}
-              </p>
-              <h3 className="font-serif text-base sm:text-lg font-semibold text-foreground truncate group-hover:text-primary transition-colors">
-                {latestBulletin.title}
-              </h3>
-              {latestBulletin.description && (
-                <p className="text-sm text-muted-foreground mt-0.5 line-clamp-1">{latestBulletin.description}</p>
-              )}
-              <p className="text-xs text-primary font-medium mt-2 flex items-center gap-1">
-                <BookOpen className="w-3.5 h-3.5" />
-                Tap to read bulletin
-              </p>
-            </div>
-            <div className="flex gap-2 shrink-0">
-              <a
-                href={latestBulletin.pdfUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Button variant="outline" size="sm" className="gap-1.5">
-                  <Download className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Download</span>
-                </Button>
-              </a>
+          <CardContent className="p-0">
+            <div className="flex items-stretch">
+              {/* Left accent strip */}
+              <div className="w-1.5 sm:w-2 bg-gradient-to-b from-primary via-primary to-gold shrink-0 rounded-l-xl" />
+              
+              {/* Content */}
+              <div className="flex-1 p-4 sm:p-5 flex items-center gap-4">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-primary to-parish-green-dark flex items-center justify-center shrink-0 shadow-md group-hover:shadow-lg transition-shadow">
+                  <BookOpen className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <span className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                      Week of {format(weekDate, "MMMM d, yyyy")}
+                    </span>
+                  </div>
+                  <h3 className="font-serif text-sm sm:text-base font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+                    {latestBulletin.title}
+                  </h3>
+                  <p className="text-xs text-primary/80 font-medium mt-1 flex items-center gap-1 group-hover:text-primary transition-colors">
+                    <BookOpen className="w-3 h-3" />
+                    Tap to read bulletin
+                  </p>
+                </div>
+                <a
+                  href={latestBulletin.pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="shrink-0"
+                >
+                  <Button variant="outline" size="sm" className="gap-1.5 press-scale">
+                    <Download className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Download</span>
+                  </Button>
+                </a>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -852,96 +975,8 @@ export default function Home() {
       <HeroSection />
 
       <div ref={revealRef}>
-        {/* What's Happening — Latest News + Next Event */}
-        <section className="reveal container -mt-8 relative z-20 mb-10 sm:mb-14">
-          <Card className="border-0 shadow-lg overflow-hidden hover-glow">
-            <CardContent className="p-0">
-              {/* Latest News */}
-              <div className="border-b border-border/50">
-                <Link href="/news" className="group">
-                  <div className="p-4 sm:p-5 flex items-center gap-4 hover:bg-primary/[0.02] transition-colors">
-                    <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <Newspaper className="w-5 h-5 text-primary" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Latest News</p>
-                      {latestNews ? (
-                        <>
-                          <p className="font-semibold text-foreground text-sm sm:text-base truncate">{latestNews.title}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {format(new Date(latestNews.publishedAt || latestNews.createdAt), "MMM d, yyyy")}
-                          </p>
-                        </>
-                      ) : (
-                        <>
-                          <p className="font-semibold text-foreground text-sm sm:text-base">News & Announcements</p>
-                          <p className="text-xs text-muted-foreground">Parish updates and community news</p>
-                        </>
-                      )}
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
-                  </div>
-                </Link>
-                <Link href="/news" className="group">
-                  <div className="px-4 sm:px-5 py-2 flex items-center justify-center gap-1.5 text-xs font-medium text-primary hover:bg-primary/[0.03] transition-colors border-t border-border/30">
-                    View all news <ArrowRight className="w-3 h-3" />
-                  </div>
-                </Link>
-              </div>
-
-              {/* Next Event */}
-              <div className="border-b border-border/50">
-                {(() => {
-                  const nextEvent = allImportantDates
-                    ?.filter((e) => new Date(e.eventDate as unknown as string) >= new Date())
-                    ?.[0];
-                  if (!nextEvent) return (
-                    <div className="p-4 sm:p-5 text-center text-sm text-muted-foreground">No upcoming events</div>
-                  );
-                  const catColors: Record<string, { dot: string }> = {
-                    ccd: { dot: "bg-green-500" },
-                    cyo: { dot: "bg-orange-500" },
-                    sacrament: { dot: "bg-purple-500" },
-                    parish: { dot: "bg-primary" },
-                    teen_life: { dot: "bg-blue-500" },
-                    social: { dot: "bg-amber-500" },
-                  };
-                  const cat = catColors[nextEvent.category] || catColors.parish;
-                  const eventDate = toEastern(nextEvent.eventDate as unknown as string);
-                  return (
-                    <div className="p-4 sm:p-5 flex items-center gap-4">
-                      <div className="w-11 h-11 rounded-lg bg-gold/10 flex flex-col items-center justify-center shrink-0">
-                        <span className="text-[10px] font-medium text-gold uppercase leading-none">
-                          {format(eventDate, "MMM")}
-                        </span>
-                        <span className="text-base font-bold text-gold leading-tight">
-                          {format(eventDate, "d")}
-                        </span>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Next Event</p>
-                        <div className="flex items-center gap-1.5">
-                          <span className={`w-1.5 h-1.5 rounded-full ${cat.dot} shrink-0`} />
-                          <p className="font-semibold text-foreground text-sm sm:text-base truncate">{nextEvent.title}</p>
-                        </div>
-                        <p className="text-xs text-muted-foreground">
-                          {nextEvent.location && <span>{nextEvent.location}</span>}
-                          {nextEvent.location && nextEvent.note && <span> · </span>}
-                          {nextEvent.note && <span>{nextEvent.note}</span>}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })()}
-                <Link href="/calendar?filter=key-dates" className="group">
-                  <div className="px-4 sm:px-5 py-2 flex items-center justify-center gap-1.5 text-xs font-medium text-primary hover:bg-primary/[0.03] transition-colors border-t border-border/30">
-                    View all events <ArrowRight className="w-3 h-3" />
-                  </div>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
+        {/* Live Activity Bar — Auto-rotating news + events */}
+        <LiveActivityBar latestNews={latestNews} allImportantDates={allImportantDates} />
 
         {/* Pastor's Welcome */}
         <section className="reveal container py-8 sm:py-12 mb-2 sm:mb-6">

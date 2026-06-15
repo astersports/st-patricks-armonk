@@ -368,7 +368,7 @@
 - [x] Redesign hero: time-of-day greeting, next mass countdown, Ken Burns zoom on background
 - [x] Add section rhythm: alternating white/cream/dark backgrounds between sections
 - [x] Redesign Daily Readings as dark premium section with elegant serif typography and gold accents
-- [ ] Replace static Latest News with live activity bar (auto-rotating cards showing what's happening now)
+- [x] Replace static Latest News with live activity bar (auto-rotating cards showing what's happening now)
 - [x] Redesign newsletter CTA: full-width dark section with pattern background
 - [x] Polish journey cards: horizontal scroll on mobile with snap, animated icons
-- [ ] Polish bulletin card: hero-style featured content treatment
+- [x] Polish bulletin card: hero-style featured content treatment
