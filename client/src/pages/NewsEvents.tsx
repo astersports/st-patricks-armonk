@@ -1,11 +1,15 @@
+import { useState } from "react";
 import PageLayout from "@/components/PageLayout";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Newspaper } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Newspaper, Bell, Mail, CheckCircle2 } from "lucide-react";
 import { format } from "date-fns";
 import { useReveal } from "@/hooks/useReveal";
+import { toast } from "sonner";
 
 const accentColors = [
   "border-l-[oklch(0.42_0.12_150)]",
@@ -13,6 +17,114 @@ const accentColors = [
   "border-l-[oklch(0.5_0.12_250)]",
   "border-l-[oklch(0.55_0.15_25)]",
 ];
+
+function NewsSubscribeCTA() {
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const subscribeMutation = trpc.subscriptions.subscribe.useMutation({
+    onSuccess: (data) => {
+      setSubmitted(true);
+      toast.success(data.message || "You're subscribed!");
+    },
+    onError: (err) => {
+      toast.error(err.message || "Something went wrong. Please try again.");
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) {
+      toast.error("Please enter your email address");
+      return;
+    }
+    subscribeMutation.mutate({
+      email,
+      name: name || undefined,
+      subscribedToNews: true,
+      subscribedToBulletins: false,
+    });
+  };
+
+  if (submitted) {
+    return (
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/5 via-primary/3 to-transparent border border-primary/10 p-8 sm:p-10">
+        <div className="text-center max-w-md mx-auto">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-4">
+            <CheckCircle2 className="w-7 h-7 text-primary" />
+          </div>
+          <h3 className="font-serif text-xl font-bold mb-2">You're Subscribed!</h3>
+          <p className="text-muted-foreground text-sm">
+            You'll receive email notifications when new parish news is posted.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/5 via-primary/3 to-transparent border border-primary/10 p-8 sm:p-10">
+      <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl" />
+      <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-primary/5 rounded-full blur-3xl" />
+
+      <div className="relative flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-10">
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10">
+              <Bell className="w-4.5 h-4.5 text-primary" />
+            </div>
+            <span className="text-xs font-semibold uppercase tracking-wider text-primary">Stay Updated</span>
+          </div>
+          <h3 className="font-serif text-xl sm:text-2xl font-bold mb-2">Get News Delivered to Your Inbox</h3>
+          <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+            Subscribe to receive parish news and announcements by email — no account needed.
+          </p>
+        </div>
+
+        <div className="w-full lg:w-auto lg:min-w-[340px]">
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/60" />
+              <Input
+                type="email"
+                placeholder="Your email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="pl-10 h-11"
+                required
+              />
+            </div>
+            <Input
+              type="text"
+              placeholder="Your name (optional)"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="h-11"
+            />
+            <Button
+              type="submit"
+              className="w-full h-11 gap-2 font-medium"
+              disabled={subscribeMutation.isPending}
+            >
+              {subscribeMutation.isPending ? (
+                "Subscribing..."
+              ) : (
+                <>
+                  <Mail className="w-4 h-4" />
+                  Subscribe to News Updates
+                </>
+              )}
+            </Button>
+            <p className="text-xs text-muted-foreground/70 text-center">
+              Unsubscribe anytime. We respect your privacy.
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function NewsEvents() {
   const { data: news, isLoading: newsLoading } = trpc.news.listPublished.useQuery();
@@ -78,6 +190,11 @@ export default function NewsEvents() {
           )}
         </section>
       </div>
+
+      {/* Subscribe to News CTA */}
+      <section className="container pb-12 sm:pb-16">
+        <NewsSubscribeCTA />
+      </section>
     </PageLayout>
   );
 }
