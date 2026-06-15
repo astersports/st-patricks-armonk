@@ -291,3 +291,4 @@
 - [x] Remove standalone /key-dates route (redirect to /calendar?filter=key-dates)
 - [x] Write recommendation note for pastor about consolidating Google Calendars into one with labels
 - [x] Add print-friendly button on Key Dates tab that generates clean bulletin board layout
+- [x] Add News & Announcements / Upcoming Events toggle to homepage Latest News section

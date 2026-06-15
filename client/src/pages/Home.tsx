@@ -63,7 +63,9 @@ const journeyCards = [
 
 export default function Home() {
   const [email, setEmail] = useState("");
+  const [homeTab, setHomeTab] = useState<"news" | "events">("news");
   const { data: newsItems } = trpc.news.listPublished.useQuery();
+  const { data: upcomingEvents } = trpc.events.listUpcoming.useQuery();
   const { data: allImportantDates } = trpc.importantDates.allPublished.useQuery();
   const subscribeMutation = trpc.subscriptions.subscribe.useMutation({
     onSuccess: () => {
@@ -123,31 +125,109 @@ export default function Home() {
         <section className="reveal container -mt-8 relative z-20 mb-10 sm:mb-14">
           <Card className="border-0 shadow-lg overflow-hidden">
             <CardContent className="p-0">
-              {/* Latest News row */}
-              <Link href="/news-events" className="group">
-                <div className="p-4 sm:p-5 flex items-center gap-4 hover:bg-primary/[0.02] transition-colors border-b border-border/50">
-                  <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                    <Newspaper className="w-5 h-5 text-primary" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Latest News</p>
-                    {latestNews ? (
-                      <>
-                        <p className="font-semibold text-foreground text-sm sm:text-base truncate">{latestNews.title}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {format(new Date(latestNews.publishedAt || latestNews.createdAt), "MMM d, yyyy")}
-                        </p>
-                      </>
-                    ) : (
-                      <>
-                        <p className="font-semibold text-foreground text-sm sm:text-base">News & Announcements</p>
-                        <p className="text-xs text-muted-foreground">Parish updates and community news</p>
-                      </>
-                    )}
-                  </div>
-                  <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+              {/* News / Events Toggle */}
+              <div className="px-4 sm:px-5 pt-3 pb-2 border-b border-border/50">
+                <div className="flex gap-1 p-0.5 bg-muted/50 rounded-lg w-fit">
+                  <button
+                    onClick={() => setHomeTab("news")}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all ${
+                      homeTab === "news"
+                        ? "bg-white shadow-sm text-foreground"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <Newspaper className="w-3.5 h-3.5" />
+                    News
+                  </button>
+                  <button
+                    onClick={() => setHomeTab("events")}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all ${
+                      homeTab === "events"
+                        ? "bg-white shadow-sm text-foreground"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <Calendar className="w-3.5 h-3.5" />
+                    Events
+                  </button>
                 </div>
-              </Link>
+              </div>
+
+              {/* Tab Content */}
+              {homeTab === "news" ? (
+                <Link href="/news-events" className="group">
+                  <div className="p-4 sm:p-5 flex items-center gap-4 hover:bg-primary/[0.02] transition-colors border-b border-border/50">
+                    <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                      <Newspaper className="w-5 h-5 text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Latest News</p>
+                      {latestNews ? (
+                        <>
+                          <p className="font-semibold text-foreground text-sm sm:text-base truncate">{latestNews.title}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {format(new Date(latestNews.publishedAt || latestNews.createdAt), "MMM d, yyyy")}
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <p className="font-semibold text-foreground text-sm sm:text-base">News & Announcements</p>
+                          <p className="text-xs text-muted-foreground">Parish updates and community news</p>
+                        </>
+                      )}
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+                  </div>
+                </Link>
+              ) : (
+                <div className="border-b border-border/50">
+                  {upcomingEvents && upcomingEvents.length > 0 ? (
+                    <div className="divide-y divide-border/30">
+                      {upcomingEvents.slice(0, 4).map((event: any) => {
+                        const eventDate = new Date(event.startDate);
+                        return (
+                          <div key={event.id} className="px-4 sm:px-5 py-3 flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-lg bg-gold/10 flex flex-col items-center justify-center shrink-0">
+                              <span className="text-[10px] font-medium text-gold uppercase leading-none">
+                                {format(eventDate, "MMM")}
+                              </span>
+                              <span className="text-sm font-bold text-gold leading-tight">
+                                {format(eventDate, "d")}
+                              </span>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-semibold text-foreground text-sm truncate">{event.title}</p>
+                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                {!event.allDay && (
+                                  <span className="flex items-center gap-0.5">
+                                    <Clock className="w-3 h-3" />
+                                    {format(eventDate, "h:mm a")}
+                                  </span>
+                                )}
+                                {event.location && (
+                                  <span className="flex items-center gap-0.5">
+                                    <MapPin className="w-3 h-3" />
+                                    <span className="truncate max-w-[120px]">{event.location}</span>
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="px-4 sm:px-5 py-6 text-center text-sm text-muted-foreground">
+                      No upcoming events this week
+                    </div>
+                  )}
+                  <Link href="/news-events" className="group">
+                    <div className="px-4 sm:px-5 py-2.5 flex items-center justify-center gap-1.5 text-xs font-medium text-primary hover:bg-primary/[0.03] transition-colors">
+                      View all events <ArrowRight className="w-3 h-3" />
+                    </div>
+                  </Link>
+                </div>
+              )}
 
               {/* Key Dates — next 5 important parish dates */}
               <div className="border-b border-border/50">
