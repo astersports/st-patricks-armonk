@@ -410,38 +410,13 @@ export default function Navigation() {
         <div className="bg-primary text-white py-2 overflow-hidden relative">
           <div className="announcement-marquee flex whitespace-nowrap">
             {[0, 1].map((i) => (
-              <div key={i} className="flex items-center gap-8 px-4 shrink-0 announcement-marquee-content">
+              <div key={i} className="flex items-center gap-12 px-8 shrink-0 announcement-marquee-content">
                 <Link
                   href="/parish-registration"
                   className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium hover:underline transition-all"
                 >
                   <span>New to St. Patrick in Armonk?</span>
                   <span className="font-semibold">Register as a Parishioner</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-                <span className="text-white/40">•</span>
-                <Link
-                  href="/calendar"
-                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium hover:underline transition-all"
-                >
-                  <span className="font-semibold">View Parish Calendar</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-                <span className="text-white/40">•</span>
-                <Link
-                  href="/gallery"
-                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium hover:underline transition-all"
-                >
-                  <span className="font-semibold">Photo Gallery</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-                <span className="text-white/40">•</span>
-                <Link
-                  href="/giving"
-                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium hover:underline transition-all"
-                >
-                  <span>Support Our Parish —</span>
-                  <span className="font-semibold">Give Online</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
                 <span className="text-white/40">•</span>

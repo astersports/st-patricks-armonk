@@ -1,7 +1,7 @@
 import PageLayout from "@/components/PageLayout";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin, Clock, ExternalLink, Globe } from "lucide-react";
+import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin, Clock, ExternalLink, Globe, Camera, ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -60,6 +60,100 @@ const journeyCards = [
     borderColor: "border-l-accent",
   },
 ];
+
+function PhotoGallerySection() {
+  const { data: photos, isLoading } = trpc.gallery.listPublished.useQuery(undefined);
+
+  if (isLoading) {
+    return (
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+              <Camera className="w-4 h-4 text-primary" />
+            </div>
+            <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">Photo Gallery</h2>
+          </div>
+        </div>
+        <div className="flex gap-3 overflow-hidden">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="shrink-0 w-48 h-36 rounded-lg bg-muted animate-pulse" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (!photos || photos.length === 0) {
+    return (
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+              <Camera className="w-4 h-4 text-primary" />
+            </div>
+            <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">Photo Gallery</h2>
+          </div>
+          <Link href="/gallery" className="text-sm text-primary font-medium inline-flex items-center gap-1 hover:underline">
+            View All <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+        <Card className="border-dashed">
+          <CardContent className="p-8 flex flex-col items-center text-center">
+            <ImageIcon className="w-10 h-10 text-muted-foreground/40 mb-2" />
+            <p className="text-muted-foreground text-sm">Photos coming soon!</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+            <Camera className="w-4 h-4 text-primary" />
+          </div>
+          <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">Photo Gallery</h2>
+        </div>
+        <Link href="/gallery" className="text-sm text-primary font-medium inline-flex items-center gap-1 hover:underline">
+          View All <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
+      </div>
+      <div className="relative">
+        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory">
+          {photos.map((photo) => (
+            <Link
+              key={photo.id}
+              href="/gallery"
+              className="shrink-0 w-48 sm:w-56 h-36 sm:h-44 rounded-lg overflow-hidden relative group snap-start"
+            >
+              <img
+                src={photo.imageUrl}
+                alt={photo.caption || photo.title || "Parish photo"}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+              {photo.caption && (
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-2">
+                  <p className="text-white text-xs truncate">{photo.caption}</p>
+                </div>
+              )}
+            </Link>
+          ))}
+          {/* "View All" card at end */}
+          <Link
+            href="/gallery"
+            className="shrink-0 w-48 sm:w-56 h-36 sm:h-44 rounded-lg border-2 border-dashed border-primary/20 flex flex-col items-center justify-center gap-2 hover:border-primary/40 transition-colors snap-start"
+          >
+            <Camera className="w-6 h-6 text-primary/60" />
+            <span className="text-sm text-primary font-medium">View All Photos</span>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function SaintOfDaySkeleton() {
   return (
@@ -604,6 +698,11 @@ export default function Home() {
               ))}
             </div>
           </div>
+        </section>
+
+        {/* Photo Gallery */}
+        <section className="reveal container mb-10 sm:mb-14">
+          <PhotoGallerySection />
         </section>
 
         {/* Catholic Resources — Live Feeds + Quick Links */}

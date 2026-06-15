@@ -352,3 +352,5 @@
 - [x] Migrate all existing manager components into new sidebar structure (News, Bulletins, Events, CCD, CYO, Volunteers, Documents, Subscribers, Sacraments, Registrations, Permissions, Key Dates)
 - [x] Add user/role management section for admin to assign department head roles
 - [x] Mobile-optimized admin sidebar with collapsible navigation
+- [x] Simplify scrolling marquee banner to just "Register as a Parishioner" (remove calendar, gallery, giving links)
+- [x] Add Photo Gallery section to homepage (scrolling gallery display)
