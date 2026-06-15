@@ -99,7 +99,10 @@ export default function Home() {
           <p className="text-lg sm:text-xl text-white/90 font-light animate-fade-up stagger-1">
             Armonk, New York
           </p>
-          <p className="text-white/70 text-sm sm:text-base max-w-md mx-auto mt-3 mb-8 animate-fade-up stagger-2">
+          <p className="text-white/90 text-sm sm:text-base italic mt-4 mb-2 animate-fade-up stagger-2 tracking-wide">
+            "God Bless the Whole World — No Exceptions"
+          </p>
+          <p className="text-white/60 text-xs sm:text-sm max-w-md mx-auto mb-8 animate-fade-up stagger-3">
             A welcoming Catholic community rooted in faith, service, and love.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center animate-fade-up stagger-3">
