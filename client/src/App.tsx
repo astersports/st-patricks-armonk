@@ -33,6 +33,7 @@ import ParishRegistration from "./pages/ParishRegistration";
 import CcdPermissions from "./pages/CcdPermissions";
 import NewHere from "./pages/NewHere";
 import PhotoGallery from "./pages/PhotoGallery";
+import Prayers from "./pages/Prayers";
 // KeyDates is now integrated into AllCalendars page
 
 function Router() {
@@ -67,6 +68,7 @@ function Router() {
         <Route path="/sponsor-form" component={SponsorForm} />
         <Route path="/marriage-form" component={MarriageForm} />
         <Route path="/funeral-form" component={FuneralForm} />
+        <Route path="/prayers" component={Prayers} />
         <Route path="/giving" component={Giving} />
         <Route path="/contact" component={Contact} />
         <Route path="/admin" component={AdminRouter} nest />

@@ -233,12 +233,12 @@ function NowAtStPatrick({ latestNews, allImportantDates }: { latestNews: any; al
   return (
     <section className="reveal container -mt-8 relative z-20 mb-4 sm:mb-6">
       {/* Live Status Tiles */}
-      <div className="mb-3">
+      <div className="mb-5 pb-4 border-b border-border/40">
         <NowStatusBar />
       </div>
 
       {/* Latest News — separate card */}
-      <Card className="border-0 shadow-lg overflow-hidden mb-3">
+      <Card className="border border-border/50 shadow-md overflow-hidden mb-3">
         <CardContent className="p-0">
           <Link href="/news" className="group block">
             <div className="px-3 py-2.5 sm:px-4 sm:py-3 flex items-center gap-3 hover:bg-primary/[0.02] transition-colors">

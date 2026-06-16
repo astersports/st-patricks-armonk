@@ -65,13 +65,10 @@ interface ThisWeekAccordionProps {
 
 export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
   const now = useMemo(() => new Date(new Date().toLocaleString("en-US", { timeZone: TIMEZONE })), []);
-  const todayDayOfWeek = now.getDay();
 
-  const [selectedDay, setSelectedDay] = useState<number>(todayDayOfWeek);
-
+  // Build 7 days starting from today
   const days = useMemo(() => {
     const result = [];
-    // Start from today, show 7 days
     for (let i = 0; i < 7; i++) {
       const date = addDays(now, i);
       const dayOfWeek = date.getDay();
@@ -88,18 +85,23 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
       });
 
       result.push({
+        index: i,
         dayOfWeek,
         date,
         services,
         events: dayEvents,
         isToday: i === 0,
+        label: DAY_LABELS[dayOfWeek],
+        dateNum: date.getDate(),
       });
     }
     return result;
   }, [events, now]);
 
+  const [selectedIndex, setSelectedIndex] = useState<number>(0); // Start on today
+
   // Get the selected day's data
-  const selectedDayData = days.find((d) => d.dayOfWeek === selectedDay);
+  const selectedDayData = days[selectedIndex];
   const services = selectedDayData?.services || [];
   const dayEvents = selectedDayData?.events || [];
 
@@ -120,27 +122,29 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
         </span>
       </div>
 
-      {/* Horizontal day tabs */}
+      {/* Horizontal day tabs — starting from today */}
       <div className="flex border-b border-border/30">
-        {DAY_LABELS.map((label, idx) => {
-          const isSelected = selectedDay === idx;
-          const isToday = todayDayOfWeek === idx;
+        {days.map((day) => {
+          const isSelected = selectedIndex === day.index;
           return (
             <button
-              key={label}
-              onClick={() => setSelectedDay(idx)}
-              className={`flex-1 py-2.5 text-center transition-all duration-150 relative ${
+              key={day.index}
+              onClick={() => setSelectedIndex(day.index)}
+              className={`flex-1 py-2 text-center transition-all duration-150 relative flex flex-col items-center gap-0.5 ${
                 isSelected
                   ? "bg-primary text-white font-bold"
                   : "hover:bg-muted/40 text-muted-foreground"
               }`}
             >
-              <span className={`text-[10px] sm:text-[11px] font-semibold ${isSelected ? "text-white" : ""}`}>
-                {label}
+              <span className={`text-[9px] sm:text-[10px] font-semibold ${isSelected ? "text-white/80" : ""}`}>
+                {day.label}
               </span>
-              {/* Today dot indicator */}
-              {isToday && !isSelected && (
-                <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
+              <span className={`text-[11px] sm:text-xs font-bold ${isSelected ? "text-white" : "text-foreground/70"}`}>
+                {day.dateNum}
+              </span>
+              {/* Today indicator */}
+              {day.isToday && !isSelected && (
+                <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
               )}
             </button>
           );
@@ -152,7 +156,7 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
         {/* Day label */}
         <div className="flex items-center justify-between mb-2.5">
           <h3 className="text-sm font-bold text-foreground">
-            {selectedDay === todayDayOfWeek ? "Today" : format(new Date(2024, 0, selectedDay === 0 ? 7 : selectedDay), "EEEE")}
+            {selectedDayData?.isToday ? "Today" : format(selectedDayData?.date || now, "EEEE")}
           </h3>
           {services.length === 0 && dayEvents.length === 0 && (
             <span className="text-[10px] text-muted-foreground italic">No services</span>
@@ -177,7 +181,7 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      const dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][selectedDay];
+                      const dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][selectedDayData?.dayOfWeek || 0];
                       downloadMassICS({
                         title: `${svc.label} - St. Patrick in Armonk`,
                         day: dayName,

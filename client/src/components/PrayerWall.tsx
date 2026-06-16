@@ -3,6 +3,7 @@ import { trpc } from "@/lib/trpc";
 import { Send, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { Link } from "wouter";
 
 function timeAgo(dateStr: string): string {
   const now = Date.now();
@@ -232,36 +233,33 @@ export function PrayerWall() {
           </form>
         )}
 
-        {/* Prayer Intentions List */}
+        {/* Prayer Intentions List — compact tiles */}
         {intentions.length > 0 && (
-          <div className="mt-8 border-t border-amber-800/30 pt-5">
-            <div className="flex items-center justify-between mb-3">
+          <div className="mt-6 border-t border-amber-800/30 pt-4">
+            <div className="flex items-center justify-between mb-2">
               <p className="text-sm font-semibold text-amber-200">Community Prayers</p>
               <p className="text-[11px] text-amber-400/50">{intentions.length} shared</p>
             </div>
-            <div className="space-y-2.5 max-h-56 overflow-y-auto pr-1 scrollbar-thin">
+            <div className="grid grid-cols-2 gap-1.5 max-h-48 overflow-y-auto pr-1 scrollbar-thin">
               {intentions.slice(0, 10).map((item) => (
-                <div key={item.id} className="group flex items-start gap-3 py-2.5 px-3 rounded-lg bg-amber-900/15 border border-amber-800/20 hover:border-amber-700/30 transition-colors">
-                  <div className="shrink-0 mt-0.5">
-                    <svg className="w-4 h-4 text-amber-400 opacity-70" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 2C12 2 8 8 8 12a4 4 0 008 0c0-4-4-10-4-10z" />
-                    </svg>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-xs text-amber-100/90 leading-relaxed">{item.intention}</p>
-                    <div className="flex items-center gap-2 mt-1.5">
-                      {item.name && (
-                        <span className="text-[10px] text-amber-300/60 font-medium">— {item.name}</span>
-                      )}
-                      <span className="text-[10px] text-amber-400/40 flex items-center gap-0.5">
-                        <Clock className="w-2.5 h-2.5" />
-                        {timeAgo(typeof item.createdAt === 'string' ? item.createdAt : new Date(item.createdAt).toISOString())}
-                      </span>
-                    </div>
+                <div key={item.id} className="py-1.5 px-2.5 rounded-md bg-amber-900/15 border border-amber-800/20">
+                  <p className="text-[11px] text-amber-100/90 leading-snug line-clamp-2">{item.intention}</p>
+                  <div className="flex items-center gap-1.5 mt-1">
+                    {item.name && (
+                      <span className="text-[9px] text-amber-300/60 font-medium truncate max-w-[60px]">— {item.name}</span>
+                    )}
+                    <span className="text-[9px] text-amber-400/40">
+                      {timeAgo(typeof item.createdAt === 'string' ? item.createdAt : new Date(item.createdAt).toISOString())}
+                    </span>
                   </div>
                 </div>
               ))}
             </div>
+            {intentions.length > 10 && (
+              <Link href="/prayers" className="flex items-center justify-center gap-1 mt-3 text-[11px] font-medium text-amber-300 hover:text-amber-200 transition-colors">
+                View all {intentions.length} prayers <span className="text-xs">→</span>
+              </Link>
+            )}
           </div>
         )}
       </div>

@@ -356,15 +356,15 @@ function MobileMenu({ location, isAuthenticated, isAdmin, onClose }: {
               </div>
             ))}
             {isAuthenticated && isAdmin && (
-              <div>
+              <div className="border-t border-border/50 pt-3 mt-2">
                 <h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70 px-3 mb-1">
-                  Admin
+                  Administration
                 </h3>
                 <Link
                   href="/admin"
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold text-accent"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold text-primary bg-primary/5"
                 >
-                  <Church className="w-4 h-4 text-accent" />
+                  <Church className="w-4 h-4 text-primary" />
                   Admin Dashboard
                 </Link>
               </div>

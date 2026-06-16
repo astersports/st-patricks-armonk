@@ -438,3 +438,12 @@
 - [x] Add "Back to Dashboard" breadcrumb at top of each admin sub-page for easier navigation
 - [x] Add push notifications in admin dashboard when new form submissions arrive (baptism, marriage, registration, CCD, teen life) — notifyOwner already fires on each submission + added Recent Form Submissions activity feed on dashboard
 - [x] Add Quick Edit mode for homepage announcement banner text directly from admin dashboard home
+
+## Phase: Homepage Mobile Fixes
+
+- [x] Add Admin link to mobile hamburger menu (not visible currently)
+- [x] Add color/visual separation between NowStatusBar tiles and Latest News section
+- [x] Fix This Week to start from current day and show next 7 days (not fixed SUN-SAT week)
+- [x] Make Prayer Wall tiles shorter/compact instead of tall cards (2-column grid)
+- [x] Limit Prayer Wall on homepage to latest 10 intentions
+- [x] Move full prayer list to a dedicated /prayers page with "View All" link
