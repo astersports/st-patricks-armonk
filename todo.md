@@ -401,3 +401,4 @@
 - [x] Compact Saint of the Day: truncate biography, reduce card padding
 - [x] Compact Catholic Resources: collapse sources by default, tighter rows
 - [x] Tighten section spacing across entire homepage
+- [x] Redesign Mass Times page with interactive day-tabbed schedule (tap Mon/Tue/Wed etc. to see that day's services)
