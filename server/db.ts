@@ -894,3 +894,68 @@ export async function getPrayerIntentionCount() {
     .where(gte(prayerIntentions.createdAt, sevenDaysAgo));
   return result.count;
 }
+
+// ===== RECENT FORM SUBMISSIONS (Activity Feed) =====
+
+export async function getRecentFormSubmissions(limit = 15) {
+  const db = await getDb();
+  if (!db) return [];
+
+  // Query recent submissions from all form tables
+  const [baptisms, marriages, ccdRegs, parishRegs, teenLife, permissions] = await Promise.all([
+    db.select({
+      id: baptismRegistrations.id,
+      name: sql<string>`CONCAT(${baptismRegistrations.childFirstName}, ' ', ${baptismRegistrations.childLastName})`,
+      status: baptismRegistrations.status,
+      createdAt: baptismRegistrations.createdAt,
+    }).from(baptismRegistrations).orderBy(desc(baptismRegistrations.createdAt)).limit(5),
+
+    db.select({
+      id: marriageInquiries.id,
+      name: sql<string>`CONCAT(${marriageInquiries.brideFirstName}, ' ', ${marriageInquiries.brideLastName}, ' & ', ${marriageInquiries.groomFirstName}, ' ', ${marriageInquiries.groomLastName})`,
+      status: marriageInquiries.status,
+      createdAt: marriageInquiries.createdAt,
+    }).from(marriageInquiries).orderBy(desc(marriageInquiries.createdAt)).limit(5),
+
+    db.select({
+      id: ccdRegistrations.id,
+      name: sql<string>`CONCAT(${ccdRegistrations.childFirstName}, ' ', ${ccdRegistrations.childLastName})`,
+      status: ccdRegistrations.status,
+      createdAt: ccdRegistrations.createdAt,
+    }).from(ccdRegistrations).orderBy(desc(ccdRegistrations.createdAt)).limit(5),
+
+    db.select({
+      id: parishRegistrations.id,
+      name: parishRegistrations.headOfHousehold,
+      status: parishRegistrations.status,
+      createdAt: parishRegistrations.createdAt,
+    }).from(parishRegistrations).orderBy(desc(parishRegistrations.createdAt)).limit(5),
+
+    db.select({
+      id: teenLifeRegistrations.id,
+      name: sql<string>`CONCAT(${teenLifeRegistrations.teenFirstName}, ' ', ${teenLifeRegistrations.teenLastName})`,
+      status: teenLifeRegistrations.status,
+      createdAt: teenLifeRegistrations.createdAt,
+    }).from(teenLifeRegistrations).orderBy(desc(teenLifeRegistrations.createdAt)).limit(5),
+
+    db.select({
+      id: ccdPermissions.id,
+      name: sql<string>`CONCAT(${ccdPermissions.childFirstName}, ' ', ${ccdPermissions.childLastName})`,
+      status: sql<string>`'submitted'`,
+      createdAt: ccdPermissions.createdAt,
+    }).from(ccdPermissions).orderBy(desc(ccdPermissions.createdAt)).limit(5),
+  ]);
+
+  // Combine and sort by date
+  const all = [
+    ...baptisms.map(r => ({ ...r, type: "baptism" as const })),
+    ...marriages.map(r => ({ ...r, type: "marriage" as const })),
+    ...ccdRegs.map(r => ({ ...r, type: "ccd" as const })),
+    ...parishRegs.map(r => ({ ...r, type: "parish_registration" as const })),
+    ...teenLife.map(r => ({ ...r, type: "teen_life" as const })),
+    ...permissions.map(r => ({ ...r, type: "ccd_permission" as const })),
+  ];
+
+  all.sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime());
+  return all.slice(0, limit);
+}

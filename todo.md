@@ -432,3 +432,9 @@
 - [x] Fix admin tiles not working (clicking does nothing) — was double /admin/admin/ path from wouter nested routing
 - [x] Add home/back button navigation when viewing admin section (home icon in mobile header, View Site in sidebar)
 - [x] Fix YouTube link to correct URL: https://www.youtube.com/@StPatricksArmonk
+
+## Phase: Admin UX Improvements (3 Features)
+
+- [x] Add "Back to Dashboard" breadcrumb at top of each admin sub-page for easier navigation
+- [x] Add push notifications in admin dashboard when new form submissions arrive (baptism, marriage, registration, CCD, teen life) — notifyOwner already fires on each submission + added Recent Form Submissions activity feed on dashboard
+- [x] Add Quick Edit mode for homepage announcement banner text directly from admin dashboard home

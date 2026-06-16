@@ -1071,6 +1071,9 @@ export const appRouter = router({
     overview: staffProcedure.query(async () => {
       return db.getAdminStats();
     }),
+    recentActivity: staffProcedure.query(async () => {
+      return db.getRecentFormSubmissions(12);
+    }),
   }),
 
   // ===== USER MANAGEMENT =====

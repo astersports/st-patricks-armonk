@@ -8,7 +8,7 @@ import { type UserRole, type AdminSection, hasAccess, isStaffRole, ROLE_LABELS }
 import {
   Shield, Menu, X, Home, Newspaper, FileText, Calendar,
   Users, Camera, Heart, BookOpen, GraduationCap, Cross,
-  UserPlus, ChevronDown, LogOut, Settings,
+  UserPlus, ChevronDown, LogOut, Settings, ChevronRight,
 } from "lucide-react";
 
 type NavGroup = {
@@ -258,11 +258,33 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
         {/* Page Content */}
         <div className="p-4 sm:p-6 lg:p-8">
+          {location !== "/" && (
+            <nav className="mb-4 flex items-center gap-1.5 text-sm text-muted-foreground">
+              <Link href="/" className="hover:text-primary transition-colors flex items-center gap-1">
+                <Home className="w-3.5 h-3.5" />
+                Dashboard
+              </Link>
+              <ChevronRight className="w-3 h-3" />
+              <span className="text-foreground font-medium truncate">
+                {getCurrentPageLabel(location)}
+              </span>
+            </nav>
+          )}
           {children}
         </div>
       </main>
     </div>
   );
+}
+
+// Helper to get current page label from path
+function getCurrentPageLabel(path: string): string {
+  const allItems = navGroups.flatMap(g => g.items);
+  const match = allItems.find(item => item.path === path);
+  if (match) return match.label;
+  // Fallback: convert path to readable label
+  const segment = path.split("/").filter(Boolean).pop() || "";
+  return segment.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase());
 }
 
 // Collapsible nav group component
