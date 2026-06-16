@@ -454,3 +454,8 @@
 - [x] Fix Today's Readings "Week 12" and "Full Readings" pills overlapping on mobile (separate row with flex-wrap)
 - [x] Fix Coming Up events horizontal scroll pills (changed to flex-wrap)
 - [x] Fix Admin link not appearing in mobile hamburger menu (auth.me now returns role=admin for owner)
+
+## Phase: Staff Login Discoverability
+
+- [x] Add "Staff Login" link in footer (always visible when not authenticated, changes to "Admin Dashboard" when logged in as admin)
+- [x] Diagnose admin link not showing on published site (user was not logged in on published domain — session cookies are domain-specific)

@@ -1,5 +1,36 @@
 import { Link } from "wouter";
-import { MapPin, Phone } from "lucide-react";
+import { MapPin, Phone, Shield } from "lucide-react";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { getLoginUrl } from "@/const";
+
+function StaffAccessBar() {
+  const { user, isAuthenticated } = useAuth();
+  const isAdmin = isAuthenticated && user?.role === "admin";
+
+  return (
+    <div className="border-t border-white/10">
+      <div className="container py-2 flex items-center justify-center">
+        {isAdmin ? (
+          <Link
+            href="/admin"
+            className="inline-flex items-center gap-1.5 text-[11px] text-white/50 hover:text-gold transition-colors"
+          >
+            <Shield className="w-3 h-3" />
+            Admin Dashboard
+          </Link>
+        ) : (
+          <a
+            href={getLoginUrl()}
+            className="inline-flex items-center gap-1.5 text-[11px] text-white/40 hover:text-white/60 transition-colors"
+          >
+            <Shield className="w-3 h-3" />
+            Staff Login
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function Footer() {
   return (
@@ -35,7 +66,7 @@ export default function Footer() {
           </nav>
 
           {/* Right: Stay connected buttons */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <a
               href="https://stpatarmonk.flocknote.com/home"
               target="_blank"
@@ -58,6 +89,9 @@ export default function Footer() {
           </div>
         </div>
       </div>
+
+      {/* Staff Access Bar */}
+      <StaffAccessBar />
 
       {/* Bottom Bar */}
       <div className="border-t border-white/10">
