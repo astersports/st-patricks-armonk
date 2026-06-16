@@ -45,7 +45,7 @@ export default function FaithFormation() {
                 {/* CCD */}
                 <AccordionItem
                   value="ccd"
-                  className="reveal border border-border/50 rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] border-l-3 border-l-[oklch(0.42_0.12_150)]"
+                  className="reveal border border-border/50 rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] border-l-3 border-l-[oklch(0.42_0.12_140)]"
                 >
                   <AccordionTrigger className="px-4 sm:px-6 py-3 sm:py-5 hover:no-underline">
                     <div className="flex items-center gap-3 sm:gap-4">

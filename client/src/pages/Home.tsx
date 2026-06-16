@@ -116,8 +116,12 @@ function HeroSection() {
           St. Patrick in Armonk
         </h1>
         {/* Parish Motto */}
-        <p className="text-white/90 text-base sm:text-lg italic font-light animate-fade-up stagger-1 mb-5 tracking-wide">
+        <p className="text-white/90 text-base sm:text-lg italic font-light animate-fade-up stagger-1 mb-2 tracking-wide">
           God Bless the Whole World, No Exceptions
+        </p>
+        {/* Address */}
+        <p className="text-white/60 text-xs sm:text-sm font-medium animate-fade-up stagger-2 mb-5 tracking-wide">
+          29 Cox Avenue, Armonk, NY 10504
         </p>
 
 

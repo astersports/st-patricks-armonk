@@ -12,7 +12,7 @@ import { useReveal } from "@/hooks/useReveal";
 import { toast } from "sonner";
 
 const accentColors = [
-  "border-l-[oklch(0.42_0.12_150)]",
+  "border-l-[oklch(0.42_0.12_140)]",
   "border-l-[oklch(0.75_0.15_85)]",
   "border-l-[oklch(0.5_0.12_250)]",
   "border-l-[oklch(0.55_0.15_25)]",

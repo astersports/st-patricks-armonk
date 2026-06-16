@@ -1,88 +1,41 @@
 import { useState, useEffect, useMemo } from "react";
-import { Church, Cross, Sun } from "lucide-react";
+import { Church } from "lucide-react";
 
 const TIMEZONE = "America/New_York";
 
-// Weekly schedule (mirrors MassTimes.tsx)
-const SERVICES = [
-  {
-    id: "mass",
-    label: "Mass",
-    icon: Church,
-    color: "text-primary",
-    dotActive: "bg-primary",
-    dotInactive: "bg-muted-foreground/30",
-    bgActive: "bg-primary/10",
-    times: [
-      { day: 0, start: [8, 30], end: [9, 30] },
-      { day: 0, start: [10, 30], end: [11, 30] },
-      { day: 0, start: [12, 30], end: [13, 30] },
-      { day: 2, start: [8, 30], end: [9, 0] },
-      { day: 3, start: [8, 30], end: [9, 0] },
-      { day: 4, start: [8, 30], end: [9, 0] },
-      { day: 5, start: [8, 30], end: [9, 0] },
-      { day: 6, start: [17, 30], end: [18, 30] },
-    ],
-  },
-  {
-    id: "confession",
-    label: "Confession",
-    icon: Cross,
-    color: "text-purple-600",
-    dotActive: "bg-purple-500",
-    dotInactive: "bg-muted-foreground/30",
-    bgActive: "bg-purple-500/10",
-    times: [
-      { day: 6, start: [16, 30], end: [17, 15] },
-    ],
-  },
-  {
-    id: "prayer",
-    label: "Prayer",
-    icon: Sun,
-    color: "text-amber-600",
-    dotActive: "bg-amber-500",
-    dotInactive: "bg-muted-foreground/30",
-    bgActive: "bg-amber-500/10",
-    times: [
-      { day: 2, start: [8, 0], end: [8, 25] },
-      { day: 3, start: [8, 0], end: [8, 25] },
-      { day: 4, start: [8, 0], end: [8, 25] },
-      { day: 5, start: [8, 0], end: [8, 25] },
-    ],
-  },
+// Mass schedule (mirrors MassTimes.tsx)
+const MASS_TIMES = [
+  { day: 0, start: [8, 30], end: [9, 30], label: "Sunday" },
+  { day: 0, start: [10, 30], end: [11, 30], label: "Sunday" },
+  { day: 0, start: [12, 30], end: [13, 30], label: "Sunday" },
+  { day: 2, start: [8, 30], end: [9, 0], label: "Tuesday" },
+  { day: 3, start: [8, 30], end: [9, 0], label: "Wednesday" },
+  { day: 4, start: [8, 30], end: [9, 0], label: "Thursday" },
+  { day: 5, start: [8, 30], end: [9, 0], label: "Friday" },
+  { day: 6, start: [17, 30], end: [18, 30], label: "Saturday" },
 ] as const;
 
-type ServiceStatus = "active" | "next" | "closed";
-
-interface StatusResult {
-  status: ServiceStatus;
-  statusText: string;
-}
-
-function getServiceStatus(
-  service: typeof SERVICES[number],
-  now: Date
-): StatusResult {
+function getMassStatus(now: Date) {
   const day = now.getDay();
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
-  // Check if currently active
-  for (const t of service.times) {
+  // Check if Mass is currently active
+  for (const t of MASS_TIMES) {
     if (t.day === day) {
       const startMin = t.start[0] * 60 + t.start[1];
       const endMin = t.end[0] * 60 + t.end[1];
       if (currentMinutes >= startMin && currentMinutes < endMin) {
         const remaining = endMin - currentMinutes;
-        return { status: "active", statusText: `Now · ${remaining}m left` };
+        return { isActive: true, text: `Mass in Progress — ${remaining}m remaining` };
       }
     }
   }
 
-  // Find next occurrence
+  // Find next Mass
   let minDiff = Infinity;
+  let nextLabel = "";
   let nextTimeStr = "";
-  for (const t of service.times) {
+  for (const t of MASS_TIMES) {
     let daysAhead = t.day - day;
     if (daysAhead < 0) daysAhead += 7;
     const startMin = t.start[0] * 60 + t.start[1];
@@ -90,23 +43,32 @@ function getServiceStatus(
     if (diffMinutes <= 0) diffMinutes += 7 * 24 * 60;
     if (diffMinutes < minDiff) {
       minDiff = diffMinutes;
+      nextLabel = t.label;
       const h = t.start[0] as number;
       const m = t.start[1] as number;
       const ampm = h >= 12 ? "PM" : "AM";
       const h12 = h > 12 ? h - 12 : h === 0 ? 12 : h;
-      const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-      nextTimeStr = `${days[t.day]} ${h12}:${m.toString().padStart(2, "0")} ${ampm}`;
+      nextTimeStr = `${h12}:${m.toString().padStart(2, "0")} ${ampm}`;
     }
   }
 
-  if (minDiff < 120) {
-    return { status: "next", statusText: `In ${minDiff}m` };
-  }
-  if (minDiff < 24 * 60) {
+  // Format countdown
+  let countdown = "";
+  if (minDiff < 60) {
+    countdown = `${minDiff}m`;
+  } else if (minDiff < 24 * 60) {
     const h = Math.floor(minDiff / 60);
-    return { status: "next", statusText: `In ${h}h` };
+    const m = minDiff % 60;
+    countdown = m > 0 ? `${h}h ${m}m` : `${h}h`;
+  } else {
+    const d = Math.floor(minDiff / (24 * 60));
+    countdown = `${d} day${d > 1 ? "s" : ""}`;
   }
-  return { status: "closed", statusText: nextTimeStr };
+
+  return {
+    isActive: false,
+    text: `Next Mass in ${countdown} — ${nextLabel} ${nextTimeStr}`,
+  };
 }
 
 export function NowStatusBar() {
@@ -123,59 +85,38 @@ export function NowStatusBar() {
     return () => clearInterval(interval);
   }, []);
 
-  const statuses = useMemo(() => {
-    return SERVICES.map((service) => ({
-      ...service,
-      ...getServiceStatus(service, now),
-    }));
-  }, [now]);
+  const status = useMemo(() => getMassStatus(now), [now]);
 
   return (
-    <div className="grid grid-cols-3 gap-2.5">
-      {statuses.map((s) => {
-        const Icon = s.icon;
-        const isActive = s.status === "active";
-        const isNext = s.status === "next";
-        return (
-          <div
-            key={s.id}
-            className={`
-              relative rounded-xl px-3 py-3 transition-all duration-200
-              ${isActive
-                ? `${s.bgActive} border border-primary/20 shadow-md`
-                : "bg-card border border-border/50"
-              }
-            `}
-          >
-            {/* Active glow overlay */}
-            {isActive && (
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
-            )}
-            <div className="flex items-center gap-2 mb-1.5">
-              <Icon className={`w-5 h-5 ${isActive ? s.color : "text-muted-foreground"}`} />
-              <span className={`text-base font-bold ${isActive ? "text-foreground" : "text-foreground/80"}`}>
-                {s.label}
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              {/* Pulsing dot */}
-              <span className="relative flex h-2 w-2">
-                {isActive && (
-                  <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${s.dotActive} opacity-60`} />
-                )}
-                <span className={`relative inline-flex rounded-full h-2 w-2 ${
-                  isActive ? s.dotActive : isNext ? "bg-amber-400" : s.dotInactive
-                }`} />
-              </span>
-              <span className={`text-sm font-medium ${
-                isActive ? s.color : isNext ? "text-amber-600" : "text-muted-foreground"
-              }`}>
-                {s.statusText}
-              </span>
-            </div>
-          </div>
-        );
-      })}
+    <div
+      className={`
+        flex items-center justify-center gap-2.5 px-4 py-3 rounded-full
+        ${status.isActive
+          ? "bg-primary/10 border border-primary/20 shadow-md"
+          : "bg-card border border-border/60 shadow-sm"
+        }
+        transition-all duration-200
+      `}
+    >
+      {/* Pulsing dot */}
+      <span className="relative flex h-2.5 w-2.5 shrink-0">
+        {status.isActive && (
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60" />
+        )}
+        <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
+          status.isActive ? "bg-primary" : "bg-emerald-500"
+        }`} />
+      </span>
+
+      {/* Icon */}
+      <Church className={`w-4 h-4 shrink-0 ${status.isActive ? "text-primary" : "text-primary/70"}`} />
+
+      {/* Text */}
+      <span className={`text-sm font-semibold ${
+        status.isActive ? "text-primary" : "text-foreground/80"
+      }`}>
+        {status.text}
+      </span>
     </div>
   );
 }

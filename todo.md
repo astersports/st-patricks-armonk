@@ -537,3 +537,8 @@
 - [x] Fix duplicated mass countdown (hero + mass card both show countdown)
 - [x] Replace subtitle line under header with motto image ("God Bless the Whole World, No Exceptions")
 - [x] Fix blue/cyan tint still showing on card borders (Coming Up, This Week, Latest News, etc.)
+
+## Bug Fixes: User Reported Issues (Jun 16 - Round 2)
+- [x] Fix cyan/blue tint STILL showing on card borders (deployed version)
+- [x] Replace small Mass/Confession/Prayer tiles with long mass countdown bar
+- [x] Add church address under the motto in hero section
