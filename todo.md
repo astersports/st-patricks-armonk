@@ -470,3 +470,13 @@
 - [x] Increase font size in footer links and info text
 - [x] Increase font size in Catholic Resources section
 - [x] Darken secondary/muted text colors globally
+
+## Phase: Additional Readability & Overlap Fixes
+
+- [x] Fix NowStatusBar tiles overlapping with mobile bottom nav (increased spacer from h-20 to h-24)
+- [x] Further increase font sizes in Coming Up event names and locations
+- [x] Further increase font sizes in Catholic Resources subtitle text
+- [x] Further increase AT A GLANCE label and day labels in This Week section
+- [x] Increase hero text, Daily Readings labels, Bulletin section, Photo Gallery links
+- [x] Increase journey card titles and CTAs
+- [x] Increase Subscribe section label

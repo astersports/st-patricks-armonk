@@ -36,7 +36,7 @@ export default function PageLayout({ children, hideBackButton }: PageLayoutProps
       <Footer />
       <ScrollToTopButton />
       {/* Spacer for mobile bottom tab bar + safe area */}
-      <div className="lg:hidden h-14" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }} />
+      <div className="lg:hidden h-24" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }} />
     </div>
   );
 }

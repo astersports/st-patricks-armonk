@@ -117,7 +117,7 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
           <Calendar className="w-3.5 h-3.5 text-primary" />
           <span className="text-sm font-bold text-foreground">This Week</span>
         </div>
-        <span className="text-xs text-foreground/60">
+        <span className="text-sm text-foreground/70">
           {format(weekStart, "MMM d")} – {format(weekEnd, "MMM d")}
         </span>
       </div>
@@ -136,10 +136,10 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
                   : "hover:bg-muted/40 text-muted-foreground"
               }`}
             >
-              <span className={`text-[10px] sm:text-xs font-semibold ${isSelected ? "text-white/80" : ""}`}>
+              <span className={`text-xs sm:text-sm font-semibold ${isSelected ? "text-white/80" : ""}`}>
                 {day.label}
               </span>
-              <span className={`text-xs sm:text-sm font-bold ${isSelected ? "text-white" : "text-foreground/70"}`}>
+              <span className={`text-sm sm:text-base font-bold ${isSelected ? "text-white" : "text-foreground/70"}`}>
                 {day.dateNum}
               </span>
               {/* Today indicator */}
@@ -193,7 +193,7 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
                   >
                     <CalendarPlus className="w-3 h-3" />
                   </button>
-                  <span className={`text-xs font-bold ${style.color}`}>
+                  <span className={`text-sm font-bold ${style.color}`}>
                     {svc.time}
                   </span>
                 </div>
@@ -213,7 +213,7 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
                 <div className="flex-1 min-w-0">
                   <span className="text-sm font-medium text-foreground truncate block">{evt.title}</span>
                   {evt.location && (
-                    <span className="text-xs text-foreground/60">{evt.location}</span>
+                    <span className="text-sm text-foreground/70">{evt.location}</span>
                   )}
                 </div>
                 <button
@@ -247,25 +247,25 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
       <div className="border-t border-border/30 px-4 py-3 bg-muted/20">
         <div className="flex items-center gap-1.5 mb-2">
           <Clock className="w-3 h-3 text-muted-foreground" />
-          <span className="text-xs font-bold uppercase tracking-wider text-foreground/60">At a Glance</span>
+          <span className="text-sm font-bold uppercase tracking-wider text-foreground/70">At a Glance</span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           <div className="rounded-lg bg-card border border-border/40 p-2.5 text-center">
-            <p className="text-xs uppercase tracking-wider text-foreground/60 font-medium">Saturday Vigil</p>
-            <p className="text-sm font-bold text-primary mt-0.5">5:30 PM</p>
+            <p className="text-sm uppercase tracking-wider text-foreground/70 font-medium">Saturday Vigil</p>
+            <p className="text-base font-bold text-primary mt-0.5">5:30 PM</p>
           </div>
           <div className="rounded-lg bg-card border border-border/40 p-2.5 text-center">
-            <p className="text-xs uppercase tracking-wider text-foreground/60 font-medium">Sunday</p>
-            <p className="text-sm font-bold text-primary mt-0.5">8:30 & 10:30 AM</p>
-            <p className="text-xs text-foreground/60">12:30 PM (Oct–Jun)</p>
+            <p className="text-sm uppercase tracking-wider text-foreground/70 font-medium">Sunday</p>
+            <p className="text-base font-bold text-primary mt-0.5">8:30 & 10:30 AM</p>
+            <p className="text-sm text-foreground/70">12:30 PM (Oct–Jun)</p>
           </div>
           <div className="rounded-lg bg-card border border-border/40 p-2.5 text-center">
-            <p className="text-xs uppercase tracking-wider text-foreground/60 font-medium">Weekday (Tue–Fri)</p>
-            <p className="text-sm font-bold text-primary mt-0.5">8:30 AM</p>
+            <p className="text-sm uppercase tracking-wider text-foreground/70 font-medium">Weekday (Tue–Fri)</p>
+            <p className="text-base font-bold text-primary mt-0.5">8:30 AM</p>
           </div>
         </div>
-        <Link href="/mass-times" className="flex items-center justify-center gap-1 mt-2.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors">
-          Full schedule & details <span className="text-xs">→</span>
+        <Link href="/mass-times" className="flex items-center justify-center gap-1 mt-2.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors">
+          Full schedule & details <span className="text-sm">→</span>
         </Link>
       </div>
     </div>

@@ -167,8 +167,8 @@ export function NowStatusBar() {
                   isActive ? s.dotActive : isNext ? "bg-amber-400" : s.dotInactive
                 }`} />
               </span>
-              <span className={`text-xs font-medium ${
-                isActive ? s.color : isNext ? "text-amber-600" : "text-foreground/60"
+              <span className={`text-sm font-medium ${
+                isActive ? s.color : isNext ? "text-amber-600" : "text-foreground/70"
               }`}>
                 {s.statusText}
               </span>
