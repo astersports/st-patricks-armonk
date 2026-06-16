@@ -603,3 +603,7 @@
 ## Colorful Weather Icons
 
 - [x] Replace monochrome weather icons with fancy colorful multi-color SVG icons site-wide
+
+## Calendar Default Tab
+
+- [x] Change calendar page default tab from Key Dates to All (so next upcoming events show first)

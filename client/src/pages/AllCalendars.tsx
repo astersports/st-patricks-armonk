@@ -259,18 +259,16 @@ export default function AllCalendars() {
   const filterParam = params.get("filter") as SourceFilter | null;
 
   const [activeSource, setActiveSource] = useState<SourceFilter>(
-    filterParam && ["key-dates", "parish", "ccd", "cyo"].includes(filterParam) ? filterParam : "key-dates"
+    filterParam && ["key-dates", "parish", "ccd", "cyo", "all"].includes(filterParam) ? filterParam : "all"
   );
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
 
   // Sync filter from URL when navigating between calendar links
   useEffect(() => {
-    if (filterParam && ["key-dates", "parish", "ccd", "cyo"].includes(filterParam)) {
-      setActiveSource(filterParam);
-    } else if (filterParam === "all") {
-      setActiveSource("all");
+    if (filterParam && ["key-dates", "parish", "ccd", "cyo", "all"].includes(filterParam)) {
+      setActiveSource(filterParam as SourceFilter);
     } else if (!filterParam) {
-      setActiveSource("key-dates");
+      setActiveSource("all");
     }
   }, [filterParam]);
 
