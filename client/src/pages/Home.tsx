@@ -635,16 +635,16 @@ function SaintOfDayCard() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center">
-            <svg className="w-4 h-4 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center">
+            <svg className="w-3.5 h-3.5 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="8" r="5" />
               <path d="M12 13v8" />
               <path d="M9 18h6" />
             </svg>
           </div>
-          <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">Saint of the Day</h2>
+          <h2 className="font-serif text-base sm:text-lg font-bold text-foreground">Saint of the Day</h2>
         </div>
         <a
           href="https://www.evangelizo.org"
@@ -656,36 +656,31 @@ function SaintOfDayCard() {
         </a>
       </div>
       <Card className="border-border/50 shadow-sm overflow-hidden">
-        <CardContent className="p-5 sm:p-6">
-          <div className="flex gap-4 sm:gap-6">
+        <CardContent className="p-3 sm:p-4">
+          <div className="flex gap-3">
             {featuredSaint.imageUrl && (
               <div className="hidden sm:block flex-shrink-0">
                 <img
                   src={featuredSaint.imageUrl}
                   alt={featuredSaint.name}
-                  className="w-24 h-32 object-cover rounded-lg shadow-sm"
+                  className="w-16 h-20 object-cover rounded-lg shadow-sm"
                   onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                 />
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <h3 className="font-serif text-base sm:text-lg font-bold text-foreground mb-1">
+              <h3 className="font-serif text-sm sm:text-base font-bold text-foreground">
                 {featuredSaint.name}
               </h3>
               {saints.length > 1 && (
-                <p className="text-xs text-muted-foreground mb-2">
-                  Also commemorated: {saints.filter(s => s !== featuredSaint.name && !featuredSaint.name.includes(s)).slice(0, 3).join(", ")}
+                <p className="text-[10px] text-muted-foreground mt-0.5">
+                  Also: {saints.filter(s => s !== featuredSaint.name && !featuredSaint.name.includes(s)).slice(0, 2).join(", ")}
                 </p>
               )}
               {featuredSaint.biography && (
-                <p className="text-sm text-foreground/85 leading-relaxed line-clamp-4">
+                <p className="text-xs text-foreground/80 leading-relaxed line-clamp-3 mt-1">
                   {featuredSaint.biography}
                 </p>
-              )}
-              {featuredSaint.prayer && (
-                <blockquote className="mt-3 pl-3 border-l-2 border-gold/40 italic text-sm text-muted-foreground line-clamp-3">
-                  {featuredSaint.prayer}
-                </blockquote>
               )}
             </div>
           </div>
@@ -730,6 +725,7 @@ function DailyReadingsSkeleton() {
 
 function DailyReadings() {
   const { data: readings, isLoading } = trpc.dailyReadings.today.useQuery();
+  const [expandedReading, setExpandedReading] = useState<string | null>(null);
 
   if (isLoading) {
     return <DailyReadingsSkeleton />;
@@ -737,7 +733,7 @@ function DailyReadings() {
 
   if (!readings) {
     return (
-      <div className="rounded-xl border border-white/10 bg-white/5 p-5 text-center">
+      <div className="rounded-lg border border-white/10 bg-white/5 p-4 text-center">
         <p className="text-sm text-white/70">Daily readings are temporarily unavailable.</p>
         <a
           href="https://bible.usccb.org/daily-bible-reading"
@@ -751,18 +747,24 @@ function DailyReadings() {
     );
   }
 
+  const readingItems = [
+    { key: "first", label: "First Reading", title: readings.firstReading.title, text: readings.firstReading.text, color: "text-gold" },
+    { key: "psalm", label: "Responsorial Psalm", title: readings.psalm.title, text: readings.psalm.text, color: "text-amber-300" },
+    { key: "gospel", label: "Gospel", title: readings.gospel.title, text: readings.gospel.text, color: "text-red-300" },
+  ];
+
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center">
-            <svg className="w-4 h-4 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div className="w-7 h-7 rounded-full bg-gold/20 flex items-center justify-center">
+            <svg className="w-3.5 h-3.5 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
             </svg>
           </div>
           <div>
-            <h2 className="font-serif text-lg sm:text-xl font-bold text-white">Today's Readings</h2>
-            <p className="text-xs text-white/60">{readings.liturgicTitle}</p>
+            <h2 className="font-serif text-base sm:text-lg font-bold text-white">Today's Readings</h2>
+            <p className="text-[10px] text-white/60">{readings.liturgicTitle}</p>
           </div>
         </div>
         <a
@@ -774,25 +776,26 @@ function DailyReadings() {
           Full Readings <ArrowRight className="w-3 h-3" />
         </a>
       </div>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {/* First Reading */}
-        <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm p-4">
-          <p className="text-xs font-semibold text-gold uppercase tracking-wider mb-1">First Reading</p>
-          <p className="text-xs text-white/50 mb-2 line-clamp-1">{readings.firstReading.title}</p>
-          <p className="text-sm text-white/90 leading-relaxed line-clamp-6 whitespace-pre-line">{readings.firstReading.text}</p>
-        </div>
-        {/* Psalm */}
-        <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm p-4">
-          <p className="text-xs font-semibold text-amber-300 uppercase tracking-wider mb-1">Responsorial Psalm</p>
-          <p className="text-xs text-white/50 mb-2 line-clamp-1">{readings.psalm.title}</p>
-          <p className="text-sm text-white/90 leading-relaxed line-clamp-6 italic whitespace-pre-line">{readings.psalm.text}</p>
-        </div>
-        {/* Gospel */}
-        <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm p-4 sm:col-span-2 lg:col-span-1">
-          <p className="text-xs font-semibold text-red-300 uppercase tracking-wider mb-1">Gospel</p>
-          <p className="text-xs text-white/50 mb-2 line-clamp-1">{readings.gospel.title}</p>
-          <p className="text-sm text-white/90 leading-relaxed line-clamp-6 whitespace-pre-line">{readings.gospel.text}</p>
-        </div>
+      {/* Compact reading rows — tap to expand */}
+      <div className="space-y-1.5">
+        {readingItems.map((item) => (
+          <button
+            key={item.key}
+            onClick={() => setExpandedReading(expandedReading === item.key ? null : item.key)}
+            className="w-full text-left rounded-lg border border-white/10 bg-white/5 hover:bg-white/8 transition-colors overflow-hidden"
+          >
+            <div className="flex items-center gap-3 px-3 py-2.5">
+              <span className={`text-[10px] font-bold uppercase tracking-wider ${item.color} w-20 shrink-0`}>{item.label}</span>
+              <span className="text-sm text-white/80 truncate flex-1">{item.title}</span>
+              <ChevronDown className={`w-3.5 h-3.5 text-white/40 transition-transform duration-200 shrink-0 ${expandedReading === item.key ? "rotate-180" : ""}`} />
+            </div>
+            {expandedReading === item.key && (
+              <div className="px-3 pb-3 pt-1 border-t border-white/10">
+                <p className="text-sm text-white/85 leading-relaxed whitespace-pre-line">{item.text}</p>
+              </div>
+            )}
+          </button>
+        ))}
       </div>
     </div>
   );
@@ -904,7 +907,7 @@ function CatholicResources() {
   const { data: gnFeed, isLoading: gLoading } = trpc.catholicResources.goodNewsroom.useQuery({ limit: 3 });
   const { data: usccbFeed, isLoading: uLoading } = trpc.catholicResources.usccb.useQuery({ limit: 3 });
   const { data: archnyFeed, isLoading: aLoading } = trpc.catholicResources.archny.useQuery({ limit: 3 });
-  const [expandedSources, setExpandedSources] = useState<string[]>(["goodnewsroom", "archny", "usccb", "vatican"]);
+  const [expandedSources, setExpandedSources] = useState<string[]>([]);
 
   const isLoading = vLoading || gLoading || uLoading || aLoading;
   if (isLoading) return <CatholicResourcesSkeleton />;
@@ -1099,31 +1102,31 @@ export default function Home() {
         </section>
 
         {/* Catholic Resources — Live Feeds by Source */}
-        <section className="reveal section-cream py-6 sm:py-10 -mx-4 px-4 sm:-mx-0 sm:px-0">
+        <section className="reveal section-cream py-4 sm:py-6 -mx-4 px-4 sm:-mx-0 sm:px-0">
           <div className="container">
             <CatholicResources />
           </div>
         </section>
 
         {/* Daily Readings — Dark Premium Section */}
-        <section className="reveal section-dark-green py-6 sm:py-10 -mx-4 px-4 sm:-mx-0 sm:px-0">
+        <section className="reveal section-dark-green py-4 sm:py-6 -mx-4 px-4 sm:-mx-0 sm:px-0">
           <div className="container">
             <DailyReadings />
           </div>
         </section>
 
         {/* Saint of the Day */}
-        <section className="reveal container py-6 sm:py-10">
+        <section className="reveal container py-4 sm:py-6">
           <SaintOfDayCard />
         </section>
 
         {/* Prayer Wall — Light a Candle */}
-        <section className="reveal section-cream py-6 sm:py-8 -mx-4 px-4 sm:-mx-0 sm:px-0">
+        <section className="reveal section-cream py-4 sm:py-6 -mx-4 px-4 sm:-mx-0 sm:px-0">
           <PrayerWall />
         </section>
 
         {/* Newsletter Subscription — Full-width dark CTA */}
-        <section className="reveal section-dark py-8 sm:py-12 -mx-4 px-4 sm:-mx-0 sm:px-0">
+        <section className="reveal section-dark py-6 sm:py-8 -mx-4 px-4 sm:-mx-0 sm:px-0">
           <div className="container">
             <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-10 max-w-4xl mx-auto">
               <div className="flex-1 text-center md:text-left">

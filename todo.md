@@ -395,6 +395,9 @@
 - [x] Fix horizontal overflow bug (page dragging left/right on mobile)
 - [x] Build "Light a Candle" prayer wall with database persistence (candle count, intentions)
 - [x] Build "Now at St. Patrick" unified card (news + coming up events with countdown pills)
-- [ ] Redesign Bulletin page: inline paginated reader + vertical archive list (not horizontal scroll)
-- [ ] Add Fraunces display font for section titles site-wide
-- [ ] Compact all remaining oversized cards and sections
+- [x] Redesign Bulletin page: inline paginated reader + vertical archive list (not horizontal scroll)
+- [x] Add Fraunces display font for section titles site-wide
+- [x] Compact Daily Readings: collapse to reference-only rows with tap-to-expand
+- [x] Compact Saint of the Day: truncate biography, reduce card padding
+- [x] Compact Catholic Resources: collapse sources by default, tighter rows
+- [x] Tighten section spacing across entire homepage
