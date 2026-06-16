@@ -157,12 +157,29 @@ function findNextMass(currentDay: number, currentMin: number) {
   return { nextLabel, nextTime, nextDay, countdownText };
 }
 
+/** Custom filled sun icon - amber colored, large center, short thick rays */
+function SunIconSmall({ className = "w-3 h-3" }: { className?: string }) {
+  return (
+    <svg className={`${className} text-amber-500`} viewBox="0 0 24 24" fill="currentColor" stroke="none">
+      <circle cx="12" cy="12" r="6" />
+      <rect x="11" y="1" width="2" height="4" rx="1" />
+      <rect x="11" y="19" width="2" height="4" rx="1" />
+      <rect x="19" y="11" width="4" height="2" rx="1" />
+      <rect x="1" y="11" width="4" height="2" rx="1" />
+      <rect x="17.4" y="3.8" width="2" height="4" rx="1" transform="rotate(45 18.4 5.8)" />
+      <rect x="4.6" y="16.2" width="2" height="4" rx="1" transform="rotate(45 5.6 18.2)" />
+      <rect x="17.4" y="16.2" width="2" height="4" rx="1" transform="rotate(-45 18.4 18.2)" />
+      <rect x="4.6" y="3.8" width="2" height="4" rx="1" transform="rotate(-45 5.6 5.8)" />
+    </svg>
+  );
+}
+
 function WeatherIconSmall({ icon }: { icon: string }) {
   const cls = "w-3 h-3";
   switch (icon) {
     case "clear":
     case "mostly-clear":
-      return <Sun className={cls} />;
+      return <SunIconSmall className={cls} />;
     case "partly-cloudy":
       return <CloudSun className={cls} />;
     case "overcast":
@@ -180,7 +197,7 @@ function WeatherIconSmall({ icon }: { icon: string }) {
     case "thunderstorm":
       return <CloudLightning className={cls} />;
     default:
-      return <Sun className={cls} />;
+      return <SunIconSmall className={cls} />;
   }
 }
 

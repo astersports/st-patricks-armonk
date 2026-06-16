@@ -3,7 +3,7 @@
  * Shows temperature, condition, and precipitation probability.
  * Glows amber when rain probability > 40%.
  */
-import { Cloud, CloudRain, CloudSnow, Sun, CloudSun, CloudLightning, Wind, Droplets } from "lucide-react";
+import { Cloud, CloudRain, CloudSnow, CloudSun, CloudLightning, Wind, Droplets } from "lucide-react";
 
 interface WeatherData {
   temperature: number;
@@ -27,13 +27,41 @@ interface WeatherData {
   }>;
 }
 
+/** Custom filled sun icon - large center, short thick rays, unmistakably sunny */
+function SunIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg className={`${className} text-amber-500`} viewBox="0 0 24 24" fill="currentColor" stroke="none">
+      <circle cx="12" cy="12" r="6" />
+      <rect x="11" y="1" width="2" height="4" rx="1" />
+      <rect x="11" y="19" width="2" height="4" rx="1" />
+      <rect x="19" y="11" width="4" height="2" rx="1" />
+      <rect x="1" y="11" width="4" height="2" rx="1" />
+      <rect x="17.4" y="3.8" width="2" height="4" rx="1" transform="rotate(45 18.4 5.8)" />
+      <rect x="4.6" y="16.2" width="2" height="4" rx="1" transform="rotate(45 5.6 18.2)" />
+      <rect x="17.4" y="16.2" width="2" height="4" rx="1" transform="rotate(-45 18.4 18.2)" />
+      <rect x="4.6" y="3.8" width="2" height="4" rx="1" transform="rotate(-45 5.6 5.8)" />
+    </svg>
+  );
+}
+
+/** Partly cloudy: sun peeking behind cloud */
+function PartlySunIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" stroke="none">
+      <circle cx="10" cy="8" r="3.5" fill="currentColor" opacity="0.7" />
+      <path d="M10 3v1.5M10 12.5V14M5.05 5.05l1.06 1.06M13.89 13.89l1.06 1.06M3 8h1.5M16 8h.5M5.05 10.95l1.06-1.06" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.7" />
+      <path d="M7 17h10a4 4 0 0 0 0-8h-.5A5.5 5.5 0 0 0 6 11.5 4 4 0 0 0 7 17z" fill="currentColor" opacity="0.9" />
+    </svg>
+  );
+}
+
 function WeatherIcon({ icon, className = "w-4 h-4" }: { icon: string; className?: string }) {
   switch (icon) {
     case "clear":
     case "mostly-clear":
-      return <Sun className={className} />;
+      return <SunIcon className={className} />;
     case "partly-cloudy":
-      return <CloudSun className={className} />;
+      return <PartlySunIcon className={className} />;
     case "overcast":
     case "fog":
       return <Cloud className={className} />;
@@ -49,7 +77,7 @@ function WeatherIcon({ icon, className = "w-4 h-4" }: { icon: string; className?
     case "thunderstorm":
       return <CloudLightning className={className} />;
     default:
-      return <Sun className={className} />;
+      return <SunIcon className={className} />;
   }
 }
 

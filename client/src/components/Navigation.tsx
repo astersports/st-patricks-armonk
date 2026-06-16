@@ -416,7 +416,7 @@ export default function Navigation() {
             {[0, 1].map((i) => (
               <div key={i} className="flex items-center gap-12 px-8 shrink-0 announcement-marquee-content">
                 <a
-                  href="https://www.youtube.com/@stpatricksarmonk/live"
+                  href="https://youtube.com/@stpatricksarmonk?si=Nf71id_fwNyCT_Ob"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium hover:underline transition-all"
