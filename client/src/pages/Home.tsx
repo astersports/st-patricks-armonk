@@ -118,7 +118,7 @@ function HeroSection() {
         <div className="max-w-3xl">
           {/* Eyebrow — time greeting */}
           <p
-            className="text-gold text-xs sm:text-sm font-medium tracking-[0.2em] uppercase mb-4 opacity-0 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]"
+            className="text-emerald-300 text-xs sm:text-sm font-medium tracking-[0.2em] uppercase mb-4 opacity-0 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]"
             style={{ animation: 'fadeSlideUp 0.6s ease 0.1s forwards' }}
           >
             {timeGreeting || "Welcome"} · Armonk, New York
@@ -138,7 +138,7 @@ function HeroSection() {
             }}
           >
             Welcome Home to<br />
-            <span className="text-gold">St. Patrick</span>
+            <span className="text-emerald-300">St. Patrick</span>
           </h1>
 
           {/* Motto */}
