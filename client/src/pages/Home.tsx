@@ -198,6 +198,7 @@ function HeroSection() {
 // === LIVE ACTIVITY BAR — Auto-rotating latest news + upcoming events ===
 function LiveActivityBar({ latestNews, allImportantDates }: { latestNews: any; allImportantDates: any[] | undefined }) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   // Build activity items from news + events
   const items = useMemo(() => {
@@ -237,14 +238,14 @@ function LiveActivityBar({ latestNews, allImportantDates }: { latestNews: any; a
     return result;
   }, [latestNews, allImportantDates]);
 
-  // Auto-rotate every 5 seconds
+  // Auto-rotate every 5 seconds, paused on hover
   useEffect(() => {
-    if (items.length <= 1) return;
+    if (items.length <= 1 || isPaused) return;
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % items.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [items.length]);
+  }, [items.length, isPaused]);
 
   if (items.length === 0) return null;
 
@@ -252,7 +253,11 @@ function LiveActivityBar({ latestNews, allImportantDates }: { latestNews: any; a
 
   return (
     <section className="reveal container -mt-8 relative z-20 mb-10 sm:mb-14">
-      <Card className="border-0 shadow-lg overflow-hidden hover-glow">
+      <Card
+        className="border-0 shadow-lg overflow-hidden hover-glow"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
         <CardContent className="p-0">
           {/* Activity content with crossfade */}
           <Link href={current.href} className="group block">

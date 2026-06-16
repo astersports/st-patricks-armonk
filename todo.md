@@ -372,3 +372,4 @@
 - [x] Redesign newsletter CTA: full-width dark section with pattern background
 - [x] Polish journey cards: horizontal scroll on mobile with snap, animated icons
 - [x] Polish bulletin card: hero-style featured content treatment
+- [x] Add pause-on-hover to live activity bar so rotation stops when user hovers
