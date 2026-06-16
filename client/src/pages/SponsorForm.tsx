@@ -48,7 +48,7 @@ export default function SponsorForm() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[oklch(0.98_0.005_140)]">
+      <div className="min-h-screen bg-[oklch(0.98_0.005_141)]">
         <div className="container max-w-2xl py-20">
           <Card className="text-center border-green-200">
             <CardContent className="py-16">
@@ -74,7 +74,7 @@ export default function SponsorForm() {
   }
 
   return (
-    <div className="min-h-screen bg-[oklch(0.98_0.005_140)]">
+    <div className="min-h-screen bg-[oklch(0.98_0.005_141)]">
       {/* Header */}
       <div className="bg-green-900 text-white py-8 sm:py-12">
         <div className="container max-w-3xl">

@@ -48,7 +48,7 @@ const sacraments = [
     icon: Droplets,
     title: "Baptism",
     subtitle: "The gateway to life in the Spirit",
-    accent: "border-l-[oklch(0.42_0.12_140)]",
+    accent: "border-l-[oklch(0.42_0.12_141)]",
     badge: null,
     content: (
       <>
@@ -267,7 +267,7 @@ export default function Sacraments() {
 
             {/* Additional Info Cards */}
             <div className="mt-10 grid md:grid-cols-2 gap-4">
-              <Card className="p-5 border border-border/50 border-l-3 border-l-[oklch(0.42_0.12_140)] shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] rounded-xl">
+              <Card className="p-5 border border-border/50 border-l-3 border-l-[oklch(0.42_0.12_141)] shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] rounded-xl">
                 <div className="flex items-center gap-2 mb-2.5">
                   <h3 className="font-serif text-base text-foreground">Reconciliation</h3>
                   <Badge className="bg-primary/8 text-primary border-0 text-[10px] px-1.5 py-0">Weekly</Badge>

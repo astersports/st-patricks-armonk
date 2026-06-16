@@ -4,41 +4,44 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  /* ===== Color System (OKLCH) ===== */
-  /* Refined palette: deeper greens, richer golds, warmer neutrals */
-  --color-background: oklch(0.985 0.003 90);
-  --color-foreground: oklch(0.13 0.04 140);
-  --color-card: oklch(0.995 0.001 90);
-  --color-card-foreground: oklch(0.13 0.04 140);
-  --color-popover: oklch(0.995 0.001 90);
-  --color-popover-foreground: oklch(0.18 0.03 140);
-  --color-primary: oklch(0.35 0.15 140);
-  --color-primary-foreground: oklch(0.98 0.01 90);
-  --color-secondary: oklch(0.96 0.015 90);
-  --color-secondary-foreground: oklch(0.25 0.08 140);
-  --color-muted: oklch(0.955 0.005 90);
-  --color-muted-foreground: oklch(0.4 0.02 90);
-  --color-accent: oklch(0.72 0.16 80);
-  --color-accent-foreground: oklch(0.18 0.06 80);
+  /* ===== L99 Design System — Claude AI Architect ===== */
+  /* Primary Green: hue 141 — true forest emerald */
+  /* Gold Accent: hue 79 — burnished liturgical gold */
+  /* All neutrals: zero chroma — no tint whatsoever */
+
+  --color-background: oklch(0.995 0 0);
+  --color-foreground: oklch(0.13 0 0);
+  --color-card: oklch(0.985 0 0);
+  --color-card-foreground: oklch(0.13 0 0);
+  --color-popover: oklch(0.985 0 0);
+  --color-popover-foreground: oklch(0.18 0 0);
+  --color-primary: oklch(0.35 0.15 141);
+  --color-primary-foreground: oklch(0.98 0.01 79);
+  --color-secondary: oklch(0.96 0 0);
+  --color-secondary-foreground: oklch(0.25 0.08 141);
+  --color-muted: oklch(0.955 0 0);
+  --color-muted-foreground: oklch(0.52 0 0);
+  --color-accent: oklch(0.72 0.16 79);
+  --color-accent-foreground: oklch(0.18 0.06 79);
   --color-destructive: oklch(0.55 0.2 25);
-  --color-destructive-foreground: oklch(0.98 0.01 25);
-  --color-border: oklch(0.9 0.005 90);
-  --color-input: oklch(0.92 0.005 90);
-  --color-ring: oklch(0.35 0.15 140);
-  --color-chart-1: oklch(0.35 0.15 140);
-  --color-chart-2: oklch(0.72 0.16 80);
-  --color-chart-3: oklch(0.5 0.1 140);
-  --color-chart-4: oklch(0.62 0.13 80);
-  --color-chart-5: oklch(0.3 0.08 140);
-  --color-sidebar: oklch(0.97 0.005 90);
-  --color-sidebar-foreground: oklch(0.18 0.03 140);
-  --color-sidebar-primary: oklch(0.35 0.15 140);
-  --color-sidebar-primary-foreground: oklch(0.98 0.01 90);
-  --color-sidebar-accent: oklch(0.94 0.01 90);
-  --color-sidebar-accent-foreground: oklch(0.25 0.08 140);
-  --color-sidebar-border: oklch(0.9 0.005 90);
-  --color-sidebar-ring: oklch(0.35 0.15 140);
-  --radius-sm: 0.375rem;
+  --color-destructive-foreground: oklch(0.98 0 0);
+  --color-border: oklch(0.9 0 0);
+  --color-input: oklch(0.92 0 0);
+  --color-ring: oklch(0.35 0.15 141);
+  --color-chart-1: oklch(0.35 0.15 141);
+  --color-chart-2: oklch(0.72 0.16 79);
+  --color-chart-3: oklch(0.5 0.1 141);
+  --color-chart-4: oklch(0.62 0.13 79);
+  --color-chart-5: oklch(0.3 0.08 141);
+  --color-sidebar: oklch(0.97 0 0);
+  --color-sidebar-foreground: oklch(0.18 0 0);
+  --color-sidebar-primary: oklch(0.35 0.15 141);
+  --color-sidebar-primary-foreground: oklch(0.98 0.01 79);
+  --color-sidebar-accent: oklch(0.94 0 0);
+  --color-sidebar-accent-foreground: oklch(0.25 0.08 141);
+  --color-sidebar-border: oklch(0.9 0 0);
+  --color-sidebar-ring: oklch(0.35 0.15 141);
+  --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
@@ -48,22 +51,22 @@
 
 /* ===== Custom Color Utilities ===== */
 @utility text-gold {
-  color: oklch(0.72 0.16 80);
+  color: oklch(0.72 0.16 79);
 }
 @utility bg-gold {
-  background-color: oklch(0.72 0.16 80);
+  background-color: oklch(0.72 0.16 79);
 }
 @utility text-parish-green {
-  color: oklch(0.35 0.15 140);
+  color: oklch(0.35 0.15 141);
 }
 @utility bg-parish-green {
-  background-color: oklch(0.35 0.15 140);
+  background-color: oklch(0.35 0.15 141);
 }
 @utility bg-parish-green-dark {
-  background-color: oklch(0.28 0.12 140);
+  background-color: oklch(0.22 0.10 141);
 }
 @utility border-gold {
-  border-color: oklch(0.72 0.16 80);
+  border-color: oklch(0.72 0.16 79);
 }
 
 @layer base {
@@ -127,7 +130,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-size: 16px;
-    line-height: 1.6;
+    line-height: 1.55;
     letter-spacing: -0.01em;
   }
 }
@@ -151,39 +154,52 @@
   }
 }
 
-/* ===== Animation System ===== */
+/* ===== L99 Motion System ===== */
 :root {
-  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  /* Easing functions — Apple/Google design language */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-standard: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --ease-decelerate: cubic-bezier(0.0, 0.0, 0.2, 1);
+  --ease-crisp: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Duration tokens */
+  --duration-fastest: 80ms;
+  --duration-faster: 120ms;
+  --duration-fast: 180ms;
+  --duration-normal: 250ms;
+  --duration-medium: 350ms;
+  --duration-slow: 500ms;
+  --duration-slower: 700ms;
 }
 
 @layer utilities {
   .animate-fade-in {
-    animation: fadeIn 0.5s var(--ease-out) forwards;
+    animation: fadeIn 0.5s var(--ease-crisp) forwards;
   }
   .animate-slide-up {
-    animation: slideUp 0.4s var(--ease-out) forwards;
+    animation: slideUp 0.4s var(--ease-crisp) forwards;
   }
   .animate-scale-in {
-    animation: scaleIn 0.25s var(--ease-out) forwards;
+    animation: scaleIn 0.25s var(--ease-crisp) forwards;
   }
   .animate-slide-down {
-    animation: slideDown 0.25s var(--ease-out) forwards;
+    animation: slideDown 0.25s var(--ease-crisp) forwards;
   }
   .animate-fade-up {
-    animation: fadeUp 0.5s var(--ease-out) both;
+    animation: fadeUp 0.5s var(--ease-crisp) both;
   }
 }
 
 /* Stagger delay utilities */
 @layer utilities {
-  .stagger-1 { animation-delay: 60ms; }
-  .stagger-2 { animation-delay: 120ms; }
-  .stagger-3 { animation-delay: 180ms; }
-  .stagger-4 { animation-delay: 240ms; }
-  .stagger-5 { animation-delay: 300ms; }
-  .stagger-6 { animation-delay: 360ms; }
+  .stagger-1 { animation-delay: 50ms; }
+  .stagger-2 { animation-delay: 100ms; }
+  .stagger-3 { animation-delay: 150ms; }
+  .stagger-4 { animation-delay: 200ms; }
+  .stagger-5 { animation-delay: 250ms; }
+  .stagger-6 { animation-delay: 300ms; }
 }
 
 @keyframes fadeIn {
@@ -208,6 +224,11 @@
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -237,17 +258,22 @@
   100% { opacity: 1; }
 }
 
+@keyframes scrollLine {
+  0%, 100% { transform: scaleY(1); opacity: 0.6; }
+  50% { transform: scaleY(0.4); opacity: 0.2; }
+}
+
 /* ===== Section Backgrounds ===== */
 .section-cream {
-  background-color: oklch(0.975 0.008 80);
+  background-color: oklch(0.975 0.005 79);
 }
 .section-dark {
-  background-color: oklch(0.2 0.08 140);
-  color: oklch(0.95 0.01 90);
+  background-color: oklch(0.18 0.08 141);
+  color: oklch(0.95 0 0);
 }
 .section-dark-green {
-  background-color: oklch(0.25 0.1 140);
-  color: oklch(0.95 0.01 90);
+  background-color: oklch(0.22 0.10 141);
+  color: oklch(0.95 0 0);
 }
 
 /* Ken Burns hero background */
@@ -260,37 +286,37 @@
 @layer utilities {
   /* Button press feedback */
   .press-scale {
-    transition: transform 140ms var(--ease-out);
+    transition: transform 140ms var(--ease-crisp);
   }
   .press-scale:active {
     transform: scale(0.97);
   }
 
-  /* Card hover lift */
+  /* Card hover lift — translateY only, no colored shadow */
   .hover-lift {
-    transition: transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
+    transition: transform var(--duration-normal) var(--ease-crisp), box-shadow var(--duration-normal) var(--ease-crisp);
   }
   .hover-lift:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 20px -6px oklch(0.38 0.12 140 / 0.1), 0 4px 8px -4px oklch(0 0 0 / 0.05);
+    box-shadow: 0 10px 20px -6px oklch(0 0 0 / 0.08), 0 4px 8px -4px oklch(0 0 0 / 0.04);
   }
 
-  /* Subtle card hover */
+  /* Subtle card hover glow */
   .hover-glow {
-    transition: box-shadow 200ms var(--ease-out), border-color 200ms var(--ease-out);
+    transition: box-shadow var(--duration-normal) var(--ease-crisp), border-color var(--duration-fast) var(--ease-standard);
   }
   .hover-glow:hover {
-    box-shadow: 0 0 0 1px oklch(0.38 0.12 140 / 0.12), 0 6px 12px -4px oklch(0.38 0.12 140 / 0.06);
+    box-shadow: 0 0 0 1px oklch(0.35 0.15 141 / 0.1), 0 6px 12px -4px oklch(0 0 0 / 0.06);
   }
 
   /* Interactive card with combined lift + glow */
   .card-interactive {
-    transition: transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out), border-color 200ms var(--ease-out);
+    transition: transform var(--duration-normal) var(--ease-crisp), box-shadow var(--duration-normal) var(--ease-crisp), border-color var(--duration-fast) var(--ease-standard);
   }
   .card-interactive:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px -6px oklch(0.38 0.12 140 / 0.08), 0 4px 8px -4px oklch(0 0 0 / 0.03);
-    border-color: oklch(0.38 0.12 140 / 0.2);
+    box-shadow: 0 8px 20px -6px oklch(0 0 0 / 0.07), 0 4px 8px -4px oklch(0 0 0 / 0.03);
+    border-color: oklch(0.35 0.15 141 / 0.15);
   }
   .card-interactive:active {
     transform: translateY(0) scale(0.99);
@@ -301,7 +327,7 @@
 .reveal {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+  transition: opacity 0.5s var(--ease-crisp), transform 0.5s var(--ease-crisp);
 }
 .reveal.visible {
   opacity: 1;
@@ -310,7 +336,7 @@
 
 /* ===== Navigation Animations ===== */
 .nav-dropdown-enter {
-  animation: navDropdown 180ms var(--ease-out) forwards;
+  animation: navDropdown 180ms var(--ease-crisp) forwards;
 }
 @keyframes navDropdown {
   from {
@@ -333,10 +359,10 @@
   bottom: 0;
   width: 0;
   height: 2px;
-  background: oklch(0.72 0.16 80);
+  background: oklch(0.72 0.16 79);
   border-radius: 1px;
   transform: translateX(-50%);
-  transition: width 200ms var(--ease-out);
+  transition: width 200ms var(--ease-crisp);
 }
 .nav-link-underline:hover::after {
   width: 70%;
