@@ -48,7 +48,7 @@ export default function MobileBottomNav({ onMoreClick }: MobileBottomNavProps) {
               {isActive && (
                 <span
                   className="absolute -top-[1px] w-8 h-[3px] rounded-full bg-primary"
-                  style={{ boxShadow: "0 1px 4px oklch(0.45 0.15 141 / 0.3)" }}
+                  style={{ boxShadow: "0 1px 4px oklch(0.47 0.14 160 / 0.3)" }}
                 />
               )}
               <tab.icon

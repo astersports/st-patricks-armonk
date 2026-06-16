@@ -92,8 +92,8 @@ function HeroSection() {
       {/* Ken Burns background */}
       <div className="absolute inset-0 will-change-transform">
         <img
-          src="/manus-storage/church-stained-glass_4e3f2e8c.jpg"
-          alt="St. Patrick's Church stained glass window"
+          src="/manus-storage/st-patrick-church-front_2665392e.jpeg"
+          alt="St. Patrick's Church front exterior"
           className="w-full h-[115%] object-cover object-center -translate-y-[7%] hero-ken-burns"
         />
       </div>
@@ -104,9 +104,9 @@ function HeroSection() {
         style={{
           background: `linear-gradient(
             165deg,
-            oklch(0.12 0.06 141 / 0.82) 0%,
-            oklch(0.18 0.08 141 / 0.72) 40%,
-            oklch(0.08 0.03 141 / 0.88) 100%
+            oklch(0.12 0.06 160 / 0.82) 0%,
+            oklch(0.18 0.08 160 / 0.72) 40%,
+            oklch(0.08 0.03 160 / 0.88) 100%
           )`,
         }}
       />

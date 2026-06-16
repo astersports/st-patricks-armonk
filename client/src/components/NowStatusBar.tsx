@@ -259,6 +259,9 @@ export function NowStatusBar() {
             )}
           </div>
 
+          {/* Current weather */}
+          <CurrentWeatherPill />
+
           {/* CTA arrow */}
           <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
         </div>
@@ -296,8 +299,6 @@ export function NowStatusBar() {
             <Cross className="w-3 h-3" />
             <span>{status.confessionText}</span>
           </div>
-          {/* Current weather */}
-          <CurrentWeatherPill />
         </div>
       )}
     </div>

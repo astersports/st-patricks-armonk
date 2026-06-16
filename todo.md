@@ -574,3 +574,9 @@
 - [x] D01: High-attendance event detection (Easter, Christmas, First Communion, etc.)
 - [x] D01: Parking advisory system for high-attendance events
 - [x] Claude Architect Part 2 directives (D09-D18) generated and saved
+
+## User-Requested Changes (June 16)
+
+- [x] Use real St. Patrick's church photo (IMG_2873.jpeg) as hero background image
+- [x] Move weather pill from next to confession time to next to "Next Mass" countdown
+- [x] Shift all greens to richer emerald green throughout the site (hue 141→160, all 21 references updated)

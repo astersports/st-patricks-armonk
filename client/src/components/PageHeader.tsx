@@ -25,7 +25,7 @@ export default function PageHeader({ eyebrow, title, description, children }: Pa
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `linear-gradient(180deg, oklch(0.96 0.02 141 / 0.5) 0%, transparent 100%)`,
+          background: `linear-gradient(180deg, oklch(0.96 0.02 160 / 0.5) 0%, transparent 100%)`,
         }}
       />
       <div className="container relative">
