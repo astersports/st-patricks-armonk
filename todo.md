@@ -373,3 +373,4 @@
 - [x] Polish journey cards: horizontal scroll on mobile with snap, animated icons
 - [x] Polish bulletin card: hero-style featured content treatment
 - [x] Add pause-on-hover to live activity bar so rotation stops when user hovers
+- [x] Add left/right navigation arrows to live activity bar for manual browsing

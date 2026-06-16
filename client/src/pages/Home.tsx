@@ -1,7 +1,7 @@
 import PageLayout from "@/components/PageLayout";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin, Clock, ExternalLink, Globe, Camera, ImageIcon, BookOpen, Download, RefreshCw, ChevronDown, Rss } from "lucide-react";
+import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin, Clock, ExternalLink, Globe, Camera, ImageIcon, BookOpen, Download, RefreshCw, ChevronDown, ChevronLeft, ChevronRight, Rss } from "lucide-react";
 import BulletinBookReader from "@/components/BulletinBookReader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -285,20 +285,36 @@ function LiveActivityBar({ latestNews, allImportantDates }: { latestNews: any; a
             </div>
           </Link>
 
-          {/* Progress dots + quick links */}
+          {/* Progress dots + arrows + quick links */}
           <div className="px-4 sm:px-5 py-2.5 border-t border-border/30 flex items-center justify-between">
-            {/* Dots indicator */}
-            <div className="flex items-center gap-1.5">
-              {items.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveIndex(i)}
-                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                    i === activeIndex ? "bg-primary w-4" : "bg-border hover:bg-muted-foreground/50"
-                  }`}
-                  aria-label={`View item ${i + 1}`}
-                />
-              ))}
+            {/* Left arrow + dots + right arrow */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setActiveIndex((prev) => (prev - 1 + items.length) % items.length)}
+                className="w-6 h-6 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors press-scale"
+                aria-label="Previous item"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+              </button>
+              <div className="flex items-center gap-1.5">
+                {items.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveIndex(i)}
+                    className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                      i === activeIndex ? "bg-primary w-4" : "bg-border hover:bg-muted-foreground/50"
+                    }`}
+                    aria-label={`View item ${i + 1}`}
+                  />
+                ))}
+              </div>
+              <button
+                onClick={() => setActiveIndex((prev) => (prev + 1) % items.length)}
+                className="w-6 h-6 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors press-scale"
+                aria-label="Next item"
+              >
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
             </div>
             {/* Quick links */}
             <div className="flex items-center gap-3">
