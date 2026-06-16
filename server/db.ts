@@ -1,6 +1,7 @@
 import { eq, desc, and, gte, lte, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, newsPosts, bulletins, events, emailSubscriptions, ccdRegistrations, cyoTeams, cyoGames, volunteerOpportunities, volunteerSignups, ccdEvents, parishDocuments, baptismRegistrations, sponsorCertificates, marriageInquiries, funeralPrePlanning, teenLifeRegistrations, parishRegistrations, ccdPermissions, importantDates, galleryPhotos, siteSettings } from "../drizzle/schema";
+import { InsertUser, users, newsPosts, bulletins, events, emailSubscriptions, ccdRegistrations, cyoTeams, cyoGames, volunteerOpportunities, volunteerSignups, ccdEvents, parishDocuments, baptismRegistrations, sponsorCertificates, marriageInquiries, funeralPrePlanning, teenLifeRegistrations, parishRegistrations, ccdPermissions, importantDates, galleryPhotos, siteSettings, prayerIntentions } from "../drizzle/schema";
+import type { InsertPrayerIntention } from "../drizzle/schema";
 import type { InsertGalleryPhoto } from "../drizzle/schema";
 import type { InsertNewsPost, InsertBulletin, InsertEvent, InsertEmailSubscription, InsertCcdRegistration, InsertCyoTeam, InsertCyoGame, InsertVolunteerOpportunity, InsertVolunteerSignup, InsertCcdEvent, InsertParishDocument, BaptismRegistration, SponsorCertificate, MarriageInquiry, FuneralPrePlanning, TeenLifeRegistration, ParishRegistration, CcdPermission } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -859,4 +860,37 @@ export async function getAllSiteSettings() {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(siteSettings);
+}
+
+// ===== PRAYER WALL =====
+
+export async function createPrayerIntention(data: { name?: string; intention: string; isPublic?: boolean }) {
+  const db = await getDb();
+  if (!db) return null;
+  const [result] = await db.insert(prayerIntentions).values({
+    name: data.name || null,
+    intention: data.intention,
+    isPublic: data.isPublic ?? true,
+  });
+  return result.insertId;
+}
+
+export async function getRecentPrayerIntentions(limit = 20) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(prayerIntentions)
+    .where(eq(prayerIntentions.isPublic, true))
+    .orderBy(desc(prayerIntentions.createdAt))
+    .limit(limit);
+}
+
+export async function getPrayerIntentionCount() {
+  const db = await getDb();
+  if (!db) return 0;
+  // Count candles lit in the past 7 days
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const [result] = await db.select({ count: sql<number>`count(*)` })
+    .from(prayerIntentions)
+    .where(gte(prayerIntentions.createdAt, sevenDaysAgo));
+  return result.count;
 }

@@ -1176,6 +1176,29 @@ export const appRouter = router({
       return getSaintOfDay();
     }),
   }),
+
+  // ===== PRAYER WALL =====
+  prayerWall: router({
+    getIntentions: publicProcedure.query(async () => {
+      const intentions = await db.getRecentPrayerIntentions(30);
+      const count = await db.getPrayerIntentionCount();
+      return { intentions, candlesThisWeek: count };
+    }),
+    lightCandle: publicProcedure
+      .input(z.object({
+        name: z.string().max(100).optional(),
+        intention: z.string().min(1).max(300),
+        isPublic: z.boolean().optional().default(true),
+      }))
+      .mutation(async ({ input }) => {
+        const id = await db.createPrayerIntention({
+          name: input.name || undefined,
+          intention: input.intention,
+          isPublic: input.isPublic,
+        });
+        return { success: true, id };
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

@@ -527,3 +527,16 @@ export const siteSettings = mysqlTable("site_settings", {
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 export type SiteSetting = typeof siteSettings.$inferSelect;
+
+/**
+ * Prayer Wall - "Light a Candle" intentions from parishioners
+ */
+export const prayerIntentions = mysqlTable("prayer_intentions", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }),
+  intention: text("intention").notNull(),
+  isPublic: boolean("isPublic").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type PrayerIntention = typeof prayerIntentions.$inferSelect;
+export type InsertPrayerIntention = typeof prayerIntentions.$inferInsert;

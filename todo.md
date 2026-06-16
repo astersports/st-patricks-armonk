@@ -389,3 +389,12 @@
 - [x] Get Involved page: Compact outreach cards from tall blocks to single-row items with email links
 - [x] Faith Formation page: Add email links to all contact names
 - [x] Fix Catholic Resources: Replace broken USCCB/ArchNY RSS feeds with working alternatives (Aleteia + The Pillar)
+
+## Phase: Full Site Redesign (Interactive + Compact)
+
+- [x] Fix horizontal overflow bug (page dragging left/right on mobile)
+- [x] Build "Light a Candle" prayer wall with database persistence (candle count, intentions)
+- [x] Build "Now at St. Patrick" unified card (news + coming up events with countdown pills)
+- [ ] Redesign Bulletin page: inline paginated reader + vertical archive list (not horizontal scroll)
+- [ ] Add Fraunces display font for section titles site-wide
+- [ ] Compact all remaining oversized cards and sections

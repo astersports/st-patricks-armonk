@@ -74,11 +74,26 @@
   }
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  @keyframes flicker {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    25% { opacity: 0.8; transform: scale(0.95) rotate(-2deg); }
+    50% { opacity: 1; transform: scale(1.05) rotate(1deg); }
+    75% { opacity: 0.9; transform: scale(0.98) rotate(-1deg); }
+  }
+  .animate-flicker {
+    animation: flicker 2s ease-in-out infinite;
+  }
+  .candle-glow {
+    filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.5));
   }
   body {
     font-family: var(--font-sans);
     color: var(--color-foreground);
     background-color: var(--color-background);
+    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

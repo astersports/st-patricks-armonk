@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin, Clock, ExternalLink, Globe, Camera, ImageIcon, BookOpen, Download, RefreshCw, ChevronDown, ChevronLeft, ChevronRight, Rss } from "lucide-react";
 import BulletinBookReader from "@/components/BulletinBookReader";
+import { PrayerWall } from "@/components/PrayerWall";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -195,7 +196,99 @@ function HeroSection() {
   );
 }
 
-// === LATEST NEWS CARD — Always visible, single news highlight ===
+// === NOW AT ST. PATRICK — Unified live status + news + events ===
+function NowAtStPatrick({ latestNews, allImportantDates }: { latestNews: any; allImportantDates: any[] | undefined }) {
+  const upcomingEvents = useMemo(() => {
+    return allImportantDates
+      ?.filter((e) => new Date(e.eventDate as unknown as string) >= new Date())
+      ?.slice(0, 3) || [];
+  }, [allImportantDates]);
+
+  const catColors: Record<string, { dot: string; bg: string }> = {
+    ccd: { dot: "bg-green-500", bg: "bg-green-500/10" },
+    cyo: { dot: "bg-orange-500", bg: "bg-orange-500/10" },
+    sacrament: { dot: "bg-purple-500", bg: "bg-purple-500/10" },
+    parish: { dot: "bg-primary", bg: "bg-primary/10" },
+    teen_life: { dot: "bg-blue-500", bg: "bg-blue-500/10" },
+    social: { dot: "bg-amber-500", bg: "bg-amber-500/10" },
+  };
+
+  return (
+    <section className="reveal container -mt-8 relative z-20 mb-4 sm:mb-6">
+      <Card className="border-0 shadow-lg overflow-hidden">
+        <CardContent className="p-0">
+          {/* Latest News — top strip */}
+          <Link href="/news" className="group block border-b border-border/30">
+            <div className="px-3 py-2.5 sm:px-4 sm:py-3 flex items-center gap-3 hover:bg-primary/[0.02] transition-colors">
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                <Newspaper className="w-3.5 h-3.5 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[9px] text-muted-foreground uppercase tracking-wider font-medium">Latest News</p>
+                {latestNews ? (
+                  <p className="font-semibold text-foreground text-sm truncate">{latestNews.title}</p>
+                ) : (
+                  <p className="font-semibold text-foreground text-sm">News & Announcements</p>
+                )}
+              </div>
+              <ArrowRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+            </div>
+          </Link>
+
+          {/* Coming Up Events */}
+          {upcomingEvents.length > 0 && (
+            <div className="px-3 py-2.5 sm:px-4 sm:py-3">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-gold" />
+                  <span className="text-xs font-bold text-foreground">Coming Up</span>
+                </div>
+                <Link href="/calendar?filter=key-dates" className="text-[10px] font-medium text-primary hover:text-primary/80 flex items-center gap-0.5">
+                  All Events <ArrowRight className="w-2.5 h-2.5" />
+                </Link>
+              </div>
+              <div className="space-y-1.5">
+                {upcomingEvents.map((evt, i) => {
+                  const eventDate = toEastern(evt.eventDate as unknown as string);
+                  const colors = catColors[evt.category] || catColors.parish;
+                  const countdown = getCountdown(eventDate);
+                  return (
+                    <Link key={evt.id || i} href="/calendar?filter=key-dates" className="group flex items-center gap-2.5 py-1.5 px-2 -mx-1 rounded-lg hover:bg-muted/40 transition-colors">
+                      {/* Date badge */}
+                      <div className={`w-9 h-9 rounded-lg ${colors.bg} flex flex-col items-center justify-center shrink-0`}>
+                        <span className="text-[8px] font-bold uppercase leading-none text-muted-foreground">
+                          {format(eventDate, "MMM")}
+                        </span>
+                        <span className="text-sm font-bold leading-tight text-foreground">
+                          {format(eventDate, "d")}
+                        </span>
+                      </div>
+                      {/* Event info */}
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-foreground text-xs sm:text-sm truncate group-hover:text-primary transition-colors">
+                          {evt.title}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground truncate">
+                          {evt.location || format(eventDate, "EEEE · h:mm a")}
+                        </p>
+                      </div>
+                      {/* Countdown */}
+                      <span className="text-[9px] font-semibold text-gold bg-gold/10 px-2 py-0.5 rounded-full shrink-0 whitespace-nowrap">
+                        {countdown}
+                      </span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </section>
+  );
+}
+
+// === LATEST NEWS CARD (kept for backward compat but no longer rendered) ===
 function LatestNewsCard({ latestNews }: { latestNews: any }) {
   return (
     <section className="reveal container -mt-8 relative z-20 mb-3 sm:mb-4">
@@ -980,9 +1073,8 @@ export default function Home() {
       <HeroSection />
 
       <div ref={revealRef}>
-        {/* Latest News + Coming Up Events — two always-visible sections */}
-        <LatestNewsCard latestNews={latestNews} />
-        <ComingUpEvents allImportantDates={allImportantDates} />
+        {/* Now at St. Patrick — Live status + upcoming events + latest news */}
+        <NowAtStPatrick latestNews={latestNews} allImportantDates={allImportantDates} />
 
         {/* Pastor's Welcome */}
         <section className="reveal container py-5 sm:py-8 mb-1 sm:mb-3">
@@ -1023,6 +1115,11 @@ export default function Home() {
         {/* Saint of the Day */}
         <section className="reveal container py-6 sm:py-10">
           <SaintOfDayCard />
+        </section>
+
+        {/* Prayer Wall — Light a Candle */}
+        <section className="reveal section-cream py-6 sm:py-8 -mx-4 px-4 sm:-mx-0 sm:px-0">
+          <PrayerWall />
         </section>
 
         {/* Newsletter Subscription — Full-width dark CTA */}

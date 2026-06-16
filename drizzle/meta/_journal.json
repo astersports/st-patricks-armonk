@@ -99,6 +99,13 @@
       "when": 1781557994560,
       "tag": "0013_plain_black_tarantula",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "5",
+      "when": 1781575812053,
+      "tag": "0014_nifty_amazoness",
+      "breakpoints": true
     }
   ]
 }
