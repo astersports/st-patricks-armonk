@@ -31,35 +31,35 @@ export default function DashboardHome() {
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {stats.pendingCcdRegistrations > 0 && (
-                <Link href="/admin/ccd">
+                <Link href="/ccd">
                   <Badge variant="outline" className="cursor-pointer hover:bg-amber-100 border-amber-300">
                     {stats.pendingCcdRegistrations} CCD Registration{stats.pendingCcdRegistrations > 1 ? "s" : ""}
                   </Badge>
                 </Link>
               )}
               {stats.pendingParishRegistrations > 0 && (
-                <Link href="/admin/registrations">
+                <Link href="/registrations">
                   <Badge variant="outline" className="cursor-pointer hover:bg-amber-100 border-amber-300">
                     {stats.pendingParishRegistrations} Parish Registration{stats.pendingParishRegistrations > 1 ? "s" : ""}
                   </Badge>
                 </Link>
               )}
               {stats.pendingBaptisms > 0 && (
-                <Link href="/admin/sacraments">
+                <Link href="/sacraments">
                   <Badge variant="outline" className="cursor-pointer hover:bg-amber-100 border-amber-300">
                     {stats.pendingBaptisms} Baptism Request{stats.pendingBaptisms > 1 ? "s" : ""}
                   </Badge>
                 </Link>
               )}
               {stats.pendingMarriages > 0 && (
-                <Link href="/admin/sacraments">
+                <Link href="/sacraments">
                   <Badge variant="outline" className="cursor-pointer hover:bg-amber-100 border-amber-300">
                     {stats.pendingMarriages} Marriage Inquir{stats.pendingMarriages > 1 ? "ies" : "y"}
                   </Badge>
                 </Link>
               )}
               {stats.pendingTeenLife > 0 && (
-                <Link href="/admin/teen-life">
+                <Link href="/teen-life">
                   <Badge variant="outline" className="cursor-pointer hover:bg-amber-100 border-amber-300">
                     {stats.pendingTeenLife} Teen Life Registration{stats.pendingTeenLife > 1 ? "s" : ""}
                   </Badge>
@@ -88,42 +88,42 @@ export default function DashboardHome() {
             icon={Newspaper}
             label="News Posts"
             value={stats.totalNews}
-            href="/admin/news"
+            href="/news"
             color="text-blue-600"
           />
           <StatCard
             icon={Calendar}
             label="Events"
             value={stats.totalEvents}
-            href="/admin/events"
+            href="/events"
             color="text-green-600"
           />
           <StatCard
             icon={Users}
             label="Subscribers"
             value={stats.activeSubscribers}
-            href="/admin/subscribers"
+            href="/subscribers"
             color="text-purple-600"
           />
           <StatCard
             icon={Camera}
             label="Gallery Photos"
             value={stats.totalGalleryPhotos}
-            href="/admin/gallery"
+            href="/gallery"
             color="text-pink-600"
           />
           <StatCard
             icon={Heart}
             label="Volunteer Signups"
             value={stats.totalVolunteerSignups}
-            href="/admin/volunteers"
+            href="/volunteers"
             color="text-red-600"
           />
           <StatCard
             icon={GraduationCap}
             label="Pending CCD"
             value={stats.pendingCcdRegistrations}
-            href="/admin/ccd"
+            href="/ccd"
             color="text-amber-600"
             highlight={stats.pendingCcdRegistrations > 0}
           />
@@ -131,7 +131,7 @@ export default function DashboardHome() {
             icon={UserPlus}
             label="Pending Parish Reg."
             value={stats.pendingParishRegistrations}
-            href="/admin/registrations"
+            href="/registrations"
             color="text-teal-600"
             highlight={stats.pendingParishRegistrations > 0}
           />
@@ -139,7 +139,7 @@ export default function DashboardHome() {
             icon={Cross}
             label="Pending Baptisms"
             value={stats.pendingBaptisms}
-            href="/admin/sacraments"
+            href="/sacraments"
             color="text-indigo-600"
             highlight={stats.pendingBaptisms > 0}
           />
@@ -147,7 +147,7 @@ export default function DashboardHome() {
             icon={Cross}
             label="Pending Marriages"
             value={stats.pendingMarriages}
-            href="/admin/sacraments"
+            href="/sacraments"
             color="text-rose-600"
             highlight={stats.pendingMarriages > 0}
           />
@@ -155,7 +155,7 @@ export default function DashboardHome() {
             icon={Users}
             label="Pending Teen Life"
             value={stats.pendingTeenLife}
-            href="/admin/teen-life"
+            href="/teen-life"
             color="text-orange-600"
             highlight={stats.pendingTeenLife > 0}
           />
@@ -166,12 +166,12 @@ export default function DashboardHome() {
       <div>
         <h2 className="font-semibold text-lg mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          <QuickAction href="/admin/news" icon={Newspaper} label="Create News Post" description="Publish an announcement" />
-          <QuickAction href="/admin/gallery" icon={Camera} label="Upload Photos" description="Add to the photo gallery" />
-          <QuickAction href="/admin/events" icon={Calendar} label="Add Event" description="Schedule a parish event" />
-          <QuickAction href="/admin/bulletins" icon={BookOpen} label="Upload Bulletin" description="Post this week's bulletin" />
-          <QuickAction href="/admin/key-dates" icon={Calendar} label="Manage Key Dates" description="Update important dates" />
-          <QuickAction href="/admin/users" icon={Users} label="Manage Staff" description="Assign department roles" />
+          <QuickAction href="/news" icon={Newspaper} label="Create News Post" description="Publish an announcement" />
+          <QuickAction href="/gallery" icon={Camera} label="Upload Photos" description="Add to the photo gallery" />
+          <QuickAction href="/events" icon={Calendar} label="Add Event" description="Schedule a parish event" />
+          <QuickAction href="/bulletins" icon={BookOpen} label="Upload Bulletin" description="Post this week's bulletin" />
+          <QuickAction href="/key-dates" icon={Calendar} label="Manage Key Dates" description="Update important dates" />
+          <QuickAction href="/users" icon={Users} label="Manage Staff" description="Assign department roles" />
         </div>
       </div>
     </div>

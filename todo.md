@@ -425,3 +425,10 @@
 - [x] Add YouTube subscribe button in hero section after "Support Our Parish" button
 - [x] Visually separate Latest News and Coming Up sections (not merged in same card)
 - [x] Tighten New Here page — reduce padding and whitespace for less scrolling on mobile
+
+## Phase: Admin Section Fixes
+
+- [x] Fix admin section not viewable on desktop or mobile
+- [x] Fix admin tiles not working (clicking does nothing) — was double /admin/admin/ path from wouter nested routing
+- [x] Add home/back button navigation when viewing admin section (home icon in mobile header, View Site in sidebar)
+- [x] Fix YouTube link to correct URL: https://www.youtube.com/@StPatricksArmonk

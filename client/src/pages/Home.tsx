@@ -195,7 +195,7 @@ function HeroSection() {
 
         {/* YouTube Subscribe */}
         <a
-          href="https://www.youtube.com/@stpatrickinamonk"
+          href="https://www.youtube.com/@StPatricksArmonk"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 mt-4 bg-red-600/90 hover:bg-red-600 text-white text-xs font-semibold px-4 py-2 rounded-full transition-colors press-scale animate-fade-up stagger-4"

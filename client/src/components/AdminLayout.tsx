@@ -27,53 +27,53 @@ const navGroups: NavGroup[] = [
     title: "Communications",
     section: "news",
     items: [
-      { label: "News & Announcements", section: "news", icon: Newspaper, path: "/admin/news" },
-      { label: "Weekly Bulletins", section: "bulletins", icon: BookOpen, path: "/admin/bulletins" },
-      { label: "Photo Gallery", section: "gallery", icon: Camera, path: "/admin/gallery" },
-      { label: "Subscribers", section: "subscribers", icon: Users, path: "/admin/subscribers" },
+      { label: "News & Announcements", section: "news", icon: Newspaper, path: "/news" },
+      { label: "Weekly Bulletins", section: "bulletins", icon: BookOpen, path: "/bulletins" },
+      { label: "Photo Gallery", section: "gallery", icon: Camera, path: "/gallery" },
+      { label: "Subscribers", section: "subscribers", icon: Users, path: "/subscribers" },
     ],
   },
   {
     title: "Parish Life",
     section: "events",
     items: [
-      { label: "Events", section: "events", icon: Calendar, path: "/admin/events" },
-      { label: "Key Dates", section: "key_dates", icon: Calendar, path: "/admin/key-dates" },
-      { label: "Volunteers", section: "volunteers", icon: Heart, path: "/admin/volunteers" },
-      { label: "Registrations", section: "registrations", icon: UserPlus, path: "/admin/registrations" },
+      { label: "Events", section: "events", icon: Calendar, path: "/events" },
+      { label: "Key Dates", section: "key_dates", icon: Calendar, path: "/key-dates" },
+      { label: "Volunteers", section: "volunteers", icon: Heart, path: "/volunteers" },
+      { label: "Registrations", section: "registrations", icon: UserPlus, path: "/registrations" },
     ],
   },
   {
     title: "Religious Education",
     section: "ccd_registrations",
     items: [
-      { label: "CCD Registrations", section: "ccd_registrations", icon: GraduationCap, path: "/admin/ccd" },
-      { label: "CCD Calendar", section: "ccd_calendar", icon: Calendar, path: "/admin/ccd-calendar" },
-      { label: "CCD Permissions", section: "ccd_permissions", icon: FileText, path: "/admin/ccd-permissions" },
-      { label: "Documents", section: "documents", icon: FileText, path: "/admin/documents" },
+      { label: "CCD Registrations", section: "ccd_registrations", icon: GraduationCap, path: "/ccd" },
+      { label: "CCD Calendar", section: "ccd_calendar", icon: Calendar, path: "/ccd-calendar" },
+      { label: "CCD Permissions", section: "ccd_permissions", icon: FileText, path: "/ccd-permissions" },
+      { label: "Documents", section: "documents", icon: FileText, path: "/documents" },
     ],
   },
   {
     title: "Youth Ministry",
     section: "cyo",
     items: [
-      { label: "CYO Basketball", section: "cyo", icon: Calendar, path: "/admin/cyo" },
-      { label: "Teen Life", section: "teen_life", icon: Users, path: "/admin/teen-life" },
+      { label: "CYO Basketball", section: "cyo", icon: Calendar, path: "/cyo" },
+      { label: "Teen Life", section: "teen_life", icon: Users, path: "/teen-life" },
     ],
   },
   {
     title: "Sacraments",
     section: "sacraments",
     items: [
-      { label: "Sacrament Requests", section: "sacraments", icon: Cross, path: "/admin/sacraments" },
+      { label: "Sacrament Requests", section: "sacraments", icon: Cross, path: "/sacraments" },
     ],
   },
   {
     title: "Administration",
     section: "settings",
     items: [
-      { label: "Site Settings", section: "settings", icon: Settings, path: "/admin/settings" },
-      { label: "User Management", section: "users", icon: Users, path: "/admin/users" },
+      { label: "Site Settings", section: "settings", icon: Settings, path: "/settings" },
+      { label: "User Management", section: "users", icon: Users, path: "/users" },
     ],
   },
 ];
@@ -157,7 +157,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       >
         {/* Sidebar Header */}
         <div className="p-4 border-b flex items-center justify-between">
-          <Link href="/admin" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <Shield className="w-5 h-5 text-primary" />
             <span className="font-serif font-bold text-primary">Admin</span>
           </Link>
@@ -173,9 +173,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <nav className="flex-1 overflow-y-auto py-3 px-3 space-y-1">
           {/* Dashboard Home */}
           <Link
-            href="/admin"
+            href="/"
             className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-              location === "/admin"
+              location === "/"
                 ? "bg-primary/10 text-primary"
                 : "text-foreground/70 hover:bg-muted hover:text-foreground"
             }`}
@@ -198,9 +198,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           {/* User Management - admin only */}
           {hasAccess(userRole, "users") && (
             <Link
-              href="/admin/users"
+              href="/users"
               className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                location === "/admin/users"
+                location === "/users"
                   ? "bg-primary/10 text-primary"
                   : "text-foreground/70 hover:bg-muted hover:text-foreground"
               }`}
@@ -226,7 +226,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             </div>
           </div>
           <div className="flex gap-2 mt-2">
-            <Link href="/" className="flex-1">
+            <Link href="~/" className="flex-1">
               <Button variant="ghost" size="sm" className="w-full text-xs gap-1.5">
                 <LogOut className="w-3 h-3" /> View Site
               </Button>
@@ -250,7 +250,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               <Shield className="w-4 h-4 text-primary" />
               <span className="font-serif font-bold text-primary text-sm">Admin</span>
             </div>
-            <div className="w-9" /> {/* Spacer for centering */}
+            <Link href="~/" className="p-2 -mr-2 rounded-lg hover:bg-muted">
+              <Home className="w-5 h-5 text-muted-foreground" />
+            </Link>
           </div>
         </header>
 
