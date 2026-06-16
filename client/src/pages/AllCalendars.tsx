@@ -9,6 +9,7 @@ import { trpc } from "@/lib/trpc";
 import { format, isToday, isTomorrow, isThisWeek, startOfWeek, addWeeks, isSameWeek } from "date-fns";
 import { TZDate } from "@date-fns/tz";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import { WeatherBadge, ParkingAdvisory } from "@/components/WeatherBadge";
 
 // Convert a UTC ISO string to a TZDate in Eastern Time for correct display
 const TIMEZONE = "America/New_York";
@@ -320,6 +321,30 @@ export default function AllCalendars() {
     };
   }, [allEvents]);
 
+  // Weather enrichment for events within 7 days
+  const weatherInput = useMemo(() => {
+    if (!filteredEvents || filteredEvents.length === 0) return [];
+    const now = new Date();
+    const sevenDays = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+    return filteredEvents
+      .filter(e => {
+        const d = new Date(e.startDate);
+        return d >= now && d <= sevenDays;
+      })
+      .map(e => ({
+        id: e.id,
+        title: e.title,
+        description: e.description || undefined,
+        location: e.location || undefined,
+        startDate: e.startDate,
+      }));
+  }, [filteredEvents]);
+
+  const { data: weatherData } = trpc.weather.forEvents.useQuery(
+    { events: weatherInput },
+    { enabled: weatherInput.length > 0 && activeSource !== "key-dates", staleTime: 60 * 60 * 1000 }
+  );
+
   // Dynamic page title based on active filter
   const isKeyDates = activeSource === "key-dates";
   const pageTitle = isKeyDates
@@ -564,6 +589,16 @@ export default function AllCalendars() {
                                       <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-2">
                                         {event.description}
                                       </p>
+                                    )}
+
+                                    {/* Weather badge for outdoor/high-attendance events */}
+                                    {weatherData?.[event.id]?.weather && (
+                                      <div className="mt-2 space-y-1.5">
+                                        <WeatherBadge weather={weatherData[event.id].weather!} />
+                                        {weatherData[event.id].parkingAdvisory && (
+                                          <ParkingAdvisory advisory={weatherData[event.id].parkingAdvisory!} />
+                                        )}
+                                      </div>
                                     )}
                                   </div>
                                 </div>

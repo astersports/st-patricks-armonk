@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
-import { Church, Cross, Sun, Clock, ChevronRight } from "lucide-react";
+import { Church, Cross, Sun, Clock, ChevronRight, CloudRain, CloudSnow, CloudSun, Cloud, CloudLightning } from "lucide-react";
 import { Link } from "wouter";
+import { trpc } from "@/lib/trpc";
 
 const TIMEZONE = "America/New_York";
 
@@ -156,6 +157,47 @@ function findNextMass(currentDay: number, currentMin: number) {
   return { nextLabel, nextTime, nextDay, countdownText };
 }
 
+function WeatherIconSmall({ icon }: { icon: string }) {
+  const cls = "w-3 h-3";
+  switch (icon) {
+    case "clear":
+    case "mostly-clear":
+      return <Sun className={cls} />;
+    case "partly-cloudy":
+      return <CloudSun className={cls} />;
+    case "overcast":
+    case "fog":
+      return <Cloud className={cls} />;
+    case "drizzle":
+    case "light-rain":
+    case "rain":
+    case "heavy-rain":
+      return <CloudRain className={cls} />;
+    case "light-snow":
+    case "snow":
+    case "heavy-snow":
+      return <CloudSnow className={cls} />;
+    case "thunderstorm":
+      return <CloudLightning className={cls} />;
+    default:
+      return <Sun className={cls} />;
+  }
+}
+
+function CurrentWeatherPill() {
+  const { data: weather } = trpc.weather.current.useQuery(undefined, {
+    staleTime: 60 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+  if (!weather) return null;
+  return (
+    <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-sky-500/8 text-sky-700 dark:text-sky-300 shrink-0">
+      <WeatherIconSmall icon={weather.icon} />
+      <span>{weather.temperature}°F</span>
+    </div>
+  );
+}
+
 export function NowStatusBar() {
   const [now, setNow] = useState(() => {
     const d = new Date();
@@ -254,6 +296,8 @@ export function NowStatusBar() {
             <Cross className="w-3 h-3" />
             <span>{status.confessionText}</span>
           </div>
+          {/* Current weather */}
+          <CurrentWeatherPill />
         </div>
       )}
     </div>

@@ -561,3 +561,16 @@
 - [x] L99 Polish: Catholic Resources quick links (rounded-xl, larger gaps, hover shadow)
 - [x] L99 Polish: Daily Readings (stronger borders, better expanded state contrast)
 - [x] Final comprehensive verification (all 31 tests pass, all pages verified on desktop + mobile)
+
+## Phase: Claude Architect Directives (D01)
+
+- [x] D01: Server-side weather API integration (Open-Meteo, 7-day hourly forecast, 60-min cache)
+- [x] D01: Weather tRPC endpoints (weather.current + weather.forEvents)
+- [x] D01: Frontend WeatherBadge and ParkingAdvisory components
+- [x] D01: Integrate weather into NowStatusBar (current conditions pill - 76°F with icon)
+- [x] D01: Integrate weather into Coming Up Events on homepage (outdoor/high-attendance detection)
+- [x] D01: Integrate weather into AllCalendars page (badges on events within 7 days)
+- [x] D01: Outdoor event keyword detection (bbq, park, field, procession, etc.)
+- [x] D01: High-attendance event detection (Easter, Christmas, First Communion, etc.)
+- [x] D01: Parking advisory system for high-attendance events
+- [x] Claude Architect Part 2 directives (D09-D18) generated and saved

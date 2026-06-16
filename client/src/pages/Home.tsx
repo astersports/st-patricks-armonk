@@ -7,6 +7,7 @@ import BulletinBookReader from "@/components/BulletinBookReader";
 import { PrayerWall } from "@/components/PrayerWall";
 import { NowStatusBar } from "@/components/NowStatusBar";
 import { LiturgicalSeasonBadge } from "@/components/LiturgicalSeasonBadge";
+import { WeatherBadge, ParkingAdvisory } from "@/components/WeatherBadge";
 import { ThisWeekAccordion } from "@/components/ThisWeekAccordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -399,6 +400,29 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
     return c;
   }, [events]);
 
+  // Fetch weather for upcoming events (within 7 days)
+  const weatherInput = useMemo(() => {
+    const now = new Date();
+    const sevenDays = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+    return events
+      .filter(e => {
+        const d = new Date(e.eventDate as unknown as string);
+        return d >= now && d <= sevenDays;
+      })
+      .map(e => ({
+        id: e.id?.toString() || e.title,
+        title: e.title,
+        description: e.note || undefined,
+        location: e.location || undefined,
+        startDate: new Date(e.eventDate as unknown as string).toISOString(),
+      }));
+  }, [events]);
+
+  const { data: weatherData } = trpc.weather.forEvents.useQuery(
+    { events: weatherInput },
+    { enabled: weatherInput.length > 0, staleTime: 60 * 60 * 1000 }
+  );
+
   return (
     <div className="px-4 py-3">
       {/* Header */}
@@ -439,48 +463,63 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
             const eventDate = toEastern(evt.eventDate as unknown as string);
             const colors = catColors[evt.category] || catColors.parish;
             const countdown = getCountdown(eventDate);
+            const evtKey = evt.id?.toString() || evt.title;
+            const evtWeather = weatherData?.[evtKey];
             return (
-              <div key={evt.id || i} className="group flex items-center gap-3 py-2 px-2 -mx-2 rounded-lg hover:bg-muted/40 transition-colors">
-                <Link href="/calendar?filter=key-dates" className="flex items-center gap-3 flex-1 min-w-0">
-                  {/* Date badge */}
-                  <div className={`w-10 h-10 rounded-lg ${colors.bg} flex flex-col items-center justify-center shrink-0`}>
-                    <span className="text-[10px] font-bold uppercase leading-none text-primary/70">
-                      {format(eventDate, "MMM")}
-                    </span>
-                    <span className="text-lg font-bold leading-tight text-primary">
-                      {format(eventDate, "d")}
-                    </span>
+              <div key={evt.id || i} className="group py-2 px-2 -mx-2 rounded-lg hover:bg-muted/40 transition-colors">
+                <div className="flex items-center gap-3">
+                  <Link href="/calendar?filter=key-dates" className="flex items-center gap-3 flex-1 min-w-0">
+                    {/* Date badge */}
+                    <div className={`w-10 h-10 rounded-lg ${colors.bg} flex flex-col items-center justify-center shrink-0`}>
+                      <span className="text-[10px] font-bold uppercase leading-none text-primary/70">
+                        {format(eventDate, "MMM")}
+                      </span>
+                      <span className="text-lg font-bold leading-tight text-primary">
+                        {format(eventDate, "d")}
+                      </span>
+                    </div>
+                    {/* Event info */}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-foreground text-base leading-snug group-hover:text-primary transition-colors">
+                        {evt.title}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {evt.location || format(eventDate, "EEEE \u00b7 h:mm a")}
+                      </p>
+                    </div>
+                  </Link>
+                  {/* Add to Calendar */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      downloadICS({
+                        title: evt.title,
+                        startDate: eventDate,
+                        location: evt.location || "St. Patrick Church, 29 Cox Ave, Armonk NY 10504",
+                      });
+                      toast.success("Calendar event downloaded");
+                    }}
+                    className="shrink-0 p-1.5 rounded-md hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                    title="Add to Calendar"
+                  >
+                    <CalendarPlus className="w-4 h-4" />
+                  </button>
+                  {/* Countdown */}
+                  <span className="text-xs font-medium text-gold bg-gold/15 px-2 py-0.5 rounded-full shrink-0 whitespace-nowrap">
+                    {countdown}
+                  </span>
+                </div>
+                {/* Weather badge for outdoor/high-attendance events */}
+                {evtWeather?.weather && (
+                  <div className="ml-[52px] mt-1">
+                    <WeatherBadge weather={evtWeather.weather} compact />
+                    {evtWeather.parkingAdvisory && (
+                      <div className="mt-1">
+                        <ParkingAdvisory advisory={evtWeather.parkingAdvisory} />
+                      </div>
+                    )}
                   </div>
-                  {/* Event info */}
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-foreground text-base leading-snug group-hover:text-primary transition-colors">
-                      {evt.title}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {evt.location || format(eventDate, "EEEE \u00b7 h:mm a")}
-                    </p>
-                  </div>
-                </Link>
-                {/* Add to Calendar */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    downloadICS({
-                      title: evt.title,
-                      startDate: eventDate,
-                      location: evt.location || "St. Patrick Church, 29 Cox Ave, Armonk NY 10504",
-                    });
-                    toast.success("Calendar event downloaded");
-                  }}
-                  className="shrink-0 p-1.5 rounded-md hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
-                  title="Add to Calendar"
-                >
-                  <CalendarPlus className="w-4 h-4" />
-                </button>
-                {/* Countdown */}
-                <span className="text-xs font-medium text-gold bg-gold/15 px-2 py-0.5 rounded-full shrink-0 whitespace-nowrap">
-                  {countdown}
-                </span>
+                )}
               </div>
             );
           })

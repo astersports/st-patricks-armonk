@@ -244,6 +244,29 @@ export const appRouter = router({
     }),
   }),
 
+  // ===== WEATHER =====
+  weather: router({
+    forEvents: publicProcedure
+      .input(z.object({
+        events: z.array(z.object({
+          id: z.string(),
+          title: z.string(),
+          description: z.string().optional(),
+          location: z.string().optional(),
+          startDate: z.string(),
+        })),
+      }))
+      .query(async ({ input }) => {
+        const { getWeatherForEvents } = await import("./weather");
+        return getWeatherForEvents(input.events);
+      }),
+    current: publicProcedure.query(async () => {
+      const { getWeatherForEvent } = await import("./weather");
+      // Get weather for right now
+      return getWeatherForEvent(new Date().toISOString());
+    }),
+  }),
+
   // ===== GOOGLE CALENDAR (ICS) =====
   googleCalendar: router({
     parishEvents: publicProcedure.query(async () => {
