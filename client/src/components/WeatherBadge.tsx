@@ -1,9 +1,9 @@
 /**
  * WeatherBadge — Contextual weather display for upcoming events.
  * Shows temperature, condition, and precipitation probability.
- * Glows amber when rain probability > 40%.
+ * Uses colorful multi-color SVG icons for a polished look.
  */
-import { Cloud, CloudRain, CloudSnow, CloudSun, CloudLightning, Wind, Droplets } from "lucide-react";
+import { ColorfulWeatherIcon, DropletIcon, WindIcon } from "@/components/WeatherIcons";
 
 interface WeatherData {
   temperature: number;
@@ -27,60 +27,6 @@ interface WeatherData {
   }>;
 }
 
-/** Custom filled sun icon - large center, short thick rays, unmistakably sunny */
-function SunIcon({ className = "w-4 h-4" }: { className?: string }) {
-  return (
-    <svg className={`${className} text-amber-500`} viewBox="0 0 24 24" fill="currentColor" stroke="none">
-      <circle cx="12" cy="12" r="6" />
-      <rect x="11" y="1" width="2" height="4" rx="1" />
-      <rect x="11" y="19" width="2" height="4" rx="1" />
-      <rect x="19" y="11" width="4" height="2" rx="1" />
-      <rect x="1" y="11" width="4" height="2" rx="1" />
-      <rect x="17.4" y="3.8" width="2" height="4" rx="1" transform="rotate(45 18.4 5.8)" />
-      <rect x="4.6" y="16.2" width="2" height="4" rx="1" transform="rotate(45 5.6 18.2)" />
-      <rect x="17.4" y="16.2" width="2" height="4" rx="1" transform="rotate(-45 18.4 18.2)" />
-      <rect x="4.6" y="3.8" width="2" height="4" rx="1" transform="rotate(-45 5.6 5.8)" />
-    </svg>
-  );
-}
-
-/** Partly cloudy: sun peeking behind cloud */
-function PartlySunIcon({ className = "w-4 h-4" }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor" stroke="none">
-      <circle cx="10" cy="8" r="3.5" fill="currentColor" opacity="0.7" />
-      <path d="M10 3v1.5M10 12.5V14M5.05 5.05l1.06 1.06M13.89 13.89l1.06 1.06M3 8h1.5M16 8h.5M5.05 10.95l1.06-1.06" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.7" />
-      <path d="M7 17h10a4 4 0 0 0 0-8h-.5A5.5 5.5 0 0 0 6 11.5 4 4 0 0 0 7 17z" fill="currentColor" opacity="0.9" />
-    </svg>
-  );
-}
-
-function WeatherIcon({ icon, className = "w-4 h-4" }: { icon: string; className?: string }) {
-  switch (icon) {
-    case "clear":
-    case "mostly-clear":
-      return <SunIcon className={className} />;
-    case "partly-cloudy":
-      return <PartlySunIcon className={className} />;
-    case "overcast":
-    case "fog":
-      return <Cloud className={className} />;
-    case "drizzle":
-    case "light-rain":
-    case "rain":
-    case "heavy-rain":
-      return <CloudRain className={className} />;
-    case "light-snow":
-    case "snow":
-    case "heavy-snow":
-      return <CloudSnow className={className} />;
-    case "thunderstorm":
-      return <CloudLightning className={className} />;
-    default:
-      return <SunIcon className={className} />;
-  }
-}
-
 export function WeatherBadge({
   weather,
   compact = false,
@@ -101,11 +47,11 @@ export function WeatherBadge({
             : "bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-300"
         }`}
       >
-        <WeatherIcon icon={icon} className="w-3 h-3" />
+        <ColorfulWeatherIcon icon={icon} className="w-3.5 h-3.5" />
         <span>{temperature}°F</span>
         {precipProbability > 20 && (
           <span className="flex items-center gap-0.5">
-            <Droplets className="w-2.5 h-2.5" />
+            <DropletIcon className="w-2.5 h-2.5" />
             {precipProbability}%
           </span>
         )}
@@ -123,7 +69,7 @@ export function WeatherBadge({
           : "bg-sky-50 border-sky-200 text-sky-800 dark:bg-sky-950/30 dark:border-sky-800 dark:text-sky-200"
       }`}
     >
-      <WeatherIcon icon={icon} className="w-4 h-4 shrink-0" />
+      <ColorfulWeatherIcon icon={icon} className="w-5 h-5 shrink-0" />
       <span className="font-semibold">{temperature}°F</span>
       <span className="text-xs opacity-75">·</span>
       <span className="text-xs">{description}</span>
@@ -131,7 +77,7 @@ export function WeatherBadge({
         <>
           <span className="text-xs opacity-75">·</span>
           <span className="flex items-center gap-0.5 text-xs">
-            <Droplets className="w-3 h-3" />
+            <DropletIcon className="w-3 h-3" />
             {precipProbability}% rain
           </span>
         </>
@@ -140,7 +86,7 @@ export function WeatherBadge({
         <>
           <span className="text-xs opacity-75">·</span>
           <span className="flex items-center gap-0.5 text-xs">
-            <Wind className="w-3 h-3" />
+            <WindIcon className="w-3.5 h-3.5" />
             {weather.windSpeed} mph
           </span>
         </>
@@ -164,11 +110,11 @@ export function WeatherForecastStrip({ weather }: { weather: WeatherData }) {
           }`}
         >
           <span className="text-[10px] text-muted-foreground font-medium">{slot.label}</span>
-          <WeatherIcon icon={slot.icon} className="w-3.5 h-3.5" />
+          <ColorfulWeatherIcon icon={slot.icon} className="w-4 h-4" />
           <span className="font-semibold">{slot.temperature}°</span>
           {slot.precipProbability > 20 && (
             <span className="text-[10px] text-blue-600 dark:text-blue-400 flex items-center gap-0.5">
-              <Droplets className="w-2 h-2" />
+              <DropletIcon className="w-2 h-2" />
               {slot.precipProbability}%
             </span>
           )}

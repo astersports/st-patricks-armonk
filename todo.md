@@ -599,3 +599,7 @@
 - [x] Fold Teen Life content into Faith Formation page as a new accordion section
 - [x] Remove /teen-life as a standalone route (redirect to /faith-formation)
 - [x] Remove Teen Life from navigation (desktop dropdown, mobile menu, search index)
+
+## Colorful Weather Icons
+
+- [x] Replace monochrome weather icons with fancy colorful multi-color SVG icons site-wide

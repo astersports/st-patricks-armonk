@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
-import { Church, Cross, Sun, Clock, ChevronRight, CloudRain, CloudSnow, CloudSun, Cloud, CloudLightning } from "lucide-react";
+import { Church, Cross, Sun, Clock, ChevronRight } from "lucide-react";
+import { ColorfulWeatherIcon } from "@/components/WeatherIcons";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 
@@ -157,49 +158,7 @@ function findNextMass(currentDay: number, currentMin: number) {
   return { nextLabel, nextTime, nextDay, countdownText };
 }
 
-/** Custom filled sun icon - amber colored, large center, short thick rays */
-function SunIconSmall({ className = "w-3 h-3" }: { className?: string }) {
-  return (
-    <svg className={`${className} text-amber-500`} viewBox="0 0 24 24" fill="currentColor" stroke="none">
-      <circle cx="12" cy="12" r="6" />
-      <rect x="11" y="1" width="2" height="4" rx="1" />
-      <rect x="11" y="19" width="2" height="4" rx="1" />
-      <rect x="19" y="11" width="4" height="2" rx="1" />
-      <rect x="1" y="11" width="4" height="2" rx="1" />
-      <rect x="17.4" y="3.8" width="2" height="4" rx="1" transform="rotate(45 18.4 5.8)" />
-      <rect x="4.6" y="16.2" width="2" height="4" rx="1" transform="rotate(45 5.6 18.2)" />
-      <rect x="17.4" y="16.2" width="2" height="4" rx="1" transform="rotate(-45 18.4 18.2)" />
-      <rect x="4.6" y="3.8" width="2" height="4" rx="1" transform="rotate(-45 5.6 5.8)" />
-    </svg>
-  );
-}
 
-function WeatherIconSmall({ icon }: { icon: string }) {
-  const cls = "w-3 h-3";
-  switch (icon) {
-    case "clear":
-    case "mostly-clear":
-      return <SunIconSmall className={cls} />;
-    case "partly-cloudy":
-      return <CloudSun className={cls} />;
-    case "overcast":
-    case "fog":
-      return <Cloud className={cls} />;
-    case "drizzle":
-    case "light-rain":
-    case "rain":
-    case "heavy-rain":
-      return <CloudRain className={cls} />;
-    case "light-snow":
-    case "snow":
-    case "heavy-snow":
-      return <CloudSnow className={cls} />;
-    case "thunderstorm":
-      return <CloudLightning className={cls} />;
-    default:
-      return <SunIconSmall className={cls} />;
-  }
-}
 
 function CurrentWeatherPill() {
   const { data: weather } = trpc.weather.current.useQuery(undefined, {
@@ -209,7 +168,7 @@ function CurrentWeatherPill() {
   if (!weather) return null;
   return (
     <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-sky-500/8 text-sky-700 dark:text-sky-300 shrink-0">
-      <WeatherIconSmall icon={weather.icon} />
+      <ColorfulWeatherIcon icon={weather.icon} className="w-4 h-4" />
       <span>{weather.temperature}°F</span>
     </div>
   );
