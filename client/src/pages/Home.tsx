@@ -115,14 +115,10 @@ function HeroSection() {
         <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold mb-3 animate-fade-in drop-shadow-2xl leading-tight">
           St. Patrick in Armonk
         </h1>
-        {/* Parish Motto Image */}
-        <div className="animate-fade-up stagger-1 mb-5 max-w-[180px] sm:max-w-[220px] mx-auto">
-          <img
-            src="/manus-storage/motto-bumper-sticker_b29e3725.jpeg"
-            alt="God Bless the Whole World, No Exceptions — Pax Christi, St. Patrick's Church, Armonk, New York"
-            className="w-full h-auto rounded shadow-md opacity-95"
-          />
-        </div>
+        {/* Parish Motto */}
+        <p className="text-white/90 text-base sm:text-lg italic font-light animate-fade-up stagger-1 mb-5 tracking-wide">
+          God Bless the Whole World, No Exceptions
+        </p>
 
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center animate-fade-up stagger-3">
