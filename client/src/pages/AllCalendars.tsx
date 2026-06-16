@@ -121,7 +121,7 @@ export default function AllCalendars() {
     if (activeSource === "key-dates") return keyDatesNormalized;
     if (!allEvents) return [];
     const events = activeSource === "all" ? allEvents : allEvents.filter((e) => e.source === activeSource);
-    return events.map(e => ({
+    const mapped = events.map(e => ({
       id: e.id,
       title: e.title,
       startDate: e.startDate,
@@ -131,6 +131,19 @@ export default function AllCalendars() {
       allDay: e.allDay,
       source: e.source,
     }));
+    // In "All" view, merge Key Dates into the timeline so milestones appear with star badges
+    if (activeSource === "all" && keyDatesNormalized.length > 0) {
+      // Build a set of existing event keys to avoid duplicates
+      const existingKeys = new Set(mapped.map(e => `${e.title.toLowerCase().trim()}|${new Date(e.startDate).toISOString().slice(0, 10)}`));
+      const uniqueKeyDates = keyDatesNormalized.filter(kd => {
+        const key = `${kd.title.toLowerCase().trim()}|${new Date(kd.startDate).toISOString().slice(0, 10)}`;
+        return !existingKeys.has(key);
+      });
+      const combined = [...mapped, ...uniqueKeyDates];
+      combined.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+      return combined;
+    }
+    return mapped;
   }, [allEvents, keyDatesNormalized, activeSource]);
 
   // Group events by time period
@@ -154,15 +167,28 @@ export default function AllCalendars() {
   // Count events per source for badges
   const counts = useMemo(() => {
     if (!allEvents) return { all: 0, parish: 0, ccd: 0, cyo: 0 };
+    // All count includes merged key dates
+    const calCount = allEvents.length;
     return {
-      all: allEvents.length,
+      all: calCount + keyDatesNormalized.length,
       parish: allEvents.filter((e) => e.source === "parish").length,
       ccd: allEvents.filter((e) => e.source === "ccd").length,
       cyo: allEvents.filter((e) => e.source === "cyo").length,
     };
-  }, [allEvents]);
+  }, [allEvents, keyDatesNormalized]);
 
   const keyDatesCount = keyDatesNormalized.length;
+
+  // Build a set of key date titles+dates for cross-referencing in All view
+  const keyDateMatchSet = useMemo(() => {
+    if (!keyDatesRaw) return new Set<string>();
+    return new Set(
+      keyDatesRaw.map(d => {
+        const dateStr = new Date(d.eventDate as unknown as string).toISOString().slice(0, 10);
+        return `${d.title.toLowerCase().trim()}|${dateStr}`;
+      })
+    );
+  }, [keyDatesRaw]);
 
   // Weather enrichment for events within 7 days (not for key-dates view)
   const weatherInput = useMemo(() => {
@@ -366,6 +392,8 @@ export default function AllCalendars() {
                           const eventDate = toEastern(event.startDate);
                           const endDate = event.endDate ? toEastern(event.endDate) : null;
                           const isKeyDate = event.source === "key-dates";
+                          // Show star badge on Key Date events when displayed in the All view
+                          const isKeyDateMatch = isKeyDate && activeSource === "all";
                           const eventCategory = (event as any).category as string | undefined;
 
                           // Determine border and badge colors
@@ -400,15 +428,28 @@ export default function AllCalendars() {
                               {/* Event Content */}
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-start justify-between gap-2 mb-0.5">
-                                  <h4 className="font-semibold text-sm sm:text-base text-foreground leading-tight">
+                                  <h4 className="font-semibold text-sm sm:text-base text-foreground leading-tight flex items-center gap-1.5">
+                                    {isKeyDateMatch && (
+                                      <Star className="w-3.5 h-3.5 text-gold fill-gold shrink-0" />
+                                    )}
                                     {event.title}
                                   </h4>
-                                  <Badge
-                                    variant="secondary"
-                                    className={`text-xs px-1.5 py-0 shrink-0 ${badgeClass}`}
-                                  >
-                                    {badgeLabel}
-                                  </Badge>
+                                  <div className="flex items-center gap-1 shrink-0">
+                                    {isKeyDateMatch && (
+                                      <Badge
+                                        variant="secondary"
+                                        className="text-xs px-1.5 py-0 bg-gold/10 text-gold"
+                                      >
+                                        Key Date
+                                      </Badge>
+                                    )}
+                                    <Badge
+                                      variant="secondary"
+                                      className={`text-xs px-1.5 py-0 ${badgeClass}`}
+                                    >
+                                      {badgeLabel}
+                                    </Badge>
+                                  </div>
                                 </div>
 
                                 <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs sm:text-sm text-muted-foreground">

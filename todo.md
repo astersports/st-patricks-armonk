@@ -617,3 +617,7 @@
 ## Key Dates as Calendar Filter
 
 - [x] Add Key Dates as a filter category on the unified calendar page (alongside All/Parish/CCD/CYO)
+
+## Key Date Star Badge in All View
+
+- [x] Add a star badge on events in the All view that also appear in Key Dates so milestones stand out
