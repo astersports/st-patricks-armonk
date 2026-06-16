@@ -72,7 +72,7 @@ const searchablePages: SearchableItem[] = [
   { href: "/faith-formation", label: "Teen Life & Youth Ministry", keywords: ["teen", "youth", "high school", "confirmation", "young", "teen life"], icon: Users },
   { href: "/news", label: "News", keywords: ["news", "announcement", "update", "parish"], icon: Newspaper },
   { href: "/calendar", label: "Calendar (All Events)", keywords: ["calendar", "events", "schedule", "upcoming", "parish", "cyo", "ccd"], icon: Calendar },
-  { href: "/calendar?filter=key-dates", label: "Key Dates 2026–2027", keywords: ["key dates", "important dates", "parish calendar", "milestones", "annual", "year"], icon: Calendar },
+
   { href: "/bulletins", label: "Weekly Bulletins", keywords: ["bulletin", "weekly", "pdf", "download", "read"], icon: BookOpen },
   { href: "/calendar?filter=cyo", label: "CYO Schedule", keywords: ["cyo", "basketball", "sports", "practice", "youth", "athletics"], icon: Calendar },
   { href: "/ministries", label: "Ministries & Devotions", keywords: ["ministry", "devotion", "lector", "eucharistic", "choir", "music", "rosary", "prayer", "share care", "fiat", "embrace"], icon: HandHeart },

@@ -428,7 +428,7 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
           <Clock className="w-4 h-4 text-primary" />
           <span className="font-serif text-lg font-bold text-foreground">Coming Up</span>
         </div>
-        <Link href="/calendar?filter=key-dates" className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1">
+        <Link href="/calendar" className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1">
           All Events <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>
@@ -465,7 +465,7 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
             return (
               <div key={evt.id || i} className="group py-2 px-2 -mx-2 rounded-lg hover:bg-muted/40 transition-colors">
                 <div className="flex items-center gap-3">
-                  <Link href="/calendar?filter=key-dates" className="flex items-center gap-3 flex-1 min-w-0">
+                  <Link href="/calendar" className="flex items-center gap-3 flex-1 min-w-0">
                     {/* Date badge */}
                     <div className={`w-10 h-10 rounded-lg ${colors.bg} flex flex-col items-center justify-center shrink-0`}>
                       <span className="text-[10px] font-bold uppercase leading-none text-primary/70">
@@ -595,7 +595,7 @@ function ComingUpEvents({ allImportantDates }: { allImportantDates: any[] | unde
               </div>
               <h2 className="font-serif text-sm sm:text-base font-bold text-foreground">Coming Up</h2>
             </div>
-            <Link href="/calendar?filter=key-dates" className="text-sm font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1">
+            <Link href="/calendar" className="text-sm font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1">
               View Calendar <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -609,7 +609,7 @@ function ComingUpEvents({ allImportantDates }: { allImportantDates: any[] | unde
               return (
                 <div key={evt.id || i}>
                   {i > 0 && <div className="border-t border-dashed border-border/40 my-2" />}
-                  <Link href="/calendar?filter=key-dates" className="group flex items-center gap-3 py-1 hover:bg-primary/[0.02] -mx-2 px-2 rounded-lg transition-colors">
+                  <Link href="/calendar" className="group flex items-center gap-3 py-1 hover:bg-primary/[0.02] -mx-2 px-2 rounded-lg transition-colors">
                     {/* Date badge — compact */}
                     <div className="w-10 h-10 rounded-lg bg-gold/10 flex flex-col items-center justify-center shrink-0">
                       <span className="text-xs font-semibold text-gold uppercase leading-none">

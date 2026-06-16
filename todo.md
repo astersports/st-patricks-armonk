@@ -607,3 +607,9 @@
 ## Calendar Default Tab
 
 - [x] Change calendar page default tab from Key Dates to All (so next upcoming events show first)
+
+## Combine Calendar Page into Single Unified View
+
+- [x] Remove Key Dates tab from calendar page — merge Key Dates into the main chronological feed
+- [x] Keep Parish/CCD/CYO filter tabs (remove "All" and "Key Dates" as separate tabs)
+- [x] Homepage Coming Up section stays as Key Dates (no change)
