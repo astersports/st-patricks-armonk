@@ -112,39 +112,43 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
   return (
     <div className="rounded-xl border border-border/50 overflow-hidden bg-card shadow-sm">
       {/* Header */}
-      <div className="px-4 py-2.5 border-b border-border/30 flex items-center justify-between">
+      <div className="px-4 py-3 border-b border-border/30 flex items-center justify-between bg-muted/10">
         <div className="flex items-center gap-2">
-          <Calendar className="w-3.5 h-3.5 text-primary" />
-          <span className="text-sm font-bold text-foreground">This Week</span>
+          <Calendar className="w-4 h-4 text-primary" />
+          <span className="font-serif text-lg font-bold text-foreground">This Week</span>
         </div>
-        <span className="text-sm text-foreground/70">
+        <span className="text-sm text-muted-foreground font-medium">
           {format(weekStart, "MMM d")} – {format(weekEnd, "MMM d")}
         </span>
       </div>
 
-      {/* Horizontal day tabs — starting from today */}
-      <div className="flex border-b border-border/30">
+      {/* Horizontal day tabs — refined with rounded selected state */}
+      <div className="flex gap-1 p-1.5 border-b border-border/30 bg-muted/20">
         {days.map((day) => {
           const isSelected = selectedIndex === day.index;
           return (
             <button
               key={day.index}
               onClick={() => setSelectedIndex(day.index)}
-              className={`flex-1 py-2 text-center transition-all duration-150 relative flex flex-col items-center gap-0.5 ${
+              className={`flex-1 py-2 px-1 rounded-lg text-center transition-all duration-200 relative flex flex-col items-center gap-0.5 ${
                 isSelected
-                  ? "bg-primary text-white font-bold"
-                  : "hover:bg-muted/40 text-muted-foreground"
+                  ? "bg-primary text-white shadow-md shadow-primary/20"
+                  : "hover:bg-muted/60 text-muted-foreground"
               }`}
             >
-              <span className={`text-xs sm:text-sm font-semibold ${isSelected ? "text-white/80" : ""}`}>
+              <span className={`text-[10px] sm:text-xs font-medium uppercase ${
+                isSelected ? "text-white/80" : ""
+              }`}>
                 {day.label}
               </span>
-              <span className={`text-sm sm:text-base font-bold ${isSelected ? "text-white" : "text-foreground/70"}`}>
+              <span className={`text-sm sm:text-base font-bold ${
+                isSelected ? "text-white" : "text-foreground/70"
+              }`}>
                 {day.dateNum}
               </span>
               {/* Today indicator */}
               {day.isToday && !isSelected && (
-                <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
+                <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
               )}
             </button>
           );
@@ -152,30 +156,30 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
       </div>
 
       {/* Selected day content */}
-      <div className="p-3 sm:p-4">
+      <div className="p-4">
         {/* Day label */}
-        <div className="flex items-center justify-between mb-2.5">
-          <h3 className="text-sm font-bold text-foreground">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-base font-bold text-foreground">
             {selectedDayData?.isToday ? "Today" : format(selectedDayData?.date || now, "EEEE")}
           </h3>
           {services.length === 0 && dayEvents.length === 0 && (
-            <span className="text-xs text-foreground/50 italic">No services</span>
+            <span className="text-xs text-muted-foreground italic">No services</span>
           )}
         </div>
 
         {/* Services list */}
         {services.length > 0 && (
-          <div className="space-y-1.5 mb-3">
+          <div className="space-y-2 mb-3">
             {services.map((svc, idx) => {
               const style = typeStyles[svc.type];
               const Icon = style.icon;
               return (
                 <div
                   key={`svc-${idx}`}
-                  className={`flex items-center gap-2.5 py-2 px-3 rounded-lg border-l-3 ${style.borderColor} bg-muted/20`}
+                  className={`flex items-center gap-3 p-3 rounded-lg border-l-4 ${style.borderColor} bg-card shadow-sm hover:shadow-md transition-all duration-200`}
                 >
-                  <div className={`w-7 h-7 rounded-md ${style.bg} flex items-center justify-center`}>
-                    <Icon className={`w-3.5 h-3.5 ${style.color}`} />
+                  <div className={`w-9 h-9 rounded-lg ${style.bg} flex items-center justify-center`}>
+                    <Icon className={`w-4 h-4 ${style.color}`} />
                   </div>
                   <span className="text-sm font-medium text-foreground flex-1">{svc.label}</span>
                   <button
@@ -188,10 +192,10 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
                         time: svc.time,
                       });
                     }}
-                    className="p-1 rounded hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                    className="p-1.5 rounded-md hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
                     title="Add to Calendar"
                   >
-                    <CalendarPlus className="w-3 h-3" />
+                    <CalendarPlus className="w-3.5 h-3.5" />
                   </button>
                   <span className={`text-sm font-bold ${style.color}`}>
                     {svc.time}
@@ -204,16 +208,16 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
 
         {/* Events for this day */}
         {dayEvents.length > 0 && (
-          <div className="space-y-1.5 mb-3">
+          <div className="space-y-2 mb-3">
             {dayEvents.map((evt, idx) => (
-              <div key={`evt-${idx}`} className="flex items-center gap-2.5 py-2 px-3 rounded-lg bg-gold/5 border border-gold/10">
-                <div className="w-7 h-7 rounded-md bg-gold/10 flex items-center justify-center">
-                  <Calendar className="w-3.5 h-3.5 text-gold" />
+              <div key={`evt-${idx}`} className="flex items-center gap-3 p-3 rounded-lg bg-gold/5 border border-gold/15">
+                <div className="w-9 h-9 rounded-lg bg-gold/10 flex items-center justify-center">
+                  <Calendar className="w-4 h-4 text-gold" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <span className="text-sm font-medium text-foreground truncate block">{evt.title}</span>
+                  <span className="text-sm font-medium text-foreground block">{evt.title}</span>
                   {evt.location && (
-                    <span className="text-sm text-foreground/70">{evt.location}</span>
+                    <span className="text-xs text-muted-foreground">{evt.location}</span>
                   )}
                 </div>
                 <button
@@ -225,10 +229,10 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
                       location: evt.location || "St. Patrick Church, 29 Cox Ave, Armonk NY 10504",
                     });
                   }}
-                  className="p-1 rounded hover:bg-gold/20 text-muted-foreground hover:text-gold transition-colors shrink-0"
+                  className="p-1.5 rounded-md hover:bg-gold/20 text-muted-foreground hover:text-gold transition-colors shrink-0"
                   title="Add to Calendar"
                 >
-                  <CalendarPlus className="w-3 h-3" />
+                  <CalendarPlus className="w-3.5 h-3.5" />
                 </button>
               </div>
             ))}
@@ -237,34 +241,33 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
 
         {/* No services message */}
         {services.length === 0 && dayEvents.length === 0 && (
-          <p className="text-sm text-foreground/50 text-center py-3 italic">
+          <p className="text-sm text-muted-foreground text-center py-4 italic">
             No scheduled services on this day
           </p>
         )}
       </div>
 
-      {/* At a Glance — compact summary */}
-      <div className="border-t border-border/30 px-4 py-3 bg-muted/20">
-        <div className="flex items-center gap-1.5 mb-2">
-          <Clock className="w-3 h-3 text-muted-foreground" />
-          <span className="text-sm font-bold uppercase tracking-wider text-foreground/70">At a Glance</span>
+      {/* At a Glance — cleaner summary */}
+      <div className="border-t border-border/30 px-4 py-3 bg-muted/10">
+        <div className="flex items-center gap-1.5 mb-2.5">
+          <Clock className="w-3.5 h-3.5 text-muted-foreground" />
+          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">At a Glance</span>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-          <div className="rounded-lg bg-card border border-border/40 p-2.5 text-center">
-            <p className="text-sm uppercase tracking-wider text-foreground/70 font-medium">Saturday Vigil</p>
-            <p className="text-base font-bold text-primary mt-0.5">5:30 PM</p>
+        <div className="grid grid-cols-3 gap-2">
+          <div className="rounded-lg bg-card p-2.5 text-center shadow-sm">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Sat Vigil</p>
+            <p className="text-sm font-bold text-primary mt-0.5">5:30 PM</p>
           </div>
-          <div className="rounded-lg bg-card border border-border/40 p-2.5 text-center">
-            <p className="text-sm uppercase tracking-wider text-foreground/70 font-medium">Sunday</p>
-            <p className="text-base font-bold text-primary mt-0.5">8:30 & 10:30 AM</p>
-            <p className="text-sm text-foreground/70">12:30 PM (Oct–Jun)</p>
+          <div className="rounded-lg bg-card p-2.5 text-center shadow-sm">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Sunday</p>
+            <p className="text-sm font-bold text-primary mt-0.5">8:30 & 10:30</p>
           </div>
-          <div className="rounded-lg bg-card border border-border/40 p-2.5 text-center">
-            <p className="text-sm uppercase tracking-wider text-foreground/70 font-medium">Weekday (Tue–Fri)</p>
-            <p className="text-base font-bold text-primary mt-0.5">8:30 AM</p>
+          <div className="rounded-lg bg-card p-2.5 text-center shadow-sm">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Tue–Fri</p>
+            <p className="text-sm font-bold text-primary mt-0.5">8:30 AM</p>
           </div>
         </div>
-        <Link href="/mass-times" className="flex items-center justify-center gap-1 mt-2.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors">
+        <Link href="/mass-times" className="flex items-center justify-center gap-1 mt-3 text-sm font-medium text-primary hover:text-primary/80 transition-colors">
           Full schedule & details <span className="text-sm">→</span>
         </Link>
       </div>

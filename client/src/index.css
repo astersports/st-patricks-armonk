@@ -4,64 +4,66 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-background: oklch(0.99 0.002 120);
-  --color-foreground: oklch(0.15 0.03 150);
-  --color-card: oklch(0.99 0.001 120);
-  --color-card-foreground: oklch(0.15 0.03 150);
-  --color-popover: oklch(0.99 0.001 120);
-  --color-popover-foreground: oklch(0.2 0.02 150);
-  --color-primary: oklch(0.42 0.12 150);
+  /* ===== Color System (OKLCH) ===== */
+  /* Refined palette: deeper greens, richer golds, warmer neutrals */
+  --color-background: oklch(0.985 0.003 90);
+  --color-foreground: oklch(0.13 0.04 150);
+  --color-card: oklch(0.995 0.001 90);
+  --color-card-foreground: oklch(0.13 0.04 150);
+  --color-popover: oklch(0.995 0.001 90);
+  --color-popover-foreground: oklch(0.18 0.03 150);
+  --color-primary: oklch(0.38 0.12 150);
   --color-primary-foreground: oklch(0.98 0.01 90);
-  --color-secondary: oklch(0.95 0.02 120);
-  --color-secondary-foreground: oklch(0.3 0.08 150);
-  --color-muted: oklch(0.96 0.01 120);
-  --color-muted-foreground: oklch(0.35 0.04 150);
-  --color-accent: oklch(0.75 0.15 85);
-  --color-accent-foreground: oklch(0.2 0.05 85);
+  --color-secondary: oklch(0.96 0.015 90);
+  --color-secondary-foreground: oklch(0.25 0.08 150);
+  --color-muted: oklch(0.955 0.01 90);
+  --color-muted-foreground: oklch(0.4 0.04 150);
+  --color-accent: oklch(0.72 0.16 80);
+  --color-accent-foreground: oklch(0.18 0.06 80);
   --color-destructive: oklch(0.55 0.2 25);
   --color-destructive-foreground: oklch(0.98 0.01 25);
-  --color-border: oklch(0.82 0.03 120);
-  --color-input: oklch(0.9 0.02 120);
-  --color-ring: oklch(0.42 0.12 150);
-  --color-chart-1: oklch(0.42 0.12 150);
-  --color-chart-2: oklch(0.75 0.15 85);
-  --color-chart-3: oklch(0.55 0.1 150);
-  --color-chart-4: oklch(0.65 0.12 85);
-  --color-chart-5: oklch(0.35 0.08 150);
-  --color-sidebar: oklch(0.97 0.01 120);
-  --color-sidebar-foreground: oklch(0.2 0.02 150);
-  --color-sidebar-primary: oklch(0.42 0.12 150);
+  --color-border: oklch(0.88 0.02 90);
+  --color-input: oklch(0.92 0.015 90);
+  --color-ring: oklch(0.38 0.12 150);
+  --color-chart-1: oklch(0.38 0.12 150);
+  --color-chart-2: oklch(0.72 0.16 80);
+  --color-chart-3: oklch(0.5 0.1 150);
+  --color-chart-4: oklch(0.62 0.13 80);
+  --color-chart-5: oklch(0.3 0.08 150);
+  --color-sidebar: oklch(0.97 0.01 90);
+  --color-sidebar-foreground: oklch(0.18 0.03 150);
+  --color-sidebar-primary: oklch(0.38 0.12 150);
   --color-sidebar-primary-foreground: oklch(0.98 0.01 90);
-  --color-sidebar-accent: oklch(0.93 0.03 120);
-  --color-sidebar-accent-foreground: oklch(0.3 0.08 150);
-  --color-sidebar-border: oklch(0.9 0.02 120);
-  --color-sidebar-ring: oklch(0.42 0.12 150);
-  --radius-sm: 0.25rem;
-  --radius-md: 0.375rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-sidebar-accent: oklch(0.94 0.02 90);
+  --color-sidebar-accent-foreground: oklch(0.25 0.08 150);
+  --color-sidebar-border: oklch(0.9 0.015 90);
+  --color-sidebar-ring: oklch(0.38 0.12 150);
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-serif: "Fraunces", "Playfair Display", ui-serif, Georgia, serif;
 }
 
-/* Custom color utilities */
+/* ===== Custom Color Utilities ===== */
 @utility text-gold {
-  color: oklch(0.75 0.15 85);
+  color: oklch(0.72 0.16 80);
 }
 @utility bg-gold {
-  background-color: oklch(0.75 0.15 85);
+  background-color: oklch(0.72 0.16 80);
 }
 @utility text-parish-green {
-  color: oklch(0.42 0.12 150);
+  color: oklch(0.38 0.12 150);
 }
 @utility bg-parish-green {
-  background-color: oklch(0.42 0.12 150);
+  background-color: oklch(0.38 0.12 150);
 }
 @utility bg-parish-green-dark {
-  background-color: oklch(0.32 0.1 150);
+  background-color: oklch(0.28 0.1 150);
 }
 @utility border-gold {
-  border-color: oklch(0.75 0.15 85);
+  border-color: oklch(0.72 0.16 80);
 }
 
 @layer base {
@@ -77,6 +79,7 @@
     overflow-x: hidden;
   }
 
+  /* ===== Candle & Prayer Animations ===== */
   @keyframes flicker {
     0%, 100% { opacity: 1; transform: scale(1); }
     25% { opacity: 0.8; transform: scale(0.95) rotate(-2deg); }
@@ -115,6 +118,7 @@
   .animate-flicker-fast {
     animation: flicker-fast 1.2s ease-in-out infinite;
   }
+
   body {
     font-family: var(--font-sans);
     color: var(--color-foreground);
@@ -124,6 +128,7 @@
     -moz-osx-font-smoothing: grayscale;
     font-size: 16px;
     line-height: 1.6;
+    letter-spacing: -0.01em;
   }
 }
 
@@ -147,7 +152,6 @@
 }
 
 /* ===== Animation System ===== */
-/* Custom easings for snappy, physically-intuitive motion */
 :root {
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
@@ -156,30 +160,30 @@
 
 @layer utilities {
   .animate-fade-in {
-    animation: fadeIn 0.6s var(--ease-out) forwards;
+    animation: fadeIn 0.5s var(--ease-out) forwards;
   }
   .animate-slide-up {
-    animation: slideUp 0.5s var(--ease-out) forwards;
+    animation: slideUp 0.4s var(--ease-out) forwards;
   }
   .animate-scale-in {
-    animation: scaleIn 0.3s var(--ease-out) forwards;
+    animation: scaleIn 0.25s var(--ease-out) forwards;
   }
   .animate-slide-down {
-    animation: slideDown 0.3s var(--ease-out) forwards;
+    animation: slideDown 0.25s var(--ease-out) forwards;
   }
   .animate-fade-up {
-    animation: fadeUp 0.6s var(--ease-out) both;
+    animation: fadeUp 0.5s var(--ease-out) both;
   }
 }
 
-/* Stagger delay utilities for cascading reveals */
+/* Stagger delay utilities */
 @layer utilities {
-  .stagger-1 { animation-delay: 50ms; }
-  .stagger-2 { animation-delay: 100ms; }
-  .stagger-3 { animation-delay: 150ms; }
-  .stagger-4 { animation-delay: 200ms; }
-  .stagger-5 { animation-delay: 250ms; }
-  .stagger-6 { animation-delay: 300ms; }
+  .stagger-1 { animation-delay: 60ms; }
+  .stagger-2 { animation-delay: 120ms; }
+  .stagger-3 { animation-delay: 180ms; }
+  .stagger-4 { animation-delay: 240ms; }
+  .stagger-5 { animation-delay: 300ms; }
+  .stagger-6 { animation-delay: 360ms; }
 }
 
 @keyframes fadeIn {
@@ -188,28 +192,28 @@
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
+  from { opacity: 0; transform: translateY(-8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95); }
+  from { opacity: 0; transform: scale(0.96); }
   to { opacity: 1; transform: scale(1); }
 }
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes kenBurns {
   0% { transform: scale(1); }
-  100% { transform: scale(1.08); }
+  100% { transform: scale(1.06); }
 }
 
 @keyframes pulseGlow {
@@ -233,30 +237,30 @@
   100% { opacity: 1; }
 }
 
-/* ===== Section background utilities ===== */
+/* ===== Section Backgrounds ===== */
 .section-cream {
-  background-color: oklch(0.97 0.01 85);
+  background-color: oklch(0.975 0.008 80);
 }
 .section-dark {
-  background-color: oklch(0.22 0.06 150);
-  color: oklch(0.95 0.01 120);
+  background-color: oklch(0.2 0.06 150);
+  color: oklch(0.95 0.01 90);
 }
 .section-dark-green {
-  background-color: oklch(0.28 0.08 150);
-  color: oklch(0.95 0.01 120);
+  background-color: oklch(0.25 0.08 150);
+  color: oklch(0.95 0.01 90);
 }
 
 /* Ken Burns hero background */
 .hero-ken-burns {
-  animation: kenBurns 25s ease-in-out infinite alternate;
+  animation: kenBurns 20s ease-in-out infinite alternate;
   will-change: transform;
 }
 
-/* ===== Micro-interaction utilities ===== */
+/* ===== Micro-interaction Utilities ===== */
 @layer utilities {
   /* Button press feedback */
   .press-scale {
-    transition: transform 160ms var(--ease-out);
+    transition: transform 140ms var(--ease-out);
   }
   .press-scale:active {
     transform: scale(0.97);
@@ -264,49 +268,49 @@
 
   /* Card hover lift */
   .hover-lift {
-    transition: transform 250ms var(--ease-out), box-shadow 250ms var(--ease-out);
+    transition: transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
   }
   .hover-lift:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px -8px oklch(0.42 0.12 150 / 0.12), 0 4px 8px -4px oklch(0 0 0 / 0.06);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px -6px oklch(0.38 0.12 150 / 0.1), 0 4px 8px -4px oklch(0 0 0 / 0.05);
   }
 
   /* Subtle card hover */
   .hover-glow {
-    transition: box-shadow 250ms var(--ease-out), border-color 250ms var(--ease-out);
+    transition: box-shadow 200ms var(--ease-out), border-color 200ms var(--ease-out);
   }
   .hover-glow:hover {
-    box-shadow: 0 0 0 1px oklch(0.42 0.12 150 / 0.15), 0 8px 16px -4px oklch(0.42 0.12 150 / 0.08);
+    box-shadow: 0 0 0 1px oklch(0.38 0.12 150 / 0.12), 0 6px 12px -4px oklch(0.38 0.12 150 / 0.06);
   }
 
   /* Interactive card with combined lift + glow */
   .card-interactive {
-    transition: transform 250ms var(--ease-out), box-shadow 250ms var(--ease-out), border-color 250ms var(--ease-out);
+    transition: transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out), border-color 200ms var(--ease-out);
   }
   .card-interactive:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px -8px oklch(0.42 0.12 150 / 0.1), 0 4px 8px -4px oklch(0 0 0 / 0.04);
-    border-color: oklch(0.42 0.12 150 / 0.2);
+    box-shadow: 0 8px 20px -6px oklch(0.38 0.12 150 / 0.08), 0 4px 8px -4px oklch(0 0 0 / 0.03);
+    border-color: oklch(0.38 0.12 150 / 0.2);
   }
   .card-interactive:active {
     transform: translateY(0) scale(0.99);
   }
 }
 
-/* ===== Scroll-triggered reveal (IntersectionObserver driven) ===== */
+/* ===== Scroll-triggered reveal ===== */
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+  transform: translateY(20px);
+  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
 }
 .reveal.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* ===== Navigation dropdown animation ===== */
+/* ===== Navigation Animations ===== */
 .nav-dropdown-enter {
-  animation: navDropdown 200ms var(--ease-out) forwards;
+  animation: navDropdown 180ms var(--ease-out) forwards;
 }
 @keyframes navDropdown {
   from {
@@ -319,7 +323,6 @@
   }
 }
 
-/* ===== Nav link underline-slide animation ===== */
 .nav-link-underline {
   position: relative;
 }
@@ -330,7 +333,7 @@
   bottom: 0;
   width: 0;
   height: 2px;
-  background: var(--color-primary, oklch(0.35 0.15 145));
+  background: oklch(0.72 0.16 80);
   border-radius: 1px;
   transform: translateX(-50%);
   transition: width 200ms var(--ease-out);
@@ -342,7 +345,6 @@
   width: 70%;
 }
 
-/* ===== Reduced motion ===== */
 /* ===== Mobile Card Compaction ===== */
 @media (max-width: 639px) {
   [data-slot="card"] {
@@ -363,6 +365,7 @@
   }
 }
 
+/* ===== Reduced Motion ===== */
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in,
   .animate-slide-up,
@@ -403,9 +406,8 @@
   }
 }
 
-/* Print-friendly layout for Key Dates bulletin board */
+/* ===== Print Styles ===== */
 @media print {
-  /* Hide all chrome: nav, footer, bottom bar, sticky header, filter pills */
   nav,
   footer,
   .print\:hidden,
@@ -414,7 +416,6 @@
     display: none !important;
   }
 
-  /* Reset page layout */
   body {
     background: white !important;
     color: black !important;
@@ -426,7 +427,6 @@
     padding: 0 !important;
   }
 
-  /* Force all accordion content visible */
   [data-state="closed"] > [data-radix-accordion-content] {
     display: block !important;
     height: auto !important;
@@ -442,7 +442,6 @@
     animation: none !important;
   }
 
-  /* Remove shadows, borders, and rounded corners for clean print */
   .rounded-xl,
   .rounded-lg {
     border-radius: 0 !important;
@@ -453,7 +452,6 @@
     box-shadow: none !important;
   }
 
-  /* Make page header compact for print */
   section[class*="gradient"] {
     background: none !important;
     border: none !important;
@@ -461,31 +459,26 @@
     padding-bottom: 0.5rem !important;
   }
 
-  /* Compact event rows */
   .container {
     max-width: 100% !important;
     padding-left: 0.5cm !important;
     padding-right: 0.5cm !important;
   }
 
-  /* Add title for print header */
   h1 {
     font-size: 18pt !important;
     margin-bottom: 0.25rem !important;
   }
 
-  /* Avoid page breaks inside event cards */
   [class*="divide-y"] > div {
     break-inside: avoid;
   }
 
-  /* Category dots should print in color */
   [class*="rounded-full"] {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 
-  /* Ensure color prints for category indicators */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;

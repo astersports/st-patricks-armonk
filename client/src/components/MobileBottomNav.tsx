@@ -2,7 +2,7 @@ import { Link, useLocation } from "wouter";
 import { Clock, Calendar, Heart, MoreHorizontal } from "lucide-react";
 
 const tabs = [
-  { href: "/mass-times", label: "Mass Times", icon: Clock },
+  { href: "/mass-times", label: "Mass", icon: Clock },
   { href: "/calendar", label: "Calendar", icon: Calendar },
   { href: "/giving", label: "Give", icon: Heart },
   { href: "/__more__", label: "More", icon: MoreHorizontal },
@@ -16,8 +16,8 @@ export default function MobileBottomNav({ onMoreClick }: MobileBottomNavProps) {
   const [location] = useLocation();
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-border/50 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
-      <div className="flex items-center justify-around h-14 max-w-md mx-auto px-2">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/98 backdrop-blur-lg border-t border-border/30 shadow-[0_-1px_8px_rgba(0,0,0,0.04)]">
+      <div className="flex items-center justify-around h-[52px] max-w-md mx-auto px-2">
         {tabs.map((tab) => {
           const isMore = tab.href === "/__more__";
           const isActive = !isMore && location === tab.href;
@@ -27,10 +27,10 @@ export default function MobileBottomNav({ onMoreClick }: MobileBottomNavProps) {
               <button
                 key={tab.label}
                 onClick={onMoreClick}
-                className="flex flex-col items-center justify-center gap-0.5 w-16 py-1 rounded-lg transition-colors text-muted-foreground active:bg-primary/5"
+                className="flex flex-col items-center justify-center gap-0.5 w-14 py-1 rounded-lg transition-colors text-muted-foreground active:scale-95"
               >
-                <tab.icon className="w-5 h-5" />
-                <span className="text-xs font-medium">{tab.label}</span>
+                <tab.icon className="w-[22px] h-[22px]" />
+                <span className="text-[10px] font-medium">{tab.label}</span>
               </button>
             );
           }
@@ -39,14 +39,17 @@ export default function MobileBottomNav({ onMoreClick }: MobileBottomNavProps) {
             <Link
               key={tab.href}
               href={tab.href}
-              className={`flex flex-col items-center justify-center gap-0.5 w-16 py-1 rounded-lg transition-colors ${
+              className={`relative flex flex-col items-center justify-center gap-0.5 w-14 py-1 rounded-lg transition-all duration-200 ${
                 isActive
                   ? "text-primary"
-                  : "text-muted-foreground active:bg-primary/5"
+                  : "text-muted-foreground active:scale-95"
               }`}
             >
-              <tab.icon className={`w-5 h-5 ${isActive ? "text-primary" : ""}`} />
-              <span className={`text-xs font-medium ${isActive ? "text-primary" : ""}`}>
+              {isActive && (
+                <span className="absolute -top-1 w-5 h-0.5 rounded-full bg-primary" />
+              )}
+              <tab.icon className={`w-[22px] h-[22px] transition-colors ${isActive ? "text-primary" : ""}`} />
+              <span className={`text-[10px] font-semibold transition-colors ${isActive ? "text-primary" : ""}`}>
                 {tab.label}
               </span>
             </Link>

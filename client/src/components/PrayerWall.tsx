@@ -139,21 +139,21 @@ export function PrayerWall() {
   const intentions = data?.intentions ?? [];
 
   return (
-    <div className="relative py-12 px-4 overflow-hidden">
+    <div className="relative py-10 px-4 overflow-hidden">
       {/* Dark immersive background with subtle texture */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#1a0f05] via-[#1c1208] to-[#0f0a04]" />
       {/* Radial warm glow behind candle */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-amber-500/8 rounded-full blur-3xl" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl" />
 
       <div className="relative z-10 max-w-lg mx-auto">
         {/* Header */}
-        <div className="text-center mb-6">
-          <h2 className="font-serif text-2xl font-bold text-amber-100 tracking-tight">Light a Candle</h2>
-          <p className="text-sm text-amber-200/60 mt-1">Share a prayer intention with our parish family</p>
+        <div className="text-center mb-5">
+          <h2 className="font-serif text-xl sm:text-2xl font-bold text-amber-100 tracking-tight">Light a Candle</h2>
+          <p className="text-sm text-amber-200/50 mt-1">Share a prayer intention with our parish family</p>
         </div>
 
         {/* Candle visual — centered hero */}
-        <div className="relative flex justify-center mb-8">
+        <div className="relative flex justify-center mb-6">
           <Sparks />
           <AnimatedCandle count={candleCount} />
         </div>
@@ -170,7 +170,7 @@ export function PrayerWall() {
           <div className="text-center">
             <Button
               onClick={() => setShowForm(true)}
-              className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white active:scale-95 transition-all duration-200 rounded-full px-8 py-3 text-sm font-semibold shadow-lg shadow-amber-900/30 hover:shadow-amber-600/30"
+              className="bg-amber-500 hover:bg-amber-400 text-amber-950 active:scale-97 transition-all duration-200 rounded-full px-8 py-3 text-sm font-bold shadow-lg shadow-amber-900/30"
               size="lg"
             >
               <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -181,26 +181,26 @@ export function PrayerWall() {
             </Button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-3 border border-amber-700/30 rounded-xl p-4 bg-amber-950/40 backdrop-blur-sm">
+          <form onSubmit={handleSubmit} className="space-y-3 rounded-xl p-4 bg-amber-950/50 backdrop-blur-sm border border-amber-700/20">
             <input
               type="text"
               placeholder="Your name (optional)"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3.5 py-2 text-sm border border-amber-800/40 rounded-lg bg-amber-950/50 text-amber-100 placeholder:text-amber-400/40 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
+              className="w-full px-4 py-2.5 text-sm border border-amber-800/30 rounded-lg bg-amber-950/60 text-amber-100 placeholder:text-amber-400/40 focus:outline-none focus:ring-2 focus:ring-amber-500/30 transition-all"
               maxLength={100}
             />
             <textarea
               placeholder="Your prayer intention..."
               value={intention}
               onChange={(e) => setIntention(e.target.value)}
-              className="w-full px-3.5 py-2 text-sm border border-amber-800/40 rounded-lg bg-amber-950/50 text-amber-100 placeholder:text-amber-400/40 focus:outline-none focus:ring-2 focus:ring-amber-500/40 resize-none"
+              className="w-full px-4 py-2.5 text-sm border border-amber-800/30 rounded-lg bg-amber-950/60 text-amber-100 placeholder:text-amber-400/40 focus:outline-none focus:ring-2 focus:ring-amber-500/30 resize-none transition-all"
               rows={3}
               maxLength={300}
               required
             />
             <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 text-xs text-amber-300/70 cursor-pointer">
+              <label className="flex items-center gap-2 text-xs text-amber-300/60 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={isPublic}
@@ -215,7 +215,7 @@ export function PrayerWall() {
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowForm(false)}
-                  className="text-xs text-amber-300/70 hover:text-amber-200 hover:bg-amber-800/20"
+                  className="text-xs text-amber-300/60 hover:text-amber-200 hover:bg-amber-800/20"
                 >
                   Cancel
                 </Button>
@@ -223,7 +223,7 @@ export function PrayerWall() {
                   type="submit"
                   size="sm"
                   disabled={!intention.trim() || lightCandle.isPending}
-                  className="bg-amber-600 hover:bg-amber-500 text-white text-xs rounded-full px-5 shadow-md"
+                  className="bg-amber-500 hover:bg-amber-400 text-amber-950 text-xs font-bold rounded-full px-5 shadow-md"
                 >
                   <Send className="w-3 h-3 mr-1.5" />
                   {lightCandle.isPending ? "Sending..." : "Submit Prayer"}
@@ -233,22 +233,22 @@ export function PrayerWall() {
           </form>
         )}
 
-        {/* Prayer Intentions List — compact tiles */}
+        {/* Prayer Intentions List — refined grid */}
         {intentions.length > 0 && (
-          <div className="mt-6 border-t border-amber-800/30 pt-4">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-lg font-semibold text-amber-100">Community Prayers</p>
-              <p className="text-base text-amber-300/80 font-medium">{intentions.length} shared</p>
+          <div className="mt-6 pt-5 border-t border-amber-800/20">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-base font-semibold text-amber-100">Community Prayers</p>
+              <p className="text-xs text-amber-300/60 font-medium">{intentions.length} shared</p>
             </div>
-            <div className="grid grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1 scrollbar-thin">
+            <div className="grid grid-cols-2 gap-2.5 max-h-52 overflow-y-auto pr-1 scrollbar-thin">
               {intentions.slice(0, 10).map((item) => (
-                <div key={item.id} className="py-2 px-3 rounded-md bg-amber-900/15 border border-amber-800/20">
-                  <p className="text-base text-amber-100 leading-snug line-clamp-2">{item.intention}</p>
+                <div key={item.id} className="py-2.5 px-3 rounded-lg bg-amber-900/10 border border-amber-800/15 hover:border-amber-700/30 transition-colors">
+                  <p className="text-sm text-amber-100/90 leading-snug line-clamp-2">{item.intention}</p>
                   <div className="flex items-center gap-1.5 mt-1.5">
                     {item.name && (
-                      <span className="text-sm text-amber-200/90 font-medium truncate max-w-[100px]">— {item.name}</span>
+                      <span className="text-xs text-amber-200/70 font-medium truncate max-w-[100px]">— {item.name}</span>
                     )}
-                    <span className="text-sm text-amber-300/70">
+                    <span className="text-xs text-amber-300/50">
                       {timeAgo(typeof item.createdAt === 'string' ? item.createdAt : new Date(item.createdAt).toISOString())}
                     </span>
                   </div>
@@ -256,7 +256,7 @@ export function PrayerWall() {
               ))}
             </div>
             {intentions.length > 10 && (
-              <Link href="/prayers" className="flex items-center justify-center gap-1 mt-3 text-sm font-medium text-amber-300 hover:text-amber-200 transition-colors">
+              <Link href="/prayers" className="flex items-center justify-center gap-1 mt-3 text-sm font-medium text-amber-300/80 hover:text-amber-200 transition-colors">
                 View all {intentions.length} prayers <span className="text-sm">→</span>
               </Link>
             )}

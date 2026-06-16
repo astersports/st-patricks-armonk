@@ -131,7 +131,7 @@ export function NowStatusBar() {
   }, [now]);
 
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-3 gap-2.5">
       {statuses.map((s) => {
         const Icon = s.icon;
         const isActive = s.status === "active";
@@ -140,20 +140,20 @@ export function NowStatusBar() {
           <div
             key={s.id}
             className={`
-              relative rounded-xl border-2 px-3 py-2.5 transition-all duration-300
+              relative rounded-xl px-3 py-3 transition-all duration-200
               ${isActive
-                ? `${s.bgActive} border-primary/30 shadow-sm ring-1 ring-current/10 animate-pulse-slow`
-                : "bg-card border-border"
+                ? `${s.bgActive} border border-primary/20 shadow-md`
+                : "bg-card border border-border/50"
               }
             `}
           >
             {/* Active glow overlay */}
             {isActive && (
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-green-400/5 to-transparent pointer-events-none" />
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
             )}
-            <div className="flex items-center gap-1.5 mb-1.5">
-              <Icon className={`w-4 h-4 ${isActive ? s.color : "text-muted-foreground"}`} />
-              <span className={`text-sm font-semibold ${isActive ? "text-foreground" : "text-foreground/80"}`}>
+            <div className="flex items-center gap-2 mb-1.5">
+              <Icon className={`w-5 h-5 ${isActive ? s.color : "text-muted-foreground"}`} />
+              <span className={`text-base font-bold ${isActive ? "text-foreground" : "text-foreground/80"}`}>
                 {s.label}
               </span>
             </div>
@@ -161,14 +161,14 @@ export function NowStatusBar() {
               {/* Pulsing dot */}
               <span className="relative flex h-2 w-2">
                 {isActive && (
-                  <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${s.dotActive} opacity-75`} />
+                  <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${s.dotActive} opacity-60`} />
                 )}
                 <span className={`relative inline-flex rounded-full h-2 w-2 ${
                   isActive ? s.dotActive : isNext ? "bg-amber-400" : s.dotInactive
                 }`} />
               </span>
               <span className={`text-sm font-medium ${
-                isActive ? s.color : isNext ? "text-amber-600" : "text-foreground/70"
+                isActive ? s.color : isNext ? "text-amber-600" : "text-muted-foreground"
               }`}>
                 {s.statusText}
               </span>

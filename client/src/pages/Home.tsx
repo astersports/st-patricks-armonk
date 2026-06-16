@@ -142,73 +142,54 @@ function HeroSection() {
   }, []);
 
   return (
-    <section className="relative h-[65vh] min-h-[480px] max-h-[600px] flex items-center justify-center overflow-hidden">
+    <section className="relative h-[60vh] min-h-[440px] max-h-[560px] flex items-center justify-center overflow-hidden">
       {/* Ken Burns background */}
       <div className="absolute inset-0">
         <img
           src="/manus-storage/church-stained-glass_4e3f2e8c.jpg"
-          alt="Church stained glass"
+          alt="St. Patrick's Church stained glass window"
           className="w-full h-full object-cover hero-ken-burns"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/30 to-black/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/15 to-black/55" />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 text-center text-white container px-6">
+      <div className="relative z-10 text-center text-white container px-6 flex flex-col items-center">
         {/* Time-of-day greeting */}
-        <p className="text-gold font-medium tracking-[0.2em] uppercase text-sm sm:text-base mb-3 animate-fade-in">
+        <p className="text-gold font-semibold tracking-[0.2em] uppercase text-xs sm:text-sm mb-4 animate-fade-in">
           {timeGreeting || "Welcome"}
         </p>
-        <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-3 animate-fade-in drop-shadow-2xl">
+        <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold mb-3 animate-fade-in drop-shadow-2xl leading-tight">
           St. Patrick in Armonk
         </h1>
-        <p className="text-lg sm:text-xl text-white/90 font-light animate-fade-up stagger-1">
-          29 Cox Ave, Armonk NY 10504
-        </p>
-        <p className="text-white/90 text-sm sm:text-base italic mt-4 mb-1 animate-fade-up stagger-2 tracking-wide">
-          &ldquo;God Bless the Whole World &mdash; No Exceptions&rdquo;
-        </p>
-        <p className="text-white/80 text-sm sm:text-base mb-6 animate-fade-up stagger-3 tracking-wide">
-          Pax Christi - St. Patricks Church, Armonk, New York
+        <p className="text-white/85 text-base sm:text-lg font-light animate-fade-up stagger-1 mb-5">
+          A Catholic community of faith, service &amp; love
         </p>
 
         {/* Next Mass Countdown */}
         {nextMassText && (
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-6 animate-fade-up stagger-3">
+          <div className="inline-flex items-center gap-2.5 bg-white/12 backdrop-blur-md border border-white/25 rounded-full px-5 py-2 mb-7 animate-fade-up stagger-2">
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            <span className="text-white/90 text-sm sm:text-base font-medium">{nextMassText}</span>
+            <span className="text-white/95 text-sm font-semibold">{nextMassText}</span>
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row gap-3 justify-center animate-fade-up stagger-4">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center animate-fade-up stagger-3">
           <Link href="/mass-times">
-            <Button size="lg" className="bg-gold text-black hover:bg-gold/90 font-semibold px-8 press-scale shadow-lg">
+            <Button size="lg" className="bg-gold text-parish-green hover:bg-gold/90 font-bold px-8 py-3 rounded-full press-scale shadow-lg shadow-gold/20">
               View Mass Times
             </Button>
           </Link>
           <Link href="/giving">
-            <Button size="lg" variant="outline" className="border-white/80 text-white hover:bg-white/10 font-semibold px-8 press-scale">
+            <Button size="lg" variant="outline" className="border-2 border-white/50 text-white hover:bg-white/10 font-semibold px-8 py-3 rounded-full press-scale backdrop-blur-sm">
               Support Our Parish
             </Button>
           </Link>
         </div>
-
-        {/* YouTube Subscribe */}
-        <a
-          href="https://www.youtube.com/@StPatricksArmonk"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 mt-4 mb-6 bg-red-600/90 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2 rounded-full transition-colors press-scale animate-fade-up stagger-4"
-        >
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-          </svg>
-          Subscribe on YouTube
-        </a>
       </div>
 
-      {/* Bottom fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
+      {/* Bottom fade — taller and more gradual */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background via-background/60 to-transparent" />
     </section>
   );
 }
@@ -231,37 +212,37 @@ function NowAtStPatrick({ latestNews, allImportantDates }: { latestNews: any; al
   };
 
   return (
-    <section className="reveal container -mt-8 relative z-20 mb-4 sm:mb-6">
+    <section className="reveal container -mt-10 relative z-20 mb-6 sm:mb-8">
       {/* Live Status Tiles */}
-      <div className="mb-5 pb-4 border-b border-border/40">
+      <div className="mb-6">
         <NowStatusBar />
       </div>
 
-      {/* Latest News — separate card */}
-      <Card className="border-2 border-border shadow-md overflow-hidden mb-3">
+      {/* Latest News — clean card */}
+      <Card className="rounded-xl border border-border/60 shadow-sm overflow-hidden mb-4 card-interactive">
         <CardContent className="p-0">
           <Link href="/news" className="group block">
-            <div className="px-3 py-2.5 sm:px-4 sm:py-3 flex items-center gap-3 hover:bg-primary/[0.02] transition-colors">
-              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                <Newspaper className="w-3.5 h-3.5 text-primary" />
+            <div className="px-4 py-3 flex items-center gap-3 hover:bg-primary/[0.03] transition-colors">
+              <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <Newspaper className="w-4 h-4 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-foreground/70 uppercase tracking-wider font-medium">Latest News</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-0.5">Latest News</p>
                 {latestNews ? (
                   <p className="font-semibold text-foreground text-base leading-snug">{latestNews.title}</p>
                 ) : (
                   <p className="font-semibold text-foreground text-base">News & Announcements</p>
                 )}
               </div>
-              <ArrowRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+              <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
             </div>
           </Link>
         </CardContent>
       </Card>
 
-      {/* Coming Up Events — separate card */}
+      {/* Coming Up Events — clean card */}
       {upcomingEvents.length > 0 && (
-        <Card className="border-2 border-border shadow-lg overflow-hidden">
+        <Card className="rounded-xl border border-border/60 shadow-sm overflow-hidden">
           <CardContent className="p-0">
             <ComingUpFiltered events={upcomingEvents} catColors={catColors} />
           </CardContent>
@@ -298,54 +279,54 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
   }, [events]);
 
   return (
-    <div className="px-3 py-2.5 sm:px-4 sm:py-3">
+    <div className="px-4 py-3">
       {/* Header */}
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-1.5">
-          <Clock className="w-4 h-4 text-gold" />
-          <span className="text-base font-bold text-foreground">Coming Up</span>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <Clock className="w-4 h-4 text-primary" />
+          <span className="font-serif text-lg font-bold text-foreground">Coming Up</span>
         </div>
-        <Link href="/calendar?filter=key-dates" className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-0.5">
+        <Link href="/calendar?filter=key-dates" className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1">
           All Events <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>
 
-      {/* Category filter chips */}
-      <div className="flex flex-wrap gap-2 pb-2 mb-2">
+      {/* Category filter chips — refined */}
+      <div className="flex flex-wrap gap-1.5 pb-3 mb-3 border-b border-border/30">
         {CATEGORIES.filter(c => c.key === "all" || (counts[c.key] || 0) > 0).map((cat) => (
           <button
             key={cat.key}
             onClick={() => setActiveFilter(cat.key)}
-            className={`text-base font-semibold px-3.5 py-1.5 rounded-full transition-all duration-150 ${
+            className={`text-sm font-medium px-3 py-1 rounded-full transition-all duration-150 ${
               activeFilter === cat.key
-                ? `${cat.color} ring-1 ring-current/20 scale-105`
-                : "bg-muted/50 text-foreground/60 hover:bg-muted"
+                ? "bg-primary text-white shadow-sm"
+                : "bg-muted/50 text-muted-foreground hover:bg-muted"
             }`}
           >
             {cat.label}
-            {counts[cat.key] ? ` (${counts[cat.key]})` : ""}
+            {counts[cat.key] ? ` ${counts[cat.key]}` : ""}
           </button>
         ))}
       </div>
 
       {/* Event list */}
-      <div className="space-y-1.5">
+      <div className="space-y-1">
         {filteredEvents.length === 0 ? (
-          <p className="text-sm text-foreground/60 italic py-2 text-center">No upcoming events in this category</p>
+          <p className="text-sm text-muted-foreground italic py-3 text-center">No upcoming events in this category</p>
         ) : (
           filteredEvents.slice(0, 5).map((evt, i) => {
             const eventDate = toEastern(evt.eventDate as unknown as string);
             const colors = catColors[evt.category] || catColors.parish;
             const countdown = getCountdown(eventDate);
             return (
-              <div key={evt.id || i} className="group flex items-center gap-2.5 py-1.5 px-2 -mx-1 rounded-lg hover:bg-muted/40 transition-colors">
-                <Link href="/calendar?filter=key-dates" className="flex items-center gap-2.5 flex-1 min-w-0">
+              <div key={evt.id || i} className="group flex items-center gap-3 py-2 px-2 -mx-2 rounded-lg hover:bg-muted/40 transition-colors">
+                <Link href="/calendar?filter=key-dates" className="flex items-center gap-3 flex-1 min-w-0">
                   {/* Date badge */}
-                  <div className={`w-9 h-9 rounded-lg ${colors.bg} flex flex-col items-center justify-center shrink-0`}>
-                    <span className="text-sm font-bold uppercase leading-none text-foreground/70">
+                  <div className={`w-10 h-10 rounded-lg ${colors.bg} flex flex-col items-center justify-center shrink-0`}>
+                    <span className="text-[10px] font-bold uppercase leading-none text-primary/70">
                       {format(eventDate, "MMM")}
                     </span>
-                    <span className="text-base font-bold leading-tight text-foreground">
+                    <span className="text-lg font-bold leading-tight text-primary">
                       {format(eventDate, "d")}
                     </span>
                   </div>
@@ -354,7 +335,7 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
                     <p className="font-semibold text-foreground text-base leading-snug group-hover:text-primary transition-colors">
                       {evt.title}
                     </p>
-                    <p className="text-sm text-foreground/70">
+                    <p className="text-sm text-muted-foreground">
                       {evt.location || format(eventDate, "EEEE \u00b7 h:mm a")}
                     </p>
                   </div>
@@ -373,10 +354,10 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
                   className="shrink-0 p-1.5 rounded-md hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
                   title="Add to Calendar"
                 >
-                  <CalendarPlus className="w-3.5 h-3.5" />
+                  <CalendarPlus className="w-4 h-4" />
                 </button>
                 {/* Countdown */}
-                <span className="text-sm font-semibold text-gold bg-gold/10 px-2 py-0.5 rounded-full shrink-0 whitespace-nowrap">
+                <span className="text-xs font-medium text-gold bg-gold/15 px-2 py-0.5 rounded-full shrink-0 whitespace-nowrap">
                   {countdown}
                 </span>
               </div>
@@ -642,33 +623,34 @@ function PhotoGallerySection() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
-            <Camera className="w-3.5 h-3.5 text-primary" />
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+            <Camera className="w-4 h-4 text-primary" />
           </div>
-          <h2 className="font-serif text-sm sm:text-base font-bold text-foreground">Photo Gallery</h2>
+          <h2 className="font-serif text-lg font-bold text-foreground">Photo Gallery</h2>
         </div>
         <Link href="/gallery" className="text-sm text-primary font-medium inline-flex items-center gap-1 hover:underline">
           View All <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>
       <div className="relative">
-        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory">
+        <div className="flex gap-3 overflow-x-auto pb-3 scrollbar-hide snap-x snap-mandatory">
           {photos.map((photo) => (
             <Link
               key={photo.id}
               href="/gallery"
-              className="shrink-0 w-48 sm:w-56 h-36 sm:h-44 rounded-lg overflow-hidden relative group snap-start"
+              className="shrink-0 w-52 sm:w-64 h-40 sm:h-48 rounded-xl overflow-hidden relative group snap-start shadow-sm hover:shadow-lg transition-all duration-300"
             >
               <img
                 src={photo.imageUrl}
                 alt={photo.caption || photo.title || "Parish photo"}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               {photo.caption && (
-                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-2">
-                  <p className="text-white text-xs truncate">{photo.caption}</p>
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+                  <p className="text-white text-xs font-medium truncate">{photo.caption}</p>
                 </div>
               )}
             </Link>
@@ -676,9 +658,9 @@ function PhotoGallerySection() {
           {/* "View All" card at end */}
           <Link
             href="/gallery"
-            className="shrink-0 w-48 sm:w-56 h-36 sm:h-44 rounded-lg border-2 border-dashed border-primary/20 flex flex-col items-center justify-center gap-2 hover:border-primary/40 transition-colors snap-start"
+            className="shrink-0 w-52 sm:w-64 h-40 sm:h-48 rounded-xl border border-dashed border-primary/20 flex flex-col items-center justify-center gap-2 hover:border-primary/40 hover:bg-primary/[0.02] transition-all snap-start"
           >
-            <Camera className="w-6 h-6 text-primary/60" />
+            <Camera className="w-7 h-7 text-primary/50" />
             <span className="text-sm text-primary font-medium">View All Photos</span>
           </Link>
         </div>
@@ -855,19 +837,19 @@ function DailyReadings() {
 
   return (
     <div>
-      <div className="mb-3">
-        <div className="flex items-center gap-2 mb-2">
-          <div className="w-7 h-7 rounded-full bg-gold/20 flex items-center justify-center shrink-0">
-            <svg className="w-3.5 h-3.5 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <div className="mb-4">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-9 h-9 rounded-lg bg-gold/15 flex items-center justify-center shrink-0">
+            <svg className="w-4 h-4 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
             </svg>
           </div>
           <div className="min-w-0">
-            <h2 className="font-serif text-base sm:text-lg font-bold text-white">Today's Readings</h2>
-            <p className="text-sm text-white/90 leading-snug">{readings.liturgicTitle}</p>
+            <h2 className="font-serif text-lg sm:text-xl font-bold text-white">Today's Readings</h2>
+            <p className="text-sm text-white/70 leading-snug">{readings.liturgicTitle}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap mt-2">
           <LiturgicalSeasonBadge variant="dark" />
           <a
             href="https://bible.usccb.org/daily-bible-reading"
@@ -880,23 +862,23 @@ function DailyReadings() {
         </div>
       </div>
       {/* Compact reading rows — tap to expand */}
-      <div className="space-y-1.5">
+      <div className="space-y-2">
         {readingItems.map((item) => (
           <button
             key={item.key}
             onClick={() => setExpandedReading(expandedReading === item.key ? null : item.key)}
-            className="w-full text-left rounded-lg border border-white/10 bg-white/5 hover:bg-white/8 transition-colors overflow-hidden"
+            className="w-full text-left rounded-xl border border-white/8 bg-white/[0.04] hover:bg-white/[0.07] transition-all duration-200 overflow-hidden"
           >
-            <div className="flex items-center gap-3 px-3 py-2.5">
+            <div className="flex items-center gap-3 px-4 py-3">
               <div className="flex-1 min-w-0">
-                <span className={`text-sm font-bold uppercase tracking-wider ${item.color} block mb-0.5`}>{item.label}</span>
-                <span className="text-base text-white/90 leading-snug">{item.title}</span>
+                <span className={`text-xs font-bold uppercase tracking-wider ${item.color} block mb-1`}>{item.label}</span>
+                <span className="text-sm sm:text-base text-white/85 leading-snug">{item.title}</span>
               </div>
-              <ChevronDown className={`w-3.5 h-3.5 text-white/40 transition-transform duration-200 shrink-0 ${expandedReading === item.key ? "rotate-180" : ""}`} />
+              <ChevronDown className={`w-4 h-4 text-white/30 transition-transform duration-200 shrink-0 ${expandedReading === item.key ? "rotate-180" : ""}`} />
             </div>
             {expandedReading === item.key && (
-              <div className="px-3 pb-3 pt-1 border-t border-white/10">
-                <p className="text-base text-white/90 leading-relaxed whitespace-pre-line">{item.text}</p>
+              <div className="px-4 pb-4 pt-2 border-t border-white/8">
+                <p className="text-sm sm:text-base text-white/80 leading-relaxed whitespace-pre-line">{item.text}</p>
               </div>
             )}
           </button>
@@ -1036,18 +1018,18 @@ function CatholicResources() {
   return (
     <div>
       {/* Header with stats bar */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
-            <Rss className="w-3.5 h-3.5 text-primary" />
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+            <Rss className="w-4 h-4 text-primary" />
           </div>
           <div>
-            <h2 className="font-serif text-sm sm:text-base font-bold text-foreground">Catholic Resources</h2>
-            <div className="flex items-center gap-2 text-sm text-foreground/70">
+            <h2 className="font-serif text-lg font-bold text-foreground">Catholic Resources</h2>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span>{SOURCES.length} Sources</span>
-              <span className="text-border">·</span>
+              <span>·</span>
               <span>{totalArticles} Articles</span>
-              <span className="text-border">·</span>
+              <span>·</span>
               <span className="flex items-center gap-1">
                 <span className="relative flex h-1.5 w-1.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
@@ -1061,7 +1043,7 @@ function CatholicResources() {
       </div>
 
       {/* Per-source collapsible sections */}
-      <div className="space-y-3">
+      <div className="space-y-2.5">
         {SOURCES.map((source) => {
           const articles = feedsBySource[source.key] || [];
           const isExpanded = expandedSources.includes(source.key);
@@ -1072,47 +1054,47 @@ function CatholicResources() {
           return (
             <div
               key={source.key}
-              className={`rounded-xl border border-border/50 overflow-hidden shadow-sm border-l-4 ${source.borderColor} transition-all`}
+              className={`rounded-xl border border-border/40 overflow-hidden shadow-sm border-l-4 ${source.borderColor} transition-all`}
             >
               {/* Source Header — clickable to expand/collapse */}
               <button
                 onClick={() => toggleSource(source.key)}
-                className="w-full flex items-center justify-between px-4 py-3 hover:bg-muted/30 transition-colors"
+                className="w-full flex items-center justify-between px-4 py-3 hover:bg-muted/20 transition-colors"
               >
                 <div className="flex items-center gap-2.5">
-                  <span className={`w-2 h-2 rounded-full ${source.color}`} />
+                  <span className={`w-2.5 h-2.5 rounded-full ${source.color}`} />
                   <div className="text-left">
-                    <span className="text-sm font-semibold text-foreground">{source.label}</span>
-                    <span className="text-sm text-foreground/70 ml-2 hidden sm:inline">{source.sublabel}</span>
+                    <span className="text-sm font-bold text-foreground">{source.label}</span>
+                    <span className="text-xs text-muted-foreground ml-2 hidden sm:inline">{source.sublabel}</span>
                   </div>
                   {newCount > 0 && (
-                    <span className="text-xs font-bold uppercase tracking-wider bg-gold/15 text-gold px-1.5 py-0.5 rounded">
+                    <span className="text-[10px] font-bold uppercase tracking-wider bg-gold/15 text-gold px-1.5 py-0.5 rounded-full">
                       {newCount} new
                     </span>
                   )}
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-foreground/70">{articles.length} articles</span>
-                  <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
+                  <span className="text-xs text-muted-foreground">{articles.length}</span>
+                  <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
                 </div>
               </button>
 
               {/* Articles list */}
               {isExpanded && articles.length > 0 && (
-                <div className="border-t border-border/30">
+                <div className="border-t border-border/20">
                   {articles.map((article, idx) => (
                     <a
                       key={idx}
                       href={article.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group flex items-start gap-3 px-4 py-2.5 hover:bg-muted/40 transition-colors border-b border-border/20 last:border-b-0"
+                      className="group flex items-start gap-3 px-4 py-2.5 hover:bg-muted/30 transition-colors border-b border-border/10 last:border-b-0"
                     >
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
                           {article.title}
                         </p>
-                        <p className="text-sm text-foreground/70 mt-0.5">
+                        <p className="text-xs text-muted-foreground mt-0.5">
                           {new Date(article.pubDate).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
                         </p>
                       </div>
@@ -1124,7 +1106,7 @@ function CatholicResources() {
                     href={source.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/5 transition-colors border-t border-border/30"
+                    className="flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium text-primary hover:bg-primary/5 transition-colors border-t border-border/20"
                   >
                     Visit {source.label} <ExternalLink className="w-2.5 h-2.5" />
                   </a>
@@ -1136,21 +1118,21 @@ function CatholicResources() {
       </div>
 
       {/* Quick Links Row */}
-      <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2">
+      <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-2">
         {RESOURCE_LINKS.map((resource, idx) => (
           <a
             key={idx}
             href={resource.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center gap-2 rounded-lg border border-border/40 px-3 py-2 hover:border-primary/30 hover:bg-primary/[0.02] transition-all"
+            className="group flex items-center gap-2 rounded-lg border border-border/30 px-3 py-2.5 hover:border-primary/20 hover:bg-primary/[0.02] transition-all card-interactive"
           >
             <Globe className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
             <div className="min-w-0">
-              <p className="text-base font-medium text-foreground group-hover:text-primary transition-colors">
+              <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
                 {resource.name}
               </p>
-              <p className="text-sm text-foreground/70">{resource.category}</p>
+              <p className="text-xs text-muted-foreground">{resource.category}</p>
             </div>
           </a>
         ))}
@@ -1236,19 +1218,16 @@ export default function Home() {
         </section>
 
         {/* Newsletter Subscription — Full-width dark CTA */}
-        <section className="reveal section-dark py-6 sm:py-8 -mx-4 px-4 sm:-mx-0 sm:px-0">
+        <section className="reveal section-dark py-8 sm:py-12 -mx-4 px-4 sm:-mx-0 sm:px-0">
           <div className="container">
-            <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-10 max-w-4xl mx-auto">
+            <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-12 max-w-4xl mx-auto">
               <div className="flex-1 text-center md:text-left">
-                <div className="flex items-center gap-2 mb-2 justify-center md:justify-start">
-                  <Mail className="w-4 h-4 text-gold" />
-                  <span className="text-gold text-sm font-medium uppercase tracking-wider">Stay Connected</span>
-                </div>
-                <h2 className="font-serif text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1.5">
+                <span className="text-gold text-xs font-bold uppercase tracking-widest">Stay Connected</span>
+                <h2 className="font-serif text-xl sm:text-2xl md:text-3xl font-bold text-white mt-2 mb-2">
                   Subscribe to Parish Updates
                 </h2>
-                <p className="text-white/80 text-base sm:text-lg">
-                  Receive weekly bulletins and news directly in your inbox.
+                <p className="text-white/60 text-sm sm:text-base">
+                  Weekly bulletins and parish news, delivered to your inbox.
                 </p>
               </div>
               <div className="w-full md:w-auto">
@@ -1264,20 +1243,20 @@ export default function Home() {
                     placeholder="Your email address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-white/50 min-w-[250px] focus:border-gold focus:ring-gold/30"
+                    className="bg-white/10 border-white/15 text-white placeholder:text-white/40 min-w-[250px] focus:border-gold/50 focus:ring-gold/20 rounded-full px-5"
                     required
                   />
                   <Button
                     type="submit"
-                    className="bg-gold text-black hover:bg-gold/90 font-semibold whitespace-nowrap press-scale"
+                    className="bg-gold text-parish-green-dark hover:bg-gold/90 font-bold whitespace-nowrap rounded-full px-6 active:scale-97 transition-all"
                     disabled={subscribeMutation.isPending}
                   >
                     {subscribeMutation.isPending ? "Subscribing..." : "Subscribe"}
                   </Button>
                 </form>
-                <p className="text-white/60 text-sm sm:text-base mt-3 text-center sm:text-left">
+                <p className="text-white/40 text-xs mt-3 text-center sm:text-left">
                   Or join us on{" "}
-                  <a href="https://stpatarmonk.flocknote.com/home" target="_blank" rel="noopener noreferrer" className="text-gold underline hover:text-gold/80">
+                  <a href="https://stpatarmonk.flocknote.com/home" target="_blank" rel="noopener noreferrer" className="text-gold/80 underline hover:text-gold">
                     Flocknote
                   </a>{" "}
                   for text and email updates.
