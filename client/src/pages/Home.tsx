@@ -195,137 +195,112 @@ function HeroSection() {
   );
 }
 
-// === LIVE ACTIVITY BAR — Auto-rotating latest news + upcoming events ===
-function LiveActivityBar({ latestNews, allImportantDates }: { latestNews: any; allImportantDates: any[] | undefined }) {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-
-  // Build activity items from news + events
-  const items = useMemo(() => {
-    const result: { type: "news" | "event"; title: string; subtitle: string; href: string; icon: "news" | "calendar"; dot?: string }[] = [];
-    
-    if (latestNews) {
-      result.push({
-        type: "news",
-        title: latestNews.title,
-        subtitle: format(new Date(latestNews.publishedAt || latestNews.createdAt), "MMM d, yyyy"),
-        href: "/news",
-        icon: "news",
-      });
-    }
-
-    const upcomingEvents = allImportantDates
-      ?.filter((e) => new Date(e.eventDate as unknown as string) >= new Date())
-      ?.slice(0, 3) || [];
-
-    const catDots: Record<string, string> = {
-      ccd: "bg-green-500", cyo: "bg-orange-500", sacrament: "bg-purple-500",
-      parish: "bg-primary", teen_life: "bg-blue-500", social: "bg-amber-500",
-    };
-
-    upcomingEvents.forEach((evt) => {
-      const eventDate = toEastern(evt.eventDate as unknown as string);
-      result.push({
-        type: "event",
-        title: evt.title,
-        subtitle: format(eventDate, "EEE, MMM d") + (evt.location ? ` · ${evt.location}` : ""),
-        href: "/calendar?filter=key-dates",
-        icon: "calendar",
-        dot: catDots[evt.category] || catDots.parish,
-      });
-    });
-
-    return result;
-  }, [latestNews, allImportantDates]);
-
-  // Auto-rotate every 5 seconds, paused on hover
-  useEffect(() => {
-    if (items.length <= 1 || isPaused) return;
-    const timer = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % items.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [items.length, isPaused]);
-
-  if (items.length === 0) return null;
-
-  const current = items[activeIndex];
-
+// === LATEST NEWS CARD — Always visible, single news highlight ===
+function LatestNewsCard({ latestNews }: { latestNews: any }) {
   return (
-    <section className="reveal container -mt-8 relative z-20 mb-10 sm:mb-14">
-      <Card
-        className="border-0 shadow-lg overflow-hidden hover-glow"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-      >
+    <section className="reveal container -mt-8 relative z-20 mb-4 sm:mb-5">
+      <Card className="border-0 shadow-lg overflow-hidden hover-glow">
         <CardContent className="p-0">
-          {/* Activity content with crossfade */}
-          <Link href={current.href} className="group block">
+          <Link href="/news" className="group block">
             <div className="p-4 sm:p-5 flex items-center gap-4 hover:bg-primary/[0.02] transition-colors">
-              <div className={`w-11 h-11 rounded-full flex items-center justify-center shrink-0 ${
-                current.icon === "news" ? "bg-primary/10" : "bg-gold/10"
-              }`}>
-                {current.icon === "news" ? (
-                  <Newspaper className="w-5 h-5 text-primary" />
-                ) : (
-                  <Clock className="w-5 h-5 text-gold" />
-                )}
+              <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                <Newspaper className="w-5 h-5 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">
-                    {current.type === "news" ? "Latest News" : "Coming Up"}
-                  </p>
-                  {current.dot && <span className={`w-1.5 h-1.5 rounded-full ${current.dot}`} />}
-                </div>
-                <p className="font-semibold text-foreground text-sm sm:text-base truncate">{current.title}</p>
-                <p className="text-xs text-muted-foreground">{current.subtitle}</p>
+                <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Latest News</p>
+                {latestNews ? (
+                  <>
+                    <p className="font-semibold text-foreground text-sm sm:text-base truncate">{latestNews.title}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {format(new Date(latestNews.publishedAt || latestNews.createdAt), "MMM d, yyyy")}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="font-semibold text-foreground text-sm sm:text-base">News & Announcements</p>
+                    <p className="text-xs text-muted-foreground">Parish updates and community news</p>
+                  </>
+                )}
               </div>
               <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
             </div>
           </Link>
+        </CardContent>
+      </Card>
+    </section>
+  );
+}
 
-          {/* Progress dots + arrows + quick links */}
-          <div className="px-4 sm:px-5 py-2.5 border-t border-border/30 flex items-center justify-between">
-            {/* Left arrow + dots + right arrow */}
+// === COMING UP EVENTS — Compact timeline list of next 3 events ===
+function ComingUpEvents({ allImportantDates }: { allImportantDates: any[] | undefined }) {
+  const upcomingEvents = useMemo(() => {
+    return allImportantDates
+      ?.filter((e) => new Date(e.eventDate as unknown as string) >= new Date())
+      ?.slice(0, 3) || [];
+  }, [allImportantDates]);
+
+  const catDots: Record<string, string> = {
+    ccd: "bg-green-500", cyo: "bg-orange-500", sacrament: "bg-purple-500",
+    parish: "bg-primary", teen_life: "bg-blue-500", social: "bg-amber-500",
+  };
+
+  if (upcomingEvents.length === 0) return null;
+
+  return (
+    <section className="reveal container mb-10 sm:mb-14">
+      <Card className="border-0 shadow-md overflow-hidden">
+        <CardContent className="p-0">
+          {/* Header */}
+          <div className="px-4 sm:px-5 pt-4 sm:pt-5 pb-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <button
-                onClick={() => setActiveIndex((prev) => (prev - 1 + items.length) % items.length)}
-                className="w-6 h-6 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors press-scale"
-                aria-label="Previous item"
-              >
-                <ChevronLeft className="w-3.5 h-3.5" />
-              </button>
-              <div className="flex items-center gap-1.5">
-                {items.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setActiveIndex(i)}
-                    className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                      i === activeIndex ? "bg-primary w-4" : "bg-border hover:bg-muted-foreground/50"
-                    }`}
-                    aria-label={`View item ${i + 1}`}
-                  />
-                ))}
+              <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center">
+                <Clock className="w-4 h-4 text-gold" />
               </div>
-              <button
-                onClick={() => setActiveIndex((prev) => (prev + 1) % items.length)}
-                className="w-6 h-6 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors press-scale"
-                aria-label="Next item"
-              >
-                <ChevronRight className="w-3.5 h-3.5" />
-              </button>
+              <h2 className="font-serif text-base sm:text-lg font-bold text-foreground">Coming Up</h2>
             </div>
-            {/* Quick links */}
-            <div className="flex items-center gap-3">
-              <Link href="/news" className="text-xs font-medium text-primary hover:text-primary/80 transition-colors">
-                All News
-              </Link>
-              <span className="text-border">|</span>
-              <Link href="/calendar?filter=key-dates" className="text-xs font-medium text-primary hover:text-primary/80 transition-colors">
-                All Events
-              </Link>
-            </div>
+            <Link href="/calendar?filter=key-dates" className="text-xs font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1">
+              View Calendar <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
+
+          {/* Event rows */}
+          <div className="px-4 sm:px-5 pb-4 sm:pb-5">
+            {upcomingEvents.map((evt, i) => {
+              const eventDate = toEastern(evt.eventDate as unknown as string);
+              const dot = catDots[evt.category] || catDots.parish;
+              return (
+                <div key={evt.id || i}>
+                  {i > 0 && <div className="border-t border-dashed border-border/40 my-3" />}
+                  <Link href="/calendar?filter=key-dates" className="group flex items-center gap-3 sm:gap-4 py-1 hover:bg-primary/[0.02] -mx-2 px-2 rounded-lg transition-colors">
+                    {/* Date badge */}
+                    <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-lg bg-gold/10 flex flex-col items-center justify-center shrink-0">
+                      <span className="text-[10px] font-semibold text-gold uppercase leading-none">
+                        {format(eventDate, "MMM")}
+                      </span>
+                      <span className="text-lg sm:text-xl font-bold text-gold leading-tight">
+                        {format(eventDate, "d")}
+                      </span>
+                    </div>
+                    {/* Event details */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <span className={`w-1.5 h-1.5 rounded-full ${dot} shrink-0`} />
+                        <p className="font-semibold text-foreground text-sm truncate group-hover:text-primary transition-colors">
+                          {evt.title}
+                        </p>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {evt.location && <span>{evt.location}</span>}
+                        {evt.location && evt.note && <span> · </span>}
+                        {evt.note && <span>{evt.note}</span>}
+                        {!evt.location && !evt.note && <span>{format(eventDate, "EEEE")}</span>}
+                      </p>
+                    </div>
+                    <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:text-primary transition-colors shrink-0" />
+                  </Link>
+                </div>
+              );
+            })}
           </div>
         </CardContent>
       </Card>
@@ -996,8 +971,9 @@ export default function Home() {
       <HeroSection />
 
       <div ref={revealRef}>
-        {/* Live Activity Bar — Auto-rotating news + events */}
-        <LiveActivityBar latestNews={latestNews} allImportantDates={allImportantDates} />
+        {/* Latest News + Coming Up Events — two always-visible sections */}
+        <LatestNewsCard latestNews={latestNews} />
+        <ComingUpEvents allImportantDates={allImportantDates} />
 
         {/* Pastor's Welcome */}
         <section className="reveal container py-8 sm:py-12 mb-2 sm:mb-6">
