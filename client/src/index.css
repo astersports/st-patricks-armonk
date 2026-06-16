@@ -5,7 +5,7 @@
 
 @theme inline {
   /* ===== L99 Design System — Claude AI Architect ===== */
-  /* Primary Green: hue 160 — rich emerald green */
+  /* Primary Green: hue 160 — lighter emerald green (church is about the light) */
   /* Gold Accent: hue 79 — burnished liturgical gold */
   /* All neutrals: zero chroma — no tint whatsoever */
 
@@ -15,10 +15,10 @@
   --color-card-foreground: oklch(0.13 0 0);
   --color-popover: oklch(0.985 0 0);
   --color-popover-foreground: oklch(0.18 0 0);
-  --color-primary: oklch(0.38 0.14 160);
+  --color-primary: oklch(0.48 0.14 160);
   --color-primary-foreground: oklch(0.98 0.01 79);
   --color-secondary: oklch(0.96 0 0);
-  --color-secondary-foreground: oklch(0.28 0.08 160);
+  --color-secondary-foreground: oklch(0.38 0.08 160);
   --color-muted: oklch(0.955 0 0);
   --color-muted-foreground: oklch(0.52 0 0);
   --color-accent: oklch(0.72 0.16 79);
@@ -27,20 +27,20 @@
   --color-destructive-foreground: oklch(0.98 0 0);
   --color-border: oklch(0.9 0 0);
   --color-input: oklch(0.92 0 0);
-  --color-ring: oklch(0.38 0.14 160);
-  --color-chart-1: oklch(0.38 0.14 160);
+  --color-ring: oklch(0.48 0.14 160);
+  --color-chart-1: oklch(0.48 0.14 160);
   --color-chart-2: oklch(0.72 0.16 79);
-  --color-chart-3: oklch(0.52 0.10 160);
+  --color-chart-3: oklch(0.58 0.10 160);
   --color-chart-4: oklch(0.62 0.13 79);
-  --color-chart-5: oklch(0.32 0.08 160);
+  --color-chart-5: oklch(0.42 0.08 160);
   --color-sidebar: oklch(0.97 0 0);
   --color-sidebar-foreground: oklch(0.18 0 0);
-  --color-sidebar-primary: oklch(0.38 0.14 160);
+  --color-sidebar-primary: oklch(0.48 0.14 160);
   --color-sidebar-primary-foreground: oklch(0.98 0.01 79);
   --color-sidebar-accent: oklch(0.94 0 0);
-  --color-sidebar-accent-foreground: oklch(0.28 0.08 160);
+  --color-sidebar-accent-foreground: oklch(0.38 0.08 160);
   --color-sidebar-border: oklch(0.9 0 0);
-  --color-sidebar-ring: oklch(0.38 0.14 160);
+  --color-sidebar-ring: oklch(0.48 0.14 160);
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
@@ -57,13 +57,13 @@
   background-color: oklch(0.72 0.16 79);
 }
 @utility text-parish-green {
-  color: oklch(0.38 0.14 160);
+  color: oklch(0.48 0.14 160);
 }
 @utility bg-parish-green {
-  background-color: oklch(0.38 0.14 160);
+  background-color: oklch(0.48 0.14 160);
 }
 @utility bg-parish-green-dark {
-  background-color: oklch(0.22 0.10 160);
+  background-color: oklch(0.38 0.12 160);
 }
 @utility border-gold {
   border-color: oklch(0.72 0.16 79);
@@ -272,7 +272,7 @@
   color: oklch(0.95 0 0);
 }
 .section-dark-green {
-  background-color: oklch(0.22 0.10 160);
+  background-color: oklch(0.32 0.10 160);
   color: oklch(0.95 0 0);
 }
 
@@ -306,7 +306,7 @@
     transition: box-shadow var(--duration-normal) var(--ease-crisp), border-color var(--duration-fast) var(--ease-standard);
   }
   .hover-glow:hover {
-    box-shadow: 0 0 0 1px oklch(0.38 0.14 160 / 0.1), 0 6px 12px -4px oklch(0 0 0 / 0.06);
+    box-shadow: 0 0 0 1px oklch(0.48 0.14 160 / 0.1), 0 6px 12px -4px oklch(0 0 0 / 0.06);
   }
 
   /* Interactive card with combined lift + glow */
@@ -316,7 +316,7 @@
   .card-interactive:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px -6px oklch(0 0 0 / 0.07), 0 4px 8px -4px oklch(0 0 0 / 0.03);
-    border-color: oklch(0.38 0.14 160 / 0.15);
+    border-color: oklch(0.48 0.14 160 / 0.15);
   }
   .card-interactive:active {
     transform: translateY(0) scale(0.99);

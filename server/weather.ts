@@ -146,7 +146,7 @@ export async function getWeatherForEvent(eventStartISO: string): Promise<EventWe
   const eventDate = new Date(eventStartISO);
   const now = new Date();
   const daysAway = (eventDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
-  if (daysAway > 7 || daysAway < 0) return null;
+  if (daysAway > 7 || daysAway < -1) return null; // Allow today's events even if start time is past
 
   const forecasts = await fetchForecast();
   if (forecasts.length === 0) return null;
@@ -164,8 +164,8 @@ export async function getWeatherForEvent(eventStartISO: string): Promise<EventWe
     }
   }
 
-  // If closest is more than 2 hours away, skip
-  if (closestDiff > 2 * 60 * 60 * 1000) return null;
+  // If closest is more than 6 hours away, skip (relaxed for daily schedule views)
+  if (closestDiff > 6 * 60 * 60 * 1000) return null;
 
   const weatherInfo = getWeatherInfo(closest.weatherCode);
 
@@ -272,18 +272,17 @@ export async function getWeatherForEvents(
   const result: Record<string, { weather: EventWeather | null; isOutdoor: boolean; isHighAttendance: boolean; parkingAdvisory: string | null }> = {};
 
   const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // Start of today
   const sevenDaysOut = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
   for (const event of events) {
     const eventDate = new Date(event.startDate);
-    if (eventDate > sevenDaysOut || eventDate < now) continue;
+    if (eventDate > sevenDaysOut || eventDate < todayStart) continue;
 
     const outdoor = isOutdoorEvent(event);
     const highAttendance = isHighAttendanceEvent(event);
 
-    // Only enrich outdoor or high-attendance events
-    if (!outdoor && !highAttendance) continue;
-
+    // Show weather for ALL events within 7 days
     const weather = await getWeatherForEvent(event.startDate);
     const parkingAdvisory = highAttendance ? getParkingAdvisory(event) : null;
 

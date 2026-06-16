@@ -580,3 +580,16 @@
 - [x] Use real St. Patrick's church photo (IMG_2873.jpeg) as hero background image
 - [x] Move weather pill from next to confession time to next to "Next Mass" countdown
 - [x] Shift all greens to richer emerald green throughout the site (hue 141→160, all 21 references updated)
+
+## User-Requested Changes (June 16 - Batch 2)
+
+- [x] Hero photo should be clear - lighten/remove dark overlay (very light 15% gradient)
+- [x] Remove "Week 12 in Ordinary Time" liturgical badge from hero and readings section
+- [x] Remove Parish BBQ from news/events (canceled) - deleted from database
+- [x] Weather icons/temp on ALL Coming Up events within 7 days (removed outdoor-only filter)
+- [x] Lighter green across the site - lightness 0.38→0.48 (church is about the light)
+- [x] YouTube live stream link at the top for parishioners (Watch Live Mass in announcement bar)
+- [x] Audit inner pages for Claude architectural decisions (PageHeader on all 19 pages)
+- [x] Fix admin departments: Teen Life → St. Francis Hall (gym), Wallace Hall → parish hall for community/ministry
+- [x] Added Facilities section to About page (Wallace Hall + St. Francis Hall descriptions)
+- [x] Weather badges now show on This Week daily schedule (all 7 days)

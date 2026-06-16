@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import PageHeader from "@/components/PageHeader";
 
 const accentColors = [
-  "border-l-[oklch(0.44_0.12_160)]",
+  "border-l-[oklch(0.54_0.12_160)]",
   "border-l-[oklch(0.75_0.15_85)]",
   "border-l-[oklch(0.5_0.12_250)]",
   "border-l-[oklch(0.55_0.15_25)]",

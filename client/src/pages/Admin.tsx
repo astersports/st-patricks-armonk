@@ -423,7 +423,7 @@ export function EventManager() {
         <Card className="border-primary/30">
           <CardContent className="p-6 space-y-4">
             <Input placeholder="Event title" value={title} onChange={(e) => setTitle(e.target.value)} />
-            <Input placeholder="Location (optional)" value={location} onChange={(e) => setLocation(e.target.value)} />
+            <Input placeholder="Location (e.g. Wallace Hall, St. Francis Hall, Church)" value={location} onChange={(e) => setLocation(e.target.value)} />
             <Textarea placeholder="Description (optional)" value={description} onChange={(e) => setDescription(e.target.value)} rows={3} />
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -697,7 +697,7 @@ export function CcdManager() {
                 <option value="sacrament">Sacrament</option>
               </select>
               <Input placeholder="Grade (optional, e.g. 2nd, All)" value={eventGrade} onChange={e => setEventGrade(e.target.value)} />
-              <Input placeholder="Location (optional)" value={eventLocation} onChange={e => setEventLocation(e.target.value)} />
+              <Input placeholder="Location (e.g. Wallace Hall, St. Francis Hall, Church)" value={eventLocation} onChange={e => setEventLocation(e.target.value)} />
               <Input placeholder="Description (optional)" value={eventDescription} onChange={e => setEventDescription(e.target.value)} />
             </div>
             <div className="flex gap-2 mt-3">
@@ -833,7 +833,7 @@ export function CyoManager() {
               <Input placeholder="Opponent" value={gameOpponent} onChange={e => setGameOpponent(e.target.value)} />
               <Input type="date" value={gameDate} onChange={e => setGameDate(e.target.value)} />
               <Input type="time" value={gameTime} onChange={e => setGameTime(e.target.value)} />
-              <Input placeholder="Location" value={gameLocation} onChange={e => setGameLocation(e.target.value)} />
+              <Input placeholder="Location (Home: St. Francis Hall)" value={gameLocation} onChange={e => setGameLocation(e.target.value)} />
               <select className="border rounded-md px-3 py-2 text-sm" value={gameHomeAway} onChange={e => setGameHomeAway(e.target.value as "home" | "away")}>
                 <option value="home">Home</option>
                 <option value="away">Away</option>
@@ -1609,7 +1609,7 @@ export function KeyDatesManager() {
     cyo: { label: "CYO", color: "bg-orange-100 text-orange-800" },
     sacrament: { label: "Sacrament", color: "bg-purple-100 text-purple-800" },
     parish: { label: "Parish", color: "bg-emerald-100 text-emerald-800" },
-    teen_life: { label: "Teen Life", color: "bg-blue-100 text-blue-800" },
+    teen_life: { label: "Teen Life (St. Francis Hall)", color: "bg-blue-100 text-blue-800" },
     social: { label: "Social", color: "bg-amber-100 text-amber-800" },
   };
 
@@ -1643,7 +1643,7 @@ export function KeyDatesManager() {
           </div>
           <div>
             <Label htmlFor="kd-location">Location</Label>
-            <Input id="kd-location" placeholder="e.g. Church, Gym, WH" value={formLocation} onChange={(e) => setFormLocation(e.target.value)} />
+            <Input id="kd-location" placeholder="e.g. Church, St. Francis Hall, Wallace Hall" value={formLocation} onChange={(e) => setFormLocation(e.target.value)} />
           </div>
           <div>
             <Label htmlFor="kd-note">Time / Note</Label>

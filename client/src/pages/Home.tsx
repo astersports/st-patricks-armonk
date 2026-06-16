@@ -98,30 +98,27 @@ function HeroSection() {
         />
       </div>
 
-      {/* Green-tinted gradient overlay — NOT pure black */}
+      {/* Very light gradient overlay — just enough for text readability */}
       <div
         className="absolute inset-0"
         style={{
           background: `linear-gradient(
             165deg,
-            oklch(0.12 0.06 160 / 0.82) 0%,
-            oklch(0.18 0.08 160 / 0.72) 40%,
-            oklch(0.08 0.03 160 / 0.88) 100%
+            oklch(0.15 0.04 160 / 0.35) 0%,
+            oklch(0.20 0.03 160 / 0.25) 40%,
+            oklch(0.10 0.02 160 / 0.40) 100%
           )`,
         }}
       />
 
-      {/* Liturgical season badge — top-left floating pill */}
-      <div className="absolute top-5 left-5 sm:top-6 sm:left-8 md:top-8 md:left-12 z-20">
-        <LiturgicalSeasonBadge variant="dark" className="backdrop-blur-md bg-white/10 border-white/20 px-3 py-1.5" />
-      </div>
+
 
       {/* Content — left-aligned, bottom-anchored */}
       <div className="relative z-10 flex flex-col flex-1 justify-end pb-14 sm:pb-16 md:pb-20 px-5 sm:px-8 md:px-12 lg:px-20 max-w-[1400px] mx-auto w-full">
         <div className="max-w-3xl">
           {/* Eyebrow — time greeting */}
           <p
-            className="text-gold text-xs sm:text-sm font-medium tracking-[0.2em] uppercase mb-4 opacity-0"
+            className="text-gold text-xs sm:text-sm font-medium tracking-[0.2em] uppercase mb-4 opacity-0 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]"
             style={{ animation: 'fadeSlideUp 0.6s ease 0.1s forwards' }}
           >
             {timeGreeting || "Welcome"} · Armonk, New York
@@ -129,7 +126,7 @@ function HeroSection() {
 
           {/* Primary heading — Fraunces with gold accent */}
           <h1
-            className="text-white mb-4 opacity-0"
+            className="text-white mb-4 opacity-0 drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]"
             style={{
               fontFamily: "'Fraunces', Georgia, serif",
               fontSize: 'clamp(2.5rem, 5vw + 1rem, 5.5rem)',
@@ -146,7 +143,7 @@ function HeroSection() {
 
           {/* Motto */}
           <p
-            className="text-white/80 text-base sm:text-lg italic mb-2 opacity-0 max-w-xl"
+            className="text-white/80 text-base sm:text-lg italic mb-2 opacity-0 max-w-xl drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]"
             style={{
               lineHeight: 1.6,
               animation: 'fadeSlideUp 0.7s ease 0.3s forwards',
@@ -157,7 +154,7 @@ function HeroSection() {
 
           {/* Address */}
           <p
-            className="text-white/50 text-xs sm:text-sm font-medium tracking-wide mb-8 opacity-0"
+            className="text-white/70 text-xs sm:text-sm font-medium tracking-wide mb-8 opacity-0 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
             style={{ animation: 'fadeSlideUp 0.7s ease 0.35s forwards' }}
           >
             29 Cox Avenue, Armonk, NY 10504
@@ -1012,7 +1009,6 @@ function DailyReadings() {
           </div>
         </div>
         <div className="flex items-center gap-2 flex-wrap mt-2">
-          <LiturgicalSeasonBadge variant="dark" />
           <a
             href="https://bible.usccb.org/daily-bible-reading"
             target="_blank"

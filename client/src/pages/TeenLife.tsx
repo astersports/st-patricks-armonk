@@ -219,7 +219,7 @@ export default function TeenLife() {
             <Card className="p-6">
               <h3 className="font-serif text-lg text-foreground mb-3">Meeting Schedule</h3>
               <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-                Teen Life meets regularly throughout the school year. Check the parish calendar for upcoming events and gatherings.
+                Teen Life meets in <strong>St. Francis Hall</strong> (the gym) throughout the school year. Check the parish calendar for upcoming events and gatherings.
               </p>
               <Button variant="outline" size="sm" asChild>
                 <a href="/calendar">View Calendar</a>

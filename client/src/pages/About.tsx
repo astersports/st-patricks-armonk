@@ -85,6 +85,41 @@ export default function About() {
           </div>
         </section>
 
+        {/* Our Facilities */}
+        <section className="container py-8 sm:py-12">
+          <div className="reveal max-w-4xl mx-auto">
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground text-center mb-6 sm:mb-10">Our Facilities</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card className="border border-border/50 rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <Users className="w-5 h-5 text-primary" />
+                    </div>
+                    <h3 className="font-serif text-lg font-semibold text-foreground">Wallace Hall</h3>
+                  </div>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    The parish hall for community and ministry gatherings, religious education classes, receptions, and group meetings. Named in honor of our founding pastor, Rev. Msgr. John J. Wallace.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border border-border/50 rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <Heart className="w-5 h-5 text-primary" />
+                    </div>
+                    <h3 className="font-serif text-lg font-semibold text-foreground">St. Francis Hall</h3>
+                  </div>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    Our gymnasium and youth activity center. Home to Teen Life events, CYO basketball, and youth gatherings. Contact: <a href="mailto:gym@stpatrickinarmonk.org" className="text-primary hover:underline">gym@stpatrickinarmonk.org</a> or (914) 468-5938.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
         {/* Quick Links */}
         <section className="container py-8 sm:py-12">
           <h2 className="reveal font-serif text-2xl sm:text-3xl font-bold text-foreground text-center mb-6 sm:mb-10">

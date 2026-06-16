@@ -3,6 +3,8 @@ import { Church, Cross, Sun, Calendar, CalendarPlus, Clock } from "lucide-react"
 import { downloadMassICS, downloadICS } from "@/lib/icsGenerator";
 import { format, addDays } from "date-fns";
 import { Link } from "wouter";
+import { trpc } from "@/lib/trpc";
+import { WeatherBadge } from "@/components/WeatherBadge";
 
 const TIMEZONE = "America/New_York";
 
@@ -100,6 +102,20 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
 
   const [selectedIndex, setSelectedIndex] = useState<number>(0); // Start on today
 
+  // Fetch 7-day weather forecast for each day
+  const weatherInput = useMemo(() => {
+    return days.map((day) => ({
+      id: `day-${day.index}`,
+      title: day.isToday ? "Today" : format(day.date, "EEEE"),
+      startDate: day.date.toISOString(),
+    }));
+  }, [days]);
+
+  const { data: weatherData } = trpc.weather.forEvents.useQuery(
+    { events: weatherInput },
+    { staleTime: 60 * 60 * 1000 }
+  );
+
   // Get the selected day's data
   const selectedDayData = days[selectedIndex];
   const services = selectedDayData?.services || [];
@@ -157,14 +173,19 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
 
       {/* Selected day content */}
       <div className="p-4">
-        {/* Day label */}
+        {/* Day label with weather */}
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-base font-bold text-foreground">
             {selectedDayData?.isToday ? "Today" : format(selectedDayData?.date || now, "EEEE")}
           </h3>
-          {services.length === 0 && dayEvents.length === 0 && (
-            <span className="text-xs text-muted-foreground italic">No services</span>
-          )}
+          <div className="flex items-center gap-2">
+            {weatherData?.[`day-${selectedIndex}`]?.weather && (
+              <WeatherBadge weather={weatherData[`day-${selectedIndex}`].weather!} compact />
+            )}
+            {services.length === 0 && dayEvents.length === 0 && (
+              <span className="text-xs text-muted-foreground italic">No services</span>
+            )}
+          </div>
         </div>
 
         {/* Services list */}
