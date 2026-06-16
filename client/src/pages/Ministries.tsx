@@ -1,22 +1,21 @@
 import PageLayout from "@/components/PageLayout";
 import { Card, CardContent } from "@/components/ui/card";
-import { Heart, Cross, BookOpen, Music, Users, HandHeart, Mail } from "lucide-react";
+import { Heart, Cross, BookOpen, Music, Users, HandHeart, Mail, Clock, MapPin, Calendar, ExternalLink } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
 
 const devotions = [
-  { title: "First Fridays", desc: "Exposition of the Blessed Sacrament", time: "9 AM – 7 PM", icon: Cross },
-  { title: "Thursday Rosary", desc: "Rosary in the Chapel", time: "Thursdays 7:30 PM", icon: BookOpen },
-  { title: "Stations of the Cross", desc: "Fridays during Lent", time: "7:30 PM", icon: Cross },
-  { title: "Saturday Stations", desc: "Outside Stations of the Cross", time: "Saturdays 7:30 AM", icon: Heart },
+  { title: "First Fridays", desc: "Exposition of the Blessed Sacrament", time: "9 AM – 7 PM", day: "1st Friday", icon: Cross, color: "emerald" },
+  { title: "Thursday Rosary", desc: "Rosary in the Chapel", time: "7:30 PM", day: "Every Thursday", icon: BookOpen, color: "emerald" },
+  { title: "Stations of the Cross", desc: "Fridays during Lent", time: "7:30 PM", day: "Lenten Fridays", icon: Cross, color: "purple" },
+  { title: "Saturday Stations", desc: "Outside Stations of the Cross", time: "7:30 AM", day: "Every Saturday", icon: Heart, color: "emerald" },
 ];
 
 const ministries = [
-  { title: "Lectors", desc: "Proclaim the Word of God at Mass", icon: BookOpen },
-  { title: "Eucharistic Ministers", desc: "Assist in distribution of Holy Communion", icon: HandHeart },
-  { title: "Music Ministry", desc: "Enhance liturgical celebrations through song", icon: Music },
-  { title: "Altar Servers", desc: "Assist the priest during Mass", icon: Cross },
-  { title: "Ushers & Greeters", desc: "Welcome parishioners and visitors", icon: Users },
-  { title: "Charitable Outreach", desc: "Serve those in need through community programs", icon: Heart },
+  { title: "Lectors", desc: "Proclaim the Word of God at Mass", icon: BookOpen, contact: "Parish Office", email: "parishoffice@stpatricksarmonk.org" },
+  { title: "Eucharistic Ministers", desc: "Assist in distribution of Holy Communion", icon: HandHeart, contact: "Parish Office", email: "parishoffice@stpatricksarmonk.org" },
+  { title: "Music Ministry", desc: "Enhance liturgical celebrations through song", icon: Music, contact: "Parish Office", email: "parishoffice@stpatricksarmonk.org" },
+  { title: "Altar Servers", desc: "Assist the priest during Mass", icon: Cross, contact: "Parish Office", email: "parishoffice@stpatricksarmonk.org" },
+  { title: "Ushers & Greeters", desc: "Welcome parishioners and visitors", icon: Users, contact: "Parish Office", email: "parishoffice@stpatricksarmonk.org" },
 ];
 
 const outreachPrograms = [
@@ -31,101 +30,156 @@ export default function Ministries() {
 
   return (
     <PageLayout>
-      {/* Compact Header */}
+      {/* Header */}
       <section className="py-6 sm:py-10 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container">
           <p className="text-gold font-medium tracking-widest uppercase text-xs mb-1.5">Serve & Pray</p>
           <h1 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-2">
             Ministries & Devotions
           </h1>
-          <p className="text-sm text-muted-foreground">
-            Serve the Lord and grow in holiness through our parish ministries.
+          <p className="text-sm text-muted-foreground max-w-md">
+            Three ways to deepen your faith: through prayer, service at the altar, and outreach to those in need.
           </p>
         </div>
       </section>
 
-      <div ref={revealRef} className="container py-4 sm:py-8">
-        {/* Devotions - Compact rows */}
-        <div className="mb-6">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-1 h-4 bg-primary rounded-full" />
-            <h2 className="font-serif text-lg font-bold">Devotions</h2>
+      <div ref={revealRef} className="container py-4 sm:py-8 space-y-8">
+
+        {/* ═══════════════════════════════════════════════════════════════
+            SECTION 1: DEVOTIONS — Prayer Schedule
+            Visual: Dark green background, schedule-like layout with time badges
+        ═══════════════════════════════════════════════════════════════ */}
+        <section className="reveal rounded-xl overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-950 p-4 sm:p-6 shadow-lg">
+          <div className="flex items-center gap-2.5 mb-4">
+            <div className="w-8 h-8 rounded-lg bg-emerald-400/20 flex items-center justify-center">
+              <Cross className="w-4 h-4 text-emerald-300" />
+            </div>
+            <div>
+              <h2 className="font-serif text-lg font-bold text-emerald-50">Devotions</h2>
+              <p className="text-[11px] text-emerald-300/70">Prayer schedule & spiritual practices</p>
+            </div>
           </div>
-          <div className="space-y-1.5">
+
+          <div className="space-y-2">
             {devotions.map((d) => (
-              <Card key={d.title} className="reveal border-0 shadow-sm border-l-3 border-l-primary">
-                <CardContent className="p-3 flex items-center gap-3">
-                  <d.icon className="w-4 h-4 text-primary shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-sm">{d.title}</h3>
-                    <p className="text-xs text-muted-foreground truncate">{d.desc}</p>
-                  </div>
-                  <span className="text-xs font-medium text-primary whitespace-nowrap">{d.time}</span>
-                </CardContent>
-              </Card>
+              <div key={d.title} className="flex items-center gap-3 bg-emerald-800/30 border border-emerald-700/30 rounded-lg p-3 hover:bg-emerald-800/50 transition-colors">
+                <div className="shrink-0 flex flex-col items-center w-16">
+                  <span className="text-[10px] uppercase tracking-wider text-emerald-400/80 font-medium">{d.day.split(" ")[0]}</span>
+                  <span className="text-xs text-emerald-200 font-semibold">{d.day.split(" ").slice(1).join(" ") || d.day}</span>
+                </div>
+                <div className="w-px h-8 bg-emerald-600/40" />
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-sm text-emerald-50">{d.title}</h3>
+                  <p className="text-xs text-emerald-300/70 truncate">{d.desc}</p>
+                </div>
+                <div className="shrink-0 flex items-center gap-1 text-emerald-300">
+                  <Clock className="w-3 h-3" />
+                  <span className="text-xs font-medium whitespace-nowrap">{d.time}</span>
+                </div>
+              </div>
             ))}
           </div>
-          <a href="https://youtu.be/6faWBZxdE0M" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-primary font-medium mt-2 ml-1 hover:underline">
-            Watch Stations of the Cross video →
-          </a>
-        </div>
 
-        {/* Parish Ministries - Compact rows */}
-        <div className="mb-6">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-1 h-4 bg-accent rounded-full" />
-            <h2 className="font-serif text-lg font-bold">Parish Ministries</h2>
+          <a
+            href="https://youtu.be/6faWBZxdE0M"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs text-emerald-300 font-medium mt-3 hover:text-emerald-200 transition-colors"
+          >
+            <ExternalLink className="w-3 h-3" />
+            Watch Stations of the Cross video
+          </a>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════════════
+            SECTION 2: PARISH MINISTRIES — Volunteer Roles
+            Visual: Clean white cards with accent icons, email links
+        ═══════════════════════════════════════════════════════════════ */}
+        <section className="reveal">
+          <div className="flex items-center gap-2.5 mb-3">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Users className="w-4 h-4 text-primary" />
+            </div>
+            <div>
+              <h2 className="font-serif text-lg font-bold text-foreground">Parish Ministries</h2>
+              <p className="text-[11px] text-muted-foreground">Use your gifts to serve God and our community</p>
+            </div>
           </div>
-          <p className="text-xs text-muted-foreground mb-2 ml-4">Use your gifts to serve God and our community.</p>
-          <div className="space-y-1.5">
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {ministries.map((m) => (
-              <Card key={m.title} className="reveal border-0 shadow-sm">
+              <Card key={m.title} className="reveal border shadow-sm hover:shadow-md transition-shadow group">
                 <CardContent className="p-3 flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
-                    <m.icon className="w-4 h-4 text-accent" />
+                  <div className="w-9 h-9 rounded-lg bg-primary/8 flex items-center justify-center shrink-0 group-hover:bg-primary/15 transition-colors">
+                    <m.icon className="w-4 h-4 text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-sm">{m.title}</h3>
                     <p className="text-xs text-muted-foreground truncate">{m.desc}</p>
                   </div>
+                  <a
+                    href={`mailto:${m.email}`}
+                    className="shrink-0 w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors"
+                    title={`Email ${m.contact}`}
+                  >
+                    <Mail className="w-3 h-3 text-primary" />
+                  </a>
                 </CardContent>
               </Card>
             ))}
           </div>
-        </div>
 
-        {/* Charitable Outreach - Compact with email links */}
-        <div className="mb-6">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-1 h-4 bg-gold rounded-full" />
-            <h2 className="font-serif text-lg font-bold">Charitable Outreach</h2>
+          <p className="text-xs text-muted-foreground mt-2 ml-1">
+            Interested?{" "}
+            <a href="mailto:parishoffice@stpatricksarmonk.org" className="text-primary font-medium hover:underline">
+              Email the Parish Office
+            </a>{" "}
+            or call{" "}
+            <a href="tel:9142739724" className="text-primary font-medium hover:underline">(914) 273-9724</a>
+          </p>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════════════
+            SECTION 3: CHARITABLE OUTREACH — Service Programs
+            Visual: Warm amber/gold accent, left border, expanded descriptions
+        ═══════════════════════════════════════════════════════════════ */}
+        <section className="reveal rounded-xl bg-amber-50/50 dark:bg-amber-950/10 border border-amber-200/50 p-4 sm:p-6">
+          <div className="flex items-center gap-2.5 mb-4">
+            <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+              <Heart className="w-4 h-4 text-amber-600" />
+            </div>
+            <div>
+              <h2 className="font-serif text-lg font-bold text-foreground">Charitable Outreach</h2>
+              <p className="text-[11px] text-muted-foreground">Putting our faith into action through service</p>
+            </div>
           </div>
-          <p className="text-xs text-muted-foreground mb-2 ml-4">Putting our faith into action through service.</p>
-          <div className="space-y-1.5">
+
+          <div className="space-y-2.5">
             {outreachPrograms.map((p) => (
-              <Card key={p.title} className="reveal border-0 shadow-sm border-l-3 border-l-gold/60">
-                <CardContent className="p-3">
-                  <div className="flex items-start gap-3">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-sm">{p.title}</h3>
-                      <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{p.desc}</p>
-                    </div>
-                    <a href={`mailto:${p.email}`} className="shrink-0 inline-flex items-center gap-1 text-xs text-primary font-medium hover:underline whitespace-nowrap">
-                      <Mail className="w-3 h-3" />
-                      {p.contact}
-                    </a>
+              <div key={p.title} className="bg-white dark:bg-card border-l-3 border-l-amber-400 rounded-lg p-3 shadow-sm">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-sm text-foreground">{p.title}</h3>
+                    <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{p.desc}</p>
                   </div>
-                </CardContent>
-              </Card>
+                  <a
+                    href={`mailto:${p.email}`}
+                    className="shrink-0 inline-flex items-center gap-1 text-xs text-amber-700 dark:text-amber-400 font-medium hover:underline whitespace-nowrap mt-0.5"
+                  >
+                    <Mail className="w-3 h-3" />
+                    {p.contact}
+                  </a>
+                </div>
+              </div>
             ))}
           </div>
-        </div>
+        </section>
 
         {/* CTA */}
-        <Card className="bg-primary/5 border-primary/20 border-0">
+        <Card className="reveal bg-primary/5 border-primary/20">
           <CardContent className="p-3 text-center">
             <p className="text-sm text-foreground">
-              Interested in joining? Contact us at{" "}
+              Ready to serve? Contact us at{" "}
               <a href="mailto:parishoffice@stpatricksarmonk.org" className="font-semibold text-primary hover:underline">parishoffice@stpatricksarmonk.org</a>
               {" "}or{" "}
               <a href="tel:9142739724" className="font-semibold text-primary hover:underline">(914) 273-9724</a>

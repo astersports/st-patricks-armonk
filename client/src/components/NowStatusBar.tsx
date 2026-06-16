@@ -157,11 +157,15 @@ export function NowStatusBar() {
             className={`
               relative rounded-xl border px-3 py-2.5 transition-all duration-300
               ${isActive
-                ? `${s.bgActive} border-transparent shadow-sm`
+                ? `${s.bgActive} border-transparent shadow-sm ring-1 ring-current/10 animate-pulse-slow`
                 : "bg-card border-border/50"
               }
             `}
           >
+            {/* Active glow overlay */}
+            {isActive && (
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-green-400/5 to-transparent pointer-events-none" />
+            )}
             <div className="flex items-center gap-1.5 mb-1.5">
               <Icon className={`w-3.5 h-3.5 ${isActive ? s.color : "text-muted-foreground"}`} />
               <span className={`text-[11px] font-semibold ${isActive ? "text-foreground" : "text-muted-foreground"}`}>

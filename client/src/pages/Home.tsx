@@ -6,6 +6,7 @@ import { downloadICS } from "@/lib/icsGenerator";
 import BulletinBookReader from "@/components/BulletinBookReader";
 import { PrayerWall } from "@/components/PrayerWall";
 import { NowStatusBar } from "@/components/NowStatusBar";
+import { LiturgicalSeasonBadge } from "@/components/LiturgicalSeasonBadge";
 import { ThisWeekAccordion } from "@/components/ThisWeekAccordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -848,6 +849,7 @@ function DailyReadings() {
             <h2 className="font-serif text-base sm:text-lg font-bold text-white">Today's Readings</h2>
             <p className="text-[10px] text-white/60">{readings.liturgicTitle}</p>
           </div>
+          <LiturgicalSeasonBadge variant="dark" className="ml-2 hidden sm:inline-flex" />
         </div>
         <a
           href="https://bible.usccb.org/daily-bible-reading"

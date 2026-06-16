@@ -409,4 +409,11 @@
 - [x] Build "This Week" accordion: day-by-day expandable view with all services + events, Now/Next/Done chips
 - [x] Build category-filtered Key Dates board with filter chips (All, Parish, CCD, CYO, Sacrament, Teen Life, Social)
 - [x] Add .ics download links to events and Mass schedule entries
-- [ ] Enhance Prayer Wall visual design: larger candle, dramatic glow/particle effects, immersive dark background
+- [x] Enhance Prayer Wall visual design: larger candle, dramatic glow/particle effects, immersive dark background
+
+## Phase: Ministries Redesign + Liturgical Season + Polish
+
+- [x] Redesign Ministries page with clear separation: Devotions (prayer schedule) vs. Volunteering (parish ministries) vs. Charitable Outreach — each with distinct visual treatment
+- [x] Add liturgical season awareness (accent color changes with season: green=Ordinary Time, purple=Advent/Lent, gold=Easter/Christmas)
+- [x] Add "happening now" pulse animation to Now Status Bar tiles when a service is actively in progress
+- [x] Compact the Giving page (Venmo QR + WeShare sections)
