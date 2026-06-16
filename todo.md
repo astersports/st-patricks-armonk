@@ -409,3 +409,4 @@
 - [x] Build "This Week" accordion: day-by-day expandable view with all services + events, Now/Next/Done chips
 - [x] Build category-filtered Key Dates board with filter chips (All, Parish, CCD, CYO, Sacrament, Teen Life, Social)
 - [x] Add .ics download links to events and Mass schedule entries
+- [ ] Enhance Prayer Wall visual design: larger candle, dramatic glow/particle effects, immersive dark background
