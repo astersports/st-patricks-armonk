@@ -16,8 +16,8 @@ export default function MobileBottomNav({ onMoreClick }: MobileBottomNavProps) {
   const [location] = useLocation();
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/98 backdrop-blur-lg border-t border-border/30 shadow-[0_-1px_8px_rgba(0,0,0,0.04)]">
-      <div className="flex items-center justify-around h-[52px] max-w-md mx-auto px-2">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/[0.97] backdrop-blur-xl border-t border-border/20">
+      <div className="flex items-center justify-around h-14 max-w-md mx-auto px-3">
         {tabs.map((tab) => {
           const isMore = tab.href === "/__more__";
           const isActive = !isMore && location === tab.href;
@@ -27,10 +27,10 @@ export default function MobileBottomNav({ onMoreClick }: MobileBottomNavProps) {
               <button
                 key={tab.label}
                 onClick={onMoreClick}
-                className="flex flex-col items-center justify-center gap-0.5 w-14 py-1 rounded-lg transition-colors text-muted-foreground active:scale-95"
+                className="flex flex-col items-center justify-center gap-[3px] w-16 py-1.5 rounded-xl transition-all duration-200 text-muted-foreground/70 active:scale-[0.92] active:bg-muted/30"
               >
-                <tab.icon className="w-[22px] h-[22px]" />
-                <span className="text-[10px] font-medium">{tab.label}</span>
+                <tab.icon className="w-[21px] h-[21px]" strokeWidth={1.8} />
+                <span className="text-[10px] font-medium tracking-tight">{tab.label}</span>
               </button>
             );
           }
@@ -39,17 +39,29 @@ export default function MobileBottomNav({ onMoreClick }: MobileBottomNavProps) {
             <Link
               key={tab.href}
               href={tab.href}
-              className={`relative flex flex-col items-center justify-center gap-0.5 w-14 py-1 rounded-lg transition-all duration-200 ${
+              className={`relative flex flex-col items-center justify-center gap-[3px] w-16 py-1.5 rounded-xl transition-all duration-200 ${
                 isActive
                   ? "text-primary"
-                  : "text-muted-foreground active:scale-95"
+                  : "text-muted-foreground/70 active:scale-[0.92] active:bg-muted/30"
               }`}
             >
               {isActive && (
-                <span className="absolute -top-1 w-5 h-0.5 rounded-full bg-primary" />
+                <span
+                  className="absolute -top-[1px] w-8 h-[3px] rounded-full bg-primary"
+                  style={{ boxShadow: "0 1px 4px oklch(0.45 0.15 141 / 0.3)" }}
+                />
               )}
-              <tab.icon className={`w-[22px] h-[22px] transition-colors ${isActive ? "text-primary" : ""}`} />
-              <span className={`text-[10px] font-semibold transition-colors ${isActive ? "text-primary" : ""}`}>
+              <tab.icon
+                className={`w-[21px] h-[21px] transition-all duration-200 ${
+                  isActive ? "text-primary scale-105" : ""
+                }`}
+                strokeWidth={isActive ? 2.2 : 1.8}
+              />
+              <span
+                className={`text-[10px] tracking-tight transition-all duration-200 ${
+                  isActive ? "text-primary font-bold" : "font-medium"
+                }`}
+              >
                 {tab.label}
               </span>
             </Link>

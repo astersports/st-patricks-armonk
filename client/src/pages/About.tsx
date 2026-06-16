@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import { useReveal } from "@/hooks/useReveal";
 import { Church, Users, Heart, Cross, ArrowRight } from "lucide-react";
+import PageHeader from "@/components/PageHeader";
 
 export default function About() {
   const revealRef = useReveal();
@@ -10,18 +11,11 @@ export default function About() {
   return (
     <PageLayout>
       {/* Page Header — refined */}
-      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
-        <div className="container">
-          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Est. 1924</p>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">
-            Our Parish
-          </h1>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-2xl animate-fade-up">
-            For a century, St. Patrick in Armonk has been a spiritual home for the Catholic community 
-            of Armonk and surrounding areas — a place of worship, fellowship, and service.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="Est. 1924"
+        title="Our Parish"
+        description="For a century, St. Patrick in Armonk has been a spiritual home for the Catholic community of northern Westchester."
+      />
 
       <div ref={revealRef}>
         {/* Parish Story */}

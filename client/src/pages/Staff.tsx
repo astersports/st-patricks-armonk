@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useReveal } from "@/hooks/useReveal";
 import { Phone, Mail, Users, Cross, BookOpen, Heart } from "lucide-react";
+import PageHeader from "@/components/PageHeader";
 
 interface StaffMember {
   name: string;
@@ -122,17 +123,11 @@ export default function Staff() {
   return (
     <PageLayout>
       {/* Page Header — refined */}
-      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
-        <div className="container">
-          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Our Team</p>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">
-            Staff & Directory
-          </h1>
-          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
-            The dedicated people who serve our parish community every day.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="Our Team"
+        title="Staff & Directory"
+        description="The dedicated people who serve our parish community every day."
+      />
 
       <div ref={revealRef}>
         <section className="container py-6 sm:py-10 max-w-4xl">

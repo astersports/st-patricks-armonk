@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Clock, Church, Cross, MapPin, Phone, Sun, Calendar, ChevronRight } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
 import { useState, useMemo } from "react";
+import PageHeader from "@/components/PageHeader";
 
 // Day schedule data
 type ServiceType = "mass" | "confession" | "prayer" | "none";
@@ -107,27 +108,11 @@ export default function MassTimes() {
   return (
     <PageLayout>
       {/* Page Header — refined with better hierarchy */}
-      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
-        <div className="container">
-          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Worship With Us</p>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">
-            Mass Times & Confession
-          </h1>
-          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
-            Join us in worship and prayer. All are welcome at St. Patrick's.
-          </p>
-          <div className="flex flex-wrap items-center gap-4 mt-4 text-xs text-muted-foreground animate-fade-up">
-            <span className="inline-flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-primary/70" />
-              29 Cox Ave, Armonk NY 10504
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Phone className="w-3.5 h-3.5 text-primary/70" />
-              <a href="tel:9142739724" className="hover:text-primary transition-colors">(914) 273-9724</a>
-            </span>
-          </div>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="Worship With Us"
+        title="Mass Times & Confession"
+        description="Join us in worship and prayer. All are welcome at St. Patrick's."
+      />
 
       <div ref={revealRef} className="container py-6 sm:py-10 space-y-8">
         {/* Interactive Day Tabs */}

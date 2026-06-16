@@ -5,23 +5,18 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { BookOpen, GraduationCap, Phone, Calendar, Users, Heart, Mail } from "lucide-react";
 import { Link } from "wouter";
 import { useReveal } from "@/hooks/useReveal";
+import PageHeader from "@/components/PageHeader";
 
 export default function FaithFormation() {
   const revealRef = useReveal();
 
   return (
     <PageLayout>
-      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
-        <div className="container">
-          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Grow in Faith</p>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">
-            Faith Formation
-          </h1>
-          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
-            Religious Education programs for children, youth, and adults.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="Growing in Faith"
+        title="Faith Formation"
+        description="Programs for all ages to deepen your relationship with Christ."
+      />
 
       <div ref={revealRef}>
         <section className="container py-6 sm:py-10">

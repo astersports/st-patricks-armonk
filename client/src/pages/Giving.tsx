@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart, ExternalLink, QrCode, CreditCard } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
+import PageHeader from "@/components/PageHeader";
 
 export default function Giving() {
   const revealRef = useReveal();
@@ -10,17 +11,11 @@ export default function Giving() {
   return (
     <PageLayout>
       {/* Page Header — refined */}
-      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
-        <div className="container">
-          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Stewardship</p>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">
-            Online Giving
-          </h1>
-          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
-            Your generous support sustains our parish community and its mission.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="Stewardship"
+        title="Online Giving"
+        description="Your generous support sustains our parish community and its mission."
+      />
 
       <div ref={revealRef}>
         <section className="container py-6 sm:py-10">

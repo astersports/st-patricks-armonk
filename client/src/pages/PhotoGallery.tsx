@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Camera, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import PageHeader from "@/components/PageHeader";
 
 function GallerySkeleton() {
   return (
@@ -40,17 +41,12 @@ export default function PhotoGallery() {
   return (
     <PageLayout>
       {/* Page Header — refined */}
-      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
-        <div className="container text-center">
-          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Parish Life</p>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">
-            Photo Gallery
-          </h1>
-          <p className="text-sm text-muted-foreground max-w-lg mx-auto animate-fade-up">
-            Moments of faith, fellowship, and celebration from our parish community.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="Parish Life"
+        title="Photo Gallery"
+        description="Moments from our parish community."
+      />
+
 
       <div className="container py-6 sm:py-10">
 

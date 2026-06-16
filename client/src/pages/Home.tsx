@@ -761,17 +761,17 @@ function PhotoGallerySection() {
             <Link
               key={photo.id}
               href="/gallery"
-              className="shrink-0 w-52 sm:w-64 h-40 sm:h-48 rounded-xl overflow-hidden relative group snap-start shadow-sm hover:shadow-lg transition-all duration-300"
+              className="shrink-0 w-52 sm:w-64 h-40 sm:h-48 rounded-xl overflow-hidden relative group snap-start shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
             >
               <img
                 src={photo.imageUrl}
                 alt={photo.caption || photo.title || "Parish photo"}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
               {photo.caption && (
-                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-3">
-                  <p className="text-white text-xs font-medium truncate">{photo.caption}</p>
+                <div className="absolute bottom-0 inset-x-0 p-3">
+                  <p className="text-white text-sm font-medium drop-shadow-sm">{photo.caption}</p>
                 </div>
               )}
             </Link>
@@ -779,10 +779,12 @@ function PhotoGallerySection() {
           {/* "View All" card at end */}
           <Link
             href="/gallery"
-            className="shrink-0 w-52 sm:w-64 h-40 sm:h-48 rounded-xl border border-dashed border-primary/20 flex flex-col items-center justify-center gap-2 hover:border-primary/40 hover:bg-primary/[0.02] transition-all snap-start"
+            className="shrink-0 w-52 sm:w-64 h-40 sm:h-48 rounded-xl border-2 border-dashed border-primary/30 flex flex-col items-center justify-center gap-3 hover:border-primary/50 hover:bg-primary/[0.03] transition-all snap-start group"
           >
-            <Camera className="w-7 h-7 text-primary/50" />
-            <span className="text-sm text-primary font-medium">View All Photos</span>
+            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/15 transition-colors">
+              <Camera className="w-5 h-5 text-primary/70 group-hover:text-primary transition-colors" />
+            </div>
+            <span className="text-base text-primary font-semibold">View All Photos</span>
           </Link>
         </div>
       </div>
@@ -988,7 +990,7 @@ function DailyReadings() {
           <button
             key={item.key}
             onClick={() => setExpandedReading(expandedReading === item.key ? null : item.key)}
-            className="w-full text-left rounded-xl border border-white/8 bg-white/[0.04] hover:bg-white/[0.07] transition-all duration-200 overflow-hidden"
+            className="w-full text-left rounded-xl border border-white/12 bg-white/[0.04] hover:bg-white/[0.08] transition-all duration-200 overflow-hidden"
           >
             <div className="flex items-center gap-3 px-4 py-3">
               <div className="flex-1 min-w-0">
@@ -998,8 +1000,8 @@ function DailyReadings() {
               <ChevronDown className={`w-4 h-4 text-white/30 transition-transform duration-200 shrink-0 ${expandedReading === item.key ? "rotate-180" : ""}`} />
             </div>
             {expandedReading === item.key && (
-              <div className="px-4 pb-4 pt-2 border-t border-white/8">
-                <p className="text-sm sm:text-base text-white/80 leading-relaxed whitespace-pre-line">{item.text}</p>
+              <div className="px-4 pb-4 pt-2 border-t border-white/12">
+                <p className="text-sm sm:text-base text-white/85 leading-relaxed whitespace-pre-line">{item.text}</p>
               </div>
             )}
           </button>
@@ -1239,16 +1241,16 @@ function CatholicResources() {
       </div>
 
       {/* Quick Links Row */}
-      <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-2">
+      <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-3">
         {RESOURCE_LINKS.map((resource, idx) => (
           <a
             key={idx}
             href={resource.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center gap-2 rounded-lg border border-border/30 px-3 py-2.5 hover:border-primary/20 hover:bg-primary/[0.02] transition-all card-interactive"
+            className="group flex items-center gap-2.5 rounded-xl border border-border/40 px-3.5 py-3 hover:border-primary/30 hover:bg-primary/[0.03] hover:shadow-sm transition-all"
           >
-            <Globe className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+            <Globe className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
             <div className="min-w-0">
               <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
                 {resource.name}
@@ -1339,15 +1341,18 @@ export default function Home() {
         </section>
 
         {/* Newsletter Subscription — Full-width dark CTA */}
-        <section className="reveal section-dark py-8 sm:py-12 -mx-4 px-4 sm:-mx-0 sm:px-0">
+        <section className="reveal section-dark py-10 sm:py-14 -mx-4 px-4 sm:-mx-0 sm:px-0">
           <div className="container">
-            <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-12 max-w-4xl mx-auto">
+            <div className="flex flex-col md:flex-row items-center gap-8 sm:gap-14 max-w-4xl mx-auto">
               <div className="flex-1 text-center md:text-left">
-                <span className="text-gold text-xs font-bold uppercase tracking-widest">Stay Connected</span>
-                <h2 className="font-serif text-xl sm:text-2xl md:text-3xl font-bold text-white mt-2 mb-2">
+                <span className="inline-flex items-center gap-2 text-gold text-sm font-medium uppercase tracking-wider mb-3">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  Stay Connected
+                </span>
+                <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3" style={{ fontFeatureSettings: '"ss01"' }}>
                   Subscribe to Parish Updates
                 </h2>
-                <p className="text-white/60 text-sm sm:text-base">
+                <p className="text-white/70 text-base sm:text-lg leading-relaxed">
                   Weekly bulletins and parish news, delivered to your inbox.
                 </p>
               </div>
@@ -1364,20 +1369,20 @@ export default function Home() {
                     placeholder="Your email address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="bg-white/10 border-white/15 text-white placeholder:text-white/40 min-w-[250px] focus:border-gold/50 focus:ring-gold/20 rounded-full px-5"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/50 min-w-[260px] focus:border-gold/60 focus:ring-gold/30 rounded-full px-5 py-2.5 text-base"
                     required
                   />
                   <Button
                     type="submit"
-                    className="bg-gold text-parish-green-dark hover:bg-gold/90 font-bold whitespace-nowrap rounded-full px-6 active:scale-97 transition-all"
+                    className="bg-gold text-parish-green-dark hover:bg-gold/90 font-bold whitespace-nowrap rounded-full px-7 py-2.5 shadow-lg shadow-gold/20 active:scale-[0.97] transition-all"
                     disabled={subscribeMutation.isPending}
                   >
                     {subscribeMutation.isPending ? "Subscribing..." : "Subscribe"}
                   </Button>
                 </form>
-                <p className="text-white/40 text-xs mt-3 text-center sm:text-left">
+                <p className="text-white/50 text-sm mt-4 text-center sm:text-left">
                   Or join us on{" "}
-                  <a href="https://stpatarmonk.flocknote.com/home" target="_blank" rel="noopener noreferrer" className="text-gold/80 underline hover:text-gold">
+                  <a href="https://stpatarmonk.flocknote.com/home" target="_blank" rel="noopener noreferrer" className="text-gold/90 underline underline-offset-2 hover:text-gold transition-colors">
                     Flocknote
                   </a>{" "}
                   for text and email updates.

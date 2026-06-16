@@ -2,6 +2,7 @@ import PageLayout from "@/components/PageLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Heart, Cross, BookOpen, Music, Users, HandHeart, Mail, Clock, MapPin, Calendar, ExternalLink } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
+import PageHeader from "@/components/PageHeader";
 
 const devotions = [
   { title: "First Fridays", desc: "Exposition of the Blessed Sacrament", time: "9 AM – 7 PM", day: "1st Friday", icon: Cross, color: "emerald" },
@@ -31,17 +32,11 @@ export default function Ministries() {
   return (
     <PageLayout>
       {/* Page Header — refined */}
-      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
-        <div className="container">
-          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Serve & Pray</p>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">
-            Ministries & Devotions
-          </h1>
-          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
-            Three ways to deepen your faith: through prayer, service at the altar, and outreach to those in need.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="Serve & Pray"
+        title="Ministries & Devotions"
+        description="Three ways to deepen your faith: through prayer, service at the altar, and outreach to those in need."
+      />
 
       <div ref={revealRef} className="container py-6 sm:py-10 space-y-8">
 

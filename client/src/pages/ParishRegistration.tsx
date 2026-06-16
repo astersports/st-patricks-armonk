@@ -9,6 +9,7 @@ import { trpc } from "@/lib/trpc";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Heart, CheckCircle, Church } from "lucide-react";
+import PageHeader from "@/components/PageHeader";
 
 export default function ParishRegistration() {
   const [submitted, setSubmitted] = useState(false);
@@ -70,23 +71,12 @@ export default function ParishRegistration() {
   return (
     <PageLayout>
       {/* Page Header — refined */}
-      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
-        <div className="container">
-          <div className="max-w-3xl">
-            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-              <Heart className="w-5 h-5 sm:w-6 sm:h-6 text-accent animate-fade-in" />
-              <p className="text-gold font-medium tracking-widest uppercase text-xs sm:text-sm animate-fade-in">Welcome Home</p>
-            </div>
-            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4 animate-fade-in">
-              New Parishioner Registration
-            </h1>
-            <p className="text-base sm:text-lg text-muted-foreground animate-fade-up">
-              We're delighted you'd like to join our parish family. Please complete this form 
-              and our office will reach out to welcome you personally.
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="Join Our Parish"
+        title="New Parishioner Registration"
+        description="Welcome! Register to become a member of St. Patrick in Armonk."
+      />
+
 
       <section className="container py-8 sm:py-12">
         <form onSubmit={handleSubmit} className="max-w-3xl mx-auto space-y-8">

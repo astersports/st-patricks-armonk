@@ -9,6 +9,7 @@ import { Users, Calendar, Heart, CheckCircle2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
 import { toast } from "sonner";
+import PageHeader from "@/components/PageHeader";
 
 export default function TeenLife() {
   const [submitted, setSubmitted] = useState(false);
@@ -50,15 +51,12 @@ export default function TeenLife() {
   return (
     <PageLayout>
       {/* Page Header — refined */}
-      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
-        <div className="container max-w-5xl">
-          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Youth Ministry</p>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">Teen Life</h1>
-          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
-            A vibrant community for teens at St. Patrick in Armonk — faith, fellowship, and fun.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="Youth Ministry"
+        title="Teen Life"
+        description="Programs and community for high school students."
+      />
+
 
       <section className="py-12">
         <div className="container max-w-5xl">

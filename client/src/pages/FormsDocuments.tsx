@@ -2,6 +2,7 @@ import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
 import { FileText, Download, ExternalLink, Loader2, Droplets, Cross, Heart, Church, BookOpen, FolderOpen } from "lucide-react";
+import PageHeader from "@/components/PageHeader";
 
 const CATEGORIES = [
   { id: "baptism", label: "Baptism", icon: Droplets, description: "Registration and sponsor forms for Baptism" },
@@ -74,15 +75,12 @@ export default function FormsDocuments() {
   return (
     <PageLayout>
       {/* Page Header — refined */}
-      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
-        <div className="container max-w-5xl">
-          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Resources</p>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">Forms & Documents</h1>
-          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
-            All parish forms and documents in one place. Download what you need for sacramental preparation, registration, and more.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="Resources"
+        title="Forms & Documents"
+        description="Download forms and reference documents for parish programs."
+      />
+
 
       <section className="py-12">
         <div className="container max-w-4xl space-y-6">

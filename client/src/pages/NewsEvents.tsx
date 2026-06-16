@@ -10,6 +10,7 @@ import { Newspaper, Bell, Mail, CheckCircle2 } from "lucide-react";
 import { format } from "date-fns";
 import { useReveal } from "@/hooks/useReveal";
 import { toast } from "sonner";
+import PageHeader from "@/components/PageHeader";
 
 const accentColors = [
   "border-l-[oklch(0.42_0.12_141)]",
@@ -132,15 +133,11 @@ export default function NewsEvents() {
 
   return (
     <PageLayout>
-      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
-        <div className="container">
-          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Stay Informed</p>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">News & Announcements</h1>
-          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
-            Stay informed about parish happenings, announcements, and community updates.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="Parish Life"
+        title="News & Announcements"
+        description="Stay up to date with what's happening in our parish community."
+      />
 
       <div ref={revealRef}>
         <section className="container py-6 sm:py-10">

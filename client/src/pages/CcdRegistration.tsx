@@ -10,6 +10,7 @@ import { trpc } from "@/lib/trpc";
 import { useState } from "react";
 import { toast } from "sonner";
 import { CheckCircle, BookOpen } from "lucide-react";
+import PageHeader from "@/components/PageHeader";
 
 export default function CcdRegistration() {
   const [submitted, setSubmitted] = useState(false);
@@ -80,15 +81,11 @@ export default function CcdRegistration() {
   return (
     <PageLayout>
       {/* Page Header — refined */}
-      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
-        <div className="container">
-          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Religious Education</p>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">CCD Registration</h1>
-          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
-            Register your child for Religious Education classes at St. Patrick in Armonk for the 2026–2027 school year.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="Faith Formation"
+        title="CCD Registration"
+        description="Register your child for Religious Education classes."
+      />
 
       {/* Form */}
       <section className="py-10">

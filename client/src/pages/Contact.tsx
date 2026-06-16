@@ -4,6 +4,7 @@ import { MapPin, Phone, Clock, Mail } from "lucide-react";
 import { MapView } from "@/components/Map";
 import { useCallback } from "react";
 import { useReveal } from "@/hooks/useReveal";
+import PageHeader from "@/components/PageHeader";
 
 export default function Contact() {
   const revealRef = useReveal();
@@ -22,17 +23,11 @@ export default function Contact() {
   return (
     <PageLayout>
       {/* Page Header — refined */}
-      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
-        <div className="container">
-          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Get in Touch</p>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">
-            Contact Us
-          </h1>
-          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
-            We would love to hear from you. Reach out to our parish office for any inquiries.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="Get in Touch"
+        title="Contact Us"
+        description="We'd love to hear from you. Reach out to our parish office."
+      />
 
       <div ref={revealRef}>
         <section className="container py-6 sm:py-10">

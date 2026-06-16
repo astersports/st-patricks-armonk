@@ -3,22 +3,18 @@ import { Link } from "wouter";
 import { MapPin, Clock, Heart, Users, ArrowRight, Church, BookOpen, Car } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import PageHeader from "@/components/PageHeader";
 
 export default function NewHere() {
   return (
     <PageLayout>
       {/* Page Header — refined */}
-      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
-        <div className="container max-w-3xl text-center">
-          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Welcome</p>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">
-            New Here?
-          </h1>
-          <p className="text-sm text-muted-foreground max-w-xl mx-auto animate-fade-up">
-            Whether you're new to the area, returning to the faith, or just curious — you belong here.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="Welcome"
+        title="Plan Your Visit"
+        description="Everything you need to know for your first time at St. Patrick's."
+      />
+
 
       {/* What to Expect */}
       <section className="container max-w-3xl py-6 sm:py-10">

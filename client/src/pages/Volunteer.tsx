@@ -11,6 +11,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Heart, Calendar, Clock, MapPin, Users } from "lucide-react";
 import { format } from "date-fns";
+import PageHeader from "@/components/PageHeader";
 
 function SignupDialog({ opportunity, onSuccess }: { opportunity: any; onSuccess: () => void }) {
   const [open, setOpen] = useState(false);
@@ -94,15 +95,11 @@ export default function Volunteer() {
   return (
     <PageLayout>
       {/* Page Header — refined */}
-      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
-        <div className="container">
-          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Get Involved</p>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">Volunteer</h1>
-          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
-            Share your time and talents with our parish community. Sign up for volunteer opportunities below.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="Get Involved"
+        title="Volunteer"
+        description="Share your time and talents with our parish community."
+      />
 
       {/* Opportunities */}
       <section className="py-10">

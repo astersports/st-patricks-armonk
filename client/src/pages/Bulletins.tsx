@@ -11,6 +11,7 @@ import { format } from "date-fns";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import BulletinBookReader from "@/components/BulletinBookReader";
+import PageHeader from "@/components/PageHeader";
 
 const MONTH_NAMES = [
   "January", "February", "March", "April", "May", "June",
@@ -170,15 +171,11 @@ export default function Bulletins() {
   return (
     <PageLayout>
       {/* Page Header — refined */}
-      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
-        <div className="container">
-          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Parish Life</p>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">Weekly Bulletin</h1>
-          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
-            Parish announcements, Mass readings, and community news.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="Weekly Bulletin"
+        title="Parish Bulletin"
+        description="Read the latest weekly bulletin or browse our archive."
+      />
 
       <section className="container py-6 sm:py-10">
         {isLoading ? (

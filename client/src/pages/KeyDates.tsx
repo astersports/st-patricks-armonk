@@ -1,5 +1,6 @@
 import PageLayout from "@/components/PageLayout";
 import { trpc } from "@/lib/trpc";
+import PageHeader from "@/components/PageHeader";
 import { Calendar, MapPin, Clock } from "lucide-react";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { useState, useMemo } from "react";
@@ -151,50 +152,43 @@ export default function KeyDates() {
     <PageLayout>
       <div ref={revealRef}>
         {/* Page Header — refined */}
-        <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
-          <div className="container">
-            <div className="text-center">
-              <p className="text-xs text-gold uppercase tracking-[0.2em] font-medium mb-1">2026–2027</p>
-              <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Parish Calendar</p>
-              <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">Key Dates</h1>
-              <p className="text-sm text-muted-foreground max-w-md mx-auto animate-fade-up">
-                All important parish events and milestones for the year
-              </p>
-            </div>
-
-            {/* Category filter pills */}
-            <div className="flex flex-wrap justify-center gap-2 mt-6">
-              {categories.map((cat) => {
-                const isActive = activeFilter === cat.key;
-                const count = categoryCounts[cat.key] || 0;
-                return (
-                  <button
-                    key={cat.key}
-                    onClick={() => setActiveFilter(cat.key)}
-                    className={`
-                      inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium
-                      transition-all duration-200 press-scale border
-                      ${isActive
-                        ? "bg-primary text-white border-primary shadow-sm"
-                        : "bg-white text-muted-foreground border-border hover:border-primary/30 hover:text-foreground"
-                      }
-                    `}
-                  >
-                    {cat.key !== "all" && (
-                      <span className={`w-2 h-2 rounded-full ${isActive ? "bg-white/80" : cat.dot}`} />
-                    )}
-                    <span>{cat.label}</span>
-                    {count > 0 && (
-                      <span className={`text-xs px-1.5 py-0.5 rounded-full ${isActive ? "bg-white/20 text-white" : "bg-muted text-foreground/60"}`}>
-                        {count}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
+        <PageHeader
+          eyebrow="Parish Calendar"
+          title="Key Dates"
+          description="All important parish events and milestones for the 2026–2027 year"
+        >
+          {/* Category filter pills */}
+          <div className="flex flex-wrap gap-2 mt-2">
+            {categories.map((cat) => {
+              const isActive = activeFilter === cat.key;
+              const count = categoryCounts[cat.key] || 0;
+              return (
+                <button
+                  key={cat.key}
+                  onClick={() => setActiveFilter(cat.key)}
+                  className={`
+                    inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium
+                    transition-all duration-200 press-scale border
+                    ${isActive
+                      ? "bg-primary text-white border-primary shadow-sm"
+                      : "bg-white text-muted-foreground border-border hover:border-primary/30 hover:text-foreground"
+                    }
+                  `}
+                >
+                  {cat.key !== "all" && (
+                    <span className={`w-2 h-2 rounded-full ${isActive ? "bg-white/80" : cat.dot}`} />
+                  )}
+                  <span>{cat.label}</span>
+                  {count > 0 && (
+                    <span className={`text-xs px-1.5 py-0.5 rounded-full ${isActive ? "bg-white/20 text-white" : "bg-muted text-foreground/60"}`}>
+                      {count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
-        </section>
+        </PageHeader>
 
         {/* Accordion */}
         <section className="reveal container pb-12 sm:pb-16 pt-4">

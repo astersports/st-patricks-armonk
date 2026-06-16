@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import PageLayout from "@/components/PageLayout";
+import PageHeader from "@/components/PageHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, BookOpen, Dribbble, Clock, MapPin, ArrowLeft, ChevronDown, Star, Printer } from "lucide-react";
@@ -405,26 +406,21 @@ export default function AllCalendars() {
       </div>
 
       {/* Page Header */}
-      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
-        <div className="container max-w-4xl">
-          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">
-            {isKeyDates ? "Important Dates" : "Stay Connected"}
-          </p>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">{pageTitle}</h1>
-          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
-            {pageDescription}
-          </p>
-          {isKeyDates && (
-            <button
-              onClick={() => window.print()}
-              className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-white text-sm font-medium text-foreground hover:bg-muted/50 transition-colors print:hidden"
-            >
-              <Printer className="w-4 h-4" />
-              Print for Bulletin Board
-            </button>
-          )}
-        </div>
-      </section>
+      <PageHeader
+        eyebrow={isKeyDates ? "Important Dates" : "Stay Connected"}
+        title={pageTitle}
+        description={pageDescription}
+      >
+        {isKeyDates && (
+          <button
+            onClick={() => window.print()}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-white text-sm font-medium text-foreground hover:bg-muted/50 transition-colors print:hidden"
+          >
+            <Printer className="w-4 h-4" />
+            Print for Bulletin Board
+          </button>
+        )}
+      </PageHeader>
 
       <section className="py-8 sm:py-12">
         <div className="container max-w-4xl">

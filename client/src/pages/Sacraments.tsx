@@ -6,6 +6,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { trpc } from "@/lib/trpc";
 import { Droplets, Cross, Heart, Church, FileText, Download, ExternalLink, Sparkles } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
+import PageHeader from "@/components/PageHeader";
 
 function DocumentList({ category }: { category: string }) {
   const { data: docs, isLoading } = trpc.documents.byCategory.useQuery({ category });
@@ -221,15 +222,12 @@ export default function Sacraments() {
   return (
     <PageLayout>
       {/* Page Header — refined */}
-      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
-        <div className="container max-w-5xl">
-          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Sacred Encounters</p>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">Sacraments</h1>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-2xl animate-fade-up">
-            The sacraments are encounters with Christ that transform our lives. Select a sacrament below to learn about preparation and requirements.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="Sacred Rites"
+        title="Sacraments"
+        description="The seven sacraments are the foundation of Catholic life."
+      />
+
 
       <div ref={revealRef}>
         <section className="py-6 sm:py-10">
