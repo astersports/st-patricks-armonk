@@ -593,3 +593,9 @@
 - [x] Fix admin departments: Teen Life → St. Francis Hall (gym), Wallace Hall → parish hall for community/ministry
 - [x] Added Facilities section to About page (Wallace Hall + St. Francis Hall descriptions)
 - [x] Weather badges now show on This Week daily schedule (all 7 days)
+
+## Fold Teen Life into Faith Formation
+
+- [x] Fold Teen Life content into Faith Formation page as a new accordion section
+- [x] Remove /teen-life as a standalone route (redirect to /faith-formation)
+- [x] Remove Teen Life from navigation (desktop dropdown, mobile menu, search index)

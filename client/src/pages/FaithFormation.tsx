@@ -77,6 +77,62 @@ export default function FaithFormation() {
                   </AccordionContent>
                 </AccordionItem>
 
+                {/* Teen Life */}
+                <AccordionItem
+                  value="teen-life"
+                  className="reveal border border-border/50 rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] border-l-3 border-l-[oklch(0.55_0.18_145)]"
+                >
+                  <AccordionTrigger className="px-4 sm:px-6 py-3 sm:py-5 hover:no-underline">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                      <div className="bg-primary/10 p-2 sm:p-2.5 rounded-lg sm:rounded-xl shrink-0">
+                        <Users className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                      </div>
+                      <div className="text-left min-w-0">
+                        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                          <span className="font-serif text-base sm:text-lg font-semibold text-foreground">Teen Life</span>
+                          <Badge className="bg-primary/10 text-primary border-0 text-xs px-1.5 py-0 shrink-0">Grades 9–12</Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-0.5">Youth ministry programs and community for high school students</p>
+                      </div>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-4 sm:px-6 pb-4 sm:pb-6">
+                    <p className="text-muted-foreground leading-relaxed mb-4">
+                      Teen Life is our youth ministry for high school students (grades 9–12). 
+                      Through community gatherings, retreats, service projects, and social events, 
+                      teens build lasting friendships with other Catholic youth in a supportive environment.
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+                      <div className="p-3.5 rounded-lg bg-secondary/50 text-center">
+                        <Users className="w-5 h-5 text-primary mx-auto mb-1.5" />
+                        <h4 className="font-semibold text-sm mb-0.5">Community</h4>
+                        <p className="text-xs text-muted-foreground">Build lasting friendships with other Catholic teens.</p>
+                      </div>
+                      <div className="p-3.5 rounded-lg bg-secondary/50 text-center">
+                        <Calendar className="w-5 h-5 text-primary mx-auto mb-1.5" />
+                        <h4 className="font-semibold text-sm mb-0.5">Events</h4>
+                        <p className="text-xs text-muted-foreground">Regular gatherings, retreats, and social events.</p>
+                      </div>
+                      <div className="p-3.5 rounded-lg bg-secondary/50 text-center">
+                        <Heart className="w-5 h-5 text-primary mx-auto mb-1.5" />
+                        <h4 className="font-semibold text-sm mb-0.5">Service</h4>
+                        <p className="text-xs text-muted-foreground">Give back to the community and grow in faith.</p>
+                      </div>
+                    </div>
+                    <div className="p-3.5 rounded-lg bg-primary/5 border border-primary/10 mb-4">
+                      <p className="text-sm text-foreground font-medium mb-1">Meeting Location</p>
+                      <p className="text-sm text-muted-foreground">
+                        Teen Life meets in <strong>St. Francis Hall</strong> (the gym) throughout the school year. 
+                        Check the parish calendar for upcoming events and gatherings.
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-3">
+                      <Link href="/calendar" className="text-sm text-primary hover:underline font-medium">View Calendar →</Link>
+                      <Link href="/contact" className="text-sm text-primary hover:underline font-medium">Contact Youth Ministry →</Link>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+
                 {/* RCIA */}
                 <AccordionItem
                   value="rcia"

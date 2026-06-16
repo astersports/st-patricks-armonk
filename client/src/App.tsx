@@ -21,7 +21,7 @@ import Volunteer from "./pages/Volunteer";
 import CcdUnsubscribe from "./pages/CcdUnsubscribe";
 import Sacraments from "./pages/Sacraments";
 import AllCalendars from "./pages/AllCalendars";
-import TeenLife from "./pages/TeenLife";
+// TeenLife page folded into FaithFormation
 import FormsDocuments from "./pages/FormsDocuments";
 import BaptismForm from "./pages/BaptismForm";
 import SponsorForm from "./pages/SponsorForm";
@@ -59,7 +59,7 @@ function Router() {
         <Route path="/ccd-registration" component={CcdRegistration} />
         <Route path="/ccd-permissions" component={CcdPermissions} />
         <Route path="/cyo-basketball"><Redirect to="/calendar?filter=cyo" /></Route>
-        <Route path="/teen-life" component={TeenLife} />
+        <Route path="/teen-life"><Redirect to="/faith-formation" /></Route>
         <Route path="/ministries" component={Ministries} />
         <Route path="/gallery" component={PhotoGallery} />
         <Route path="/volunteer" component={Volunteer} />

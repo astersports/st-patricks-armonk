@@ -39,7 +39,6 @@ const navLinks: NavItem[] = [
       { href: "/calendar?filter=ccd", label: "CCD Calendar" },
       { href: "/ccd-registration", label: "CCD Registration" },
       { href: "/ccd-permissions", label: "CCD Permission Forms" },
-      { href: "/teen-life", label: "Teen Life" },
     ],
   },
   {
@@ -70,7 +69,7 @@ const searchablePages: SearchableItem[] = [
   { href: "/calendar?filter=ccd", label: "CCD Calendar", keywords: ["ccd", "religious ed", "class", "schedule", "catechism"], icon: Calendar },
   { href: "/ccd-registration", label: "CCD Registration", keywords: ["ccd", "register", "enroll", "religious ed", "sign up", "child"], icon: FileText },
   { href: "/ccd-permissions", label: "CCD Permission Forms", keywords: ["ccd", "permission", "release", "bus", "medical", "allergy", "pickup", "dismissal", "photo"], icon: FileText },
-  { href: "/teen-life", label: "Teen Life", keywords: ["teen", "youth", "high school", "confirmation", "young"], icon: Users },
+  { href: "/faith-formation", label: "Teen Life & Youth Ministry", keywords: ["teen", "youth", "high school", "confirmation", "young", "teen life"], icon: Users },
   { href: "/news", label: "News", keywords: ["news", "announcement", "update", "parish"], icon: Newspaper },
   { href: "/calendar", label: "Calendar (All Events)", keywords: ["calendar", "events", "schedule", "upcoming", "parish", "cyo", "ccd"], icon: Calendar },
   { href: "/calendar?filter=key-dates", label: "Key Dates 2026–2027", keywords: ["key dates", "important dates", "parish calendar", "milestones", "annual", "year"], icon: Calendar },
@@ -109,7 +108,6 @@ const mobileMenuSections: MobileMenuSection[] = [
       { href: "/calendar?filter=ccd", label: "CCD Calendar", icon: Calendar },
       { href: "/ccd-registration", label: "CCD Registration", icon: FileText },
       { href: "/ccd-permissions", label: "CCD Permission Forms", icon: FileText },
-      { href: "/teen-life", label: "Teen Life", icon: Users },
     ],
   },
   {
