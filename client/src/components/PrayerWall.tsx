@@ -237,18 +237,18 @@ export function PrayerWall() {
         {intentions.length > 0 && (
           <div className="mt-6 border-t border-amber-800/30 pt-4">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-base font-semibold text-amber-200">Community Prayers</p>
-              <p className="text-sm text-amber-400/60">{intentions.length} shared</p>
+              <p className="text-lg font-semibold text-amber-100">Community Prayers</p>
+              <p className="text-base text-amber-300/80 font-medium">{intentions.length} shared</p>
             </div>
             <div className="grid grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1 scrollbar-thin">
               {intentions.slice(0, 10).map((item) => (
                 <div key={item.id} className="py-2 px-3 rounded-md bg-amber-900/15 border border-amber-800/20">
-                  <p className="text-sm text-amber-100/90 leading-snug line-clamp-2">{item.intention}</p>
+                  <p className="text-base text-amber-100 leading-snug line-clamp-2">{item.intention}</p>
                   <div className="flex items-center gap-1.5 mt-1.5">
                     {item.name && (
-                      <span className="text-xs text-amber-300/70 font-medium truncate max-w-[80px]">— {item.name}</span>
+                      <span className="text-sm text-amber-200/90 font-medium truncate max-w-[100px]">— {item.name}</span>
                     )}
-                    <span className="text-xs text-amber-400/50">
+                    <span className="text-sm text-amber-300/70">
                       {timeAgo(typeof item.createdAt === 'string' ? item.createdAt : new Date(item.createdAt).toISOString())}
                     </span>
                   </div>

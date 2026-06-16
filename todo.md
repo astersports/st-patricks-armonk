@@ -492,3 +492,9 @@
 - [x] Remove truncate from Faith Formation accordion descriptions
 - [x] Increase New Here page card description text size
 - [x] Bulk fix all text-[9px]/[10px]/[11px] across all pages to text-xs/text-sm
+
+## Phase: Remaining Readability Fixes (Round 4)
+
+- [x] Increase Community Prayers card text size and darken timestamps against dark bg
+- [x] Fix spacing between YouTube button and NowStatusBar tiles (added mb-6)
+- [x] Increase Daily Readings label, title, and expanded content text sizes
