@@ -246,7 +246,7 @@ function NowAtStPatrick({ latestNews, allImportantDates }: { latestNews: any; al
                 <Newspaper className="w-3.5 h-3.5 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[9px] text-muted-foreground uppercase tracking-wider font-medium">Latest News</p>
+                <p className="text-xs text-foreground/60 uppercase tracking-wider font-medium">Latest News</p>
                 {latestNews ? (
                   <p className="font-semibold text-foreground text-sm truncate">{latestNews.title}</p>
                 ) : (
@@ -303,10 +303,10 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-1.5">
           <Clock className="w-3.5 h-3.5 text-gold" />
-          <span className="text-xs font-bold text-foreground">Coming Up</span>
+          <span className="text-sm font-bold text-foreground">Coming Up</span>
         </div>
-        <Link href="/calendar?filter=key-dates" className="text-[10px] font-medium text-primary hover:text-primary/80 flex items-center gap-0.5">
-          All Events <ArrowRight className="w-2.5 h-2.5" />
+        <Link href="/calendar?filter=key-dates" className="text-xs font-medium text-primary hover:text-primary/80 flex items-center gap-0.5">
+          All Events <ArrowRight className="w-3 h-3" />
         </Link>
       </div>
 
@@ -316,10 +316,10 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
           <button
             key={cat.key}
             onClick={() => setActiveFilter(cat.key)}
-            className={`text-[10px] font-semibold px-2.5 py-1 rounded-full transition-all duration-150 ${
+            className={`text-xs font-semibold px-2.5 py-1.5 rounded-full transition-all duration-150 ${
               activeFilter === cat.key
                 ? `${cat.color} ring-1 ring-current/20 scale-105`
-                : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                : "bg-muted/50 text-foreground/60 hover:bg-muted"
             }`}
           >
             {cat.label}
@@ -331,7 +331,7 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
       {/* Event list */}
       <div className="space-y-1.5">
         {filteredEvents.length === 0 ? (
-          <p className="text-[11px] text-muted-foreground italic py-2 text-center">No upcoming events in this category</p>
+          <p className="text-sm text-foreground/60 italic py-2 text-center">No upcoming events in this category</p>
         ) : (
           filteredEvents.slice(0, 5).map((evt, i) => {
             const eventDate = toEastern(evt.eventDate as unknown as string);
@@ -342,7 +342,7 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
                 <Link href="/calendar?filter=key-dates" className="flex items-center gap-2.5 flex-1 min-w-0">
                   {/* Date badge */}
                   <div className={`w-9 h-9 rounded-lg ${colors.bg} flex flex-col items-center justify-center shrink-0`}>
-                    <span className="text-[8px] font-bold uppercase leading-none text-muted-foreground">
+                    <span className="text-xs font-bold uppercase leading-none text-foreground/60">
                       {format(eventDate, "MMM")}
                     </span>
                     <span className="text-sm font-bold leading-tight text-foreground">
@@ -351,10 +351,10 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
                   </div>
                   {/* Event info */}
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-foreground text-xs sm:text-sm truncate group-hover:text-primary transition-colors">
+                    <p className="font-medium text-foreground text-sm truncate group-hover:text-primary transition-colors">
                       {evt.title}
                     </p>
-                    <p className="text-[10px] text-muted-foreground truncate">
+                    <p className="text-xs text-foreground/60 truncate">
                       {evt.location || format(eventDate, "EEEE \u00b7 h:mm a")}
                     </p>
                   </div>
@@ -376,7 +376,7 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
                   <CalendarPlus className="w-3.5 h-3.5" />
                 </button>
                 {/* Countdown */}
-                <span className="text-[9px] font-semibold text-gold bg-gold/10 px-2 py-0.5 rounded-full shrink-0 whitespace-nowrap">
+                <span className="text-xs font-semibold text-gold bg-gold/10 px-2 py-0.5 rounded-full shrink-0 whitespace-nowrap">
                   {countdown}
                 </span>
               </div>
@@ -400,7 +400,7 @@ function LatestNewsCard({ latestNews }: { latestNews: any }) {
                 <Newspaper className="w-4 h-4 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Latest News</p>
+                <p className="text-xs text-foreground/60 uppercase tracking-wider font-medium">Latest News</p>
                 {latestNews ? (
                   <p className="font-semibold text-foreground text-sm truncate">{latestNews.title}</p>
                 ) : (
@@ -474,7 +474,7 @@ function ComingUpEvents({ allImportantDates }: { allImportantDates: any[] | unde
                   <Link href="/calendar?filter=key-dates" className="group flex items-center gap-3 py-1 hover:bg-primary/[0.02] -mx-2 px-2 rounded-lg transition-colors">
                     {/* Date badge — compact */}
                     <div className="w-10 h-10 rounded-lg bg-gold/10 flex flex-col items-center justify-center shrink-0">
-                      <span className="text-[9px] font-semibold text-gold uppercase leading-none">
+                      <span className="text-[10px] font-semibold text-gold uppercase leading-none">
                         {format(eventDate, "MMM")}
                       </span>
                       <span className="text-base font-bold text-gold leading-tight">
@@ -489,12 +489,12 @@ function ComingUpEvents({ allImportantDates }: { allImportantDates: any[] | unde
                           {evt.title}
                         </p>
                       </div>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-foreground/60">
                         {evt.location || format(eventDate, "EEEE")}
                       </p>
                     </div>
                     {/* Countdown pill */}
-                    <span className="text-[10px] font-medium text-gold bg-gold/10 px-2 py-0.5 rounded-full shrink-0">
+                    <span className="text-xs font-medium text-gold bg-gold/10 px-2 py-0.5 rounded-full shrink-0">
                       {countdown}
                     </span>
                   </Link>
@@ -565,7 +565,7 @@ function ThisWeeksBulletin() {
                   <BookOpen className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                  <span className="text-xs font-medium text-foreground/60 uppercase tracking-wider">
                     Week of {format(weekDate, "MMM d, yyyy")}
                   </span>
                   <h3 className="font-semibold text-foreground text-sm truncate group-hover:text-primary transition-colors">
@@ -633,7 +633,7 @@ function PhotoGallerySection() {
         <Card className="border-dashed">
           <CardContent className="p-5 flex flex-col items-center text-center">
             <ImageIcon className="w-8 h-8 text-muted-foreground/40 mb-1.5" />
-            <p className="text-muted-foreground text-xs">Photos coming soon!</p>
+            <p className="text-foreground/60 text-sm">Photos coming soon!</p>
           </CardContent>
         </Card>
       </div>
@@ -773,12 +773,12 @@ function SaintOfDayCard() {
                 {featuredSaint.name}
               </h3>
               {saints.length > 1 && (
-                <p className="text-[10px] text-muted-foreground mt-0.5">
+                <p className="text-xs text-foreground/60 mt-0.5">
                   Also: {saints.filter(s => s !== featuredSaint.name && !featuredSaint.name.includes(s)).slice(0, 2).join(", ")}
                 </p>
               )}
               {featuredSaint.biography && (
-                <p className="text-xs text-foreground/80 leading-relaxed line-clamp-3 mt-1">
+                <p className="text-sm text-foreground/80 leading-relaxed line-clamp-3 mt-1">
                   {featuredSaint.biography}
                 </p>
               )}
@@ -864,7 +864,7 @@ function DailyReadings() {
           </div>
           <div className="min-w-0">
             <h2 className="font-serif text-base sm:text-lg font-bold text-white">Today's Readings</h2>
-            <p className="text-[10px] text-white/60 truncate">{readings.liturgicTitle}</p>
+            <p className="text-xs text-white/70 truncate">{readings.liturgicTitle}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
@@ -888,7 +888,7 @@ function DailyReadings() {
             className="w-full text-left rounded-lg border border-white/10 bg-white/5 hover:bg-white/8 transition-colors overflow-hidden"
           >
             <div className="flex items-center gap-3 px-3 py-2.5">
-              <span className={`text-[10px] font-bold uppercase tracking-wider ${item.color} w-20 shrink-0`}>{item.label}</span>
+              <span className={`text-xs font-bold uppercase tracking-wider ${item.color} w-20 shrink-0`}>{item.label}</span>
               <span className="text-sm text-white/80 truncate flex-1">{item.title}</span>
               <ChevronDown className={`w-3.5 h-3.5 text-white/40 transition-transform duration-200 shrink-0 ${expandedReading === item.key ? "rotate-180" : ""}`} />
             </div>
@@ -924,8 +924,8 @@ function JourneyCardsSection() {
                     <card.icon className={`w-4 h-4 ${card.iconColor}`} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-foreground text-sm">{card.title}</h3>
-                    <span className="text-xs text-muted-foreground">{card.description}</span>
+                    <h3 className="font-semibold text-foreground text-base">{card.title}</h3>
+                    <span className="text-sm text-foreground/70">{card.description}</span>
                   </div>
                   <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
                 </CardContent>
@@ -947,7 +947,7 @@ function JourneyCardsSection() {
                   </div>
                   <div className="min-w-0">
                     <h3 className="font-semibold text-foreground text-sm">{card.title}</h3>
-                    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-primary group-hover:gap-1.5 transition-all">
+                    <span className="inline-flex items-center gap-1 text-xs font-medium text-primary group-hover:gap-1.5 transition-all">
                       {card.cta} <ArrowRight className="w-3 h-3" />
                     </span>
                   </div>
@@ -1041,7 +1041,7 @@ function CatholicResources() {
           </div>
           <div>
             <h2 className="font-serif text-sm sm:text-base font-bold text-foreground">Catholic Resources</h2>
-            <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+            <div className="flex items-center gap-2 text-xs text-foreground/60">
               <span>{SOURCES.length} Sources</span>
               <span className="text-border">·</span>
               <span>{totalArticles} Articles</span>
@@ -1081,16 +1081,16 @@ function CatholicResources() {
                   <span className={`w-2 h-2 rounded-full ${source.color}`} />
                   <div className="text-left">
                     <span className="text-sm font-semibold text-foreground">{source.label}</span>
-                    <span className="text-[10px] text-muted-foreground ml-2 hidden sm:inline">{source.sublabel}</span>
+                    <span className="text-xs text-foreground/60 ml-2 hidden sm:inline">{source.sublabel}</span>
                   </div>
                   {newCount > 0 && (
-                    <span className="text-[9px] font-bold uppercase tracking-wider bg-gold/15 text-gold px-1.5 py-0.5 rounded">
+                    <span className="text-xs font-bold uppercase tracking-wider bg-gold/15 text-gold px-1.5 py-0.5 rounded">
                       {newCount} new
                     </span>
                   )}
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] text-muted-foreground">{articles.length} articles</span>
+                  <span className="text-xs text-foreground/60">{articles.length} articles</span>
                   <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
                 </div>
               </button>
@@ -1110,7 +1110,7 @@ function CatholicResources() {
                         <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
                           {article.title}
                         </p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">
+                        <p className="text-xs text-foreground/60 mt-0.5">
                           {new Date(article.pubDate).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
                         </p>
                       </div>
@@ -1122,7 +1122,7 @@ function CatholicResources() {
                     href={source.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-1.5 px-4 py-2 text-[11px] font-medium text-primary hover:bg-primary/5 transition-colors border-t border-border/30"
+                    className="flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium text-primary hover:bg-primary/5 transition-colors border-t border-border/30"
                   >
                     Visit {source.label} <ExternalLink className="w-2.5 h-2.5" />
                   </a>
@@ -1145,10 +1145,10 @@ function CatholicResources() {
           >
             <Globe className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
             <div className="min-w-0">
-              <p className="text-[11px] font-medium text-foreground group-hover:text-primary transition-colors truncate">
+              <p className="text-xs font-medium text-foreground group-hover:text-primary transition-colors truncate">
                 {resource.name}
               </p>
-              <p className="text-[9px] text-muted-foreground">{resource.category}</p>
+              <p className="text-[11px] text-foreground/60">{resource.category}</p>
             </div>
           </a>
         ))}
@@ -1194,7 +1194,7 @@ export default function Home() {
             <blockquote className="font-serif text-lg sm:text-xl md:text-2xl text-foreground/90 italic leading-relaxed">
               "Whether you are a lifelong parishioner or visiting for the first time, you are welcome here. St. Patrick in Armonk is a place where faith grows, friendships form, and everyone belongs."
             </blockquote>
-            <p className="mt-4 text-muted-foreground font-medium text-sm">— Fr. Thadeus Aravindathu, Pastor</p>
+            <p className="mt-4 text-foreground/70 font-medium text-sm">— Fr. Thadeus Aravindathu, Pastor</p>
           </div>
         </section>
 
@@ -1245,7 +1245,7 @@ export default function Home() {
                 <h2 className="font-serif text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1.5">
                   Subscribe to Parish Updates
                 </h2>
-                <p className="text-white/70 text-sm sm:text-base">
+                <p className="text-white/80 text-base sm:text-lg">
                   Receive weekly bulletins and news directly in your inbox.
                 </p>
               </div>
@@ -1273,7 +1273,7 @@ export default function Home() {
                     {subscribeMutation.isPending ? "Subscribing..." : "Subscribe"}
                   </Button>
                 </form>
-                <p className="text-white/50 text-xs sm:text-sm mt-3 text-center sm:text-left">
+                <p className="text-white/60 text-sm sm:text-base mt-3 text-center sm:text-left">
                   Or join us on{" "}
                   <a href="https://stpatarmonk.flocknote.com/home" target="_blank" rel="noopener noreferrer" className="text-gold underline hover:text-gold/80">
                     Flocknote

@@ -30,7 +30,7 @@ export default function MobileBottomNav({ onMoreClick }: MobileBottomNavProps) {
                 className="flex flex-col items-center justify-center gap-0.5 w-16 py-1 rounded-lg transition-colors text-muted-foreground active:bg-primary/5"
               >
                 <tab.icon className="w-5 h-5" />
-                <span className="text-[10px] font-medium">{tab.label}</span>
+                <span className="text-xs font-medium">{tab.label}</span>
               </button>
             );
           }
@@ -46,7 +46,7 @@ export default function MobileBottomNav({ onMoreClick }: MobileBottomNavProps) {
               }`}
             >
               <tab.icon className={`w-5 h-5 ${isActive ? "text-primary" : ""}`} />
-              <span className={`text-[10px] font-medium ${isActive ? "text-primary" : ""}`}>
+              <span className={`text-xs font-medium ${isActive ? "text-primary" : ""}`}>
                 {tab.label}
               </span>
             </Link>

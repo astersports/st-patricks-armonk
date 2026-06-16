@@ -459,3 +459,14 @@
 
 - [x] Add "Staff Login" link in footer (always visible when not authenticated, changes to "Admin Dashboard" when logged in as admin)
 - [x] Diagnose admin link not showing on published site (user was not logged in on published domain — session cookies are domain-specific)
+
+## Phase: Font Size & Readability Improvements
+
+- [x] Increase base font size on mobile for better readability
+- [x] Darken text colors site-wide (cards, footer, event listings, descriptions)
+- [x] Increase font size in NowStatusBar tiles (Mass, Confession, Prayer)
+- [x] Increase font size in Coming Up events (event names, locations, countdown pills)
+- [x] Increase font size in journey cards (descriptions)
+- [x] Increase font size in footer links and info text
+- [x] Increase font size in Catholic Resources section
+- [x] Darken secondary/muted text colors globally

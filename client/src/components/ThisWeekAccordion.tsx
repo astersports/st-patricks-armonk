@@ -115,9 +115,9 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
       <div className="px-4 py-2.5 border-b border-border/30 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Calendar className="w-3.5 h-3.5 text-primary" />
-          <span className="text-xs font-bold text-foreground">This Week</span>
+          <span className="text-sm font-bold text-foreground">This Week</span>
         </div>
-        <span className="text-[10px] text-muted-foreground">
+        <span className="text-xs text-foreground/60">
           {format(weekStart, "MMM d")} – {format(weekEnd, "MMM d")}
         </span>
       </div>
@@ -136,10 +136,10 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
                   : "hover:bg-muted/40 text-muted-foreground"
               }`}
             >
-              <span className={`text-[9px] sm:text-[10px] font-semibold ${isSelected ? "text-white/80" : ""}`}>
+              <span className={`text-[10px] sm:text-xs font-semibold ${isSelected ? "text-white/80" : ""}`}>
                 {day.label}
               </span>
-              <span className={`text-[11px] sm:text-xs font-bold ${isSelected ? "text-white" : "text-foreground/70"}`}>
+              <span className={`text-xs sm:text-sm font-bold ${isSelected ? "text-white" : "text-foreground/70"}`}>
                 {day.dateNum}
               </span>
               {/* Today indicator */}
@@ -159,7 +159,7 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
             {selectedDayData?.isToday ? "Today" : format(selectedDayData?.date || now, "EEEE")}
           </h3>
           {services.length === 0 && dayEvents.length === 0 && (
-            <span className="text-[10px] text-muted-foreground italic">No services</span>
+            <span className="text-xs text-foreground/50 italic">No services</span>
           )}
         </div>
 
@@ -177,7 +177,7 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
                   <div className={`w-7 h-7 rounded-md ${style.bg} flex items-center justify-center`}>
                     <Icon className={`w-3.5 h-3.5 ${style.color}`} />
                   </div>
-                  <span className="text-xs font-medium text-foreground flex-1">{svc.label}</span>
+                  <span className="text-sm font-medium text-foreground flex-1">{svc.label}</span>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -211,9 +211,9 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
                   <Calendar className="w-3.5 h-3.5 text-gold" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <span className="text-xs font-medium text-foreground truncate block">{evt.title}</span>
+                  <span className="text-sm font-medium text-foreground truncate block">{evt.title}</span>
                   {evt.location && (
-                    <span className="text-[10px] text-muted-foreground">{evt.location}</span>
+                    <span className="text-xs text-foreground/60">{evt.location}</span>
                   )}
                 </div>
                 <button
@@ -237,7 +237,7 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
 
         {/* No services message */}
         {services.length === 0 && dayEvents.length === 0 && (
-          <p className="text-xs text-muted-foreground text-center py-3 italic">
+          <p className="text-sm text-foreground/50 text-center py-3 italic">
             No scheduled services on this day
           </p>
         )}
@@ -247,24 +247,24 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
       <div className="border-t border-border/30 px-4 py-3 bg-muted/20">
         <div className="flex items-center gap-1.5 mb-2">
           <Clock className="w-3 h-3 text-muted-foreground" />
-          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">At a Glance</span>
+          <span className="text-xs font-bold uppercase tracking-wider text-foreground/60">At a Glance</span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           <div className="rounded-lg bg-card border border-border/40 p-2.5 text-center">
-            <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-medium">Saturday Vigil</p>
+            <p className="text-xs uppercase tracking-wider text-foreground/60 font-medium">Saturday Vigil</p>
             <p className="text-sm font-bold text-primary mt-0.5">5:30 PM</p>
           </div>
           <div className="rounded-lg bg-card border border-border/40 p-2.5 text-center">
-            <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-medium">Sunday</p>
+            <p className="text-xs uppercase tracking-wider text-foreground/60 font-medium">Sunday</p>
             <p className="text-sm font-bold text-primary mt-0.5">8:30 & 10:30 AM</p>
-            <p className="text-[10px] text-muted-foreground">12:30 PM (Oct–Jun)</p>
+            <p className="text-xs text-foreground/60">12:30 PM (Oct–Jun)</p>
           </div>
           <div className="rounded-lg bg-card border border-border/40 p-2.5 text-center">
-            <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-medium">Weekday (Tue–Fri)</p>
+            <p className="text-xs uppercase tracking-wider text-foreground/60 font-medium">Weekday (Tue–Fri)</p>
             <p className="text-sm font-bold text-primary mt-0.5">8:30 AM</p>
           </div>
         </div>
-        <Link href="/mass-times" className="flex items-center justify-center gap-1 mt-2.5 text-[11px] font-medium text-primary hover:text-primary/80 transition-colors">
+        <Link href="/mass-times" className="flex items-center justify-center gap-1 mt-2.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors">
           Full schedule & details <span className="text-xs">→</span>
         </Link>
       </div>

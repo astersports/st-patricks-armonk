@@ -5,9 +5,9 @@
 
 @theme inline {
   --color-background: oklch(0.99 0.002 120);
-  --color-foreground: oklch(0.2 0.02 150);
+  --color-foreground: oklch(0.15 0.03 150);
   --color-card: oklch(0.99 0.001 120);
-  --color-card-foreground: oklch(0.2 0.02 150);
+  --color-card-foreground: oklch(0.15 0.03 150);
   --color-popover: oklch(0.99 0.001 120);
   --color-popover-foreground: oklch(0.2 0.02 150);
   --color-primary: oklch(0.42 0.12 150);
@@ -15,7 +15,7 @@
   --color-secondary: oklch(0.95 0.02 120);
   --color-secondary-foreground: oklch(0.3 0.08 150);
   --color-muted: oklch(0.96 0.01 120);
-  --color-muted-foreground: oklch(0.5 0.03 150);
+  --color-muted-foreground: oklch(0.35 0.04 150);
   --color-accent: oklch(0.75 0.15 85);
   --color-accent-foreground: oklch(0.2 0.05 85);
   --color-destructive: oklch(0.55 0.2 25);
@@ -122,6 +122,8 @@
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-size: 16px;
+    line-height: 1.6;
   }
 }
 

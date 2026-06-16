@@ -62,7 +62,7 @@ function MonthGroup({ group }: { group: MonthGroupData }) {
                 className={`flex items-start gap-3 sm:gap-4 p-3 sm:p-3.5 rounded-lg ${cat.bg} border border-transparent hover:border-border/50 transition-colors`}
               >
                 <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-white shadow-sm flex flex-col items-center justify-center shrink-0">
-                  <span className="text-[9px] font-medium text-muted-foreground uppercase leading-none">
+                  <span className="text-[10px] font-medium text-foreground/60 uppercase leading-none">
                     {format(eventDate, "EEE")}
                   </span>
                   <span className="text-sm sm:text-base font-bold text-foreground leading-tight">
@@ -72,7 +72,7 @@ function MonthGroup({ group }: { group: MonthGroupData }) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
                     <span className={`w-1.5 h-1.5 rounded-full ${cat.dot} shrink-0`} />
-                    <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{cat.label}</span>
+                    <span className="text-xs font-medium uppercase tracking-wider text-foreground/60">{cat.label}</span>
                   </div>
                   <p className="font-semibold text-foreground text-sm leading-snug">{event.title}</p>
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-0.5">
@@ -155,9 +155,9 @@ export default function KeyDates() {
           <div className="container">
 
             <div className="text-center">
-              <p className="text-[11px] text-gold uppercase tracking-[0.2em] font-medium mb-1">2026–2027</p>
+              <p className="text-xs text-gold uppercase tracking-[0.2em] font-medium mb-1">2026–2027</p>
               <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground">Key Dates</h1>
-              <p className="text-muted-foreground text-sm sm:text-base mt-2 max-w-lg mx-auto">
+              <p className="text-foreground/60 text-sm sm:text-base mt-2 max-w-lg mx-auto">
                 All important parish events and milestones for the year
               </p>
             </div>
@@ -185,7 +185,7 @@ export default function KeyDates() {
                     )}
                     <span>{cat.label}</span>
                     {count > 0 && (
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${isActive ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"}`}>
+                      <span className={`text-xs px-1.5 py-0.5 rounded-full ${isActive ? "bg-white/20 text-white" : "bg-muted text-foreground/60"}`}>
                         {count}
                       </span>
                     )}

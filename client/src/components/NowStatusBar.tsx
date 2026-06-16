@@ -152,8 +152,8 @@ export function NowStatusBar() {
               <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-green-400/5 to-transparent pointer-events-none" />
             )}
             <div className="flex items-center gap-1.5 mb-1.5">
-              <Icon className={`w-3.5 h-3.5 ${isActive ? s.color : "text-muted-foreground"}`} />
-              <span className={`text-[11px] font-semibold ${isActive ? "text-foreground" : "text-muted-foreground"}`}>
+              <Icon className={`w-4 h-4 ${isActive ? s.color : "text-muted-foreground"}`} />
+              <span className={`text-sm font-semibold ${isActive ? "text-foreground" : "text-foreground/80"}`}>
                 {s.label}
               </span>
             </div>
@@ -167,8 +167,8 @@ export function NowStatusBar() {
                   isActive ? s.dotActive : isNext ? "bg-amber-400" : s.dotInactive
                 }`} />
               </span>
-              <span className={`text-[10px] font-medium ${
-                isActive ? s.color : isNext ? "text-amber-600" : "text-muted-foreground"
+              <span className={`text-xs font-medium ${
+                isActive ? s.color : isNext ? "text-amber-600" : "text-foreground/60"
               }`}>
                 {s.statusText}
               </span>
