@@ -1,6 +1,6 @@
 import PageLayout from "@/components/PageLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Clock, Church, Cross, MapPin, Phone, Sun } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Clock, Church, Cross, MapPin, Phone, Sun, Calendar } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
 
 export default function MassTimes() {
@@ -8,151 +8,154 @@ export default function MassTimes() {
 
   return (
     <PageLayout>
-      {/* Page Header */}
-      <section className="relative py-10 sm:py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      {/* Compact Page Header */}
+      <section className="py-6 sm:py-10 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container">
-          <div className="max-w-3xl">
-            <p className="text-gold font-medium tracking-widest uppercase text-xs sm:text-sm mb-2 sm:mb-3 animate-fade-in">Worship With Us</p>
-            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4 animate-fade-in">
-              Mass Times & Confession
-            </h1>
-            <p className="text-base sm:text-lg text-muted-foreground animate-fade-up">
-              Join us in worship and prayer. All are welcome at St. Patrick in Armonk.
-            </p>
-            <div className="flex flex-wrap items-center gap-4 mt-6 text-sm text-muted-foreground animate-fade-up stagger-1">
-              <span className="inline-flex items-center gap-1.5">
-                <MapPin className="w-4 h-4 text-primary" />
-                29 Cox Ave, Armonk NY 10504
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <Phone className="w-4 h-4 text-primary" />
-                <a href="tel:9142739724" className="hover:text-primary">(914) 273-9724</a>
-              </span>
-            </div>
+          <p className="text-gold font-medium tracking-widest uppercase text-xs mb-1.5 animate-fade-in">Worship With Us</p>
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-2 animate-fade-in">
+            Mass Times & Confession
+          </h1>
+          <p className="text-sm text-muted-foreground animate-fade-up">
+            Join us in worship and prayer. All are welcome.
+          </p>
+          <div className="flex flex-wrap items-center gap-3 mt-3 text-xs text-muted-foreground animate-fade-up">
+            <span className="inline-flex items-center gap-1">
+              <MapPin className="w-3.5 h-3.5 text-primary" />
+              29 Cox Ave, Armonk NY 10504
+            </span>
+            <span className="inline-flex items-center gap-1">
+              <Phone className="w-3.5 h-3.5 text-primary" />
+              <a href="tel:9142739724" className="hover:text-primary transition-colors">(914) 273-9724</a>
+            </span>
           </div>
         </div>
       </section>
 
-      <div ref={revealRef}>
-        <section className="container py-6 sm:py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-8">
-            {/* Weekend Masses */}
-            <Card className="reveal border-t-4 border-t-primary shadow-sm">
-              <CardHeader>
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="bg-primary/10 p-2 sm:p-2.5 rounded-xl">
-                    <Church className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                  </div>
-                  <CardTitle className="font-serif text-xl sm:text-2xl">Weekend Masses</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-3 sm:space-y-4">
-                <div className="flex items-start gap-3 p-3 sm:p-4 rounded-xl bg-secondary/50">
-                  <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-primary mt-0.5" />
-                  <div>
-                    <h3 className="font-semibold text-base sm:text-lg">Saturday Vigil</h3>
-                    <p className="text-xl sm:text-2xl font-bold text-primary mt-0.5 sm:mt-1">5:30 PM</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3 p-3 sm:p-4 rounded-xl bg-secondary/50">
-                  <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-primary mt-0.5" />
-                  <div>
-                    <h3 className="font-semibold text-base sm:text-lg">Sunday</h3>
-                    <div className="flex flex-wrap gap-2 mt-1.5 sm:mt-2">
-                      <span className="text-base sm:text-xl font-bold text-primary bg-primary/5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg">8:30 AM</span>
-                      <span className="text-base sm:text-xl font-bold text-primary bg-primary/5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg">10:30 AM</span>
-                      <span className="text-base sm:text-xl font-bold text-primary bg-primary/5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg">12:30 PM</span>
-                    </div>
-                    <p className="text-xs sm:text-sm text-muted-foreground mt-2 sm:mt-3">12:30 PM Mass: October – June</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Weekday Masses */}
-            <Card className="reveal border-t-4 border-t-accent shadow-sm">
-              <CardHeader>
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="bg-accent/10 p-2 sm:p-2.5 rounded-xl">
-                    <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
-                  </div>
-                  <CardTitle className="font-serif text-xl sm:text-2xl">Weekday Masses</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-2 sm:space-y-3">
-                {["Tuesday", "Wednesday", "Thursday", "Friday"].map((day) => (
-                  <div key={day} className="flex items-center justify-between p-3 sm:p-4 rounded-xl bg-secondary/50">
-                    <span className="font-medium text-sm sm:text-base">{day}</span>
-                    <span className="text-base sm:text-lg font-bold text-accent">8:30 AM</span>
-                  </div>
-                ))}
-                <p className="text-xs sm:text-sm text-muted-foreground italic pt-1 sm:pt-2">
-                  No scheduled weekday Mass on Mondays.
-                </p>
-              </CardContent>
-            </Card>
-
-            {/* Confession */}
-            <Card className="reveal border-t-4 border-t-primary shadow-sm">
-              <CardHeader>
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="bg-primary/10 p-2 sm:p-2.5 rounded-xl">
-                    <Cross className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                  </div>
-                  <CardTitle className="font-serif text-xl sm:text-2xl">Confession</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="p-3 sm:p-4 rounded-xl bg-secondary/50">
-                  <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Saturday</h3>
-                  <p className="text-xl sm:text-2xl font-bold text-primary">4:30 PM – 5:15 PM</p>
-                  <p className="text-xs sm:text-sm text-muted-foreground mt-2 sm:mt-3">
-                    Also available by appointment. Contact the parish office to schedule.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Morning Prayer */}
-            <Card className="reveal border-t-4 border-t-accent shadow-sm">
-              <CardHeader>
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="bg-accent/10 p-2 sm:p-2.5 rounded-xl">
-                    <Sun className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
-                  </div>
-                  <CardTitle className="font-serif text-xl sm:text-2xl">Morning Prayer (Lauds)</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="p-3 sm:p-4 rounded-xl bg-secondary/50">
-                  <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">Tuesday – Friday</h3>
-                  <p className="text-xl sm:text-2xl font-bold text-accent">8:00 AM</p>
-                  <p className="text-xs sm:text-sm text-muted-foreground mt-2 sm:mt-3">
-                    Morning Prayer from the Liturgy of the Hours, prayed before weekday Mass.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Holy Days */}
-            <Card className="reveal border-t-4 border-t-primary shadow-sm">
-              <CardHeader>
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="bg-primary/10 p-2 sm:p-2.5 rounded-xl">
-                    <Church className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                  </div>
-                  <CardTitle className="font-serif text-xl sm:text-2xl">Holy Days of Obligation</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                  Mass times for Holy Days of Obligation are announced in the weekly bulletin and on the News page. 
-                  Please check back for upcoming Holy Day schedules.
-                </p>
-              </CardContent>
-            </Card>
+      <div ref={revealRef} className="container py-4 sm:py-8">
+        {/* Mass Schedule - Compact Table Style */}
+        <div className="mb-6">
+          <div className="flex items-center gap-2 mb-3">
+            <Church className="w-4 h-4 text-primary" />
+            <h2 className="font-serif text-lg font-bold">Mass Schedule</h2>
           </div>
-        </section>
+          <div className="space-y-1.5">
+            {/* Saturday Vigil */}
+            <Card className="reveal border-0 shadow-sm border-l-3 border-l-primary">
+              <CardContent className="p-3 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-xs font-medium text-muted-foreground uppercase w-16 shrink-0">SAT</span>
+                  <span className="font-semibold text-sm">Saturday Vigil</span>
+                </div>
+                <span className="text-sm font-bold text-primary">5:30 PM</span>
+              </CardContent>
+            </Card>
+
+            {/* Sunday */}
+            <Card className="reveal border-0 shadow-sm border-l-3 border-l-primary">
+              <CardContent className="p-3 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-xs font-medium text-muted-foreground uppercase w-16 shrink-0">SUN</span>
+                  <span className="font-semibold text-sm">Sunday Masses</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-bold text-primary bg-primary/5 px-2 py-0.5 rounded">8:30</span>
+                  <span className="text-xs font-bold text-primary bg-primary/5 px-2 py-0.5 rounded">10:30</span>
+                  <span className="text-xs font-bold text-primary bg-primary/5 px-2 py-0.5 rounded">12:30*</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Weekday */}
+            <Card className="reveal border-0 shadow-sm border-l-3 border-l-accent">
+              <CardContent className="p-3 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-xs font-medium text-muted-foreground uppercase w-16 shrink-0">TUE-FRI</span>
+                  <span className="font-semibold text-sm">Weekday Mass</span>
+                </div>
+                <span className="text-sm font-bold text-accent">8:30 AM</span>
+              </CardContent>
+            </Card>
+
+            <p className="text-xs text-muted-foreground pl-1 pt-1">*12:30 PM: October – June only. No Monday Mass.</p>
+          </div>
+        </div>
+
+        {/* Confession & Prayer - Compact */}
+        <div className="mb-6">
+          <div className="flex items-center gap-2 mb-3">
+            <Cross className="w-4 h-4 text-primary" />
+            <h2 className="font-serif text-lg font-bold">Confession & Prayer</h2>
+          </div>
+          <div className="space-y-1.5">
+            <Card className="reveal border-0 shadow-sm border-l-3 border-l-primary">
+              <CardContent className="p-3 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <Cross className="w-4 h-4 text-primary shrink-0" />
+                  <div>
+                    <span className="font-semibold text-sm">Confession</span>
+                    <span className="text-xs text-muted-foreground ml-2">Saturday</span>
+                  </div>
+                </div>
+                <span className="text-sm font-bold text-primary">4:30–5:15 PM</span>
+              </CardContent>
+            </Card>
+
+            <Card className="reveal border-0 shadow-sm border-l-3 border-l-accent">
+              <CardContent className="p-3 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <Sun className="w-4 h-4 text-accent shrink-0" />
+                  <div>
+                    <span className="font-semibold text-sm">Morning Prayer (Lauds)</span>
+                    <span className="text-xs text-muted-foreground ml-2">Tue–Fri</span>
+                  </div>
+                </div>
+                <span className="text-sm font-bold text-accent">8:00 AM</span>
+              </CardContent>
+            </Card>
+
+            <Card className="reveal border-0 shadow-sm border-l-3 border-l-muted">
+              <CardContent className="p-3 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <Calendar className="w-4 h-4 text-muted-foreground shrink-0" />
+                  <div>
+                    <span className="font-semibold text-sm">Holy Days of Obligation</span>
+                  </div>
+                </div>
+                <span className="text-xs text-muted-foreground">See bulletin</span>
+              </CardContent>
+            </Card>
+
+            <p className="text-xs text-muted-foreground pl-1 pt-1">Confession also available by appointment — call the parish office.</p>
+          </div>
+        </div>
+
+        {/* What to Expect - Compact inline items */}
+        <div>
+          <div className="flex items-center gap-2 mb-3">
+            <Church className="w-4 h-4 text-primary" />
+            <h2 className="font-serif text-lg font-bold">What to Expect</h2>
+          </div>
+          <div className="space-y-1.5">
+            {[
+              { icon: Clock, title: "Mass Lasts About an Hour", desc: "Readings, homily, prayers, and the Eucharist" },
+              { icon: Church, title: "Come As You Are", desc: "No dress code — business casual is common" },
+              { icon: Calendar, title: "Follow Along Easily", desc: "Missalettes in each pew with all readings and responses" },
+              { icon: Cross, title: "Everyone Is Welcome", desc: "Not Catholic? Come forward for a blessing" },
+            ].map((item) => (
+              <Card key={item.title} className="reveal border-0 shadow-sm">
+                <CardContent className="p-3 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center shrink-0">
+                    <item.icon className="w-4 h-4 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-sm">{item.title}</h3>
+                    <p className="text-xs text-muted-foreground truncate">{item.desc}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
       </div>
     </PageLayout>
   );

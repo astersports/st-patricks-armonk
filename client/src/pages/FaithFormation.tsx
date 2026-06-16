@@ -2,7 +2,7 @@ import PageLayout from "@/components/PageLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { BookOpen, GraduationCap, Phone, Calendar, Users, Heart } from "lucide-react";
+import { BookOpen, GraduationCap, Phone, Calendar, Users, Heart, Mail } from "lucide-react";
 import { Link } from "wouter";
 import { useReveal } from "@/hooks/useReveal";
 
@@ -11,22 +11,20 @@ export default function FaithFormation() {
 
   return (
     <PageLayout>
-      <section className="relative py-10 sm:py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      <section className="py-6 sm:py-10 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container">
-          <div className="max-w-3xl">
-            <p className="text-gold font-medium tracking-widest uppercase text-xs sm:text-sm mb-2 sm:mb-3 animate-fade-in">Grow in Faith</p>
-            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4 animate-fade-in">
-              Faith Formation
-            </h1>
-            <p className="text-base sm:text-lg text-muted-foreground animate-fade-up">
-              Growing in faith together — Religious Education programs for children, youth, and adults.
-            </p>
-          </div>
+          <p className="text-gold font-medium tracking-widest uppercase text-xs mb-1.5 animate-fade-in">Grow in Faith</p>
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-2 animate-fade-in">
+            Faith Formation
+          </h1>
+          <p className="text-sm text-muted-foreground animate-fade-up">
+            Religious Education programs for children, youth, and adults.
+          </p>
         </div>
       </section>
 
       <div ref={revealRef}>
-        <section className="container py-8 sm:py-12">
+        <section className="container py-4 sm:py-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-8">
             {/* Main Content — Accordion */}
             <div className="lg:col-span-2">
@@ -111,7 +109,7 @@ export default function FaithFormation() {
                       welcoming community of inquiry and formation.
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      Contact the parish office at <a href="tel:9142739724" className="text-primary hover:underline font-medium">(914) 273-9724</a> to learn more.
+                      Contact: <a href="mailto:parishoffice@stpatricksarmonk.org" className="text-primary hover:underline font-medium inline-flex items-center gap-1"><Mail className="w-3 h-3" />Parish Office</a> or call <a href="tel:9142739724" className="text-primary hover:underline font-medium">(914) 273-9724</a>.
                     </p>
                   </AccordionContent>
                 </AccordionItem>
@@ -142,8 +140,7 @@ export default function FaithFormation() {
                       group discussions, participants grow in faith and fellowship.
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      Sessions meet weekly during the school year. New participants are always welcome. 
-                      Contact the parish office at <a href="tel:9142739724" className="text-primary hover:underline font-medium">(914) 273-9724</a> for current schedule.
+                      Sessions meet weekly during the school year. Contact: <a href="mailto:parishoffice@stpatricksarmonk.org" className="text-primary hover:underline font-medium inline-flex items-center gap-1"><Mail className="w-3 h-3" />Parish Office</a> or call <a href="tel:9142739724" className="text-primary hover:underline font-medium">(914) 273-9724</a>.
                     </p>
                   </AccordionContent>
                 </AccordionItem>
@@ -210,7 +207,7 @@ export default function FaithFormation() {
                       <li className="flex gap-2"><span className="text-primary">&bull;</span>Meets during the school year (typically bi-weekly)</li>
                     </ul>
                     <p className="text-sm text-muted-foreground">
-                      For more information or to register your daughter, contact the Religious Education Office at <a href="tel:9145311759" className="text-primary hover:underline">(914) 531-1759</a>.
+                      Contact: <a href="mailto:parishoffice@stpatricksarmonk.org" className="text-primary hover:underline font-medium inline-flex items-center gap-1"><Mail className="w-3 h-3" />Religious Ed Office</a> or call <a href="tel:9145311759" className="text-primary hover:underline">(914) 531-1759</a>.
                     </p>
                   </AccordionContent>
                 </AccordionItem>
@@ -220,15 +217,16 @@ export default function FaithFormation() {
             {/* Sidebar */}
             <div className="reveal space-y-3">
               <Card className="bg-primary text-white shadow-lg border-0">
-                <CardContent className="p-4">
+                <CardContent className="p-3">
                   <div className="flex items-center gap-3">
-                    <Phone className="w-5 h-5 text-gold shrink-0" />
+                    <Phone className="w-4 h-4 text-gold shrink-0" />
                     <div>
                       <h3 className="font-semibold text-sm">Religious Education Office</h3>
                       <p className="text-white/80 text-xs">For registration and program inquiries:</p>
                     </div>
                   </div>
-                  <a href="tel:9145311759" className="font-bold text-base mt-2 block hover:text-gold transition-colors">(914) 531-1759</a>
+                  <a href="tel:9145311759" className="font-bold text-sm mt-1.5 block hover:text-gold transition-colors">(914) 531-1759</a>
+                  <a href="mailto:parishoffice@stpatricksarmonk.org" className="text-xs text-white/80 hover:text-gold mt-0.5 block transition-colors">parishoffice@stpatricksarmonk.org</a>
                 </CardContent>
               </Card>
 

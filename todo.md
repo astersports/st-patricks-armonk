@@ -378,3 +378,14 @@
 - [x] Add countdown (e.g. "in 3 days") to Coming Up events
 - [x] Compact all homepage cards to minimal height (use Sacraments/Faith Formation card style as template)
 - [x] Reduce journey tiles (New Here, Sacraments, Faith Formation, Get Involved) height
+- [x] Fix journey cards on mobile: change from horizontal scroll to vertical stack (like Sacraments page accordion rows)
+- [x] Catholic Resources: expand to 4 news sources (not just 2) with 3 articles each
+- [x] Reclassify non-CYO events/dates as "parish" category (only explicitly CYO items stay in CYO bucket)
+- [x] SITE-WIDE: Compact all cards to minimal height (reduce padding from p-6/p-8 to p-3/p-4, inline row layout)
+- [x] SITE-WIDE: Make all contact names clickable email links (mailto:)
+- [x] Mass Times page: Compact mass schedule cards from tall centered blocks to compact inline rows
+- [x] Mass Times page: Compact "What to Expect" cards from tall blocks to single-row items
+- [x] Get Involved page: Compact ministry cards from tall blocks to single-row accordion items
+- [x] Get Involved page: Compact outreach cards from tall blocks to single-row items with email links
+- [x] Faith Formation page: Add email links to all contact names
+- [x] Fix Catholic Resources: Replace broken USCCB/ArchNY RSS feeds with working alternatives (Aleteia + The Pillar)

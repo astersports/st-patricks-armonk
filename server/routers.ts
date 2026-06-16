@@ -1109,26 +1109,40 @@ export const appRouter = router({
 
   // ===== CATHOLIC RESOURCES (live RSS feeds + resource links) =====
   catholicResources: router({
-    // Combined feed from Vatican News + Good Newsroom
+    // Combined feed from all 4 sources
     feed: publicProcedure
-      .input(z.object({ limit: z.number().min(1).max(10).default(4) }).optional())
+      .input(z.object({ limit: z.number().min(1).max(10).default(3) }).optional())
       .query(async ({ input }) => {
         const { fetchAllFeeds } = await import("./catholicResources");
-        return fetchAllFeeds(input?.limit ?? 4);
+        return fetchAllFeeds(input?.limit ?? 3);
       }),
     // Vatican News only
     vatican: publicProcedure
-      .input(z.object({ limit: z.number().min(1).max(10).default(5) }).optional())
+      .input(z.object({ limit: z.number().min(1).max(10).default(3) }).optional())
       .query(async ({ input }) => {
         const { fetchVaticanNews } = await import("./catholicResources");
-        return fetchVaticanNews(input?.limit ?? 5);
+        return fetchVaticanNews(input?.limit ?? 3);
       }),
     // Good Newsroom only
     goodNewsroom: publicProcedure
-      .input(z.object({ limit: z.number().min(1).max(10).default(5) }).optional())
+      .input(z.object({ limit: z.number().min(1).max(10).default(3) }).optional())
       .query(async ({ input }) => {
         const { fetchGoodNewsroom } = await import("./catholicResources");
-        return fetchGoodNewsroom(input?.limit ?? 5);
+        return fetchGoodNewsroom(input?.limit ?? 3);
+      }),
+    // USCCB News
+    usccb: publicProcedure
+      .input(z.object({ limit: z.number().min(1).max(10).default(3) }).optional())
+      .query(async ({ input }) => {
+        const { fetchUSCCBNews } = await import("./catholicResources");
+        return fetchUSCCBNews(input?.limit ?? 3);
+      }),
+    // Archdiocese of NY
+    archny: publicProcedure
+      .input(z.object({ limit: z.number().min(1).max(10).default(3) }).optional())
+      .query(async ({ input }) => {
+        const { fetchArchNY } = await import("./catholicResources");
+        return fetchArchNY(input?.limit ?? 3);
       }),
     // Static resource links
     links: publicProcedure.query(async () => {

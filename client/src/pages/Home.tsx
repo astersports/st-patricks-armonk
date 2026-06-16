@@ -712,24 +712,23 @@ function JourneyCardsSection() {
   return (
     <section className="pb-6 sm:pb-8" ref={ref}>
       <div className="container">
-        {/* Mobile: horizontal scroll snap */}
-        <div className="sm:hidden flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory -mx-4 px-4">
+        {/* Mobile: vertical stack like Sacraments page */}
+        <div className="sm:hidden flex flex-col gap-2">
           {journeyCards.map((card, i) => (
-            <Link key={card.href} href={card.href} className="shrink-0 w-[65vw] snap-start">
+            <Link key={card.href} href={card.href}>
               <Card
-                className={`group cursor-pointer h-full border-0 shadow-sm border-l-3 ${card.borderColor} card-interactive`}
+                className={`group cursor-pointer border-0 shadow-sm border-l-3 ${card.borderColor} card-interactive`}
                 style={getItemStyle(i)}
               >
                 <CardContent className="p-3 flex items-center gap-3">
                   <div className={`w-9 h-9 rounded-lg ${card.iconBg} flex items-center justify-center shrink-0`}>
                     <card.icon className={`w-4 h-4 ${card.iconColor}`} />
                   </div>
-                  <div className="min-w-0">
+                  <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-foreground text-sm">{card.title}</h3>
-                    <span className="inline-flex items-center gap-1 text-xs font-medium text-primary group-hover:gap-1.5 transition-all">
-                      {card.cta} <ArrowRight className="w-3 h-3" />
-                    </span>
+                    <span className="text-xs text-muted-foreground">{card.description}</span>
                   </div>
+                  <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
                 </CardContent>
               </Card>
             </Link>
@@ -766,15 +765,18 @@ function JourneyCardsSection() {
 // === CATHOLIC RESOURCES — Aster Sports-inspired per-source live feed ===
 
 const SOURCES = [
-  { key: "goodnewsroom" as const, label: "Archdiocese of NY", sublabel: "The Good Newsroom", color: "bg-emerald-500", borderColor: "border-l-emerald-500", url: "https://thegoodnewsroom.org/" },
+  { key: "goodnewsroom" as const, label: "Good Newsroom", sublabel: "Archdiocese of NY", color: "bg-emerald-500", borderColor: "border-l-emerald-500", url: "https://thegoodnewsroom.org/" },
+  { key: "archny" as const, label: "The Pillar", sublabel: "Catholic Journalism", color: "bg-amber-700", borderColor: "border-l-amber-700", url: "https://www.pillarcatholic.com/" },
+  { key: "usccb" as const, label: "Aleteia", sublabel: "Catholic Life", color: "bg-blue-600", borderColor: "border-l-blue-600", url: "https://aleteia.org/" },
   { key: "vatican" as const, label: "Vatican News", sublabel: "Holy See Press Office", color: "bg-red-600", borderColor: "border-l-red-600", url: "https://www.vaticannews.va/en.html" },
 ] as const;
 
 const RESOURCE_LINKS = [
   { name: "Archdiocese of NY", url: "https://www.archny.org/", category: "Local Church" },
-  { name: "USCCB", url: "https://www.usccb.org/", category: "National" },
+  { name: "Aleteia", url: "https://aleteia.org/", category: "Catholic Life" },
   { name: "Vatican", url: "https://www.vatican.va/content/vatican/en.html", category: "Universal Church" },
   { name: "Good Newsroom", url: "https://thegoodnewsroom.org/", category: "Local News" },
+  { name: "The Pillar", url: "https://www.pillarcatholic.com/", category: "Catholic News" },
 ];
 
 function CatholicResourcesSkeleton() {
@@ -807,17 +809,21 @@ function CatholicResourcesSkeleton() {
 function CatholicResources() {
   const { data: vaticanFeed, isLoading: vLoading } = trpc.catholicResources.vatican.useQuery({ limit: 3 });
   const { data: gnFeed, isLoading: gLoading } = trpc.catholicResources.goodNewsroom.useQuery({ limit: 3 });
-  const [expandedSources, setExpandedSources] = useState<string[]>(["goodnewsroom", "vatican"]);
+  const { data: usccbFeed, isLoading: uLoading } = trpc.catholicResources.usccb.useQuery({ limit: 3 });
+  const { data: archnyFeed, isLoading: aLoading } = trpc.catholicResources.archny.useQuery({ limit: 3 });
+  const [expandedSources, setExpandedSources] = useState<string[]>(["goodnewsroom", "archny", "usccb", "vatican"]);
 
-  const isLoading = vLoading || gLoading;
+  const isLoading = vLoading || gLoading || uLoading || aLoading;
   if (isLoading) return <CatholicResourcesSkeleton />;
 
   const feedsBySource: Record<string, typeof vaticanFeed> = {
     vatican: vaticanFeed || [],
     goodnewsroom: gnFeed || [],
+    usccb: usccbFeed || [],
+    archny: archnyFeed || [],
   };
 
-  const totalArticles = (vaticanFeed?.length || 0) + (gnFeed?.length || 0);
+  const totalArticles = (vaticanFeed?.length || 0) + (gnFeed?.length || 0) + (usccbFeed?.length || 0) + (archnyFeed?.length || 0);
   const lastUpdated = new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
 
   const toggleSource = (key: string) => {

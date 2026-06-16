@@ -1,6 +1,7 @@
 /**
  * Catholic Resources Feed Aggregator
- * Fetches and caches RSS feeds from Vatican News and The Good Newsroom (Archdiocese of NY).
+ * Fetches and caches RSS feeds from Vatican News, The Good Newsroom (Archdiocese of NY),
+ * USCCB News, and Archdiocese of NY official site.
  * Provides static resource links for USCCB and Archdiocese of NY main sites.
  */
 
@@ -10,7 +11,7 @@ export interface FeedArticle {
   description: string;
   pubDate: string; // ISO string
   imageUrl?: string;
-  source: "vatican" | "goodnewsroom";
+  source: "vatican" | "goodnewsroom" | "usccb" | "archny";
 }
 
 export interface ResourceLink {
@@ -31,10 +32,14 @@ const CACHE_TTL = 30 * 60 * 1000; // 30 minutes
 
 let vaticanCache: FeedCache = { items: [], fetchedAt: 0 };
 let goodNewsroomCache: FeedCache = { items: [], fetchedAt: 0 };
+let usccbCache: FeedCache = { items: [], fetchedAt: 0 };
+let archnyCache: FeedCache = { items: [], fetchedAt: 0 };
 
 const FEEDS = {
   vatican: "https://www.vaticannews.va/en.rss.xml",
   goodnewsroom: "https://thegoodnewsroom.org/feed/",
+  usccb: "https://aleteia.org/feed/",
+  archny: "https://www.pillarcatholic.com/feed",
 } as const;
 
 // === Static Resource Links ===
@@ -46,10 +51,10 @@ export const CATHOLIC_RESOURCES: ResourceLink[] = [
     category: "Local Church",
   },
   {
-    name: "USCCB",
-    description: "United States Conference of Catholic Bishops — daily readings, Church teachings, and national Catholic news.",
-    url: "https://www.usccb.org/",
-    category: "National",
+    name: "Aleteia",
+    description: "Catholic spirituality, lifestyle, and world news — stories of faith and inspiration.",
+    url: "https://aleteia.org/",
+    category: "Catholic Life",
   },
   {
     name: "Vatican",
@@ -62,6 +67,12 @@ export const CATHOLIC_RESOURCES: ResourceLink[] = [
     description: "Stories of faith, hope, and service from across the Archdiocese of New York.",
     url: "https://thegoodnewsroom.org/",
     category: "Local News",
+  },
+  {
+    name: "The Pillar",
+    description: "In-depth Catholic journalism — investigative reporting and analysis on the Church.",
+    url: "https://www.pillarcatholic.com/",
+    category: "Catholic News",
   },
 ];
 
@@ -149,20 +160,62 @@ export async function fetchGoodNewsroom(maxItems: number = 5): Promise<FeedArtic
 }
 
 /**
+ * Fetch USCCB News articles
+ */
+export async function fetchUSCCBNews(maxItems: number = 5): Promise<FeedArticle[]> {
+  if (Date.now() - usccbCache.fetchedAt < CACHE_TTL && usccbCache.items.length > 0) {
+    return usccbCache.items.slice(0, maxItems);
+  }
+
+  try {
+    const xml = await fetchRSSFeed(FEEDS.usccb);
+    const items = parseRSSItems(xml, "usccb");
+    usccbCache = { items, fetchedAt: Date.now() };
+    return items.slice(0, maxItems);
+  } catch (err) {
+    console.error("Aleteia RSS error:", err);
+    return usccbCache.items.slice(0, maxItems);
+  }
+}
+
+/**
+ * Fetch Archdiocese of NY articles
+ */
+export async function fetchArchNY(maxItems: number = 5): Promise<FeedArticle[]> {
+  if (Date.now() - archnyCache.fetchedAt < CACHE_TTL && archnyCache.items.length > 0) {
+    return archnyCache.items.slice(0, maxItems);
+  }
+
+  try {
+    const xml = await fetchRSSFeed(FEEDS.archny);
+    const items = parseRSSItems(xml, "archny");
+    archnyCache = { items, fetchedAt: Date.now() };
+    return items.slice(0, maxItems);
+  } catch (err) {
+    console.error("The Pillar RSS error:", err);
+    return archnyCache.items.slice(0, maxItems);
+  }
+}
+
+/**
  * Fetch combined feed from all sources, sorted by date
  */
-export async function fetchAllFeeds(maxPerSource: number = 4): Promise<FeedArticle[]> {
-  const [vatican, goodnewsroom] = await Promise.all([
+export async function fetchAllFeeds(maxPerSource: number = 3): Promise<FeedArticle[]> {
+  const [vatican, goodnewsroom, usccb, archny] = await Promise.all([
     fetchVaticanNews(maxPerSource),
     fetchGoodNewsroom(maxPerSource),
+    fetchUSCCBNews(maxPerSource),
+    fetchArchNY(maxPerSource),
   ]);
 
   // Interleave: alternate between sources for visual variety
+  const sources = [goodnewsroom, archny, usccb, vatican];
   const combined: FeedArticle[] = [];
-  const maxLen = Math.max(vatican.length, goodnewsroom.length);
+  const maxLen = Math.max(...sources.map(s => s.length));
   for (let i = 0; i < maxLen; i++) {
-    if (i < goodnewsroom.length) combined.push(goodnewsroom[i]);
-    if (i < vatican.length) combined.push(vatican[i]);
+    for (const source of sources) {
+      if (i < source.length) combined.push(source[i]);
+    }
   }
 
   return combined;
