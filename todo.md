@@ -532,3 +532,8 @@
 - [x] Apply L99 design polish to News page
 - [x] Apply L99 design polish to Bulletins page
 - [x] Verify all pages on mobile and desktop
+
+## Bug Fixes: User Reported Issues (Jun 16)
+- [x] Fix duplicated mass countdown (hero + mass card both show countdown)
+- [x] Replace subtitle line under header with motto image ("God Bless the Whole World, No Exceptions")
+- [x] Fix blue/cyan tint still showing on card borders (Coming Up, This Week, Latest News, etc.)

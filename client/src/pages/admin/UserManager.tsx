@@ -13,7 +13,7 @@ const ROLE_OPTIONS: { value: UserRole; label: string; color: string }[] = [
   { value: "religious_ed", label: "Religious Education", color: "bg-green-100 text-green-800" },
   { value: "youth_ministry", label: "Youth Ministry", color: "bg-orange-100 text-orange-800" },
   { value: "sacraments", label: "Sacraments", color: "bg-purple-100 text-purple-800" },
-  { value: "parish_life", label: "Parish Life", color: "bg-teal-100 text-teal-800" },
+  { value: "parish_life", label: "Parish Life", color: "bg-green-100 text-green-800" },
   { value: "user", label: "Parishioner (no admin)", color: "bg-gray-100 text-gray-800" },
 ];
 
@@ -59,7 +59,7 @@ export default function UserManager() {
             <div><Badge className="bg-green-100 text-green-800 hover:bg-green-100">Religious Ed</Badge> — CCD, Permissions, Documents</div>
             <div><Badge className="bg-orange-100 text-orange-800 hover:bg-orange-100">Youth Ministry</Badge> — CYO, Teen Life</div>
             <div><Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100">Sacraments</Badge> — Baptism, Marriage, Funeral</div>
-            <div><Badge className="bg-teal-100 text-teal-800 hover:bg-teal-100">Parish Life</Badge> — Events, Volunteers, Key Dates, Registrations</div>
+            <div><Badge className="bg-green-100 text-green-800 hover:bg-green-100">Parish Life</Badge> — Events, Volunteers, Key Dates, Registrations</div>
           </div>
         </CardContent>
       </Card>

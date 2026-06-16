@@ -17,7 +17,7 @@ const TYPE_CONFIG: Record<string, { label: string; icon: typeof Bell; color: str
   baptism: { label: "Baptism", icon: Baby, color: "text-indigo-600", bgColor: "bg-indigo-50" },
   marriage: { label: "Marriage", icon: HeartHandshake, color: "text-rose-600", bgColor: "bg-rose-50" },
   ccd: { label: "CCD Registration", icon: GraduationCap, color: "text-amber-600", bgColor: "bg-amber-50" },
-  parish_registration: { label: "Parish Registration", icon: Church, color: "text-teal-600", bgColor: "bg-teal-50" },
+  parish_registration: { label: "Parish Registration", icon: Church, color: "text-green-700", bgColor: "bg-green-50" },
   teen_life: { label: "Teen Life", icon: Users, color: "text-orange-600", bgColor: "bg-orange-50" },
   ccd_permission: { label: "CCD Permission", icon: ShieldCheck, color: "text-purple-600", bgColor: "bg-purple-50" },
 };
@@ -177,7 +177,7 @@ export default function DashboardHome() {
           <StatCard icon={Camera} label="Gallery Photos" value={stats.totalGalleryPhotos} href="/gallery" color="text-pink-600" />
           <StatCard icon={Heart} label="Volunteer Signups" value={stats.totalVolunteerSignups} href="/volunteers" color="text-red-600" />
           <StatCard icon={GraduationCap} label="Pending CCD" value={stats.pendingCcdRegistrations} href="/ccd" color="text-amber-600" highlight={stats.pendingCcdRegistrations > 0} />
-          <StatCard icon={UserPlus} label="Pending Parish Reg." value={stats.pendingParishRegistrations} href="/registrations" color="text-teal-600" highlight={stats.pendingParishRegistrations > 0} />
+          <StatCard icon={UserPlus} label="Pending Parish Reg." value={stats.pendingParishRegistrations} href="/registrations" color="text-green-700" highlight={stats.pendingParishRegistrations > 0} />
           <StatCard icon={Cross} label="Pending Baptisms" value={stats.pendingBaptisms} href="/sacraments" color="text-indigo-600" highlight={stats.pendingBaptisms > 0} />
           <StatCard icon={Cross} label="Pending Marriages" value={stats.pendingMarriages} href="/sacraments" color="text-rose-600" highlight={stats.pendingMarriages > 0} />
           <StatCard icon={Users} label="Pending Teen Life" value={stats.pendingTeenLife} href="/teen-life" color="text-orange-600" highlight={stats.pendingTeenLife > 0} />

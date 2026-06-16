@@ -71,7 +71,7 @@ const journeyCards = [
 // ===== HERO SECTION — Cinematic with Ken Burns + Time Greeting + Next Mass Countdown =====
 function HeroSection() {
   const [timeGreeting, setTimeGreeting] = useState("");
-  const [nextMassText, setNextMassText] = useState("");
+
 
   useEffect(() => {
     function getGreeting() {
@@ -84,59 +84,12 @@ function HeroSection() {
       return "Good Evening";
     }
 
-    function getNextMass() {
-      const now = new Date();
-      const eastern = new Date(now.toLocaleString("en-US", { timeZone: TIMEZONE }));
-      const day = eastern.getDay(); // 0=Sun, 1=Mon, 2=Tue...
-      const hour = eastern.getHours();
-      const min = eastern.getMinutes();
-      const currentMinutes = hour * 60 + min;
-
-      // Mass schedule: Sat 17:30, Sun 8:30 & 10:30, Tue-Fri 8:30
-      type MassSlot = { day: number; hour: number; min: number; label: string };
-      const schedule: MassSlot[] = [
-        { day: 0, hour: 8, min: 30, label: "Sunday 8:30 AM" },
-        { day: 0, hour: 10, min: 30, label: "Sunday 10:30 AM" },
-        { day: 2, hour: 8, min: 30, label: "Tuesday 8:30 AM" },
-        { day: 3, hour: 8, min: 30, label: "Wednesday 8:30 AM" },
-        { day: 4, hour: 8, min: 30, label: "Thursday 8:30 AM" },
-        { day: 5, hour: 8, min: 30, label: "Friday 8:30 AM" },
-        { day: 6, hour: 17, min: 30, label: "Saturday 5:30 PM" },
-      ];
-
-      // Find next mass
-      let minDiff = Infinity;
-      let nextLabel = "";
-      for (const mass of schedule) {
-        let daysAhead = mass.day - day;
-        if (daysAhead < 0) daysAhead += 7;
-        const massMinutes = mass.hour * 60 + mass.min;
-        let diffMinutes = daysAhead * 24 * 60 + (massMinutes - currentMinutes);
-        if (diffMinutes <= 0) diffMinutes += 7 * 24 * 60;
-        if (diffMinutes < minDiff) {
-          minDiff = diffMinutes;
-          nextLabel = mass.label;
-        }
-      }
-
-      if (minDiff < 60) {
-        return `Next Mass in ${minDiff}m — ${nextLabel}`;
-      } else if (minDiff < 24 * 60) {
-        const h = Math.floor(minDiff / 60);
-        const m = minDiff % 60;
-        return `Next Mass in ${h}h ${m}m — ${nextLabel}`;
-      } else {
-        return `Next Mass: ${nextLabel}`;
-      }
-    }
 
     setTimeGreeting(getGreeting());
-    setNextMassText(getNextMass());
 
     const interval = setInterval(() => {
       setTimeGreeting(getGreeting());
-      setNextMassText(getNextMass());
-    }, 60000); // Update every minute
+      }, 60000); // Update every minute
 
     return () => clearInterval(interval);
   }, []);
@@ -162,17 +115,15 @@ function HeroSection() {
         <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold mb-3 animate-fade-in drop-shadow-2xl leading-tight">
           St. Patrick in Armonk
         </h1>
-        <p className="text-white/85 text-base sm:text-lg font-light animate-fade-up stagger-1 mb-5">
-          A Catholic community of faith, service &amp; love
-        </p>
+        {/* Parish Motto Image */}
+        <div className="animate-fade-up stagger-1 mb-5 max-w-[180px] sm:max-w-[220px] mx-auto">
+          <img
+            src="/manus-storage/motto-bumper-sticker_b29e3725.jpeg"
+            alt="God Bless the Whole World, No Exceptions — Pax Christi, St. Patrick's Church, Armonk, New York"
+            className="w-full h-auto rounded shadow-md opacity-95"
+          />
+        </div>
 
-        {/* Next Mass Countdown */}
-        {nextMassText && (
-          <div className="inline-flex items-center gap-2.5 bg-white/12 backdrop-blur-md border border-white/25 rounded-full px-5 py-2 mb-7 animate-fade-up stagger-2">
-            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            <span className="text-white/95 text-sm font-semibold">{nextMassText}</span>
-          </div>
-        )}
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center animate-fade-up stagger-3">
           <Link href="/mass-times">
@@ -207,7 +158,7 @@ function NowAtStPatrick({ latestNews, allImportantDates }: { latestNews: any; al
     cyo: { dot: "bg-orange-500", bg: "bg-orange-500/10" },
     sacrament: { dot: "bg-purple-500", bg: "bg-purple-500/10" },
     parish: { dot: "bg-primary", bg: "bg-primary/10" },
-    teen_life: { dot: "bg-teal-600", bg: "bg-teal-600/10" },
+    teen_life: { dot: "bg-emerald-700", bg: "bg-emerald-700/10" },
     social: { dot: "bg-amber-500", bg: "bg-amber-500/10" },
   };
 
@@ -259,7 +210,7 @@ const CATEGORIES = [
   { key: "ccd", label: "CCD", color: "bg-green-500/15 text-green-700" },
   { key: "cyo", label: "CYO", color: "bg-orange-500/15 text-orange-700" },
   { key: "sacrament", label: "Sacrament", color: "bg-purple-500/15 text-purple-700" },
-  { key: "teen_life", label: "Teen Life", color: "bg-teal-600/15 text-teal-700" },
+  { key: "teen_life", label: "Teen Life", color: "bg-emerald-700/15 text-emerald-800" },
   { key: "social", label: "Social", color: "bg-amber-500/15 text-amber-700" },
 ];
 
@@ -421,7 +372,7 @@ function ComingUpEvents({ allImportantDates }: { allImportantDates: any[] | unde
 
   const catDots: Record<string, string> = {
     ccd: "bg-green-500", cyo: "bg-orange-500", sacrament: "bg-purple-500",
-    parish: "bg-primary", teen_life: "bg-teal-600", social: "bg-amber-500",
+    parish: "bg-primary", teen_life: "bg-emerald-700", social: "bg-amber-500",
   };
 
   if (upcomingEvents.length === 0) return null;
@@ -950,7 +901,7 @@ function JourneyCardsSection() {
 const SOURCES = [
   { key: "goodnewsroom" as const, label: "Good Newsroom", sublabel: "Archdiocese of NY", color: "bg-emerald-500", borderColor: "border-l-emerald-500", url: "https://thegoodnewsroom.org/" },
   { key: "archny" as const, label: "The Pillar", sublabel: "Catholic Journalism", color: "bg-amber-700", borderColor: "border-l-amber-700", url: "https://www.pillarcatholic.com/" },
-  { key: "usccb" as const, label: "Aleteia", sublabel: "Catholic Life", color: "bg-teal-600", borderColor: "border-l-teal-600", url: "https://aleteia.org/" },
+  { key: "usccb" as const, label: "Aleteia", sublabel: "Catholic Life", color: "bg-emerald-700", borderColor: "border-l-emerald-700", url: "https://aleteia.org/" },
   { key: "vatican" as const, label: "Vatican News", sublabel: "Holy See Press Office", color: "bg-red-600", borderColor: "border-l-red-600", url: "https://www.vaticannews.va/en.html" },
 ] as const;
 
