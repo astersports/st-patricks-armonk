@@ -68,85 +68,141 @@ const journeyCards = [
   },
 ];
 
-// ===== HERO SECTION — Cinematic with Ken Burns + Time Greeting + Next Mass Countdown =====
+// ===== HERO SECTION — L99 Cinematic with left-aligned content, green gradient, gold accent =====
 function HeroSection() {
   const [timeGreeting, setTimeGreeting] = useState("");
-
 
   useEffect(() => {
     function getGreeting() {
       const now = new Date();
-      // Convert to Eastern time
       const eastern = new Date(now.toLocaleString("en-US", { timeZone: TIMEZONE }));
       const hour = eastern.getHours();
       if (hour < 12) return "Good Morning";
       if (hour < 17) return "Good Afternoon";
       return "Good Evening";
     }
-
-
     setTimeGreeting(getGreeting());
-
-    const interval = setInterval(() => {
-      setTimeGreeting(getGreeting());
-      }, 60000); // Update every minute
-
+    const interval = setInterval(() => setTimeGreeting(getGreeting()), 60000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <section className="relative h-[60vh] min-h-[440px] max-h-[560px] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[520px] sm:min-h-[560px] md:min-h-[600px] flex flex-col overflow-hidden" aria-label="Parish welcome">
       {/* Ken Burns background */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 will-change-transform">
         <img
           src="/manus-storage/church-stained-glass_4e3f2e8c.jpg"
           alt="St. Patrick's Church stained glass window"
-          className="w-full h-full object-cover hero-ken-burns"
+          className="w-full h-[115%] object-cover object-center -translate-y-[7%] hero-ken-burns"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/15 to-black/55" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 text-center text-white container px-6 flex flex-col items-center">
-        {/* Time-of-day greeting */}
-        <p className="text-gold font-semibold tracking-[0.2em] uppercase text-xs sm:text-sm mb-4 animate-fade-in">
-          {timeGreeting || "Welcome"}
-        </p>
-        <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold mb-3 animate-fade-in drop-shadow-2xl leading-tight">
-          St. Patrick in Armonk
-        </h1>
-        {/* Parish Motto */}
-        <p className="text-white/90 text-base sm:text-lg italic font-light animate-fade-up stagger-1 mb-2 tracking-wide">
-          God Bless the Whole World, No Exceptions
-        </p>
-        {/* Address */}
-        <p className="text-white/60 text-xs sm:text-sm font-medium animate-fade-up stagger-2 mb-5 tracking-wide">
-          29 Cox Avenue, Armonk, NY 10504
-        </p>
+      {/* Green-tinted gradient overlay — NOT pure black */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `linear-gradient(
+            165deg,
+            oklch(0.12 0.06 141 / 0.82) 0%,
+            oklch(0.18 0.08 141 / 0.72) 40%,
+            oklch(0.08 0.03 141 / 0.88) 100%
+          )`,
+        }}
+      />
 
+      {/* Liturgical season badge — top-left floating pill */}
+      <div className="absolute top-5 left-5 sm:top-6 sm:left-8 md:top-8 md:left-12 z-20">
+        <LiturgicalSeasonBadge variant="dark" className="backdrop-blur-md bg-white/10 border-white/20 px-3 py-1.5" />
+      </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 justify-center animate-fade-up stagger-3">
-          <Link href="/mass-times">
-            <Button size="lg" className="bg-gold text-parish-green hover:bg-gold/90 font-bold px-8 py-3 rounded-full press-scale shadow-lg shadow-gold/20">
-              View Mass Times
-            </Button>
-          </Link>
-          <Link href="/giving">
-            <Button size="lg" variant="outline" className="border-2 border-white/50 text-white hover:bg-white/10 font-semibold px-8 py-3 rounded-full press-scale backdrop-blur-sm">
-              Support Our Parish
-            </Button>
-          </Link>
+      {/* Content — left-aligned, bottom-anchored */}
+      <div className="relative z-10 flex flex-col flex-1 justify-end pb-14 sm:pb-16 md:pb-20 px-5 sm:px-8 md:px-12 lg:px-20 max-w-[1400px] mx-auto w-full">
+        <div className="max-w-3xl">
+          {/* Eyebrow — time greeting */}
+          <p
+            className="text-gold text-xs sm:text-sm font-medium tracking-[0.2em] uppercase mb-4 opacity-0"
+            style={{ animation: 'fadeSlideUp 0.6s ease 0.1s forwards' }}
+          >
+            {timeGreeting || "Welcome"} · Armonk, New York
+          </p>
+
+          {/* Primary heading — Fraunces with gold accent */}
+          <h1
+            className="text-white mb-4 opacity-0"
+            style={{
+              fontFamily: "'Fraunces', Georgia, serif",
+              fontSize: 'clamp(2.5rem, 5vw + 1rem, 5.5rem)',
+              fontOpticalSizing: 'auto',
+              lineHeight: 1.08,
+              fontWeight: 700,
+              letterSpacing: '-0.02em',
+              animation: 'fadeSlideUp 0.7s ease 0.2s forwards',
+            }}
+          >
+            Welcome Home to<br />
+            <span className="text-gold">St. Patrick</span>
+          </h1>
+
+          {/* Motto */}
+          <p
+            className="text-white/80 text-base sm:text-lg italic mb-2 opacity-0 max-w-xl"
+            style={{
+              lineHeight: 1.6,
+              animation: 'fadeSlideUp 0.7s ease 0.3s forwards',
+            }}
+          >
+            God Bless the Whole World, No Exceptions
+          </p>
+
+          {/* Address */}
+          <p
+            className="text-white/50 text-xs sm:text-sm font-medium tracking-wide mb-8 opacity-0"
+            style={{ animation: 'fadeSlideUp 0.7s ease 0.35s forwards' }}
+          >
+            29 Cox Avenue, Armonk, NY 10504
+          </p>
+
+          {/* CTA Group */}
+          <div
+            className="flex flex-col sm:flex-row flex-wrap gap-3 opacity-0"
+            style={{ animation: 'fadeSlideUp 0.7s ease 0.4s forwards' }}
+          >
+            <Link href="/new-here">
+              <Button
+                size="lg"
+                className="bg-gold text-parish-green hover:bg-gold/90 font-semibold px-7 py-3 rounded-full press-scale tracking-wide"
+              >
+                I'm New Here
+                <ArrowRight className="w-4 h-4 ml-1.5" />
+              </Button>
+            </Link>
+            <Link href="/mass-times">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border border-white/30 text-white hover:border-white/60 hover:bg-white/10 font-semibold px-7 py-3 rounded-full press-scale backdrop-blur-sm bg-white/5"
+              >
+                Mass Times
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
 
-      {/* Bottom fade — taller and more gradual */}
+      {/* Scroll indicator — desktop only */}
+      <div className="absolute bottom-6 right-6 md:right-12 lg:right-20 hidden md:flex flex-col items-center gap-2 opacity-50" aria-hidden="true">
+        <span className="text-white text-[10px] tracking-[0.2em] uppercase" style={{ writingMode: 'vertical-rl' }}>Scroll</span>
+        <div className="w-px h-12 bg-gradient-to-b from-white/60 to-transparent" style={{ animation: 'scrollLine 2s ease infinite' }} />
+      </div>
+
+      {/* Bottom fade */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background via-background/60 to-transparent" />
     </section>
   );
 }
 
 // === NOW AT ST. PATRICK — Unified live status + news + events ===
-function NowAtStPatrick({ latestNews, allImportantDates }: { latestNews: any; allImportantDates: any[] | undefined }) {
+function NowAtStPatrick({ latestNews, newsItems, allImportantDates }: { latestNews: any; newsItems: any[] | undefined; allImportantDates: any[] | undefined }) {
   const upcomingEvents = useMemo(() => {
     return allImportantDates
       ?.filter((e) => new Date(e.eventDate as unknown as string) >= new Date())
@@ -164,13 +220,31 @@ function NowAtStPatrick({ latestNews, allImportantDates }: { latestNews: any; al
 
   return (
     <section className="reveal container -mt-10 relative z-20 mb-6 sm:mb-8">
-      {/* Live Status Tiles */}
+      {/* Live Status Strip */}
       <div className="mb-6">
         <NowStatusBar />
       </div>
 
-      {/* Latest News — clean card */}
-      <Card className="rounded-xl border border-border/60 shadow-sm overflow-hidden mb-4 card-interactive">
+      {/* Latest News — Editorial hierarchy: 1 featured + 2 secondary */}
+      <LatestNewsEditorial newsItems={newsItems} />
+
+      {/* Coming Up Events — refined card */}
+      {upcomingEvents.length > 0 && (
+        <Card className="rounded-xl border border-border/60 shadow-sm overflow-hidden mt-4">
+          <CardContent className="p-0">
+            <ComingUpFiltered events={upcomingEvents} catColors={catColors} />
+          </CardContent>
+        </Card>
+      )}
+    </section>
+  );
+}
+
+// === LATEST NEWS — Editorial layout with hierarchy ===
+function LatestNewsEditorial({ newsItems }: { newsItems: any[] | undefined }) {
+  if (!newsItems || newsItems.length === 0) {
+    return (
+      <Card className="rounded-xl border border-border/60 shadow-sm overflow-hidden card-interactive">
         <CardContent className="p-0">
           <Link href="/news" className="group block">
             <div className="px-4 py-3 flex items-center gap-3 hover:bg-primary/[0.03] transition-colors">
@@ -179,27 +253,123 @@ function NowAtStPatrick({ latestNews, allImportantDates }: { latestNews: any; al
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-0.5">Latest News</p>
-                {latestNews ? (
-                  <p className="font-semibold text-foreground text-base leading-snug">{latestNews.title}</p>
-                ) : (
-                  <p className="font-semibold text-foreground text-base">News & Announcements</p>
-                )}
+                <p className="font-semibold text-foreground text-base">News & Announcements</p>
               </div>
               <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
             </div>
           </Link>
         </CardContent>
       </Card>
+    );
+  }
 
-      {/* Coming Up Events — clean card */}
-      {upcomingEvents.length > 0 && (
-        <Card className="rounded-xl border border-border/60 shadow-sm overflow-hidden">
-          <CardContent className="p-0">
-            <ComingUpFiltered events={upcomingEvents} catColors={catColors} />
-          </CardContent>
-        </Card>
-      )}
-    </section>
+  const featured = newsItems[0];
+  const secondary = newsItems.slice(1, 3);
+
+  // Estimate reading time from content length
+  const readTime = (content: string) => {
+    const words = content?.split(/\s+/).length || 0;
+    return Math.max(1, Math.round(words / 200));
+  };
+
+  return (
+    <div>
+      {/* Section header */}
+      <div className="flex items-end justify-between mb-4">
+        <div>
+          <p className="text-gold text-xs font-semibold tracking-[0.15em] uppercase mb-1">Parish Life</p>
+          <h2 className="font-serif text-xl sm:text-2xl font-bold text-foreground" style={{ letterSpacing: '-0.02em' }}>Latest News</h2>
+        </div>
+        <Link href="/news" className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1 pb-1 border-b border-primary/30 hover:border-primary transition-colors">
+          All News <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
+      </div>
+
+      {/* News grid: featured + secondary */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Featured article — spans 2 cols on large */}
+        <Link href="/news" className="lg:col-span-2 group">
+          <article className="rounded-xl border border-border/50 overflow-hidden hover:border-primary/20 transition-all duration-200 hover:-translate-y-0.5 h-full">
+            {featured.imageUrl && (
+              <div className="relative overflow-hidden aspect-[16/9] bg-muted">
+                <img
+                  src={featured.imageUrl}
+                  alt={featured.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  loading="lazy"
+                />
+                <div className="absolute top-3 left-3">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-primary text-white text-xs font-semibold tracking-wide">
+                    Featured
+                  </span>
+                </div>
+              </div>
+            )}
+            <div className="p-4 space-y-2">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                {featured.publishedAt && (
+                  <time>{format(new Date(featured.publishedAt), "MMM d, yyyy")}</time>
+                )}
+                <span>·</span>
+                <span>{readTime(featured.content || featured.excerpt || '')} min read</span>
+              </div>
+              <h3 className="font-serif text-lg sm:text-xl font-bold text-foreground group-hover:text-primary transition-colors leading-snug">
+                {featured.title}
+              </h3>
+              {(featured.excerpt || featured.content) && (
+                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                  {featured.excerpt || featured.content?.substring(0, 160)}
+                </p>
+              )}
+              <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary group-hover:gap-2.5 transition-all duration-200 pt-1">
+                Read article <ArrowRight className="w-3.5 h-3.5" />
+              </span>
+            </div>
+          </article>
+        </Link>
+
+        {/* Secondary articles column */}
+        <div className="flex flex-col gap-4">
+          {secondary.map((post, i) => (
+            <Link key={post.id || i} href="/news" className="group">
+              <article className="flex gap-3 rounded-xl border border-border/50 p-3 hover:border-primary/20 transition-all duration-200 hover:-translate-y-0.5">
+                {post.imageUrl && (
+                  <div className="relative overflow-hidden rounded-lg flex-shrink-0 w-20 h-20 bg-muted">
+                    <img
+                      src={post.imageUrl}
+                      alt={post.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+                <div className="flex flex-col justify-center gap-1.5 min-w-0 flex-1">
+                  <h3 className="font-serif text-sm sm:text-base font-bold text-foreground group-hover:text-primary transition-colors leading-snug line-clamp-2">
+                    {post.title}
+                  </h3>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    {post.publishedAt && (
+                      <time>{format(new Date(post.publishedAt), "MMM d")}</time>
+                    )}
+                    <span>·</span>
+                    <span>{readTime(post.content || post.excerpt || '')} min</span>
+                  </div>
+                </div>
+              </article>
+            </Link>
+          ))}
+          {/* If fewer than 2 secondary posts, show a CTA card */}
+          {secondary.length < 2 && (
+            <Link href="/news" className="group">
+              <div className="flex items-center gap-3 rounded-xl border border-dashed border-primary/20 p-4 hover:border-primary/40 hover:bg-primary/[0.02] transition-all">
+                <Newspaper className="w-5 h-5 text-primary/50" />
+                <span className="text-sm font-medium text-primary">View All News</span>
+              </div>
+            </Link>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -1115,7 +1285,7 @@ export default function Home() {
 
       <div ref={revealRef}>
         {/* Now at St. Patrick — Live status + upcoming events + latest news */}
-        <NowAtStPatrick latestNews={latestNews} allImportantDates={allImportantDates} />
+        <NowAtStPatrick latestNews={latestNews} newsItems={newsItems} allImportantDates={allImportantDates} />
 
         {/* This Week — Day-by-day schedule accordion */}
         <section className="reveal container mb-4 sm:mb-6">

@@ -549,7 +549,10 @@
 - [x] Fix missing @import tailwindcss after CSS rewrite
 - [x] Verify all inner pages render correctly with new design system
 - [x] All 31 tests passing
-- [ ] Implement Claude's L99 homepage directives (sticky mass bar, editorial news, journey cards)
+- [x] Implement Claude's L99 homepage directives: Hero redesign (left-aligned, green gradient, gold accent, Fraunces font, animated entrance)
+- [x] Implement Claude's L99 homepage directives: NowStatusBar (sticky mass countdown strip with today's schedule)
+- [x] Implement Claude's L99 homepage directives: Editorial Latest News (featured + secondary hierarchy, reading time, category badges)
+- [x] Implement Claude's L99 homepage directives: Coming Up Events (category filter chips, date badges, ICS download, countdown pills)
 - [ ] Implement Claude's L99 inner page directives (all pages)
 - [ ] Implement real-time enhancements and modern UX patterns
 - [ ] Final comprehensive verification

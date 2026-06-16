@@ -1,74 +1,159 @@
 import { useState, useEffect, useMemo } from "react";
-import { Church } from "lucide-react";
+import { Church, Cross, Sun, Clock, ChevronRight } from "lucide-react";
+import { Link } from "wouter";
 
 const TIMEZONE = "America/New_York";
 
-// Mass schedule (mirrors MassTimes.tsx)
-const MASS_TIMES = [
-  { day: 0, start: [8, 30], end: [9, 30], label: "Sunday" },
-  { day: 0, start: [10, 30], end: [11, 30], label: "Sunday" },
-  { day: 0, start: [12, 30], end: [13, 30], label: "Sunday" },
-  { day: 2, start: [8, 30], end: [9, 0], label: "Tuesday" },
-  { day: 3, start: [8, 30], end: [9, 0], label: "Wednesday" },
-  { day: 4, start: [8, 30], end: [9, 0], label: "Thursday" },
-  { day: 5, start: [8, 30], end: [9, 0], label: "Friday" },
-  { day: 6, start: [17, 30], end: [18, 30], label: "Saturday" },
-] as const;
+// Full schedule — single source of truth
+type ServiceType = "mass" | "confession" | "prayer";
 
-function getMassStatus(now: Date) {
+interface ScheduleItem {
+  day: number; // 0=Sun, 1=Mon, ..., 6=Sat
+  type: ServiceType;
+  label: string;
+  time: string;
+  startHour: number;
+  startMin: number;
+  endHour: number;
+  endMin: number;
+}
+
+const SCHEDULE: ScheduleItem[] = [
+  // Sunday
+  { day: 0, type: "mass", label: "Mass", time: "8:30 AM", startHour: 8, startMin: 30, endHour: 9, endMin: 30 },
+  { day: 0, type: "mass", label: "Mass", time: "10:30 AM", startHour: 10, startMin: 30, endHour: 11, endMin: 30 },
+  { day: 0, type: "mass", label: "Mass", time: "12:30 PM", startHour: 12, startMin: 30, endHour: 13, endMin: 30 },
+  // Tuesday
+  { day: 2, type: "prayer", label: "Lauds", time: "8:00 AM", startHour: 8, startMin: 0, endHour: 8, endMin: 25 },
+  { day: 2, type: "mass", label: "Mass", time: "8:30 AM", startHour: 8, startMin: 30, endHour: 9, endMin: 0 },
+  // Wednesday
+  { day: 3, type: "prayer", label: "Lauds", time: "8:00 AM", startHour: 8, startMin: 0, endHour: 8, endMin: 25 },
+  { day: 3, type: "mass", label: "Mass", time: "8:30 AM", startHour: 8, startMin: 30, endHour: 9, endMin: 0 },
+  // Thursday
+  { day: 4, type: "prayer", label: "Lauds", time: "8:00 AM", startHour: 8, startMin: 0, endHour: 8, endMin: 25 },
+  { day: 4, type: "mass", label: "Mass", time: "8:30 AM", startHour: 8, startMin: 30, endHour: 9, endMin: 0 },
+  // Friday
+  { day: 5, type: "prayer", label: "Lauds", time: "8:00 AM", startHour: 8, startMin: 0, endHour: 8, endMin: 25 },
+  { day: 5, type: "mass", label: "Mass", time: "8:30 AM", startHour: 8, startMin: 30, endHour: 9, endMin: 0 },
+  // Saturday
+  { day: 6, type: "confession", label: "Confession", time: "4:30 PM", startHour: 16, startMin: 30, endHour: 17, endMin: 15 },
+  { day: 6, type: "mass", label: "Vigil Mass", time: "5:30 PM", startHour: 17, startMin: 30, endHour: 18, endMin: 30 },
+];
+
+function getServiceIcon(type: ServiceType) {
+  switch (type) {
+    case "mass": return Church;
+    case "confession": return Cross;
+    case "prayer": return Sun;
+  }
+}
+
+function getServiceColor(type: ServiceType) {
+  switch (type) {
+    case "mass": return "text-primary";
+    case "confession": return "text-purple-600";
+    case "prayer": return "text-amber-600";
+  }
+}
+
+interface MassStatus {
+  isActive: boolean;
+  activeType?: ServiceType;
+  activeLabel?: string;
+  remainingMin?: number;
+  nextLabel: string;
+  nextTime: string;
+  nextDay: string;
+  countdownText: string;
+  todaySchedule: { type: ServiceType; label: string; time: string; isPast: boolean; isCurrent: boolean }[];
+  confessionText: string;
+}
+
+function getMassStatus(now: Date): MassStatus {
   const day = now.getDay();
-  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  const currentMin = now.getHours() * 60 + now.getMinutes();
 
-  // Check if Mass is currently active
-  for (const t of MASS_TIMES) {
-    if (t.day === day) {
-      const startMin = t.start[0] * 60 + t.start[1];
-      const endMin = t.end[0] * 60 + t.end[1];
-      if (currentMinutes >= startMin && currentMinutes < endMin) {
-        const remaining = endMin - currentMinutes;
-        return { isActive: true, text: `Mass in Progress — ${remaining}m remaining` };
-      }
+  // Get today's schedule
+  const todayItems = SCHEDULE.filter(s => s.day === day);
+  const todaySchedule = todayItems.map(s => {
+    const startMin = s.startHour * 60 + s.startMin;
+    const endMin = s.endHour * 60 + s.endMin;
+    const isPast = currentMin >= endMin;
+    const isCurrent = currentMin >= startMin && currentMin < endMin;
+    return { type: s.type, label: s.label, time: s.time, isPast, isCurrent };
+  });
+
+  // Check if something is active right now
+  for (const s of todayItems) {
+    const startMin = s.startHour * 60 + s.startMin;
+    const endMin = s.endHour * 60 + s.endMin;
+    if (currentMin >= startMin && currentMin < endMin) {
+      const remaining = endMin - currentMin;
+      // Find next mass
+      const { nextLabel, nextTime, nextDay, countdownText } = findNextMass(day, currentMin);
+      return {
+        isActive: true,
+        activeType: s.type,
+        activeLabel: s.label,
+        remainingMin: remaining,
+        nextLabel,
+        nextTime,
+        nextDay,
+        countdownText,
+        todaySchedule,
+        confessionText: "Sat 4:30–5:15 PM",
+      };
     }
   }
 
-  // Find next Mass
+  // Nothing active — find next mass
+  const { nextLabel, nextTime, nextDay, countdownText } = findNextMass(day, currentMin);
+  return {
+    isActive: false,
+    nextLabel,
+    nextTime,
+    nextDay,
+    countdownText,
+    todaySchedule,
+    confessionText: "Sat 4:30–5:15 PM",
+  };
+}
+
+function findNextMass(currentDay: number, currentMin: number) {
   let minDiff = Infinity;
   let nextLabel = "";
-  let nextTimeStr = "";
-  for (const t of MASS_TIMES) {
-    let daysAhead = t.day - day;
+  let nextTime = "";
+  let nextDay = "";
+
+  const massItems = SCHEDULE.filter(s => s.type === "mass");
+  for (const s of massItems) {
+    let daysAhead = s.day - currentDay;
     if (daysAhead < 0) daysAhead += 7;
-    const startMin = t.start[0] * 60 + t.start[1];
-    let diffMinutes = daysAhead * 24 * 60 + (startMin - currentMinutes);
+    const startMin = s.startHour * 60 + s.startMin;
+    let diffMinutes = daysAhead * 24 * 60 + (startMin - currentMin);
     if (diffMinutes <= 0) diffMinutes += 7 * 24 * 60;
     if (diffMinutes < minDiff) {
       minDiff = diffMinutes;
-      nextLabel = t.label;
-      const h = t.start[0] as number;
-      const m = t.start[1] as number;
-      const ampm = h >= 12 ? "PM" : "AM";
-      const h12 = h > 12 ? h - 12 : h === 0 ? 12 : h;
-      nextTimeStr = `${h12}:${m.toString().padStart(2, "0")} ${ampm}`;
+      nextLabel = s.label;
+      nextTime = s.time;
+      const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      nextDay = days[s.day];
     }
   }
 
-  // Format countdown
-  let countdown = "";
+  let countdownText = "";
   if (minDiff < 60) {
-    countdown = `${minDiff}m`;
+    countdownText = `${minDiff}m`;
   } else if (minDiff < 24 * 60) {
     const h = Math.floor(minDiff / 60);
     const m = minDiff % 60;
-    countdown = m > 0 ? `${h}h ${m}m` : `${h}h`;
+    countdownText = m > 0 ? `${h}h ${m}m` : `${h}h`;
   } else {
     const d = Math.floor(minDiff / (24 * 60));
-    countdown = `${d} day${d > 1 ? "s" : ""}`;
+    countdownText = `${d}d`;
   }
 
-  return {
-    isActive: false,
-    text: `Next Mass in ${countdown} — ${nextLabel} ${nextTimeStr}`,
-  };
+  return { nextLabel, nextTime, nextDay, countdownText };
 }
 
 export function NowStatusBar() {
@@ -88,35 +173,89 @@ export function NowStatusBar() {
   const status = useMemo(() => getMassStatus(now), [now]);
 
   return (
-    <div
-      className={`
-        flex items-center justify-center gap-2.5 px-4 py-3 rounded-full
-        ${status.isActive
-          ? "bg-primary/10 border border-primary/20 shadow-md"
-          : "bg-card border border-border/60 shadow-sm"
-        }
-        transition-all duration-200
-      `}
-    >
-      {/* Pulsing dot */}
-      <span className="relative flex h-2.5 w-2.5 shrink-0">
-        {status.isActive && (
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60" />
-        )}
-        <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
-          status.isActive ? "bg-primary" : "bg-emerald-500"
-        }`} />
-      </span>
+    <div className="space-y-3">
+      {/* Primary Status Bar */}
+      <Link href="/mass-times">
+        <div className={`
+          group flex items-center gap-3 px-4 py-3 rounded-xl
+          border transition-all duration-200 cursor-pointer
+          ${status.isActive
+            ? "bg-primary/5 border-primary/20 shadow-sm"
+            : "bg-card border-border/60 shadow-sm hover:border-primary/20 hover:shadow-md"
+          }
+        `}>
+          {/* Pulsing dot */}
+          <span className="relative flex h-2.5 w-2.5 shrink-0">
+            {status.isActive && (
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60" />
+            )}
+            <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
+              status.isActive ? "bg-primary" : "bg-emerald-500"
+            }`} />
+          </span>
 
-      {/* Icon */}
-      <Church className={`w-4 h-4 shrink-0 ${status.isActive ? "text-primary" : "text-primary/70"}`} />
+          {/* Icon */}
+          {status.isActive && status.activeType ? (
+            (() => {
+              const Icon = getServiceIcon(status.activeType);
+              return <Icon className={`w-4.5 h-4.5 shrink-0 ${getServiceColor(status.activeType)}`} />;
+            })()
+          ) : (
+            <Church className="w-4.5 h-4.5 shrink-0 text-primary/70" />
+          )}
 
-      {/* Text */}
-      <span className={`text-sm font-semibold ${
-        status.isActive ? "text-primary" : "text-foreground/80"
-      }`}>
-        {status.text}
-      </span>
+          {/* Text */}
+          <div className="flex-1 min-w-0">
+            {status.isActive ? (
+              <span className="text-sm font-semibold text-primary">
+                {status.activeLabel} in Progress — {status.remainingMin}m remaining
+              </span>
+            ) : (
+              <span className="text-sm font-semibold text-foreground/80">
+                Next Mass in {status.countdownText} — {status.nextDay} {status.nextTime}
+              </span>
+            )}
+          </div>
+
+          {/* CTA arrow */}
+          <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+        </div>
+      </Link>
+
+      {/* Today's Schedule Pills */}
+      {status.todaySchedule.length > 0 && (
+        <div className="flex items-center gap-2 px-1 overflow-x-auto scrollbar-hide">
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider shrink-0">Today</span>
+          <div className="flex gap-1.5 flex-wrap">
+            {status.todaySchedule.map((item, i) => {
+              const Icon = getServiceIcon(item.type);
+              return (
+                <div
+                  key={i}
+                  className={`
+                    inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium
+                    transition-all duration-200
+                    ${item.isCurrent
+                      ? "bg-primary/10 text-primary ring-1 ring-primary/20"
+                      : item.isPast
+                        ? "bg-muted/40 text-muted-foreground line-through opacity-60"
+                        : "bg-muted/60 text-foreground/70"
+                    }
+                  `}
+                >
+                  <Icon className="w-3 h-3" />
+                  <span>{item.time}</span>
+                </div>
+              );
+            })}
+          </div>
+          {/* Confession indicator */}
+          <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-purple-500/8 text-purple-600 shrink-0 ml-auto">
+            <Cross className="w-3 h-3" />
+            <span>{status.confessionText}</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
