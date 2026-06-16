@@ -280,7 +280,7 @@ function MobileMenu({ location, isAuthenticated, isAdmin, onClose }: {
           <div className="space-y-1">
             {searchResults.length > 0 ? (
               <>
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70 px-3 mb-1">
+                <p className="text-sm font-semibold uppercase tracking-wider text-muted-foreground/70 px-3 mb-1">
                   {searchResults.length} result{searchResults.length !== 1 ? "s" : ""}
                 </p>
                 {searchResults.map((item) => {
@@ -300,7 +300,7 @@ function MobileMenu({ location, isAuthenticated, isAdmin, onClose }: {
                       <div className="flex flex-col min-w-0">
                         <span className="text-sm">{item.labelMatch ? highlightMatch(item.label, q) : item.label}</span>
                         {item.matchedKeywords.length > 0 && !item.labelMatch && (
-                          <span className="text-[11px] text-muted-foreground mt-0.5">
+                          <span className="text-sm text-muted-foreground mt-0.5">
                             Matches: {item.matchedKeywords.slice(0, 3).map((kw, i) => (
                               <span key={kw}>{i > 0 && ", "}{highlightMatch(kw, q)}</span>
                             ))}
@@ -332,7 +332,7 @@ function MobileMenu({ location, isAuthenticated, isAdmin, onClose }: {
           <>
             {mobileMenuSections.map((section) => (
               <div key={section.title}>
-                <h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70 px-3 mb-1">
+                <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground/70 px-3 mb-1">
                   {section.title}
                 </h3>
                 <div className="grid grid-cols-1 gap-0.5">
@@ -358,7 +358,7 @@ function MobileMenu({ location, isAuthenticated, isAdmin, onClose }: {
             ))}
             {isAuthenticated && isAdmin && (
               <div className="border-t border-border/50 pt-3 mt-2">
-                <h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70 px-3 mb-1">
+                <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground/70 px-3 mb-1">
                   Administration
                 </h3>
                 <Link
@@ -437,7 +437,7 @@ export default function Navigation() {
               <span className="font-serif text-lg font-bold text-primary leading-tight tracking-tight">
                 St. Patrick
               </span>
-              <span className="text-[10px] text-muted-foreground leading-tight tracking-widest uppercase">
+              <span className="text-xs text-muted-foreground leading-tight tracking-widest uppercase">
                 in Armonk
               </span>
             </div>

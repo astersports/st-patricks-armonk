@@ -105,10 +105,10 @@ export default function About() {
                 <CardContent className="p-3 sm:p-8 text-center">
                   <Users className="w-6 h-6 sm:w-10 sm:h-10 text-primary mx-auto mb-2 sm:mb-4" />
                   <h3 className="font-semibold text-xs sm:text-lg mb-0.5 sm:mb-2">Staff</h3>
-                  <p className="text-[10px] sm:text-sm text-muted-foreground mb-1.5 sm:mb-4 hidden sm:block">
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-1.5 sm:mb-4 hidden sm:block">
                     Meet our pastor, staff, and parish council members.
                   </p>
-                  <span className="text-[10px] sm:text-sm text-primary font-medium inline-flex items-center gap-0.5">
+                  <span className="text-xs sm:text-sm text-primary font-medium inline-flex items-center gap-0.5">
                     View <ArrowRight className="w-3 h-3" />
                   </span>
                 </CardContent>
@@ -119,10 +119,10 @@ export default function About() {
                 <CardContent className="p-3 sm:p-8 text-center">
                   <Heart className="w-6 h-6 sm:w-10 sm:h-10 text-accent mx-auto mb-2 sm:mb-4" />
                   <h3 className="font-semibold text-xs sm:text-lg mb-0.5 sm:mb-2">Register</h3>
-                  <p className="text-[10px] sm:text-sm text-muted-foreground mb-1.5 sm:mb-4 hidden sm:block">
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-1.5 sm:mb-4 hidden sm:block">
                     Welcome! Register to become part of our parish family.
                   </p>
-                  <span className="text-[10px] sm:text-sm text-primary font-medium inline-flex items-center gap-0.5">
+                  <span className="text-xs sm:text-sm text-primary font-medium inline-flex items-center gap-0.5">
                     Join <ArrowRight className="w-3 h-3" />
                   </span>
                 </CardContent>
@@ -133,10 +133,10 @@ export default function About() {
                 <CardContent className="p-3 sm:p-8 text-center">
                   <Church className="w-6 h-6 sm:w-10 sm:h-10 text-primary mx-auto mb-2 sm:mb-4" />
                   <h3 className="font-semibold text-xs sm:text-lg mb-0.5 sm:mb-2">Visit</h3>
-                  <p className="text-[10px] sm:text-sm text-muted-foreground mb-1.5 sm:mb-4 hidden sm:block">
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-1.5 sm:mb-4 hidden sm:block">
                     29 Cox Ave, Armonk NY 10504. All are welcome.
                   </p>
-                  <span className="text-[10px] sm:text-sm text-primary font-medium inline-flex items-center gap-0.5">
+                  <span className="text-xs sm:text-sm text-primary font-medium inline-flex items-center gap-0.5">
                     Map <ArrowRight className="w-3 h-3" />
                   </span>
                 </CardContent>

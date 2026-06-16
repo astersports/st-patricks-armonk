@@ -85,7 +85,7 @@ function KeyDatesMonthGroup({ group }: { group: MonthGroupData }) {
             return (
               <div key={event.id} className="px-4 sm:px-5 py-3 flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-gold/10 flex flex-col items-center justify-center shrink-0">
-                  <span className="text-[10px] font-medium text-gold uppercase leading-none">
+                  <span className="text-xs font-medium text-gold uppercase leading-none">
                     {format(eventDate, "EEE")}
                   </span>
                   <span className="text-sm font-bold text-gold leading-tight">
@@ -203,7 +203,7 @@ function KeyDatesView() {
               )}
               <span>{cat.label}</span>
               {count > 0 && (
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${isActive ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"}`}>
+                <span className={`text-xs px-1.5 py-0.5 rounded-full ${isActive ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"}`}>
                   {count}
                 </span>
               )}
@@ -393,7 +393,7 @@ export default function AllCalendars() {
                       <config.icon className="w-3.5 h-3.5" />
                       {config.label}
                       {count > 0 && (
-                        <span className="text-[10px] opacity-70">{count}</span>
+                        <span className="text-xs opacity-70">{count}</span>
                       )}
                     </button>
                   );
@@ -480,7 +480,7 @@ export default function AllCalendars() {
                               {group.label}
                             </h3>
                             <div className="flex items-center gap-2">
-                              <span className="text-[11px] text-muted-foreground/70">
+                              <span className="text-sm text-muted-foreground/70">
                                 {group.events.length} event{group.events.length !== 1 ? "s" : ""}
                               </span>
                               <ChevronDown
@@ -517,13 +517,13 @@ export default function AllCalendars() {
                                 >
                                   {/* Date Badge */}
                                   <div className="flex flex-col items-center justify-center min-w-[44px] sm:min-w-[52px]">
-                                    <span className="text-[10px] sm:text-xs font-medium uppercase text-muted-foreground leading-none">
+                                    <span className="text-xs sm:text-xs font-medium uppercase text-muted-foreground leading-none">
                                       {format(eventDate, "EEE")}
                                     </span>
                                     <span className="text-xl sm:text-2xl font-bold text-foreground leading-tight">
                                       {format(eventDate, "d")}
                                     </span>
-                                    <span className="text-[10px] sm:text-xs text-muted-foreground leading-none">
+                                    <span className="text-xs sm:text-xs text-muted-foreground leading-none">
                                       {format(eventDate, "MMM")}
                                     </span>
                                   </div>
@@ -536,7 +536,7 @@ export default function AllCalendars() {
                                       </h4>
                                       <Badge
                                         variant="secondary"
-                                        className={`text-[10px] px-1.5 py-0 shrink-0 ${config.color}`}
+                                        className={`text-xs px-1.5 py-0 shrink-0 ${config.color}`}
                                       >
                                         {config.label}
                                       </Badge>

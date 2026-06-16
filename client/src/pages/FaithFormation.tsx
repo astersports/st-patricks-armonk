@@ -13,7 +13,7 @@ export default function FaithFormation() {
     <PageLayout>
       <section className="py-6 sm:py-10 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container">
-          <p className="text-gold font-medium tracking-widest uppercase text-xs mb-1.5 animate-fade-in">Grow in Faith</p>
+          <p className="text-gold font-medium tracking-widest uppercase text-sm mb-1.5 animate-fade-in">Grow in Faith</p>
           <h1 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-2 animate-fade-in">
             Faith Formation
           </h1>
@@ -30,7 +30,7 @@ export default function FaithFormation() {
             <div className="lg:col-span-2">
               {/* Status Banner */}
               <div className="reveal bg-accent/10 border border-accent/20 rounded-xl p-4 mb-8 flex items-center gap-3">
-                <Badge className="bg-accent text-white border-0 text-[10px] px-2 py-0.5 shrink-0">Open</Badge>
+                <Badge className="bg-accent text-white border-0 text-xs px-2 py-0.5 shrink-0">Open</Badge>
                 <div>
                   <p className="font-semibold text-accent-foreground text-sm">
                     CCD Registration for 2026–27 is Now Open!
@@ -54,10 +54,10 @@ export default function FaithFormation() {
                       </div>
                       <div className="text-left min-w-0">
                         <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                          <span className="font-serif text-sm sm:text-lg font-semibold text-foreground">Religious Education (CCD)</span>
-                          <Badge className="bg-primary/10 text-primary border-0 text-[10px] px-1.5 py-0 shrink-0">Grades 1–8</Badge>
+                          <span className="font-serif text-base sm:text-lg font-semibold text-foreground">Religious Education (CCD)</span>
+                          <Badge className="bg-primary/10 text-primary border-0 text-xs px-1.5 py-0 shrink-0">Grades 1–8</Badge>
                         </div>
-                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 line-clamp-1">Weekly classes for children and sacramental preparation</p>
+                        <p className="text-sm text-muted-foreground mt-0.5">Weekly classes for children and sacramental preparation</p>
                       </div>
                     </div>
                   </AccordionTrigger>
@@ -70,12 +70,12 @@ export default function FaithFormation() {
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                       <div className="p-3.5 rounded-lg bg-secondary/50">
-                        <h4 className="font-semibold text-sm mb-1">Grades 1–4</h4>
-                        <p className="text-xs text-muted-foreground">Weekly classes covering Catholic doctrine, sacraments, and prayer. Mon/Wed afternoons.</p>
+                        <h4 className="font-semibold text-base mb-1">Grades 1–4</h4>
+                        <p className="text-sm text-muted-foreground">Weekly classes covering Catholic doctrine, sacraments, and prayer. Mon/Wed afternoons.</p>
                       </div>
                       <div className="p-3.5 rounded-lg bg-secondary/50">
-                        <h4 className="font-semibold text-sm mb-1">Grades 5–8</h4>
-                        <p className="text-xs text-muted-foreground">Continued formation plus Confirmation preparation. Mon/Wed evenings.</p>
+                        <h4 className="font-semibold text-base mb-1">Grades 5–8</h4>
+                        <p className="text-sm text-muted-foreground">Continued formation plus Confirmation preparation. Mon/Wed evenings.</p>
                       </div>
                     </div>
                     <Link href="/ccd-registration" className="text-sm text-primary hover:underline font-medium">Register for CCD →</Link>
@@ -94,10 +94,10 @@ export default function FaithFormation() {
                       </div>
                       <div className="text-left min-w-0">
                         <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                          <span className="font-serif text-sm sm:text-lg font-semibold text-foreground">RCIA</span>
-                          <Badge className="bg-accent/15 text-accent-foreground border-0 text-[10px] px-1.5 py-0 shrink-0">Adults</Badge>
+                          <span className="font-serif text-base sm:text-lg font-semibold text-foreground">RCIA</span>
+                          <Badge className="bg-accent/15 text-accent-foreground border-0 text-xs px-1.5 py-0 shrink-0">Adults</Badge>
                         </div>
-                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 line-clamp-1">Rite of Christian Initiation of Adults</p>
+                        <p className="text-sm text-muted-foreground mt-0.5">Rite of Christian Initiation of Adults</p>
                       </div>
                     </div>
                   </AccordionTrigger>
@@ -126,10 +126,10 @@ export default function FaithFormation() {
                       </div>
                       <div className="text-left min-w-0">
                         <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                          <span className="font-serif text-sm sm:text-lg font-semibold text-foreground">Walking With Purpose</span>
-                          <Badge className="bg-accent/15 text-accent-foreground border-0 text-[10px] px-1.5 py-0 shrink-0">Women</Badge>
+                          <span className="font-serif text-base sm:text-lg font-semibold text-foreground">Walking With Purpose</span>
+                          <Badge className="bg-accent/15 text-accent-foreground border-0 text-xs px-1.5 py-0 shrink-0">Women</Badge>
                         </div>
-                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 line-clamp-1">Catholic women's Bible study program</p>
+                        <p className="text-sm text-muted-foreground mt-0.5">Catholic women's Bible study program</p>
                       </div>
                     </div>
                   </AccordionTrigger>
@@ -157,9 +157,9 @@ export default function FaithFormation() {
                       </div>
                       <div className="text-left min-w-0">
                         <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                          <span className="font-serif text-sm sm:text-lg font-semibold text-foreground">Adult Faith Formation</span>
+                          <span className="font-serif text-base sm:text-lg font-semibold text-foreground">Adult Faith Formation</span>
                         </div>
-                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 line-clamp-1">Bible study, book discussions, and spiritual enrichment</p>
+                        <p className="text-sm text-muted-foreground mt-0.5">Bible study, book discussions, and spiritual enrichment</p>
                       </div>
                     </div>
                   </AccordionTrigger>
@@ -188,10 +188,10 @@ export default function FaithFormation() {
                       </div>
                       <div className="text-left min-w-0">
                         <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                          <span className="font-serif text-sm sm:text-lg font-semibold text-foreground">Blaze</span>
-                          <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-primary/30 text-primary shrink-0">7th & 8th Grade Girls</Badge>
+                          <span className="font-serif text-base sm:text-lg font-semibold text-foreground">Blaze</span>
+                          <Badge variant="outline" className="text-xs px-1.5 py-0 border-primary/30 text-primary shrink-0">7th & 8th Grade Girls</Badge>
                         </div>
-                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 line-clamp-1">Walking With Purpose youth ministry for young women</p>
+                        <p className="text-sm text-muted-foreground mt-0.5">Walking With Purpose youth ministry for young women</p>
                       </div>
                     </div>
                   </AccordionTrigger>

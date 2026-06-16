@@ -62,7 +62,7 @@ function MonthGroup({ group }: { group: MonthGroupData }) {
                 className={`flex items-start gap-3 sm:gap-4 p-3 sm:p-3.5 rounded-lg ${cat.bg} border border-transparent hover:border-border/50 transition-colors`}
               >
                 <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-white shadow-sm flex flex-col items-center justify-center shrink-0">
-                  <span className="text-[10px] font-medium text-foreground/60 uppercase leading-none">
+                  <span className="text-xs font-medium text-foreground/60 uppercase leading-none">
                     {format(eventDate, "EEE")}
                   </span>
                   <span className="text-sm sm:text-base font-bold text-foreground leading-tight">

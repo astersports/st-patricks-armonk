@@ -1699,7 +1699,7 @@ export function KeyDatesManager() {
               <Card key={date.id} className="hover:shadow-sm transition-shadow">
                 <CardContent className="p-3 sm:p-4 flex items-center gap-3">
                   <div className="w-12 h-12 rounded-lg bg-gold/10 flex flex-col items-center justify-center shrink-0">
-                    <span className="text-[10px] font-medium text-gold uppercase leading-none">
+                    <span className="text-xs font-medium text-gold uppercase leading-none">
                       {format(new Date(date.eventDate), "MMM")}
                     </span>
                     <span className="text-base font-bold text-gold leading-tight">
@@ -1709,8 +1709,8 @@ export function KeyDatesManager() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                       <h3 className="font-semibold text-sm truncate">{date.title}</h3>
-                      <Badge className={`text-[10px] px-1.5 py-0 ${cat.color} border-0`}>{cat.label}</Badge>
-                      {!date.published && <Badge variant="secondary" className="text-[10px] px-1.5 py-0">Draft</Badge>}
+                      <Badge className={`text-xs px-1.5 py-0 ${cat.color} border-0`}>{cat.label}</Badge>
+                      {!date.published && <Badge variant="secondary" className="text-xs px-1.5 py-0">Draft</Badge>}
                     </div>
                     <p className="text-xs text-muted-foreground truncate">
                       {date.location && <span>{date.location}</span>}

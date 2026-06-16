@@ -480,3 +480,15 @@
 - [x] Increase hero text, Daily Readings labels, Bulletin section, Photo Gallery links
 - [x] Increase journey card titles and CTAs
 - [x] Increase Subscribe section label
+
+## Phase: Final Readability Pass (Truncation, Layout, Sizing)
+
+- [x] Remove truncate from Coming Up event titles (allow wrapping)
+- [x] Remove truncate from Coming Up event locations (allow wrapping)
+- [x] Remove truncate from Latest News card title (allow wrapping)
+- [x] Increase Community Prayers card text and timestamp sizes
+- [x] Fix Daily Readings accordion layout overlap (label vs reference text)
+- [x] Increase Coming Up filter chip text size
+- [x] Remove truncate from Faith Formation accordion descriptions
+- [x] Increase New Here page card description text size
+- [x] Bulk fix all text-[9px]/[10px]/[11px] across all pages to text-xs/text-sm

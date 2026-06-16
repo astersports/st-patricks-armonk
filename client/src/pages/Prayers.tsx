@@ -59,9 +59,9 @@ export default function Prayers() {
                 <p className="text-sm text-amber-100/90 leading-snug">{item.intention}</p>
                 <div className="flex items-center gap-2 mt-2">
                   {item.name && (
-                    <span className="text-[11px] text-amber-300/60 font-medium">— {item.name}</span>
+                    <span className="text-sm text-amber-300/60 font-medium">— {item.name}</span>
                   )}
-                  <span className="text-[11px] text-amber-400/40 flex items-center gap-0.5 ml-auto">
+                  <span className="text-sm text-amber-400/40 flex items-center gap-0.5 ml-auto">
                     <Clock className="w-2.5 h-2.5" />
                     {timeAgo(typeof item.createdAt === "string" ? item.createdAt : new Date(item.createdAt).toISOString())}
                   </span>

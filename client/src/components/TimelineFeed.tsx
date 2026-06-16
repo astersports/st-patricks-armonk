@@ -201,13 +201,13 @@ export default function TimelineFeed({
                 >
                   {/* Date Badge */}
                   <div className="flex flex-col items-center justify-center min-w-[44px] sm:min-w-[52px]">
-                    <span className="text-[10px] sm:text-xs font-medium uppercase text-muted-foreground leading-none">
+                    <span className="text-xs sm:text-xs font-medium uppercase text-muted-foreground leading-none">
                       {format(eventDate, "EEE")}
                     </span>
                     <span className="text-xl sm:text-2xl font-bold text-foreground leading-tight">
                       {format(eventDate, "d")}
                     </span>
-                    <span className="text-[10px] sm:text-xs text-muted-foreground leading-none">
+                    <span className="text-xs sm:text-xs text-muted-foreground leading-none">
                       {format(eventDate, "MMM")}
                     </span>
                   </div>
@@ -219,7 +219,7 @@ export default function TimelineFeed({
                         {event.title}
                       </h4>
                       {event.grade && (
-                        <Badge variant="secondary" className="text-[10px] px-1.5 py-0 shrink-0">
+                        <Badge variant="secondary" className="text-xs px-1.5 py-0 shrink-0">
                           {event.grade}
                         </Badge>
                       )}

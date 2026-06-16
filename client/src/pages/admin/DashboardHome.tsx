@@ -221,11 +221,11 @@ export default function DashboardHome() {
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                       {item.status === "pending" && (
-                        <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-amber-300 text-amber-700 bg-amber-50">
+                        <Badge variant="outline" className="text-xs px-1.5 py-0 border-amber-300 text-amber-700 bg-amber-50">
                           Pending
                         </Badge>
                       )}
-                      <span className="text-[11px] text-muted-foreground whitespace-nowrap">
+                      <span className="text-sm text-muted-foreground whitespace-nowrap">
                         {timeAgo(item.createdAt!)}
                       </span>
                     </div>
@@ -278,7 +278,7 @@ function StatCard({
         <CardContent className="p-4">
           <div className="flex items-center gap-2 mb-1">
             <Icon className={`w-4 h-4 ${color}`} />
-            <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wide truncate">
+            <span className="text-sm text-muted-foreground font-medium uppercase tracking-wide truncate">
               {label}
             </span>
           </div>

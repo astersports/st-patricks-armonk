@@ -87,7 +87,7 @@ function BulletinSubscribeCTA() {
           {subscribeMutation.isPending ? "..." : "Subscribe"}
         </Button>
       </form>
-      <p className="text-[10px] text-muted-foreground/60 mt-2">Unsubscribe anytime.</p>
+      <p className="text-xs text-muted-foreground/60 mt-2">Unsubscribe anytime.</p>
     </div>
   );
 }
@@ -192,9 +192,9 @@ export default function Bulletins() {
             <div>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
                 <div className="flex items-center gap-2 flex-wrap">
-                  {!viewingBulletin && <span className="text-[10px] bg-primary text-white px-2 py-0.5 rounded-full font-medium">This Week</span>}
+                  {!viewingBulletin && <span className="text-xs bg-primary text-white px-2 py-0.5 rounded-full font-medium">This Week</span>}
                   {viewingBulletin && (
-                    <button onClick={() => setViewingBulletin(null)} className="text-[10px] bg-muted text-foreground px-2 py-0.5 rounded-full font-medium flex items-center gap-1 hover:bg-muted/80">
+                    <button onClick={() => setViewingBulletin(null)} className="text-xs bg-muted text-foreground px-2 py-0.5 rounded-full font-medium flex items-center gap-1 hover:bg-muted/80">
                       <ChevronLeft className="w-2.5 h-2.5" /> Back to Latest
                     </button>
                   )}
@@ -334,13 +334,13 @@ export default function Bulletins() {
                           >
                             {/* Date */}
                             <div className="w-12 text-center shrink-0">
-                              <p className="text-[9px] font-bold uppercase text-muted-foreground leading-none">
+                              <p className="text-xs font-bold uppercase text-muted-foreground leading-none">
                                 {format(weekDate, "MMM")}
                               </p>
                               <p className="text-lg font-bold text-foreground leading-tight">
                                 {format(weekDate, "d")}
                               </p>
-                              <p className="text-[9px] text-muted-foreground leading-none">
+                              <p className="text-xs text-muted-foreground leading-none">
                                 {format(weekDate, "yyyy")}
                               </p>
                             </div>
@@ -351,7 +351,7 @@ export default function Bulletins() {
                                 {bulletin.title || `Bulletin — ${format(weekDate, "MMMM d, yyyy")}`}
                               </p>
                               {bulletin.description && (
-                                <p className="text-[11px] text-muted-foreground truncate">{bulletin.description}</p>
+                                <p className="text-sm text-muted-foreground truncate">{bulletin.description}</p>
                               )}
                             </div>
 

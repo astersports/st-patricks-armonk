@@ -18,7 +18,7 @@ export function LiturgicalSeasonBadge({ className = "", variant = "light" }: { c
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 text-[10px] font-medium px-2 py-0.5 rounded-full border ${badgeStyles} ${className}`}
+      className={`inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full border ${badgeStyles} ${className}`}
       title={description}
     >
       <SeasonIcon season={season} />

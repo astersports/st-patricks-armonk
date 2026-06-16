@@ -248,7 +248,7 @@ function NowAtStPatrick({ latestNews, allImportantDates }: { latestNews: any; al
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-foreground/70 uppercase tracking-wider font-medium">Latest News</p>
                 {latestNews ? (
-                  <p className="font-semibold text-foreground text-base truncate">{latestNews.title}</p>
+                  <p className="font-semibold text-foreground text-base leading-snug">{latestNews.title}</p>
                 ) : (
                   <p className="font-semibold text-foreground text-base">News & Announcements</p>
                 )}
@@ -311,12 +311,12 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
       </div>
 
       {/* Category filter chips */}
-      <div className="flex flex-wrap gap-1.5 pb-2 mb-2">
+      <div className="flex flex-wrap gap-2 pb-2 mb-2">
         {CATEGORIES.filter(c => c.key === "all" || (counts[c.key] || 0) > 0).map((cat) => (
           <button
             key={cat.key}
             onClick={() => setActiveFilter(cat.key)}
-            className={`text-sm font-semibold px-3 py-1.5 rounded-full transition-all duration-150 ${
+            className={`text-base font-semibold px-3.5 py-1.5 rounded-full transition-all duration-150 ${
               activeFilter === cat.key
                 ? `${cat.color} ring-1 ring-current/20 scale-105`
                 : "bg-muted/50 text-foreground/60 hover:bg-muted"
@@ -351,10 +351,10 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
                   </div>
                   {/* Event info */}
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-foreground text-base truncate group-hover:text-primary transition-colors">
+                    <p className="font-semibold text-foreground text-base leading-snug group-hover:text-primary transition-colors">
                       {evt.title}
                     </p>
-                    <p className="text-sm text-foreground/70 truncate">
+                    <p className="text-sm text-foreground/70">
                       {evt.location || format(eventDate, "EEEE \u00b7 h:mm a")}
                     </p>
                   </div>
@@ -402,7 +402,7 @@ function LatestNewsCard({ latestNews }: { latestNews: any }) {
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-foreground/70 uppercase tracking-wider font-medium">Latest News</p>
                 {latestNews ? (
-                  <p className="font-semibold text-foreground text-base truncate">{latestNews.title}</p>
+                  <p className="font-semibold text-foreground text-base leading-snug">{latestNews.title}</p>
                 ) : (
                   <p className="font-semibold text-foreground text-base">News & Announcements</p>
                 )}
@@ -485,7 +485,7 @@ function ComingUpEvents({ allImportantDates }: { allImportantDates: any[] | unde
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
                         <span className={`w-1.5 h-1.5 rounded-full ${dot} shrink-0`} />
-                        <p className="font-semibold text-foreground text-base truncate group-hover:text-primary transition-colors">
+                        <p className="font-semibold text-foreground text-base leading-snug group-hover:text-primary transition-colors">
                           {evt.title}
                         </p>
                       </div>
@@ -568,7 +568,7 @@ function ThisWeeksBulletin() {
                   <span className="text-sm font-medium text-foreground/70 uppercase tracking-wider">
                     Week of {format(weekDate, "MMM d, yyyy")}
                   </span>
-                  <h3 className="font-semibold text-foreground text-base truncate group-hover:text-primary transition-colors">
+                  <h3 className="font-semibold text-foreground text-base leading-snug group-hover:text-primary transition-colors">
                     {latestBulletin.title}
                   </h3>
                 </div>
@@ -864,7 +864,7 @@ function DailyReadings() {
           </div>
           <div className="min-w-0">
             <h2 className="font-serif text-base sm:text-lg font-bold text-white">Today's Readings</h2>
-            <p className="text-sm text-white/80 truncate">{readings.liturgicTitle}</p>
+            <p className="text-sm text-white/90 leading-snug">{readings.liturgicTitle}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
@@ -888,8 +888,10 @@ function DailyReadings() {
             className="w-full text-left rounded-lg border border-white/10 bg-white/5 hover:bg-white/8 transition-colors overflow-hidden"
           >
             <div className="flex items-center gap-3 px-3 py-2.5">
-              <span className={`text-sm font-bold uppercase tracking-wider ${item.color} w-24 shrink-0`}>{item.label}</span>
-              <span className="text-sm text-white/80 truncate flex-1">{item.title}</span>
+              <div className="flex-1 min-w-0">
+                <span className={`text-xs font-bold uppercase tracking-wider ${item.color} block mb-0.5`}>{item.label}</span>
+                <span className="text-sm text-white/90 leading-snug">{item.title}</span>
+              </div>
               <ChevronDown className={`w-3.5 h-3.5 text-white/40 transition-transform duration-200 shrink-0 ${expandedReading === item.key ? "rotate-180" : ""}`} />
             </div>
             {expandedReading === item.key && (
@@ -1145,10 +1147,10 @@ function CatholicResources() {
           >
             <Globe className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
             <div className="min-w-0">
-              <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors truncate">
+              <p className="text-base font-medium text-foreground group-hover:text-primary transition-colors">
                 {resource.name}
               </p>
-              <p className="text-xs text-foreground/70">{resource.category}</p>
+              <p className="text-sm text-foreground/70">{resource.category}</p>
             </div>
           </a>
         ))}

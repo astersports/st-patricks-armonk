@@ -13,7 +13,7 @@ export default function Giving() {
       <section className="relative py-8 sm:py-12 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container">
           <div className="max-w-2xl">
-            <p className="text-gold font-medium tracking-widest uppercase text-[11px] sm:text-xs mb-2 animate-fade-in">Stewardship</p>
+            <p className="text-gold font-medium tracking-widest uppercase text-sm sm:text-xs mb-2 animate-fade-in">Stewardship</p>
             <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-2 animate-fade-in">
               Online Giving
             </h1>
@@ -41,10 +41,10 @@ export default function Giving() {
                 </p>
                 <div className="bg-secondary/50 rounded-lg p-3 mb-4">
                   <ul className="text-xs text-muted-foreground space-y-1">
-                    <li className="flex items-center gap-2"><span className="text-primary text-[10px]">●</span> Recurring weekly or monthly donations</li>
-                    <li className="flex items-center gap-2"><span className="text-primary text-[10px]">●</span> One-time special contributions</li>
-                    <li className="flex items-center gap-2"><span className="text-primary text-[10px]">●</span> Donate to specific funds (offertory, maintenance)</li>
-                    <li className="flex items-center gap-2"><span className="text-primary text-[10px]">●</span> View and download giving history</li>
+                    <li className="flex items-center gap-2"><span className="text-primary text-xs">●</span> Recurring weekly or monthly donations</li>
+                    <li className="flex items-center gap-2"><span className="text-primary text-xs">●</span> One-time special contributions</li>
+                    <li className="flex items-center gap-2"><span className="text-primary text-xs">●</span> Donate to specific funds (offertory, maintenance)</li>
+                    <li className="flex items-center gap-2"><span className="text-primary text-xs">●</span> View and download giving history</li>
                   </ul>
                 </div>
                 <a
@@ -118,7 +118,7 @@ export default function Giving() {
                       className="w-28 h-28 sm:w-32 sm:h-32 object-contain"
                     />
                   </div>
-                  <p className="text-[10px] text-muted-foreground mt-1.5">Scan to donate</p>
+                  <p className="text-xs text-muted-foreground mt-1.5">Scan to donate</p>
                 </div>
               </div>
             </CardContent>

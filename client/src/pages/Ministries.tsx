@@ -56,7 +56,7 @@ export default function Ministries() {
             </div>
             <div>
               <h2 className="font-serif text-lg font-bold text-emerald-50">Devotions</h2>
-              <p className="text-[11px] text-emerald-300/70">Prayer schedule & spiritual practices</p>
+              <p className="text-sm text-emerald-300/70">Prayer schedule & spiritual practices</p>
             </div>
           </div>
 
@@ -64,7 +64,7 @@ export default function Ministries() {
             {devotions.map((d) => (
               <div key={d.title} className="flex items-center gap-3 bg-emerald-800/30 border border-emerald-700/30 rounded-lg p-3 hover:bg-emerald-800/50 transition-colors">
                 <div className="shrink-0 flex flex-col items-center w-16">
-                  <span className="text-[10px] uppercase tracking-wider text-emerald-400/80 font-medium">{d.day.split(" ")[0]}</span>
+                  <span className="text-xs uppercase tracking-wider text-emerald-400/80 font-medium">{d.day.split(" ")[0]}</span>
                   <span className="text-xs text-emerald-200 font-semibold">{d.day.split(" ").slice(1).join(" ") || d.day}</span>
                 </div>
                 <div className="w-px h-8 bg-emerald-600/40" />
@@ -102,7 +102,7 @@ export default function Ministries() {
             </div>
             <div>
               <h2 className="font-serif text-lg font-bold text-foreground">Parish Ministries</h2>
-              <p className="text-[11px] text-muted-foreground">Use your gifts to serve God and our community</p>
+              <p className="text-sm text-muted-foreground">Use your gifts to serve God and our community</p>
             </div>
           </div>
 
@@ -150,7 +150,7 @@ export default function Ministries() {
             </div>
             <div>
               <h2 className="font-serif text-lg font-bold text-foreground">Charitable Outreach</h2>
-              <p className="text-[11px] text-muted-foreground">Putting our faith into action through service</p>
+              <p className="text-sm text-muted-foreground">Putting our faith into action through service</p>
             </div>
           </div>
 

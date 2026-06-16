@@ -87,7 +87,7 @@ export default function UserManager() {
                     <div className="min-w-0">
                       <p className="font-medium text-sm truncate">{user.name || "Unknown User"}</p>
                       <p className="text-xs text-muted-foreground truncate">{user.email || "No email"}</p>
-                      <p className="text-[10px] text-muted-foreground">
+                      <p className="text-xs text-muted-foreground">
                         Last active: {format(new Date(user.lastSignedIn), "MMM d, yyyy")}
                       </p>
                     </div>

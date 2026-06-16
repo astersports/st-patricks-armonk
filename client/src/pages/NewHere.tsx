@@ -10,11 +10,11 @@ export default function NewHere() {
       {/* Hero — compact */}
       <section className="relative bg-gradient-to-b from-primary/5 to-background py-8 sm:py-12">
         <div className="container max-w-3xl text-center">
-          <p className="text-primary font-medium tracking-[0.2em] uppercase text-xs mb-2">Welcome</p>
+          <p className="text-primary font-medium tracking-[0.2em] uppercase text-sm mb-2">Welcome</p>
           <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2">
             New Here?
           </h1>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">
+          <p className="text-base text-muted-foreground max-w-xl mx-auto">
             Whether you're new to the area, returning to the faith, or just curious — you belong here.
           </p>
         </div>
@@ -31,8 +31,8 @@ export default function NewHere() {
               <div className="flex items-start gap-2">
                 <Clock className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-semibold text-xs sm:text-sm mb-0.5">About an Hour</h3>
-                  <p className="text-muted-foreground text-[10px] sm:text-xs leading-snug">
+                  <h3 className="font-semibold text-sm sm:text-base mb-0.5">About an Hour</h3>
+                  <p className="text-muted-foreground text-sm leading-snug">
                     Readings, homily, prayers, and the Eucharist.
                   </p>
                 </div>
@@ -44,8 +44,8 @@ export default function NewHere() {
               <div className="flex items-start gap-2">
                 <Users className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-semibold text-xs sm:text-sm mb-0.5">Come As You Are</h3>
-                  <p className="text-muted-foreground text-[10px] sm:text-xs leading-snug">
+                  <h3 className="font-semibold text-sm sm:text-base mb-0.5">Come As You Are</h3>
+                  <p className="text-muted-foreground text-sm leading-snug">
                     No dress code. Wear whatever you're comfortable in.
                   </p>
                 </div>
@@ -57,8 +57,8 @@ export default function NewHere() {
               <div className="flex items-start gap-2">
                 <BookOpen className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-semibold text-xs sm:text-sm mb-0.5">Follow Along</h3>
-                  <p className="text-muted-foreground text-[10px] sm:text-xs leading-snug">
+                  <h3 className="font-semibold text-sm sm:text-base mb-0.5">Follow Along</h3>
+                  <p className="text-muted-foreground text-sm leading-snug">
                     Missalettes in each pew. Just follow along — no pressure.
                   </p>
                 </div>
@@ -70,8 +70,8 @@ export default function NewHere() {
               <div className="flex items-start gap-2">
                 <Heart className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-semibold text-xs sm:text-sm mb-0.5">All Welcome</h3>
-                  <p className="text-muted-foreground text-[10px] sm:text-xs leading-snug">
+                  <h3 className="font-semibold text-sm sm:text-base mb-0.5">All Welcome</h3>
+                  <p className="text-muted-foreground text-sm leading-snug">
                     Not Catholic? Come forward for a blessing. No judgment.
                   </p>
                 </div>
@@ -89,22 +89,22 @@ export default function NewHere() {
           </h2>
           <div className="grid grid-cols-3 gap-2 sm:gap-3 text-center">
             <div className="bg-background rounded-lg p-3 sm:p-4 shadow-sm">
-              <p className="text-[9px] sm:text-xs text-muted-foreground uppercase tracking-wider mb-1">Sat Vigil</p>
+              <p className="text-xs sm:text-sm text-muted-foreground uppercase tracking-wider mb-1">Sat Vigil</p>
               <p className="font-serif text-base sm:text-xl font-bold text-primary">5:30 PM</p>
             </div>
             <div className="bg-background rounded-lg p-3 sm:p-4 shadow-sm">
-              <p className="text-[9px] sm:text-xs text-muted-foreground uppercase tracking-wider mb-1">Sunday</p>
+              <p className="text-xs sm:text-sm text-muted-foreground uppercase tracking-wider mb-1">Sunday</p>
               <p className="font-serif text-base sm:text-xl font-bold text-primary">8:30 & 10:30</p>
-              <p className="text-[9px] sm:text-[10px] text-muted-foreground">12:30 (Oct–Jun)</p>
+              <p className="text-xs text-muted-foreground">12:30 (Oct–Jun)</p>
             </div>
             <div className="bg-background rounded-lg p-3 sm:p-4 shadow-sm">
-              <p className="text-[9px] sm:text-xs text-muted-foreground uppercase tracking-wider mb-1">Tue–Fri</p>
+              <p className="text-xs sm:text-sm text-muted-foreground uppercase tracking-wider mb-1">Tue–Fri</p>
               <p className="font-serif text-base sm:text-xl font-bold text-primary">8:30 AM</p>
             </div>
           </div>
           <div className="text-center mt-3">
             <Link href="/mass-times">
-              <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 press-scale text-xs">
+              <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 press-scale text-sm">
                 Full schedule & details <ArrowRight className="w-3 h-3 ml-1" />
               </Button>
             </Link>
@@ -122,15 +122,15 @@ export default function NewHere() {
             <div className="flex items-start gap-2.5">
               <MapPin className="w-4 h-4 text-primary mt-0.5 shrink-0" />
               <div>
-                <p className="font-semibold text-sm">29 Cox Avenue</p>
-                <p className="text-muted-foreground text-xs">Armonk, NY 10504</p>
+                <p className="font-semibold text-base">29 Cox Avenue</p>
+                <p className="text-muted-foreground text-sm">Armonk, NY 10504</p>
               </div>
             </div>
             <div className="flex items-start gap-2.5">
               <Car className="w-4 h-4 text-primary mt-0.5 shrink-0" />
               <div>
-                <p className="font-semibold text-sm">Parking</p>
-                <p className="text-muted-foreground text-xs">
+                <p className="font-semibold text-base">Parking</p>
+                <p className="text-muted-foreground text-sm">
                   Free parking in the church lot off Cox Avenue. Street parking also available.
                 </p>
               </div>
@@ -138,8 +138,8 @@ export default function NewHere() {
             <div className="flex items-start gap-2.5">
               <Church className="w-4 h-4 text-primary mt-0.5 shrink-0" />
               <div>
-                <p className="font-semibold text-sm">Accessibility</p>
-                <p className="text-muted-foreground text-xs">
+                <p className="font-semibold text-base">Accessibility</p>
+                <p className="text-muted-foreground text-sm">
                   Wheelchair accessible with ramp entry and accessible seating.
                 </p>
               </div>

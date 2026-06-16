@@ -296,7 +296,7 @@ export default function GalleryManager() {
                 />
                 {!photo.published && (
                   <div className="absolute top-2 left-2">
-                    <Badge variant="secondary" className="text-[10px]">
+                    <Badge variant="secondary" className="text-xs">
                       <EyeOff className="w-3 h-3 mr-1" /> Hidden
                     </Badge>
                   </div>
@@ -337,7 +337,7 @@ export default function GalleryManager() {
                 <p className="text-sm font-medium truncate">{photo.title || "Untitled"}</p>
                 <div className="flex items-center gap-2 mt-1">
                   {photo.album && (
-                    <Badge variant="outline" className="text-[10px]">{photo.album}</Badge>
+                    <Badge variant="outline" className="text-xs">{photo.album}</Badge>
                   )}
                 </div>
               </CardContent>

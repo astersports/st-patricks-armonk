@@ -162,7 +162,7 @@ export default function NewsEvents() {
                     )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1.5">
-                        {idx === 0 && <Badge className="bg-primary/10 text-primary border-0 text-[10px] px-1.5 py-0">Latest</Badge>}
+                        {idx === 0 && <Badge className="bg-primary/10 text-primary border-0 text-xs px-1.5 py-0">Latest</Badge>}
                         <p className="text-xs text-muted-foreground uppercase tracking-wider">
                           {post.publishedAt ? format(new Date(post.publishedAt), "MMMM d, yyyy") : ""}
                         </p>

@@ -94,7 +94,7 @@ function AnimatedCandle({ count }: { count: number }) {
       {/* Count badge — below candle */}
       <div className="mt-3 flex items-center gap-2 bg-amber-900/30 border border-amber-500/40 rounded-full px-4 py-1.5 backdrop-blur-sm">
         <span className="text-amber-300 text-lg font-bold tabular-nums">{count}</span>
-        <span className="text-amber-200/70 text-xs">candles lit this week</span>
+        <span className="text-amber-200/80 text-sm">candles lit this week</span>
       </div>
     </div>
   );
@@ -237,18 +237,18 @@ export function PrayerWall() {
         {intentions.length > 0 && (
           <div className="mt-6 border-t border-amber-800/30 pt-4">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-sm font-semibold text-amber-200">Community Prayers</p>
-              <p className="text-[11px] text-amber-400/50">{intentions.length} shared</p>
+              <p className="text-base font-semibold text-amber-200">Community Prayers</p>
+              <p className="text-sm text-amber-400/60">{intentions.length} shared</p>
             </div>
-            <div className="grid grid-cols-2 gap-1.5 max-h-48 overflow-y-auto pr-1 scrollbar-thin">
+            <div className="grid grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1 scrollbar-thin">
               {intentions.slice(0, 10).map((item) => (
-                <div key={item.id} className="py-1.5 px-2.5 rounded-md bg-amber-900/15 border border-amber-800/20">
-                  <p className="text-[11px] text-amber-100/90 leading-snug line-clamp-2">{item.intention}</p>
-                  <div className="flex items-center gap-1.5 mt-1">
+                <div key={item.id} className="py-2 px-3 rounded-md bg-amber-900/15 border border-amber-800/20">
+                  <p className="text-sm text-amber-100/90 leading-snug line-clamp-2">{item.intention}</p>
+                  <div className="flex items-center gap-1.5 mt-1.5">
                     {item.name && (
-                      <span className="text-[9px] text-amber-300/60 font-medium truncate max-w-[60px]">— {item.name}</span>
+                      <span className="text-xs text-amber-300/70 font-medium truncate max-w-[80px]">— {item.name}</span>
                     )}
-                    <span className="text-[9px] text-amber-400/40">
+                    <span className="text-xs text-amber-400/50">
                       {timeAgo(typeof item.createdAt === 'string' ? item.createdAt : new Date(item.createdAt).toISOString())}
                     </span>
                   </div>
@@ -256,8 +256,8 @@ export function PrayerWall() {
               ))}
             </div>
             {intentions.length > 10 && (
-              <Link href="/prayers" className="flex items-center justify-center gap-1 mt-3 text-[11px] font-medium text-amber-300 hover:text-amber-200 transition-colors">
-                View all {intentions.length} prayers <span className="text-xs">→</span>
+              <Link href="/prayers" className="flex items-center justify-center gap-1 mt-3 text-sm font-medium text-amber-300 hover:text-amber-200 transition-colors">
+                View all {intentions.length} prayers <span className="text-sm">→</span>
               </Link>
             )}
           </div>

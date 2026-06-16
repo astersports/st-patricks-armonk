@@ -154,7 +154,7 @@ export default function MassTimes() {
                     }
                   `}
                 >
-                  <span className={`block text-[10px] font-medium uppercase tracking-wide ${isSelected ? "text-white/80" : ""}`}>
+                  <span className={`block text-xs font-medium uppercase tracking-wide ${isSelected ? "text-white/80" : ""}`}>
                     {day.shortDay}
                   </span>
                   {isToday && !isSelected && (
@@ -173,7 +173,7 @@ export default function MassTimes() {
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-semibold text-base text-foreground">{currentSchedule.day}</h3>
               {selectedDay === today && (
-                <span className="text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-full">
                   Today
                 </span>
               )}
@@ -194,7 +194,7 @@ export default function MassTimes() {
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-sm text-foreground">{service.name}</p>
                       {service.note && (
-                        <p className="text-[10px] text-muted-foreground">{service.note}</p>
+                        <p className="text-xs text-muted-foreground">{service.note}</p>
                       )}
                     </div>
                     {service.time && (
@@ -256,7 +256,7 @@ export default function MassTimes() {
                 </tbody>
               </table>
               <div className="px-3 py-2 bg-muted/30 border-t border-border/50">
-                <p className="text-[10px] text-muted-foreground">*12:30 PM Mass: October – June only. Holy Days announced in bulletin.</p>
+                <p className="text-xs text-muted-foreground">*12:30 PM Mass: October – June only. Holy Days announced in bulletin.</p>
               </div>
             </CardContent>
           </Card>

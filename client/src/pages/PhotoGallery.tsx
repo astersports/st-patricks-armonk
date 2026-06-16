@@ -111,7 +111,7 @@ export default function PhotoGallery() {
                         <p className="text-white text-xs font-medium line-clamp-1">{photo.title}</p>
                       )}
                       {photo.caption && (
-                        <p className="text-white/80 text-[10px] line-clamp-1 mt-0.5">{photo.caption}</p>
+                        <p className="text-white/80 text-xs line-clamp-1 mt-0.5">{photo.caption}</p>
                       )}
                     </div>
                   )}

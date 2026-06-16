@@ -222,7 +222,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium truncate">{user?.name || "Staff"}</p>
-              <p className="text-[11px] text-muted-foreground">{ROLE_LABELS[userRole]}</p>
+              <p className="text-sm text-muted-foreground">{ROLE_LABELS[userRole]}</p>
             </div>
           </div>
           <div className="flex gap-2 mt-2">
@@ -304,7 +304,7 @@ function NavGroupComponent({
     <div className="mt-2">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors"
+        className="w-full flex items-center justify-between px-3 py-1.5 text-sm font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors"
       >
         {group.title}
         <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${open ? "" : "-rotate-90"}`} />
