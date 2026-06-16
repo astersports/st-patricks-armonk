@@ -140,10 +140,10 @@ export function NowStatusBar() {
           <div
             key={s.id}
             className={`
-              relative rounded-xl border px-3 py-2.5 transition-all duration-300
+              relative rounded-xl border-2 px-3 py-2.5 transition-all duration-300
               ${isActive
-                ? `${s.bgActive} border-transparent shadow-sm ring-1 ring-current/10 animate-pulse-slow`
-                : "bg-card border-border/50"
+                ? `${s.bgActive} border-primary/30 shadow-sm ring-1 ring-current/10 animate-pulse-slow`
+                : "bg-card border-border"
               }
             `}
           >

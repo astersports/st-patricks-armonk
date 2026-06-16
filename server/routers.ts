@@ -45,7 +45,13 @@ function sectionProcedure(section: AdminSection) {
 export const appRouter = router({
   system: systemRouter,
   auth: router({
-    me: publicProcedure.query(opts => opts.ctx.user),
+    me: publicProcedure.query(opts => {
+      const user = opts.ctx.user;
+      if (!user) return null;
+      // Ensure owner always sees admin access even if role field hasn't been updated yet
+      const isOwner = user.openId === ENV.ownerOpenId;
+      return { ...user, role: isOwner ? 'admin' : user.role };
+    }),
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });

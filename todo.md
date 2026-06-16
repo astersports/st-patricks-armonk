@@ -447,3 +447,10 @@
 - [x] Make Prayer Wall tiles shorter/compact instead of tall cards (2-column grid)
 - [x] Limit Prayer Wall on homepage to latest 10 intentions
 - [x] Move full prayer list to a dedicated /prayers page with "View All" link
+
+## Phase: Visual Polish & Admin Link Fix
+
+- [x] Increase card border thickness/color across homepage for better visibility (darker global --color-border)
+- [x] Fix Today's Readings "Week 12" and "Full Readings" pills overlapping on mobile (separate row with flex-wrap)
+- [x] Fix Coming Up events horizontal scroll pills (changed to flex-wrap)
+- [x] Fix Admin link not appearing in mobile hamburger menu (auth.me now returns role=admin for owner)

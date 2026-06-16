@@ -211,6 +211,7 @@ function MobileMenu({ location, isAuthenticated, isAdmin, onClose }: {
   isAdmin?: boolean;
   onClose: () => void;
 }) {
+  // Always show admin link for any staff role (isAdmin is true for all non-user roles)
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 

@@ -238,7 +238,7 @@ function NowAtStPatrick({ latestNews, allImportantDates }: { latestNews: any; al
       </div>
 
       {/* Latest News — separate card */}
-      <Card className="border border-border/50 shadow-md overflow-hidden mb-3">
+      <Card className="border-2 border-border shadow-md overflow-hidden mb-3">
         <CardContent className="p-0">
           <Link href="/news" className="group block">
             <div className="px-3 py-2.5 sm:px-4 sm:py-3 flex items-center gap-3 hover:bg-primary/[0.02] transition-colors">
@@ -261,7 +261,7 @@ function NowAtStPatrick({ latestNews, allImportantDates }: { latestNews: any; al
 
       {/* Coming Up Events — separate card */}
       {upcomingEvents.length > 0 && (
-        <Card className="border-0 shadow-lg overflow-hidden">
+        <Card className="border-2 border-border shadow-lg overflow-hidden">
           <CardContent className="p-0">
             <ComingUpFiltered events={upcomingEvents} catColors={catColors} />
           </CardContent>
@@ -311,12 +311,12 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
       </div>
 
       {/* Category filter chips */}
-      <div className="flex gap-1.5 overflow-x-auto pb-2 mb-2 scrollbar-hide">
+      <div className="flex flex-wrap gap-1.5 pb-2 mb-2">
         {CATEGORIES.filter(c => c.key === "all" || (counts[c.key] || 0) > 0).map((cat) => (
           <button
             key={cat.key}
             onClick={() => setActiveFilter(cat.key)}
-            className={`shrink-0 text-[10px] font-semibold px-2.5 py-1 rounded-full transition-all duration-150 ${
+            className={`text-[10px] font-semibold px-2.5 py-1 rounded-full transition-all duration-150 ${
               activeFilter === cat.key
                 ? `${cat.color} ring-1 ring-current/20 scale-105`
                 : "bg-muted/50 text-muted-foreground hover:bg-muted"
@@ -855,27 +855,29 @@ function DailyReadings() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full bg-gold/20 flex items-center justify-center">
+      <div className="mb-3">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="w-7 h-7 rounded-full bg-gold/20 flex items-center justify-center shrink-0">
             <svg className="w-3.5 h-3.5 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
             </svg>
           </div>
-          <div>
+          <div className="min-w-0">
             <h2 className="font-serif text-base sm:text-lg font-bold text-white">Today's Readings</h2>
-            <p className="text-[10px] text-white/60">{readings.liturgicTitle}</p>
+            <p className="text-[10px] text-white/60 truncate">{readings.liturgicTitle}</p>
           </div>
-          <LiturgicalSeasonBadge variant="dark" className="ml-2 hidden sm:inline-flex" />
         </div>
-        <a
-          href="https://bible.usccb.org/daily-bible-reading"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs font-medium text-gold hover:text-gold/80 flex items-center gap-1 transition-colors"
-        >
-          Full Readings <ArrowRight className="w-3 h-3" />
-        </a>
+        <div className="flex items-center gap-2 flex-wrap">
+          <LiturgicalSeasonBadge variant="dark" />
+          <a
+            href="https://bible.usccb.org/daily-bible-reading"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs font-medium text-gold hover:text-gold/80 flex items-center gap-1 transition-colors ml-auto"
+          >
+            Full Readings <ArrowRight className="w-3 h-3" />
+          </a>
+        </div>
       </div>
       {/* Compact reading rows — tap to expand */}
       <div className="space-y-1.5">
