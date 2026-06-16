@@ -402,3 +402,10 @@
 - [x] Compact Catholic Resources: collapse sources by default, tighter rows
 - [x] Tighten section spacing across entire homepage
 - [x] Redesign Mass Times page with interactive day-tabbed schedule (tap Mon/Tue/Wed etc. to see that day's services)
+
+## Phase: Live Parish Status & Interactive Events
+
+- [x] Build "Now" Status Bar: live status tiles for Mass, Confession, Morning Prayer, Parish Office with pulsing dots
+- [x] Build "This Week" accordion: day-by-day expandable view with all services + events, Now/Next/Done chips
+- [x] Build category-filtered Key Dates board with filter chips (All, Parish, CCD, CYO, Sacrament, Teen Life, Social)
+- [x] Add .ics download links to events and Mass schedule entries

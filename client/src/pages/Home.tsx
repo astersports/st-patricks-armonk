@@ -1,9 +1,12 @@
 import PageLayout from "@/components/PageLayout";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin, Clock, ExternalLink, Globe, Camera, ImageIcon, BookOpen, Download, RefreshCw, ChevronDown, ChevronLeft, ChevronRight, Rss } from "lucide-react";
+import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin, Clock, ExternalLink, Globe, Camera, ImageIcon, BookOpen, Download, RefreshCw, ChevronDown, ChevronLeft, ChevronRight, Rss, CalendarPlus } from "lucide-react";
+import { downloadICS } from "@/lib/icsGenerator";
 import BulletinBookReader from "@/components/BulletinBookReader";
 import { PrayerWall } from "@/components/PrayerWall";
+import { NowStatusBar } from "@/components/NowStatusBar";
+import { ThisWeekAccordion } from "@/components/ThisWeekAccordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -201,7 +204,7 @@ function NowAtStPatrick({ latestNews, allImportantDates }: { latestNews: any; al
   const upcomingEvents = useMemo(() => {
     return allImportantDates
       ?.filter((e) => new Date(e.eventDate as unknown as string) >= new Date())
-      ?.slice(0, 3) || [];
+      ?.slice(0, 12) || [];
   }, [allImportantDates]);
 
   const catColors: Record<string, { dot: string; bg: string }> = {
@@ -215,6 +218,11 @@ function NowAtStPatrick({ latestNews, allImportantDates }: { latestNews: any; al
 
   return (
     <section className="reveal container -mt-8 relative z-20 mb-4 sm:mb-6">
+      {/* Live Status Tiles */}
+      <div className="mb-3">
+        <NowStatusBar />
+      </div>
+
       <Card className="border-0 shadow-lg overflow-hidden">
         <CardContent className="p-0">
           {/* Latest News — top strip */}
@@ -235,56 +243,130 @@ function NowAtStPatrick({ latestNews, allImportantDates }: { latestNews: any; al
             </div>
           </Link>
 
-          {/* Coming Up Events */}
+          {/* Coming Up Events — Category Filtered */}
           {upcomingEvents.length > 0 && (
-            <div className="px-3 py-2.5 sm:px-4 sm:py-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-gold" />
-                  <span className="text-xs font-bold text-foreground">Coming Up</span>
-                </div>
-                <Link href="/calendar?filter=key-dates" className="text-[10px] font-medium text-primary hover:text-primary/80 flex items-center gap-0.5">
-                  All Events <ArrowRight className="w-2.5 h-2.5" />
-                </Link>
-              </div>
-              <div className="space-y-1.5">
-                {upcomingEvents.map((evt, i) => {
-                  const eventDate = toEastern(evt.eventDate as unknown as string);
-                  const colors = catColors[evt.category] || catColors.parish;
-                  const countdown = getCountdown(eventDate);
-                  return (
-                    <Link key={evt.id || i} href="/calendar?filter=key-dates" className="group flex items-center gap-2.5 py-1.5 px-2 -mx-1 rounded-lg hover:bg-muted/40 transition-colors">
-                      {/* Date badge */}
-                      <div className={`w-9 h-9 rounded-lg ${colors.bg} flex flex-col items-center justify-center shrink-0`}>
-                        <span className="text-[8px] font-bold uppercase leading-none text-muted-foreground">
-                          {format(eventDate, "MMM")}
-                        </span>
-                        <span className="text-sm font-bold leading-tight text-foreground">
-                          {format(eventDate, "d")}
-                        </span>
-                      </div>
-                      {/* Event info */}
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-foreground text-xs sm:text-sm truncate group-hover:text-primary transition-colors">
-                          {evt.title}
-                        </p>
-                        <p className="text-[10px] text-muted-foreground truncate">
-                          {evt.location || format(eventDate, "EEEE · h:mm a")}
-                        </p>
-                      </div>
-                      {/* Countdown */}
-                      <span className="text-[9px] font-semibold text-gold bg-gold/10 px-2 py-0.5 rounded-full shrink-0 whitespace-nowrap">
-                        {countdown}
-                      </span>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
+            <ComingUpFiltered events={upcomingEvents} catColors={catColors} />
           )}
         </CardContent>
       </Card>
     </section>
+  );
+}
+
+// === COMING UP — Category Filtered Key Dates ===
+const CATEGORIES = [
+  { key: "all", label: "All", color: "bg-muted text-foreground" },
+  { key: "parish", label: "Parish", color: "bg-primary/15 text-primary" },
+  { key: "ccd", label: "CCD", color: "bg-green-500/15 text-green-700" },
+  { key: "cyo", label: "CYO", color: "bg-orange-500/15 text-orange-700" },
+  { key: "sacrament", label: "Sacrament", color: "bg-purple-500/15 text-purple-700" },
+  { key: "teen_life", label: "Teen Life", color: "bg-blue-500/15 text-blue-700" },
+  { key: "social", label: "Social", color: "bg-amber-500/15 text-amber-700" },
+];
+
+function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Record<string, { dot: string; bg: string }> }) {
+  const [activeFilter, setActiveFilter] = useState("all");
+
+  const filteredEvents = useMemo(() => {
+    if (activeFilter === "all") return events;
+    return events.filter((e) => e.category === activeFilter);
+  }, [events, activeFilter]);
+
+  // Count per category
+  const counts = useMemo(() => {
+    const c: Record<string, number> = { all: events.length };
+    events.forEach((e) => { c[e.category] = (c[e.category] || 0) + 1; });
+    return c;
+  }, [events]);
+
+  return (
+    <div className="px-3 py-2.5 sm:px-4 sm:py-3">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-1.5">
+          <Clock className="w-3.5 h-3.5 text-gold" />
+          <span className="text-xs font-bold text-foreground">Coming Up</span>
+        </div>
+        <Link href="/calendar?filter=key-dates" className="text-[10px] font-medium text-primary hover:text-primary/80 flex items-center gap-0.5">
+          All Events <ArrowRight className="w-2.5 h-2.5" />
+        </Link>
+      </div>
+
+      {/* Category filter chips */}
+      <div className="flex gap-1.5 overflow-x-auto pb-2 mb-2 scrollbar-hide">
+        {CATEGORIES.filter(c => c.key === "all" || (counts[c.key] || 0) > 0).map((cat) => (
+          <button
+            key={cat.key}
+            onClick={() => setActiveFilter(cat.key)}
+            className={`shrink-0 text-[10px] font-semibold px-2.5 py-1 rounded-full transition-all duration-150 ${
+              activeFilter === cat.key
+                ? `${cat.color} ring-1 ring-current/20 scale-105`
+                : "bg-muted/50 text-muted-foreground hover:bg-muted"
+            }`}
+          >
+            {cat.label}
+            {counts[cat.key] ? ` (${counts[cat.key]})` : ""}
+          </button>
+        ))}
+      </div>
+
+      {/* Event list */}
+      <div className="space-y-1.5">
+        {filteredEvents.length === 0 ? (
+          <p className="text-[11px] text-muted-foreground italic py-2 text-center">No upcoming events in this category</p>
+        ) : (
+          filteredEvents.slice(0, 5).map((evt, i) => {
+            const eventDate = toEastern(evt.eventDate as unknown as string);
+            const colors = catColors[evt.category] || catColors.parish;
+            const countdown = getCountdown(eventDate);
+            return (
+              <div key={evt.id || i} className="group flex items-center gap-2.5 py-1.5 px-2 -mx-1 rounded-lg hover:bg-muted/40 transition-colors">
+                <Link href="/calendar?filter=key-dates" className="flex items-center gap-2.5 flex-1 min-w-0">
+                  {/* Date badge */}
+                  <div className={`w-9 h-9 rounded-lg ${colors.bg} flex flex-col items-center justify-center shrink-0`}>
+                    <span className="text-[8px] font-bold uppercase leading-none text-muted-foreground">
+                      {format(eventDate, "MMM")}
+                    </span>
+                    <span className="text-sm font-bold leading-tight text-foreground">
+                      {format(eventDate, "d")}
+                    </span>
+                  </div>
+                  {/* Event info */}
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-foreground text-xs sm:text-sm truncate group-hover:text-primary transition-colors">
+                      {evt.title}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground truncate">
+                      {evt.location || format(eventDate, "EEEE \u00b7 h:mm a")}
+                    </p>
+                  </div>
+                </Link>
+                {/* Add to Calendar */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    downloadICS({
+                      title: evt.title,
+                      startDate: eventDate,
+                      location: evt.location || "St. Patrick Church, 29 Cox Ave, Armonk NY 10504",
+                    });
+                    toast.success("Calendar event downloaded");
+                  }}
+                  className="shrink-0 p-1.5 rounded-md hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                  title="Add to Calendar"
+                >
+                  <CalendarPlus className="w-3.5 h-3.5" />
+                </button>
+                {/* Countdown */}
+                <span className="text-[9px] font-semibold text-gold bg-gold/10 px-2 py-0.5 rounded-full shrink-0 whitespace-nowrap">
+                  {countdown}
+                </span>
+              </div>
+            );
+          })
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -1078,6 +1160,11 @@ export default function Home() {
       <div ref={revealRef}>
         {/* Now at St. Patrick — Live status + upcoming events + latest news */}
         <NowAtStPatrick latestNews={latestNews} allImportantDates={allImportantDates} />
+
+        {/* This Week — Day-by-day schedule accordion */}
+        <section className="reveal container mb-4 sm:mb-6">
+          <ThisWeekAccordion events={allImportantDates?.map(e => ({ ...e, eventDate: e.eventDate as unknown as string })) || []} />
+        </section>
 
         {/* Pastor's Welcome */}
         <section className="reveal container py-5 sm:py-8 mb-1 sm:mb-3">
