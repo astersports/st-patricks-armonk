@@ -192,6 +192,19 @@ function HeroSection() {
             </Button>
           </Link>
         </div>
+
+        {/* YouTube Subscribe */}
+        <a
+          href="https://www.youtube.com/@stpatrickinamonk"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 mt-4 bg-red-600/90 hover:bg-red-600 text-white text-xs font-semibold px-4 py-2 rounded-full transition-colors press-scale animate-fade-up stagger-4"
+        >
+          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          Subscribe on YouTube
+        </a>
       </div>
 
       {/* Bottom fade */}
@@ -224,10 +237,10 @@ function NowAtStPatrick({ latestNews, allImportantDates }: { latestNews: any; al
         <NowStatusBar />
       </div>
 
-      <Card className="border-0 shadow-lg overflow-hidden">
+      {/* Latest News — separate card */}
+      <Card className="border-0 shadow-lg overflow-hidden mb-3">
         <CardContent className="p-0">
-          {/* Latest News — top strip */}
-          <Link href="/news" className="group block border-b border-border/30">
+          <Link href="/news" className="group block">
             <div className="px-3 py-2.5 sm:px-4 sm:py-3 flex items-center gap-3 hover:bg-primary/[0.02] transition-colors">
               <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                 <Newspaper className="w-3.5 h-3.5 text-primary" />
@@ -243,13 +256,17 @@ function NowAtStPatrick({ latestNews, allImportantDates }: { latestNews: any; al
               <ArrowRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
             </div>
           </Link>
-
-          {/* Coming Up Events — Category Filtered */}
-          {upcomingEvents.length > 0 && (
-            <ComingUpFiltered events={upcomingEvents} catColors={catColors} />
-          )}
         </CardContent>
       </Card>
+
+      {/* Coming Up Events — separate card */}
+      {upcomingEvents.length > 0 && (
+        <Card className="border-0 shadow-lg overflow-hidden">
+          <CardContent className="p-0">
+            <ComingUpFiltered events={upcomingEvents} catColors={catColors} />
+          </CardContent>
+        </Card>
+      )}
     </section>
   );
 }

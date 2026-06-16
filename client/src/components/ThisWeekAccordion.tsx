@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
-import { ChevronDown, Church, Cross, Sun, Calendar, CalendarPlus } from "lucide-react";
+import { Church, Cross, Sun, Calendar, CalendarPlus, Clock } from "lucide-react";
 import { downloadMassICS, downloadICS } from "@/lib/icsGenerator";
-import { format, addDays, isToday, isTomorrow } from "date-fns";
-import { TZDate } from "@date-fns/tz";
+import { format, addDays } from "date-fns";
+import { Link } from "wouter";
 
 const TIMEZONE = "America/New_York";
 
@@ -43,10 +43,12 @@ const DAILY_SCHEDULE: Record<number, ScheduleItem[]> = {
 };
 
 const typeStyles = {
-  mass: { icon: Church, color: "text-primary", bg: "bg-primary/10", chip: "bg-primary/15 text-primary" },
-  confession: { icon: Cross, color: "text-purple-600", bg: "bg-purple-500/10", chip: "bg-purple-500/15 text-purple-600" },
-  prayer: { icon: Sun, color: "text-amber-600", bg: "bg-amber-500/10", chip: "bg-amber-500/15 text-amber-600" },
+  mass: { icon: Church, color: "text-primary", bg: "bg-primary/10", borderColor: "border-l-primary" },
+  confession: { icon: Cross, color: "text-purple-600", bg: "bg-purple-500/10", borderColor: "border-l-purple-500" },
+  prayer: { icon: Sun, color: "text-amber-600", bg: "bg-amber-500/10", borderColor: "border-l-amber-500" },
 };
+
+const DAY_LABELS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
 interface EventItem {
   id?: number;
@@ -62,19 +64,18 @@ interface ThisWeekAccordionProps {
 }
 
 export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
-  const [expandedDay, setExpandedDay] = useState<string | null>(() => {
-    // Auto-expand today
-    return "today";
-  });
+  const now = useMemo(() => new Date(new Date().toLocaleString("en-US", { timeZone: TIMEZONE })), []);
+  const todayDayOfWeek = now.getDay();
+
+  const [selectedDay, setSelectedDay] = useState<number>(todayDayOfWeek);
 
   const days = useMemo(() => {
-    const now = new Date(new Date().toLocaleString("en-US", { timeZone: TIMEZONE }));
     const result = [];
+    // Start from today, show 7 days
     for (let i = 0; i < 7; i++) {
       const date = addDays(now, i);
       const dayOfWeek = date.getDay();
       const services = DAILY_SCHEDULE[dayOfWeek] || [];
-      const dayKey = i === 0 ? "today" : format(date, "yyyy-MM-dd");
 
       // Find events on this day
       const dayEvents = events.filter((e) => {
@@ -87,24 +88,24 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
       });
 
       result.push({
-        key: dayKey,
-        date,
         dayOfWeek,
+        date,
         services,
         events: dayEvents,
         isToday: i === 0,
-        isTomorrow: i === 1,
-        label: i === 0 ? "Today" : i === 1 ? "Tomorrow" : format(date, "EEEE"),
-        shortLabel: i === 0 ? "Today" : i === 1 ? "Tmrw" : format(date, "EEE"),
-        dateLabel: format(date, "MMM d"),
       });
     }
     return result;
-  }, [events]);
+  }, [events, now]);
 
-  const toggleDay = (key: string) => {
-    setExpandedDay((prev) => (prev === key ? null : key));
-  };
+  // Get the selected day's data
+  const selectedDayData = days.find((d) => d.dayOfWeek === selectedDay);
+  const services = selectedDayData?.services || [];
+  const dayEvents = selectedDayData?.events || [];
+
+  // Week range for header
+  const weekStart = days[0]?.date || now;
+  const weekEnd = days[6]?.date || now;
 
   return (
     <div className="rounded-xl border border-border/50 overflow-hidden bg-card shadow-sm">
@@ -115,135 +116,153 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
           <span className="text-xs font-bold text-foreground">This Week</span>
         </div>
         <span className="text-[10px] text-muted-foreground">
-          {format(days[0]?.date || new Date(), "MMM d")} – {format(days[6]?.date || new Date(), "MMM d")}
+          {format(weekStart, "MMM d")} – {format(weekEnd, "MMM d")}
         </span>
       </div>
 
-      {/* Day rows */}
-      <div className="divide-y divide-border/30">
-        {days.map((day) => {
-          const isExpanded = expandedDay === day.key;
-          const totalItems = day.services.length + day.events.length;
-          const isEmpty = totalItems === 0;
-
+      {/* Horizontal day tabs */}
+      <div className="flex border-b border-border/30">
+        {DAY_LABELS.map((label, idx) => {
+          const isSelected = selectedDay === idx;
+          const isToday = todayDayOfWeek === idx;
           return (
-            <div key={day.key}>
-              {/* Day header — clickable */}
-              <button
-                onClick={() => !isEmpty && toggleDay(day.key)}
-                className={`w-full flex items-center justify-between px-4 py-2.5 transition-colors ${
-                  isEmpty ? "opacity-50 cursor-default" : "hover:bg-muted/30 cursor-pointer"
-                } ${day.isToday ? "bg-primary/[0.03]" : ""}`}
-              >
-                <div className="flex items-center gap-2.5">
-                  <div className={`w-8 h-8 rounded-lg flex flex-col items-center justify-center ${
-                    day.isToday ? "bg-primary text-white" : "bg-muted/50"
-                  }`}>
-                    <span className={`text-[9px] font-bold uppercase leading-none ${day.isToday ? "text-white/80" : "text-muted-foreground"}`}>
-                      {format(day.date, "EEE")}
-                    </span>
-                    <span className={`text-sm font-bold leading-tight ${day.isToday ? "text-white" : "text-foreground"}`}>
-                      {format(day.date, "d")}
-                    </span>
-                  </div>
-                  <div className="text-left">
-                    <span className={`text-xs font-semibold ${day.isToday ? "text-primary" : "text-foreground"}`}>
-                      {day.label}
-                    </span>
-                    {day.isToday && (
-                      <span className="ml-1.5 text-[9px] font-bold uppercase bg-primary/15 text-primary px-1.5 py-0.5 rounded">
-                        TODAY
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  {isEmpty ? (
-                    <span className="text-[10px] text-muted-foreground italic">No services</span>
-                  ) : (
-                    <>
-                      <span className="text-[10px] text-muted-foreground">
-                        {day.services.length > 0 && `${day.services.length} service${day.services.length > 1 ? "s" : ""}`}
-                        {day.services.length > 0 && day.events.length > 0 && " · "}
-                        {day.events.length > 0 && `${day.events.length} event${day.events.length > 1 ? "s" : ""}`}
-                      </span>
-                      <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
-                    </>
-                  )}
-                </div>
-              </button>
-
-              {/* Expanded content */}
-              {isExpanded && !isEmpty && (
-                <div className="px-4 pb-3 pt-1 space-y-1.5">
-                  {/* Services */}
-                  {day.services.map((svc, idx) => {
-                    const style = typeStyles[svc.type];
-                    const Icon = style.icon;
-                    return (
-                      <div key={`svc-${idx}`} className="flex items-center gap-2.5 py-1.5 px-2 rounded-lg bg-muted/20">
-                        <div className={`w-6 h-6 rounded-md ${style.bg} flex items-center justify-center`}>
-                          <Icon className={`w-3 h-3 ${style.color}`} />
-                        </div>
-                        <span className="text-xs font-medium text-foreground flex-1">{svc.label}</span>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            downloadMassICS({
-                              title: `${svc.label} - St. Patrick in Armonk`,
-                              day: format(day.date, "EEEE"),
-                              time: svc.time,
-                            });
-                          }}
-                          className="p-1 rounded hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
-                          title="Add to Calendar"
-                        >
-                          <CalendarPlus className="w-3 h-3" />
-                        </button>
-                        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${style.chip}`}>
-                          {svc.time}
-                        </span>
-                      </div>
-                    );
-                  })}
-                  {/* Events */}
-                  {day.events.map((evt, idx) => (
-                    <div key={`evt-${idx}`} className="flex items-center gap-2.5 py-1.5 px-2 rounded-lg bg-gold/5 border border-gold/10">
-                      <div className="w-6 h-6 rounded-md bg-gold/10 flex items-center justify-center">
-                        <Calendar className="w-3 h-3 text-gold" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <span className="text-xs font-medium text-foreground truncate block">{evt.title}</span>
-                        {evt.location && (
-                          <span className="text-[10px] text-muted-foreground">{evt.location}</span>
-                        )}
-                      </div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          downloadICS({
-                            title: evt.title,
-                            startDate: new Date(evt.eventDate),
-                            location: evt.location || "St. Patrick Church, 29 Cox Ave, Armonk NY 10504",
-                          });
-                        }}
-                        className="p-1 rounded hover:bg-gold/20 text-muted-foreground hover:text-gold transition-colors shrink-0"
-                        title="Add to Calendar"
-                      >
-                        <CalendarPlus className="w-3 h-3" />
-                      </button>
-                      {evt.note && (
-                        <span className="text-[10px] font-medium text-gold bg-gold/10 px-2 py-0.5 rounded-full shrink-0">
-                          {evt.note}
-                        </span>
-                      )}
-                    </div>
-                  ))}
-                </div>
+            <button
+              key={label}
+              onClick={() => setSelectedDay(idx)}
+              className={`flex-1 py-2.5 text-center transition-all duration-150 relative ${
+                isSelected
+                  ? "bg-primary text-white font-bold"
+                  : "hover:bg-muted/40 text-muted-foreground"
+              }`}
+            >
+              <span className={`text-[10px] sm:text-[11px] font-semibold ${isSelected ? "text-white" : ""}`}>
+                {label}
+              </span>
+              {/* Today dot indicator */}
+              {isToday && !isSelected && (
+                <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
               )}
-            </div>
+            </button>
           );
         })}
+      </div>
+
+      {/* Selected day content */}
+      <div className="p-3 sm:p-4">
+        {/* Day label */}
+        <div className="flex items-center justify-between mb-2.5">
+          <h3 className="text-sm font-bold text-foreground">
+            {selectedDay === todayDayOfWeek ? "Today" : format(new Date(2024, 0, selectedDay === 0 ? 7 : selectedDay), "EEEE")}
+          </h3>
+          {services.length === 0 && dayEvents.length === 0 && (
+            <span className="text-[10px] text-muted-foreground italic">No services</span>
+          )}
+        </div>
+
+        {/* Services list */}
+        {services.length > 0 && (
+          <div className="space-y-1.5 mb-3">
+            {services.map((svc, idx) => {
+              const style = typeStyles[svc.type];
+              const Icon = style.icon;
+              return (
+                <div
+                  key={`svc-${idx}`}
+                  className={`flex items-center gap-2.5 py-2 px-3 rounded-lg border-l-3 ${style.borderColor} bg-muted/20`}
+                >
+                  <div className={`w-7 h-7 rounded-md ${style.bg} flex items-center justify-center`}>
+                    <Icon className={`w-3.5 h-3.5 ${style.color}`} />
+                  </div>
+                  <span className="text-xs font-medium text-foreground flex-1">{svc.label}</span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][selectedDay];
+                      downloadMassICS({
+                        title: `${svc.label} - St. Patrick in Armonk`,
+                        day: dayName,
+                        time: svc.time,
+                      });
+                    }}
+                    className="p-1 rounded hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                    title="Add to Calendar"
+                  >
+                    <CalendarPlus className="w-3 h-3" />
+                  </button>
+                  <span className={`text-xs font-bold ${style.color}`}>
+                    {svc.time}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Events for this day */}
+        {dayEvents.length > 0 && (
+          <div className="space-y-1.5 mb-3">
+            {dayEvents.map((evt, idx) => (
+              <div key={`evt-${idx}`} className="flex items-center gap-2.5 py-2 px-3 rounded-lg bg-gold/5 border border-gold/10">
+                <div className="w-7 h-7 rounded-md bg-gold/10 flex items-center justify-center">
+                  <Calendar className="w-3.5 h-3.5 text-gold" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs font-medium text-foreground truncate block">{evt.title}</span>
+                  {evt.location && (
+                    <span className="text-[10px] text-muted-foreground">{evt.location}</span>
+                  )}
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    downloadICS({
+                      title: evt.title,
+                      startDate: new Date(evt.eventDate),
+                      location: evt.location || "St. Patrick Church, 29 Cox Ave, Armonk NY 10504",
+                    });
+                  }}
+                  className="p-1 rounded hover:bg-gold/20 text-muted-foreground hover:text-gold transition-colors shrink-0"
+                  title="Add to Calendar"
+                >
+                  <CalendarPlus className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* No services message */}
+        {services.length === 0 && dayEvents.length === 0 && (
+          <p className="text-xs text-muted-foreground text-center py-3 italic">
+            No scheduled services on this day
+          </p>
+        )}
+      </div>
+
+      {/* At a Glance — compact summary */}
+      <div className="border-t border-border/30 px-4 py-3 bg-muted/20">
+        <div className="flex items-center gap-1.5 mb-2">
+          <Clock className="w-3 h-3 text-muted-foreground" />
+          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">At a Glance</span>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <div className="rounded-lg bg-card border border-border/40 p-2.5 text-center">
+            <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-medium">Saturday Vigil</p>
+            <p className="text-sm font-bold text-primary mt-0.5">5:30 PM</p>
+          </div>
+          <div className="rounded-lg bg-card border border-border/40 p-2.5 text-center">
+            <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-medium">Sunday</p>
+            <p className="text-sm font-bold text-primary mt-0.5">8:30 & 10:30 AM</p>
+            <p className="text-[10px] text-muted-foreground">12:30 PM (Oct–Jun)</p>
+          </div>
+          <div className="rounded-lg bg-card border border-border/40 p-2.5 text-center">
+            <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-medium">Weekday (Tue–Fri)</p>
+            <p className="text-sm font-bold text-primary mt-0.5">8:30 AM</p>
+          </div>
+        </div>
+        <Link href="/mass-times" className="flex items-center justify-center gap-1 mt-2.5 text-[11px] font-medium text-primary hover:text-primary/80 transition-colors">
+          Full schedule & details <span className="text-xs">→</span>
+        </Link>
       </div>
     </div>
   );

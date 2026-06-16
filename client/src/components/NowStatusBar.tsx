@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Church, Cross, Sun, Building2 } from "lucide-react";
+import { Church, Cross, Sun } from "lucide-react";
 
 const TIMEZONE = "America/New_York";
 
@@ -49,21 +49,6 @@ const SERVICES = [
       { day: 3, start: [8, 0], end: [8, 25] },
       { day: 4, start: [8, 0], end: [8, 25] },
       { day: 5, start: [8, 0], end: [8, 25] },
-    ],
-  },
-  {
-    id: "office",
-    label: "Office",
-    icon: Building2,
-    color: "text-blue-600",
-    dotActive: "bg-blue-500",
-    dotInactive: "bg-muted-foreground/30",
-    bgActive: "bg-blue-500/10",
-    times: [
-      { day: 1, start: [10, 0], end: [17, 0] },
-      { day: 2, start: [10, 0], end: [17, 0] },
-      { day: 3, start: [10, 0], end: [17, 0] },
-      { day: 4, start: [10, 0], end: [17, 0] },
     ],
   },
 ] as const;
@@ -146,7 +131,7 @@ export function NowStatusBar() {
   }, [now]);
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+    <div className="grid grid-cols-3 gap-2">
       {statuses.map((s) => {
         const Icon = s.icon;
         const isActive = s.status === "active";

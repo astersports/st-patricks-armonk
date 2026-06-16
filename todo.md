@@ -417,3 +417,11 @@
 - [x] Add liturgical season awareness (accent color changes with season: green=Ordinary Time, purple=Advent/Lent, gold=Easter/Christmas)
 - [x] Add "happening now" pulse animation to Now Status Bar tiles when a service is actively in progress
 - [x] Compact the Giving page (Venmo QR + WeShare sections)
+
+## Phase: Homepage & New Here Refinements
+
+- [x] Redesign "This Week" section on homepage with horizontal day-of-week tabs (SUN/MON/TUE/WED/THU/FRI/SAT) + At a Glance summary (matching Mass Times page style)
+- [x] Remove Office tile from NowStatusBar
+- [x] Add YouTube subscribe button in hero section after "Support Our Parish" button
+- [x] Visually separate Latest News and Coming Up sections (not merged in same card)
+- [x] Tighten New Here page — reduce padding and whitespace for less scrolling on mobile
