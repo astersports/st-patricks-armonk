@@ -613,3 +613,7 @@
 - [x] Remove Key Dates tab from calendar page — merge Key Dates into the main chronological feed
 - [x] Keep Parish/CCD/CYO filter tabs (remove "All" and "Key Dates" as separate tabs)
 - [x] Homepage Coming Up section stays as Key Dates (no change)
+
+## Key Dates as Calendar Filter
+
+- [x] Add Key Dates as a filter category on the unified calendar page (alongside All/Parish/CCD/CYO)

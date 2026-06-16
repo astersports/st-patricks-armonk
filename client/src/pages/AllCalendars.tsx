@@ -3,7 +3,7 @@ import PageLayout from "@/components/PageLayout";
 import PageHeader from "@/components/PageHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, BookOpen, Dribbble, Clock, MapPin, ArrowLeft, ChevronDown } from "lucide-react";
+import { Calendar, BookOpen, Dribbble, Clock, MapPin, ArrowLeft, ChevronDown, Star } from "lucide-react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { format, isToday, isTomorrow, isThisWeek, startOfWeek, addWeeks, isSameWeek } from "date-fns";
@@ -16,12 +16,40 @@ function toEastern(isoString: string): Date {
   return new TZDate(isoString, TIMEZONE);
 }
 
-type SourceFilter = "all" | "parish" | "ccd" | "cyo";
+type SourceFilter = "all" | "key-dates" | "parish" | "ccd" | "cyo";
 
 const sourceConfig = {
   parish: { label: "Parish", icon: Calendar, color: "bg-primary/10 text-primary", border: "border-l-primary" },
   ccd: { label: "CCD", icon: BookOpen, color: "bg-green-100 text-green-700", border: "border-l-green-600" },
   cyo: { label: "CYO", icon: Dribbble, color: "bg-orange-100 text-orange-700", border: "border-l-orange-500" },
+};
+
+// Key dates category colors for the border
+const keyDateCategoryBorder: Record<string, string> = {
+  ccd: "border-l-green-600",
+  cyo: "border-l-orange-500",
+  sacrament: "border-l-purple-500",
+  parish: "border-l-primary",
+  teen_life: "border-l-blue-500",
+  social: "border-l-amber-500",
+};
+
+const keyDateCategoryColor: Record<string, string> = {
+  ccd: "bg-green-100 text-green-700",
+  cyo: "bg-orange-100 text-orange-700",
+  sacrament: "bg-purple-100 text-purple-700",
+  parish: "bg-primary/10 text-primary",
+  teen_life: "bg-blue-100 text-blue-700",
+  social: "bg-amber-100 text-amber-700",
+};
+
+const keyDateCategoryLabel: Record<string, string> = {
+  ccd: "CCD",
+  cyo: "CYO",
+  sacrament: "Sacrament",
+  parish: "Parish",
+  teen_life: "Teen Life",
+  social: "Social",
 };
 
 // Groups that should always be expanded (near-term)
@@ -39,6 +67,7 @@ function getWeekGroup(date: Date): string {
 
 export default function AllCalendars() {
   const { data: allEvents, isLoading } = trpc.googleCalendar.allEvents.useQuery();
+  const { data: keyDatesRaw, isLoading: keyDatesLoading } = trpc.importantDates.allPublished.useQuery();
 
   const [activeSource, setActiveSource] = useState<SourceFilter>("all");
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
@@ -55,16 +84,58 @@ export default function AllCalendars() {
     });
   };
 
+  // Normalize key dates into the same shape as calendar events for unified rendering
+  const keyDatesNormalized = useMemo(() => {
+    if (!keyDatesRaw) return [];
+    const now = new Date();
+    return keyDatesRaw
+      .filter(d => new Date(d.eventDate as unknown as string) >= now)
+      .map(d => ({
+        id: `kd-${d.id}`,
+        title: d.title,
+        startDate: d.eventDate as unknown as string,
+        endDate: null as string | null,
+        location: d.location || null,
+        description: d.note || null,
+        allDay: true,
+        source: "key-dates" as const,
+        category: d.category,
+      }));
+  }, [keyDatesRaw]);
+
+  // Unified event type for rendering
+  type UnifiedEvent = {
+    id: string;
+    title: string;
+    startDate: string;
+    endDate: string | null;
+    location: string | null;
+    description: string | null;
+    allDay: boolean;
+    source: string;
+    category?: string;
+  };
+
   // Filter events by source
-  const filteredEvents = useMemo(() => {
+  const filteredEvents: UnifiedEvent[] = useMemo(() => {
+    if (activeSource === "key-dates") return keyDatesNormalized;
     if (!allEvents) return [];
-    if (activeSource === "all") return allEvents;
-    return allEvents.filter((e) => e.source === activeSource);
-  }, [allEvents, activeSource]);
+    const events = activeSource === "all" ? allEvents : allEvents.filter((e) => e.source === activeSource);
+    return events.map(e => ({
+      id: e.id,
+      title: e.title,
+      startDate: e.startDate,
+      endDate: e.endDate || null,
+      location: e.location || null,
+      description: e.description || null,
+      allDay: e.allDay,
+      source: e.source,
+    }));
+  }, [allEvents, keyDatesNormalized, activeSource]);
 
   // Group events by time period
   const groupedEvents = useMemo(() => {
-    const groups: { label: string; events: typeof filteredEvents; isCollapsible: boolean }[] = [];
+    const groups: { label: string; events: UnifiedEvent[]; isCollapsible: boolean }[] = [];
     let currentGroup = "";
 
     for (const event of filteredEvents) {
@@ -91,8 +162,11 @@ export default function AllCalendars() {
     };
   }, [allEvents]);
 
-  // Weather enrichment for events within 7 days
+  const keyDatesCount = keyDatesNormalized.length;
+
+  // Weather enrichment for events within 7 days (not for key-dates view)
   const weatherInput = useMemo(() => {
+    if (activeSource === "key-dates") return [];
     if (!filteredEvents || filteredEvents.length === 0) return [];
     const now = new Date();
     const sevenDays = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
@@ -102,26 +176,32 @@ export default function AllCalendars() {
         return d >= now && d <= sevenDays;
       })
       .map(e => ({
-        id: e.id,
+        id: String(e.id),
         title: e.title,
         description: e.description || undefined,
         location: e.location || undefined,
         startDate: e.startDate,
       }));
-  }, [filteredEvents]);
+  }, [filteredEvents, activeSource]);
 
   const { data: weatherData } = trpc.weather.forEvents.useQuery(
     { events: weatherInput },
-    { enabled: weatherInput.length > 0, staleTime: 60 * 60 * 1000 }
+    { enabled: weatherInput.length > 0 && activeSource !== "key-dates", staleTime: 60 * 60 * 1000 }
   );
 
   // Page metadata
   const pageTitle = activeSource === "all"
     ? "Parish Calendar"
-    : `${sourceConfig[activeSource].label} Calendar`;
+    : activeSource === "key-dates"
+      ? "Key Dates"
+      : `${sourceConfig[activeSource].label} Calendar`;
   const pageDescription = activeSource === "all"
     ? "All upcoming events across Parish, CCD, and CYO."
-    : `Upcoming ${sourceConfig[activeSource].label} events and activities.`;
+    : activeSource === "key-dates"
+      ? "Important parish events and milestones."
+      : `Upcoming ${sourceConfig[activeSource].label} events and activities.`;
+
+  const isLoadingContent = activeSource === "key-dates" ? keyDatesLoading : isLoading;
 
   return (
     <PageLayout hideBackButton>
@@ -156,6 +236,22 @@ export default function AllCalendars() {
                 )}
               </button>
 
+              {/* Key Dates tab */}
+              <button
+                onClick={() => setActiveSource("key-dates")}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all ${
+                  activeSource === "key-dates"
+                    ? "bg-gold/15 text-gold"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <Star className="w-3.5 h-3.5" />
+                Key Dates
+                {keyDatesCount > 0 && (
+                  <span className="text-xs opacity-70">{keyDatesCount}</span>
+                )}
+              </button>
+
               {/* Source-specific tabs */}
               {(Object.entries(sourceConfig) as [keyof typeof sourceConfig, typeof sourceConfig.parish][]).map(
                 ([key, config]) => {
@@ -186,14 +282,14 @@ export default function AllCalendars() {
 
       {/* Page Header */}
       <PageHeader
-        eyebrow="Stay Connected"
+        eyebrow={activeSource === "key-dates" ? "Important Dates" : "Stay Connected"}
         title={pageTitle}
         description={pageDescription}
       />
 
       <section className="py-8 sm:py-12">
         <div className="container max-w-4xl">
-          {isLoading ? (
+          {isLoadingContent ? (
             <div className="space-y-4">
               {[1, 2, 3, 4, 5].map((i) => (
                 <div key={i} className="flex gap-4 p-4 rounded-lg border">
@@ -211,7 +307,9 @@ export default function AllCalendars() {
               <p className="text-muted-foreground">
                 {activeSource === "all"
                   ? "No upcoming events found."
-                  : `No upcoming ${sourceConfig[activeSource]?.label} events.`}
+                  : activeSource === "key-dates"
+                    ? "No upcoming key dates."
+                    : `No upcoming ${sourceConfig[activeSource]?.label} events.`}
               </p>
               {activeSource !== "all" && (
                 <button
@@ -267,12 +365,24 @@ export default function AllCalendars() {
                         {group.events.map((event) => {
                           const eventDate = toEastern(event.startDate);
                           const endDate = event.endDate ? toEastern(event.endDate) : null;
-                          const config = sourceConfig[event.source as keyof typeof sourceConfig];
+                          const isKeyDate = event.source === "key-dates";
+                          const eventCategory = (event as any).category as string | undefined;
+
+                          // Determine border and badge colors
+                          const borderClass = isKeyDate
+                            ? (keyDateCategoryBorder[eventCategory || "parish"] || "border-l-gold")
+                            : sourceConfig[event.source as keyof typeof sourceConfig]?.border || "border-l-primary";
+                          const badgeClass = isKeyDate
+                            ? (keyDateCategoryColor[eventCategory || "parish"] || "bg-gold/10 text-gold")
+                            : sourceConfig[event.source as keyof typeof sourceConfig]?.color || "bg-primary/10 text-primary";
+                          const badgeLabel = isKeyDate
+                            ? (keyDateCategoryLabel[eventCategory || "parish"] || "Key Date")
+                            : sourceConfig[event.source as keyof typeof sourceConfig]?.label || "Parish";
 
                           return (
                             <div
                               key={event.id}
-                              className={`flex gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg border-l-[3px] ${config.border} bg-card hover:shadow-sm transition-shadow`}
+                              className={`flex gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg border-l-[3px] ${borderClass} bg-card hover:shadow-sm transition-shadow`}
                             >
                               {/* Date Badge */}
                               <div className="flex flex-col items-center justify-center min-w-[44px] sm:min-w-[52px]">
@@ -295,9 +405,9 @@ export default function AllCalendars() {
                                   </h4>
                                   <Badge
                                     variant="secondary"
-                                    className={`text-xs px-1.5 py-0 shrink-0 ${config.color}`}
+                                    className={`text-xs px-1.5 py-0 shrink-0 ${badgeClass}`}
                                   >
-                                    {config.label}
+                                    {badgeLabel}
                                   </Badge>
                                 </div>
 
@@ -309,7 +419,7 @@ export default function AllCalendars() {
                                       {endDate && ` – ${format(endDate, "h:mm a")}`}
                                     </span>
                                   )}
-                                  {event.allDay && (
+                                  {event.allDay && !isKeyDate && (
                                     <span className="flex items-center gap-1">
                                       <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                                       All Day
@@ -329,12 +439,12 @@ export default function AllCalendars() {
                                   </p>
                                 )}
 
-                                {/* Weather badge for outdoor/high-attendance events */}
-                                {weatherData?.[event.id]?.weather && (
+                                {/* Weather badge for outdoor/high-attendance events (not for key dates) */}
+                                {!isKeyDate && weatherData?.[event.id as unknown as number]?.weather && (
                                   <div className="mt-2 space-y-1.5">
-                                    <WeatherBadge weather={weatherData[event.id].weather!} />
-                                    {weatherData[event.id].parkingAdvisory && (
-                                      <ParkingAdvisory advisory={weatherData[event.id].parkingAdvisory!} />
+                                    <WeatherBadge weather={weatherData[event.id as unknown as number].weather!} />
+                                    {weatherData[event.id as unknown as number].parkingAdvisory && (
+                                      <ParkingAdvisory advisory={weatherData[event.id as unknown as number].parkingAdvisory!} />
                                     )}
                                   </div>
                                 )}
