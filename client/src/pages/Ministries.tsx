@@ -30,20 +30,20 @@ export default function Ministries() {
 
   return (
     <PageLayout>
-      {/* Header */}
-      <section className="py-6 sm:py-10 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      {/* Page Header — refined */}
+      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
         <div className="container">
-          <p className="text-gold font-medium tracking-widest uppercase text-xs mb-1.5">Serve & Pray</p>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-2">
+          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Serve & Pray</p>
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">
             Ministries & Devotions
           </h1>
-          <p className="text-sm text-muted-foreground max-w-md">
+          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
             Three ways to deepen your faith: through prayer, service at the altar, and outreach to those in need.
           </p>
         </div>
       </section>
 
-      <div ref={revealRef} className="container py-4 sm:py-8 space-y-8">
+      <div ref={revealRef} className="container py-6 sm:py-10 space-y-8">
 
         {/* ═══════════════════════════════════════════════════════════════
             SECTION 1: DEVOTIONS — Prayer Schedule
@@ -176,8 +176,8 @@ export default function Ministries() {
         </section>
 
         {/* CTA */}
-        <Card className="reveal bg-primary/5 border-primary/20">
-          <CardContent className="p-3 text-center">
+        <Card className="reveal bg-primary/[0.04] border border-primary/15 rounded-xl">
+          <CardContent className="p-4 text-center">
             <p className="text-sm text-foreground">
               Ready to serve? Contact us at{" "}
               <a href="mailto:parishoffice@stpatricksarmonk.org" className="font-semibold text-primary hover:underline">parishoffice@stpatricksarmonk.org</a>

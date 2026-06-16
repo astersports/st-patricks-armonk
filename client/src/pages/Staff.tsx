@@ -121,26 +121,24 @@ export default function Staff() {
 
   return (
     <PageLayout>
-      {/* Page Header */}
-      <section className="relative py-10 sm:py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      {/* Page Header — refined */}
+      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
         <div className="container">
-          <div className="max-w-3xl">
-            <p className="text-gold font-medium tracking-widest uppercase text-xs sm:text-sm mb-2 sm:mb-3 animate-fade-in">Our Team</p>
-            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4 animate-fade-in">
-              Staff & Directory
-            </h1>
-            <p className="text-base sm:text-lg text-muted-foreground animate-fade-up">
-              The dedicated people who serve our parish community every day.
-            </p>
-          </div>
+          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Our Team</p>
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">
+            Staff & Directory
+          </h1>
+          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
+            The dedicated people who serve our parish community every day.
+          </p>
         </div>
       </section>
 
       <div ref={revealRef}>
-        <section className="container py-8 sm:py-12 md:py-16 max-w-4xl">
-          <Accordion type="multiple" defaultValue={[]} className="space-y-3">
+        <section className="container py-6 sm:py-10 max-w-4xl">
+          <Accordion type="multiple" defaultValue={[]} className="space-y-2.5">
             {/* Clergy */}
-            <AccordionItem value="clergy" className="reveal border rounded-lg px-4 sm:px-6 bg-card shadow-sm">
+            <AccordionItem value="clergy" className="reveal border border-border/50 rounded-xl px-4 sm:px-5 bg-card shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
               <AccordionTrigger className="py-4 hover:no-underline">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
@@ -157,7 +155,7 @@ export default function Staff() {
             </AccordionItem>
 
             {/* Parish Staff */}
-            <AccordionItem value="staff" className="reveal border rounded-lg px-4 sm:px-6 bg-card shadow-sm">
+            <AccordionItem value="staff" className="reveal border border-border/50 rounded-xl px-4 sm:px-5 bg-card shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
               <AccordionTrigger className="py-4 hover:no-underline">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
@@ -175,7 +173,7 @@ export default function Staff() {
             </AccordionItem>
 
             {/* Parish Leadership */}
-            <AccordionItem value="leadership" className="reveal border rounded-lg px-4 sm:px-6 bg-card shadow-sm">
+            <AccordionItem value="leadership" className="reveal border border-border/50 rounded-xl px-4 sm:px-5 bg-card shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
               <AccordionTrigger className="py-4 hover:no-underline">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
@@ -193,7 +191,7 @@ export default function Staff() {
             </AccordionItem>
 
             {/* Ministry Leaders */}
-            <AccordionItem value="ministry" className="reveal border rounded-lg px-4 sm:px-6 bg-card shadow-sm">
+            <AccordionItem value="ministry" className="reveal border border-border/50 rounded-xl px-4 sm:px-5 bg-card shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
               <AccordionTrigger className="py-4 hover:no-underline">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center">
@@ -211,7 +209,7 @@ export default function Staff() {
             </AccordionItem>
 
             {/* Emeritus Staff */}
-            <AccordionItem value="emeritus" className="reveal border rounded-lg px-4 sm:px-6 bg-card shadow-sm">
+            <AccordionItem value="emeritus" className="reveal border border-border/50 rounded-xl px-4 sm:px-5 bg-card shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
               <AccordionTrigger className="py-4 hover:no-underline">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
@@ -237,7 +235,7 @@ export default function Staff() {
             </AccordionItem>
 
             {/* Department Directory */}
-            <AccordionItem value="directory" className="reveal border-2 border-primary/20 rounded-lg px-4 sm:px-6 bg-primary/5 shadow-sm">
+            <AccordionItem value="directory" className="reveal border border-primary/20 rounded-xl px-4 sm:px-5 bg-primary/[0.04] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
               <AccordionTrigger className="py-4 hover:no-underline">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
@@ -275,7 +273,7 @@ export default function Staff() {
 
           {/* Office Hours Banner */}
           <div className="reveal mt-8">
-            <Card className="bg-primary/5 border-primary/10">
+            <Card className="bg-primary/[0.04] border border-primary/15 rounded-xl">
               <CardContent className="p-5 sm:p-6">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />

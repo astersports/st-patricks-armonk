@@ -7,28 +7,28 @@ import { Card, CardContent } from "@/components/ui/card";
 export default function NewHere() {
   return (
     <PageLayout>
-      {/* Hero — compact */}
-      <section className="relative bg-gradient-to-b from-primary/5 to-background py-8 sm:py-12">
+      {/* Page Header — refined */}
+      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
         <div className="container max-w-3xl text-center">
-          <p className="text-primary font-medium tracking-[0.2em] uppercase text-sm mb-2">Welcome</p>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2">
+          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Welcome</p>
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">
             New Here?
           </h1>
-          <p className="text-base text-muted-foreground max-w-xl mx-auto">
+          <p className="text-sm text-muted-foreground max-w-xl mx-auto animate-fade-up">
             Whether you're new to the area, returning to the faith, or just curious — you belong here.
           </p>
         </div>
       </section>
 
-      {/* What to Expect — compact 2x2 grid */}
-      <section className="container max-w-3xl py-6 sm:py-8">
+      {/* What to Expect */}
+      <section className="container max-w-3xl py-6 sm:py-10">
         <h2 className="font-serif text-xl sm:text-2xl font-bold text-foreground mb-4 text-center">
           What to Expect at Mass
         </h2>
         <div className="grid grid-cols-2 gap-2 sm:gap-3">
-          <Card className="border-0 shadow-sm">
-            <CardContent className="p-3">
-              <div className="flex items-start gap-2">
+          <Card className="border border-border/50 shadow-[0_1px_3px_rgba(0,0,0,0.04)] rounded-xl">
+            <CardContent className="p-3.5">
+              <div className="flex items-start gap-2.5">
                 <Clock className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                 <div>
                   <h3 className="font-semibold text-sm sm:text-base mb-0.5">About an Hour</h3>
@@ -39,9 +39,9 @@ export default function NewHere() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-0 shadow-sm">
-            <CardContent className="p-3">
-              <div className="flex items-start gap-2">
+          <Card className="border border-border/50 shadow-[0_1px_3px_rgba(0,0,0,0.04)] rounded-xl">
+            <CardContent className="p-3.5">
+              <div className="flex items-start gap-2.5">
                 <Users className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                 <div>
                   <h3 className="font-semibold text-sm sm:text-base mb-0.5">Come As You Are</h3>
@@ -52,9 +52,9 @@ export default function NewHere() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-0 shadow-sm">
-            <CardContent className="p-3">
-              <div className="flex items-start gap-2">
+          <Card className="border border-border/50 shadow-[0_1px_3px_rgba(0,0,0,0.04)] rounded-xl">
+            <CardContent className="p-3.5">
+              <div className="flex items-start gap-2.5">
                 <BookOpen className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                 <div>
                   <h3 className="font-semibold text-sm sm:text-base mb-0.5">Follow Along</h3>
@@ -65,9 +65,9 @@ export default function NewHere() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-0 shadow-sm">
-            <CardContent className="p-3">
-              <div className="flex items-start gap-2">
+          <Card className="border border-border/50 shadow-[0_1px_3px_rgba(0,0,0,0.04)] rounded-xl">
+            <CardContent className="p-3.5">
+              <div className="flex items-start gap-2.5">
                 <Heart className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                 <div>
                   <h3 className="font-semibold text-sm sm:text-base mb-0.5">All Welcome</h3>
@@ -81,8 +81,8 @@ export default function NewHere() {
         </div>
       </section>
 
-      {/* Mass Schedule — compact */}
-      <section className="bg-secondary/30 py-6 sm:py-8">
+      {/* Mass Schedule */}
+      <section className="bg-muted/30 py-6 sm:py-10">
         <div className="container max-w-3xl">
           <h2 className="font-serif text-xl sm:text-2xl font-bold text-foreground mb-4 text-center">
             Mass Schedule
@@ -160,8 +160,8 @@ export default function NewHere() {
         </div>
       </section>
 
-      {/* Next Steps — compact */}
-      <section className="bg-primary/5 py-6 sm:py-8">
+      {/* Next Steps */}
+      <section className="bg-primary/[0.04] py-6 sm:py-10">
         <div className="container max-w-3xl text-center">
           <h2 className="font-serif text-xl sm:text-2xl font-bold text-foreground mb-2">
             Ready to Join Our Parish Family?

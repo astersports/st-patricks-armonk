@@ -83,10 +83,10 @@ export default function MarriageForm() {
   return (
     <div className="min-h-screen bg-[oklch(0.98_0.005_145)]">
       {/* Header */}
-      <div className="bg-green-900 text-white py-12">
+      <div className="bg-green-900 text-white py-8 sm:py-12">
         <div className="container max-w-3xl">
-          <Link href="/" className="text-green-200 hover:text-white text-sm flex items-center gap-1 mb-4">
-            <ArrowLeft className="w-4 h-4" /> Home
+          <Link href="/" className="text-green-300/70 hover:text-white text-sm flex items-center gap-1 mb-4 transition-colors">
+            <ArrowLeft className="w-3.5 h-3.5" /> Home
           </Link>
           <div className="flex items-center gap-3 mb-3">
             <div className="w-12 h-12 bg-green-800 rounded-full flex items-center justify-center">

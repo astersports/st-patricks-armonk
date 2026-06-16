@@ -9,26 +9,23 @@ export default function About() {
 
   return (
     <PageLayout>
-      {/* Hero Header */}
-      <section className="relative py-12 sm:py-20 md:py-28 overflow-hidden bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23166534' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
-        <div className="container relative">
-          <div className="max-w-3xl">
-            <p className="text-gold font-medium tracking-widest uppercase text-xs sm:text-sm mb-2 sm:mb-4 animate-fade-in">Est. 1924</p>
-            <h1 className="font-serif text-3xl sm:text-4xl md:text-6xl font-bold text-foreground mb-4 sm:mb-6 animate-fade-in">
-              Our Parish
-            </h1>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed animate-fade-up">
-              For a century, St. Patrick in Armonk has been a spiritual home for the Catholic community 
-              of Armonk and surrounding areas — a place of worship, fellowship, and service.
-            </p>
-          </div>
+      {/* Page Header — refined */}
+      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
+        <div className="container">
+          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Est. 1924</p>
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">
+            Our Parish
+          </h1>
+          <p className="text-sm sm:text-base text-muted-foreground max-w-2xl animate-fade-up">
+            For a century, St. Patrick in Armonk has been a spiritual home for the Catholic community 
+            of Armonk and surrounding areas — a place of worship, fellowship, and service.
+          </p>
         </div>
       </section>
 
       <div ref={revealRef}>
         {/* Parish Story */}
-        <section className="container py-10 sm:py-16 md:py-20">
+        <section className="container py-8 sm:py-12">
           <div className="max-w-4xl mx-auto">
             <div className="reveal grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-6 sm:gap-12 items-start">
               <div className="space-y-4">
@@ -60,7 +57,7 @@ export default function About() {
         </section>
 
         {/* The Armonk Cross */}
-        <section className="bg-gradient-to-b from-secondary/50 to-transparent py-10 sm:py-16 md:py-20">
+        <section className="bg-muted/30 py-8 sm:py-12">
           <div className="container">
             <div className="reveal max-w-4xl mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-6 sm:gap-12 items-start">
@@ -95,13 +92,13 @@ export default function About() {
         </section>
 
         {/* Quick Links */}
-        <section className="container py-10 sm:py-16">
+        <section className="container py-8 sm:py-12">
           <h2 className="reveal font-serif text-2xl sm:text-3xl font-bold text-foreground text-center mb-6 sm:mb-10">
             Get to Know Us
           </h2>
           <div className="reveal grid grid-cols-3 gap-2 sm:gap-6 max-w-4xl mx-auto">
             <Link href="/staff">
-              <Card className="hover-lift cursor-pointer h-full border-0 shadow-md">
+              <Card className="cursor-pointer h-full border border-border/50 shadow-[0_1px_3px_rgba(0,0,0,0.04)] rounded-xl transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
                 <CardContent className="p-3 sm:p-8 text-center">
                   <Users className="w-6 h-6 sm:w-10 sm:h-10 text-primary mx-auto mb-2 sm:mb-4" />
                   <h3 className="font-semibold text-xs sm:text-lg mb-0.5 sm:mb-2">Staff</h3>
@@ -115,7 +112,7 @@ export default function About() {
               </Card>
             </Link>
             <Link href="/parish-registration">
-              <Card className="hover-lift cursor-pointer h-full border-0 shadow-md">
+              <Card className="cursor-pointer h-full border border-border/50 shadow-[0_1px_3px_rgba(0,0,0,0.04)] rounded-xl transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
                 <CardContent className="p-3 sm:p-8 text-center">
                   <Heart className="w-6 h-6 sm:w-10 sm:h-10 text-accent mx-auto mb-2 sm:mb-4" />
                   <h3 className="font-semibold text-xs sm:text-lg mb-0.5 sm:mb-2">Register</h3>
@@ -129,7 +126,7 @@ export default function About() {
               </Card>
             </Link>
             <Link href="/contact">
-              <Card className="hover-lift cursor-pointer h-full border-0 shadow-md">
+              <Card className="cursor-pointer h-full border border-border/50 shadow-[0_1px_3px_rgba(0,0,0,0.04)] rounded-xl transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
                 <CardContent className="p-3 sm:p-8 text-center">
                   <Church className="w-6 h-6 sm:w-10 sm:h-10 text-primary mx-auto mb-2 sm:mb-4" />
                   <h3 className="font-semibold text-xs sm:text-lg mb-0.5 sm:mb-2">Visit</h3>

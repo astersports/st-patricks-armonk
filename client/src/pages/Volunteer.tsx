@@ -93,14 +93,12 @@ export default function Volunteer() {
 
   return (
     <PageLayout>
-      {/* Header */}
-      <section className="bg-gradient-to-b from-green-50 to-white py-12 border-b-4 border-primary">
+      {/* Page Header — refined */}
+      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
         <div className="container">
-          <div className="flex items-center gap-3 mb-3">
-            <Heart className="w-8 h-8 text-accent" />
-            <h1 className="font-serif text-4xl md:text-5xl text-foreground">Volunteer</h1>
-          </div>
-          <p className="text-muted-foreground text-lg max-w-2xl">
+          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Get Involved</p>
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">Volunteer</h1>
+          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
             Share your time and talents with our parish community. Sign up for volunteer opportunities below.
           </p>
         </div>

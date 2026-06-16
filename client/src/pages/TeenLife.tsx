@@ -49,14 +49,12 @@ export default function TeenLife() {
 
   return (
     <PageLayout>
-      {/* Page Header */}
-      <section className="bg-gradient-to-b from-primary/5 to-background py-12 border-b border-primary/10">
+      {/* Page Header — refined */}
+      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
         <div className="container max-w-5xl">
-          <div className="flex items-center gap-3 mb-3">
-            <Users className="w-8 h-8 text-primary" />
-            <h1 className="font-serif text-4xl md:text-5xl text-foreground">Teen Life</h1>
-          </div>
-          <p className="text-lg text-muted-foreground max-w-2xl">
+          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Youth Ministry</p>
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">Teen Life</h1>
+          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
             A vibrant community for teens at St. Patrick in Armonk — faith, fellowship, and fun.
           </p>
         </div>

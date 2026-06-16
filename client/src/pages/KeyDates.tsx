@@ -150,14 +150,14 @@ export default function KeyDates() {
   return (
     <PageLayout>
       <div ref={revealRef}>
-        {/* Header */}
-        <section className="bg-gradient-to-b from-primary/5 to-transparent pt-8 pb-6 sm:pt-12 sm:pb-8">
+        {/* Page Header — refined */}
+        <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
           <div className="container">
-
             <div className="text-center">
               <p className="text-xs text-gold uppercase tracking-[0.2em] font-medium mb-1">2026–2027</p>
-              <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground">Key Dates</h1>
-              <p className="text-foreground/60 text-sm sm:text-base mt-2 max-w-lg mx-auto">
+              <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Parish Calendar</p>
+              <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">Key Dates</h1>
+              <p className="text-sm text-muted-foreground max-w-md mx-auto animate-fade-up">
                 All important parish events and milestones for the year
               </p>
             </div>

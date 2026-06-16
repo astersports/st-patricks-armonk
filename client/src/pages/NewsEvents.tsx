@@ -132,18 +132,18 @@ export default function NewsEvents() {
 
   return (
     <PageLayout>
-      <section className="relative py-10 sm:py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
         <div className="container">
-          <p className="text-gold font-medium tracking-widest uppercase text-xs sm:text-sm mb-2 sm:mb-3 animate-fade-in">Stay Informed</p>
-          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4 animate-fade-in">News & Announcements</h1>
-          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl animate-fade-up">
+          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Stay Informed</p>
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">News & Announcements</h1>
+          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
             Stay informed about parish happenings, announcements, and community updates.
           </p>
         </div>
       </section>
 
       <div ref={revealRef}>
-        <section className="container py-8 sm:py-12">
+        <section className="container py-6 sm:py-10">
           {newsLoading ? (
             <div className="space-y-4">
               {[1, 2, 3, 4].map((i) => (
@@ -153,7 +153,7 @@ export default function NewsEvents() {
           ) : news && news.length > 0 ? (
             <div className="space-y-4">
               {news.map((post, idx) => (
-                <Card key={post.id} className={`reveal overflow-hidden hover-glow transition-all border-l-4 ${accentColors[idx % accentColors.length]}`}>
+                <Card key={post.id} className={`reveal overflow-hidden border border-border/50 shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] rounded-xl border-l-3 ${accentColors[idx % accentColors.length]}`}>
                   <CardContent className="p-6 flex gap-5">
                     {post.imageUrl && (
                       <div className="w-24 h-24 rounded-lg overflow-hidden shrink-0 hidden sm:block">

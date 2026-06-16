@@ -9,26 +9,24 @@ export default function Giving() {
 
   return (
     <PageLayout>
-      {/* Compact hero header */}
-      <section className="relative py-8 sm:py-12 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      {/* Page Header — refined */}
+      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
         <div className="container">
-          <div className="max-w-2xl">
-            <p className="text-gold font-medium tracking-widest uppercase text-sm sm:text-xs mb-2 animate-fade-in">Stewardship</p>
-            <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-2 animate-fade-in">
-              Online Giving
-            </h1>
-            <p className="text-sm sm:text-base text-muted-foreground animate-fade-up">
-              Your generous support sustains our parish community and its mission.
-            </p>
-          </div>
+          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Stewardship</p>
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">
+            Online Giving
+          </h1>
+          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
+            Your generous support sustains our parish community and its mission.
+          </p>
         </div>
       </section>
 
       <div ref={revealRef}>
-        <section className="container py-5 sm:py-8">
+        <section className="container py-6 sm:py-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             {/* WeShare — compact */}
-            <Card className="reveal border-t-3 border-t-primary shadow-sm">
+            <Card className="reveal border border-border/50 border-t-3 border-t-primary shadow-[0_1px_3px_rgba(0,0,0,0.04)] rounded-xl">
               <CardContent className="p-4 sm:p-5">
                 <div className="flex items-center gap-2.5 mb-3">
                   <div className="bg-primary/10 p-2 rounded-lg">
@@ -61,7 +59,7 @@ export default function Giving() {
             </Card>
 
             {/* Venmo — compact */}
-            <Card className="reveal border-t-3 border-t-accent shadow-sm">
+            <Card className="reveal border border-border/50 border-t-3 border-t-accent shadow-[0_1px_3px_rgba(0,0,0,0.04)] rounded-xl">
               <CardContent className="p-4 sm:p-5">
                 <div className="flex items-center gap-2.5 mb-3">
                   <div className="bg-accent/10 p-2 rounded-lg">
@@ -89,7 +87,7 @@ export default function Giving() {
           </div>
 
           {/* Other Ways to Give — compact */}
-          <Card className="reveal mt-4 sm:mt-6 bg-primary/5 border-primary/20">
+          <Card className="reveal mt-5 sm:mt-8 bg-primary/[0.04] border border-primary/15 rounded-xl">
             <CardContent className="p-4 sm:p-5 text-center">
               <Heart className="w-6 h-6 text-primary mx-auto mb-2" />
               <h3 className="font-serif text-base sm:text-lg font-semibold mb-1.5">Other Ways to Give</h3>
@@ -101,7 +99,7 @@ export default function Giving() {
           </Card>
 
           {/* Cardinals Appeal — compact */}
-          <Card className="reveal mt-4 sm:mt-6 border-t-3 border-t-[#c41e3a] shadow-sm">
+          <Card className="reveal mt-5 sm:mt-8 border border-border/50 border-t-3 border-t-[#c41e3a] shadow-[0_1px_3px_rgba(0,0,0,0.04)] rounded-xl">
             <CardContent className="p-4 sm:p-5">
               <div className="flex flex-col sm:flex-row items-center gap-4">
                 <div className="flex flex-col items-center sm:items-start flex-1">

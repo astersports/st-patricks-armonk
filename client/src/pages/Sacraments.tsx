@@ -220,45 +220,45 @@ export default function Sacraments() {
 
   return (
     <PageLayout>
-      {/* Page Header */}
-      <section className="relative py-10 sm:py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      {/* Page Header — refined */}
+      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
         <div className="container max-w-5xl">
-          <p className="text-gold font-medium tracking-widest uppercase text-xs sm:text-sm mb-2 sm:mb-3 animate-fade-in">Sacred Encounters</p>
-          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4 animate-fade-in">Sacraments</h1>
-          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl animate-fade-up">
+          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Sacred Encounters</p>
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">Sacraments</h1>
+          <p className="text-sm sm:text-base text-muted-foreground max-w-2xl animate-fade-up">
             The sacraments are encounters with Christ that transform our lives. Select a sacrament below to learn about preparation and requirements.
           </p>
         </div>
       </section>
 
       <div ref={revealRef}>
-        <section className="py-8 sm:py-12">
+        <section className="py-6 sm:py-10">
           <div className="container max-w-4xl">
             {/* Accordion for Sacraments */}
-            <Accordion type="single" collapsible className="space-y-3 sm:space-y-4">
+            <Accordion type="single" collapsible className="space-y-2.5">
               {sacraments.map((sac) => (
                 <AccordionItem
                   key={sac.id}
                   value={sac.id}
-                  className={`reveal border border-border/60 rounded-xl overflow-hidden shadow-sm hover-glow transition-all border-l-4 ${sac.accent}`}
+                  className={`reveal border border-border/50 rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] border-l-3 ${sac.accent}`}
                 >
-                  <AccordionTrigger className="px-4 sm:px-6 py-3 sm:py-5 hover:no-underline">
-                    <div className="flex items-center gap-2.5 sm:gap-4">
-                      <div className="bg-primary/10 p-1.5 sm:p-2.5 rounded-lg shrink-0">
+                  <AccordionTrigger className="px-4 sm:px-5 py-3.5 sm:py-4 hover:no-underline">
+                    <div className="flex items-center gap-3 sm:gap-3.5">
+                      <div className="bg-primary/8 p-2 sm:p-2.5 rounded-lg shrink-0">
                         <sac.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                       </div>
                       <div className="text-left min-w-0">
                         <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                           <span className="font-serif text-sm sm:text-lg font-semibold text-foreground">{sac.title}</span>
                           {sac.badge && (
-                            <Badge className="bg-accent/15 text-accent-foreground border-0 text-xs px-1.5 py-0 shrink-0">{sac.badge}</Badge>
+                            <Badge className="bg-accent/10 text-accent-foreground border-0 text-[10px] px-1.5 py-0 shrink-0">{sac.badge}</Badge>
                           )}
                         </div>
-                        <p className="text-sm sm:text-sm text-muted-foreground mt-0.5 line-clamp-1">{sac.subtitle}</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 line-clamp-1">{sac.subtitle}</p>
                       </div>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="px-4 sm:px-6 pb-4 sm:pb-6">
+                  <AccordionContent className="px-4 sm:px-5 pb-4 sm:pb-5">
                     {sac.content}
                   </AccordionContent>
                 </AccordionItem>
@@ -266,28 +266,28 @@ export default function Sacraments() {
             </Accordion>
 
             {/* Additional Info Cards */}
-            <div className="mt-12 grid md:grid-cols-2 gap-5">
-              <Card className="p-6 border-l-4 border-l-[oklch(0.42_0.12_150)] hover-glow transition-all">
-                <div className="flex items-center gap-2 mb-3">
-                  <h3 className="font-serif text-lg text-foreground">Reconciliation</h3>
-                  <Badge className="bg-primary/10 text-primary border-0 text-xs px-1.5 py-0">Weekly</Badge>
+            <div className="mt-10 grid md:grid-cols-2 gap-4">
+              <Card className="p-5 border border-border/50 border-l-3 border-l-[oklch(0.42_0.12_150)] shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] rounded-xl">
+                <div className="flex items-center gap-2 mb-2.5">
+                  <h3 className="font-serif text-base text-foreground">Reconciliation</h3>
+                  <Badge className="bg-primary/8 text-primary border-0 text-[10px] px-1.5 py-0">Weekly</Badge>
                 </div>
-                <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                <p className="text-muted-foreground text-sm leading-relaxed mb-3.5">
                   The Sacrament of Reconciliation is available every Saturday from 4:30 PM to 5:15 PM, or by appointment with a priest.
                 </p>
-                <Button variant="outline" size="sm" asChild>
+                <Button variant="outline" size="sm" className="rounded-full" asChild>
                   <a href="/mass-times">View Full Schedule</a>
                 </Button>
               </Card>
-              <Card className="p-6 border-l-4 border-l-[oklch(0.75_0.15_85)] hover-glow transition-all">
-                <div className="flex items-center gap-2 mb-3">
-                  <h3 className="font-serif text-lg text-foreground">Anointing of the Sick</h3>
-                  <Badge className="bg-accent/15 text-accent-foreground border-0 text-xs px-1.5 py-0">By Request</Badge>
+              <Card className="p-5 border border-border/50 border-l-3 border-l-[oklch(0.75_0.15_85)] shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] rounded-xl">
+                <div className="flex items-center gap-2 mb-2.5">
+                  <h3 className="font-serif text-base text-foreground">Anointing of the Sick</h3>
+                  <Badge className="bg-accent/10 text-accent-foreground border-0 text-[10px] px-1.5 py-0">By Request</Badge>
                 </div>
-                <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                <p className="text-muted-foreground text-sm leading-relaxed mb-3.5">
                   If you or a loved one is seriously ill, hospitalized, or preparing for surgery, please contact the parish office to arrange for the Sacrament of the Anointing of the Sick.
                 </p>
-                <Button variant="outline" size="sm" asChild>
+                <Button variant="outline" size="sm" className="rounded-full" asChild>
                   <a href="/contact">Contact Parish Office</a>
                 </Button>
               </Card>

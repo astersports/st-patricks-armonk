@@ -207,7 +207,7 @@ function NowAtStPatrick({ latestNews, allImportantDates }: { latestNews: any; al
     cyo: { dot: "bg-orange-500", bg: "bg-orange-500/10" },
     sacrament: { dot: "bg-purple-500", bg: "bg-purple-500/10" },
     parish: { dot: "bg-primary", bg: "bg-primary/10" },
-    teen_life: { dot: "bg-blue-500", bg: "bg-blue-500/10" },
+    teen_life: { dot: "bg-teal-600", bg: "bg-teal-600/10" },
     social: { dot: "bg-amber-500", bg: "bg-amber-500/10" },
   };
 
@@ -259,7 +259,7 @@ const CATEGORIES = [
   { key: "ccd", label: "CCD", color: "bg-green-500/15 text-green-700" },
   { key: "cyo", label: "CYO", color: "bg-orange-500/15 text-orange-700" },
   { key: "sacrament", label: "Sacrament", color: "bg-purple-500/15 text-purple-700" },
-  { key: "teen_life", label: "Teen Life", color: "bg-blue-500/15 text-blue-700" },
+  { key: "teen_life", label: "Teen Life", color: "bg-teal-600/15 text-teal-700" },
   { key: "social", label: "Social", color: "bg-amber-500/15 text-amber-700" },
 ];
 
@@ -421,7 +421,7 @@ function ComingUpEvents({ allImportantDates }: { allImportantDates: any[] | unde
 
   const catDots: Record<string, string> = {
     ccd: "bg-green-500", cyo: "bg-orange-500", sacrament: "bg-purple-500",
-    parish: "bg-primary", teen_life: "bg-blue-500", social: "bg-amber-500",
+    parish: "bg-primary", teen_life: "bg-teal-600", social: "bg-amber-500",
   };
 
   if (upcomingEvents.length === 0) return null;
@@ -950,7 +950,7 @@ function JourneyCardsSection() {
 const SOURCES = [
   { key: "goodnewsroom" as const, label: "Good Newsroom", sublabel: "Archdiocese of NY", color: "bg-emerald-500", borderColor: "border-l-emerald-500", url: "https://thegoodnewsroom.org/" },
   { key: "archny" as const, label: "The Pillar", sublabel: "Catholic Journalism", color: "bg-amber-700", borderColor: "border-l-amber-700", url: "https://www.pillarcatholic.com/" },
-  { key: "usccb" as const, label: "Aleteia", sublabel: "Catholic Life", color: "bg-blue-600", borderColor: "border-l-blue-600", url: "https://aleteia.org/" },
+  { key: "usccb" as const, label: "Aleteia", sublabel: "Catholic Life", color: "bg-teal-600", borderColor: "border-l-teal-600", url: "https://aleteia.org/" },
   { key: "vatican" as const, label: "Vatican News", sublabel: "Holy See Press Office", color: "bg-red-600", borderColor: "border-l-red-600", url: "https://www.vaticannews.va/en.html" },
 ] as const;
 

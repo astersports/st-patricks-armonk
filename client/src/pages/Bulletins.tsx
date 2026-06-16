@@ -169,17 +169,18 @@ export default function Bulletins() {
 
   return (
     <PageLayout>
-      {/* Compact header */}
-      <section className="bg-gradient-to-b from-primary/5 to-transparent py-6 sm:py-8">
+      {/* Page Header — refined */}
+      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
         <div className="container">
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-1">Weekly Bulletin</h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Parish Life</p>
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">Weekly Bulletin</h1>
+          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
             Parish announcements, Mass readings, and community news.
           </p>
         </div>
       </section>
 
-      <section className="container py-4 sm:py-6">
+      <section className="container py-6 sm:py-10">
         {isLoading ? (
           <div className="space-y-3">
             <Skeleton className="h-10 w-full rounded-lg" />

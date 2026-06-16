@@ -1,5 +1,5 @@
 import PageLayout from "@/components/PageLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Phone, Clock, Mail } from "lucide-react";
 import { MapView } from "@/components/Map";
 import { useCallback } from "react";
@@ -21,37 +21,35 @@ export default function Contact() {
 
   return (
     <PageLayout>
-      <section className="relative py-10 sm:py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      {/* Page Header — refined */}
+      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
         <div className="container">
-          <div className="max-w-3xl">
-            <p className="text-gold font-medium tracking-widest uppercase text-xs sm:text-sm mb-2 sm:mb-3 animate-fade-in">Get in Touch</p>
-            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4 animate-fade-in">
-              Contact Us
-            </h1>
-            <p className="text-base sm:text-lg text-muted-foreground animate-fade-up">
-              We would love to hear from you. Reach out to our parish office for any inquiries.
-            </p>
-          </div>
+          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Get in Touch</p>
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">
+            Contact Us
+          </h1>
+          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
+            We would love to hear from you. Reach out to our parish office for any inquiries.
+          </p>
         </div>
       </section>
 
       <div ref={revealRef}>
-        <section className="container py-8 sm:py-12">
+        <section className="container py-6 sm:py-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-8">
             {/* Contact Info */}
-            <div className="reveal space-y-4 sm:space-y-6">
-              <Card className="border-t-4 border-t-primary shadow-sm">
-                <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-4">
-                  <CardTitle className="font-serif text-xl sm:text-2xl">Parish Office</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6 pt-0">
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary/10 p-2.5 rounded-xl shrink-0">
-                      <MapPin className="w-5 h-5 text-primary" />
+            <div className="reveal space-y-4">
+              <Card className="border border-border/50 border-t-3 border-t-primary shadow-[0_1px_3px_rgba(0,0,0,0.04)] rounded-xl overflow-hidden">
+                <CardContent className="p-5 sm:p-6 space-y-5">
+                  <h2 className="font-serif text-xl font-bold">Parish Office</h2>
+
+                  <div className="flex items-start gap-3.5">
+                    <div className="bg-primary/8 p-2 rounded-lg shrink-0">
+                      <MapPin className="w-4 h-4 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1">Address</h3>
-                      <p className="text-muted-foreground">
+                      <h3 className="font-semibold text-sm mb-0.5">Address</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
                         St. Patrick in Armonk<br />
                         29 Cox Ave, Armonk NY 10504<br />
                         P.O. Box 6
@@ -59,41 +57,41 @@ export default function Contact() {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary/10 p-2.5 rounded-xl shrink-0">
-                      <Phone className="w-5 h-5 text-primary" />
+                  <div className="flex items-start gap-3.5">
+                    <div className="bg-primary/8 p-2 rounded-lg shrink-0">
+                      <Phone className="w-4 h-4 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1">Phone</h3>
-                      <p className="text-muted-foreground">
-                        Parish Office: <a href="tel:9142739724" className="text-primary hover:underline">(914) 273-9724</a><br />
-                        Cell: <a href="tel:9145311760" className="text-primary hover:underline">(914) 531-1760</a><br />
-                        Religious Ed: <a href="tel:9145311759" className="text-primary hover:underline">(914) 531-1759</a>
+                      <h3 className="font-semibold text-sm mb-0.5">Phone</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        Parish Office: <a href="tel:9142739724" className="text-primary hover:underline font-medium">(914) 273-9724</a><br />
+                        Cell: <a href="tel:9145311760" className="text-primary hover:underline font-medium">(914) 531-1760</a><br />
+                        Religious Ed: <a href="tel:9145311759" className="text-primary hover:underline font-medium">(914) 531-1759</a>
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary/10 p-2.5 rounded-xl shrink-0">
-                      <Clock className="w-5 h-5 text-primary" />
+                  <div className="flex items-start gap-3.5">
+                    <div className="bg-primary/8 p-2 rounded-lg shrink-0">
+                      <Clock className="w-4 h-4 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1">Office Hours</h3>
-                      <p className="text-muted-foreground">
+                      <h3 className="font-semibold text-sm mb-0.5">Office Hours</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
                         Monday – Thursday: 10:00 AM – 5:00 PM<br />
                         Friday: Closed
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary/10 p-2.5 rounded-xl shrink-0">
-                      <Mail className="w-5 h-5 text-primary" />
+                  <div className="flex items-start gap-3.5">
+                    <div className="bg-primary/8 p-2 rounded-lg shrink-0">
+                      <Mail className="w-4 h-4 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1">Stay Connected</h3>
-                      <p className="text-muted-foreground">
-                        <a href="https://stpatarmonk.flocknote.com/home" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                      <h3 className="font-semibold text-sm mb-0.5">Stay Connected</h3>
+                      <p className="text-sm text-muted-foreground">
+                        <a href="https://stpatarmonk.flocknote.com/home" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">
                           Join us on Flocknote
                         </a>{" "}
                         for parish communications.
@@ -104,10 +102,10 @@ export default function Contact() {
               </Card>
 
               {/* Directions */}
-              <Card className="hover-glow transition-all">
-                <CardContent className="p-6">
-                  <h3 className="font-semibold text-lg mb-2">Directions</h3>
-                  <p className="text-muted-foreground text-sm">
+              <Card className="border border-border/50 shadow-[0_1px_3px_rgba(0,0,0,0.04)] rounded-xl transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+                <CardContent className="p-5">
+                  <h3 className="font-semibold text-base mb-1.5">Directions</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
                     St. Patrick in Armonk is located on Cox Avenue in Armonk, NY. 
                     The church is easily accessible from Route 22 and I-684.
                   </p>
@@ -124,7 +122,7 @@ export default function Contact() {
             </div>
 
             {/* Map */}
-            <div className="reveal h-[300px] sm:h-[500px] lg:h-auto min-h-[250px] sm:min-h-[400px] rounded-xl overflow-hidden shadow-lg border">
+            <div className="reveal h-[300px] sm:h-[500px] lg:h-auto min-h-[250px] sm:min-h-[400px] rounded-xl overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-border/50">
               <MapView onMapReady={handleMapReady} className="w-full h-full" />
             </div>
           </div>

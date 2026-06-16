@@ -69,8 +69,8 @@ export default function ParishRegistration() {
 
   return (
     <PageLayout>
-      {/* Header */}
-      <section className="relative py-10 sm:py-16 md:py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      {/* Page Header — refined */}
+      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
         <div className="container">
           <div className="max-w-3xl">
             <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">

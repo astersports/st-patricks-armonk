@@ -39,20 +39,20 @@ export default function PhotoGallery() {
 
   return (
     <PageLayout>
-      <div className="container py-8 sm:py-12">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 mb-3">
-            <Camera className="w-5 h-5 text-primary" />
-            <span className="text-xs font-medium text-primary uppercase tracking-wider">Parish Life</span>
-          </div>
-          <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-2">
+      {/* Page Header — refined */}
+      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
+        <div className="container text-center">
+          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Parish Life</p>
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">
             Photo Gallery
           </h1>
-          <p className="text-muted-foreground text-sm sm:text-base max-w-lg mx-auto">
+          <p className="text-sm text-muted-foreground max-w-lg mx-auto animate-fade-up">
             Moments of faith, fellowship, and celebration from our parish community.
           </p>
         </div>
+      </section>
+
+      <div className="container py-6 sm:py-10">
 
         {/* Album Filter Tabs */}
         {albums && albums.length > 0 && (

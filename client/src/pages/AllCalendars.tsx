@@ -405,13 +405,13 @@ export default function AllCalendars() {
       </div>
 
       {/* Page Header */}
-      <section className="bg-gradient-to-b from-primary/5 to-background py-8 sm:py-10 border-b border-primary/10">
+      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
         <div className="container max-w-4xl">
-          <p className="text-gold font-medium tracking-widest uppercase text-xs mb-2">
+          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">
             {isKeyDates ? "Important Dates" : "Stay Connected"}
           </p>
-          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-foreground mb-2">{pageTitle}</h1>
-          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl">
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">{pageTitle}</h1>
+          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
             {pageDescription}
           </p>
           {isKeyDates && (

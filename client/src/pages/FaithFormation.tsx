@@ -11,26 +11,26 @@ export default function FaithFormation() {
 
   return (
     <PageLayout>
-      <section className="py-6 sm:py-10 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      <section className="py-8 sm:py-12 bg-gradient-to-b from-primary/[0.04] to-transparent">
         <div className="container">
-          <p className="text-gold font-medium tracking-widest uppercase text-sm mb-1.5 animate-fade-in">Grow in Faith</p>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-2 animate-fade-in">
+          <p className="text-gold font-bold tracking-[0.2em] uppercase text-[11px] mb-2 animate-fade-in">Grow in Faith</p>
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-2.5 animate-fade-in leading-tight">
             Faith Formation
           </h1>
-          <p className="text-sm text-muted-foreground animate-fade-up">
+          <p className="text-sm text-muted-foreground max-w-md animate-fade-up">
             Religious Education programs for children, youth, and adults.
           </p>
         </div>
       </section>
 
       <div ref={revealRef}>
-        <section className="container py-4 sm:py-8">
+        <section className="container py-6 sm:py-10">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-8">
             {/* Main Content — Accordion */}
             <div className="lg:col-span-2">
               {/* Status Banner */}
-              <div className="reveal bg-accent/10 border border-accent/20 rounded-xl p-4 mb-8 flex items-center gap-3">
-                <Badge className="bg-accent text-white border-0 text-xs px-2 py-0.5 shrink-0">Open</Badge>
+              <div className="reveal bg-accent/8 border border-accent/15 rounded-xl p-4 mb-6 flex items-center gap-3">
+                <Badge className="bg-accent text-white border-0 text-[10px] px-2 py-0.5 shrink-0">Open</Badge>
                 <div>
                   <p className="font-semibold text-accent-foreground text-sm">
                     CCD Registration for 2026–27 is Now Open!
@@ -41,11 +41,11 @@ export default function FaithFormation() {
                 </div>
               </div>
 
-              <Accordion type="single" collapsible className="space-y-4">
+              <Accordion type="single" collapsible className="space-y-2.5">
                 {/* CCD */}
                 <AccordionItem
                   value="ccd"
-                  className="reveal border border-border/60 rounded-xl overflow-hidden shadow-sm hover-glow transition-all border-l-4 border-l-[oklch(0.42_0.12_150)]"
+                  className="reveal border border-border/50 rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] border-l-3 border-l-[oklch(0.42_0.12_150)]"
                 >
                   <AccordionTrigger className="px-4 sm:px-6 py-3 sm:py-5 hover:no-underline">
                     <div className="flex items-center gap-3 sm:gap-4">
@@ -85,7 +85,7 @@ export default function FaithFormation() {
                 {/* RCIA */}
                 <AccordionItem
                   value="rcia"
-                  className="reveal border border-border/60 rounded-xl overflow-hidden shadow-sm hover-glow transition-all border-l-4 border-l-[oklch(0.75_0.15_85)]"
+                  className="reveal border border-border/50 rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] border-l-3 border-l-[oklch(0.75_0.15_85)]"
                 >
                   <AccordionTrigger className="px-4 sm:px-6 py-3 sm:py-5 hover:no-underline">
                     <div className="flex items-center gap-3 sm:gap-4">
@@ -117,7 +117,7 @@ export default function FaithFormation() {
                 {/* Walking With Purpose */}
                 <AccordionItem
                   value="wwp"
-                  className="reveal border border-border/60 rounded-xl overflow-hidden shadow-sm hover-glow transition-all border-l-4 border-l-[oklch(0.55_0.15_25)]"
+                  className="reveal border border-border/50 rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] border-l-3 border-l-[oklch(0.55_0.15_25)]"
                 >
                   <AccordionTrigger className="px-4 sm:px-6 py-3 sm:py-5 hover:no-underline">
                     <div className="flex items-center gap-3 sm:gap-4">
@@ -148,7 +148,7 @@ export default function FaithFormation() {
                 {/* Adult Faith Formation */}
                 <AccordionItem
                   value="adult"
-                  className="reveal border border-border/60 rounded-xl overflow-hidden shadow-sm hover-glow transition-all border-l-4 border-l-[oklch(0.5_0.12_250)]"
+                  className="reveal border border-border/50 rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] border-l-3 border-l-[oklch(0.5_0.12_250)]"
                 >
                   <AccordionTrigger className="px-4 sm:px-6 py-3 sm:py-5 hover:no-underline">
                     <div className="flex items-center gap-3 sm:gap-4">
@@ -179,7 +179,7 @@ export default function FaithFormation() {
                 {/* Blaze */}
                 <AccordionItem
                   value="blaze"
-                  className="reveal border border-border/60 rounded-xl overflow-hidden shadow-sm hover-glow transition-all border-l-4 border-l-[oklch(0.65_0.2_25)]"
+                  className="reveal border border-border/50 rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] border-l-3 border-l-[oklch(0.65_0.2_25)]"
                 >
                   <AccordionTrigger className="px-4 sm:px-6 py-3 sm:py-5 hover:no-underline">
                     <div className="flex items-center gap-3 sm:gap-4">

@@ -516,3 +516,19 @@
 - [x] Redesign Footer (cleaner structure, refined spacing, rounded-full buttons)
 - [x] Redesign Mobile Bottom Nav (refined active state, indicator bar, better spacing)
 - [x] Run tests and verify mobile screenshots
+
+## Phase: L99 Inner Pages Polish + Homepage Green Fix
+
+- [x] Change homepage light blue tint to green (St. Patrick's theme color)
+- [x] Apply L99 design polish to Mass Times page
+- [x] Apply L99 design polish to Sacraments page
+- [x] Apply L99 design polish to Faith Formation page
+- [x] Apply L99 design polish to Contact page
+- [x] Apply L99 design polish to Giving page
+- [x] Apply L99 design polish to Ministries page
+- [x] Apply L99 design polish to New Here page
+- [x] Apply L99 design polish to Staff page
+- [x] Apply L99 design polish to Gallery page
+- [x] Apply L99 design polish to News page
+- [x] Apply L99 design polish to Bulletins page
+- [x] Verify all pages on mobile and desktop
