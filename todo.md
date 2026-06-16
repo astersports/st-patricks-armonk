@@ -375,3 +375,6 @@
 - [x] Add pause-on-hover to live activity bar so rotation stops when user hovers
 - [x] Add left/right navigation arrows to live activity bar for manual browsing
 - [x] Replace rotating activity bar with two separate sections: Latest News card + Coming Up events list
+- [x] Add countdown (e.g. "in 3 days") to Coming Up events
+- [x] Compact all homepage cards to minimal height (use Sacraments/Faith Formation card style as template)
+- [x] Reduce journey tiles (New Here, Sacraments, Faith Formation, Get Involved) height

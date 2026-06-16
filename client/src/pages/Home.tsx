@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 
 import { useState, useMemo, useEffect } from "react";
 import { toast } from "sonner";
-import { format } from "date-fns";
+import { format, differenceInDays, differenceInHours } from "date-fns";
 import { TZDate } from "@date-fns/tz";
 import { useReveal } from "@/hooks/useReveal";
 import { useScrollReveal, useStaggerReveal } from "@/hooks/useScrollReveal";
@@ -198,31 +198,23 @@ function HeroSection() {
 // === LATEST NEWS CARD — Always visible, single news highlight ===
 function LatestNewsCard({ latestNews }: { latestNews: any }) {
   return (
-    <section className="reveal container -mt-8 relative z-20 mb-4 sm:mb-5">
+    <section className="reveal container -mt-8 relative z-20 mb-3 sm:mb-4">
       <Card className="border-0 shadow-lg overflow-hidden hover-glow">
         <CardContent className="p-0">
           <Link href="/news" className="group block">
-            <div className="p-4 sm:p-5 flex items-center gap-4 hover:bg-primary/[0.02] transition-colors">
-              <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                <Newspaper className="w-5 h-5 text-primary" />
+            <div className="p-3 sm:p-4 flex items-center gap-3 hover:bg-primary/[0.02] transition-colors">
+              <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                <Newspaper className="w-4 h-4 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Latest News</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Latest News</p>
                 {latestNews ? (
-                  <>
-                    <p className="font-semibold text-foreground text-sm sm:text-base truncate">{latestNews.title}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {format(new Date(latestNews.publishedAt || latestNews.createdAt), "MMM d, yyyy")}
-                    </p>
-                  </>
+                  <p className="font-semibold text-foreground text-sm truncate">{latestNews.title}</p>
                 ) : (
-                  <>
-                    <p className="font-semibold text-foreground text-sm sm:text-base">News & Announcements</p>
-                    <p className="text-xs text-muted-foreground">Parish updates and community news</p>
-                  </>
+                  <p className="font-semibold text-foreground text-sm">News & Announcements</p>
                 )}
               </div>
-              <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+              <ArrowRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
             </div>
           </Link>
         </CardContent>
@@ -231,7 +223,21 @@ function LatestNewsCard({ latestNews }: { latestNews: any }) {
   );
 }
 
-// === COMING UP EVENTS — Compact timeline list of next 3 events ===
+// === COMING UP EVENTS — Compact timeline with countdown ===
+function getCountdown(eventDate: Date): string {
+  const now = new Date();
+  const days = differenceInDays(eventDate, now);
+  if (days === 0) {
+    const hours = differenceInHours(eventDate, now);
+    if (hours <= 0) return "Now";
+    return `in ${hours}h`;
+  }
+  if (days === 1) return "Tomorrow";
+  if (days < 7) return `in ${days} days`;
+  if (days < 14) return "Next week";
+  return `in ${Math.ceil(days / 7)} weeks`;
+}
+
 function ComingUpEvents({ allImportantDates }: { allImportantDates: any[] | undefined }) {
   const upcomingEvents = useMemo(() => {
     return allImportantDates
@@ -247,37 +253,38 @@ function ComingUpEvents({ allImportantDates }: { allImportantDates: any[] | unde
   if (upcomingEvents.length === 0) return null;
 
   return (
-    <section className="reveal container mb-10 sm:mb-14">
+    <section className="reveal container mb-6 sm:mb-8">
       <Card className="border-0 shadow-md overflow-hidden">
         <CardContent className="p-0">
           {/* Header */}
-          <div className="px-4 sm:px-5 pt-4 sm:pt-5 pb-3 flex items-center justify-between">
+          <div className="px-4 pt-3 pb-2 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center">
-                <Clock className="w-4 h-4 text-gold" />
+              <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center">
+                <Clock className="w-3.5 h-3.5 text-gold" />
               </div>
-              <h2 className="font-serif text-base sm:text-lg font-bold text-foreground">Coming Up</h2>
+              <h2 className="font-serif text-sm sm:text-base font-bold text-foreground">Coming Up</h2>
             </div>
             <Link href="/calendar?filter=key-dates" className="text-xs font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1">
               View Calendar <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
 
-          {/* Event rows */}
-          <div className="px-4 sm:px-5 pb-4 sm:pb-5">
+          {/* Event rows — compact */}
+          <div className="px-4 pb-3">
             {upcomingEvents.map((evt, i) => {
               const eventDate = toEastern(evt.eventDate as unknown as string);
               const dot = catDots[evt.category] || catDots.parish;
+              const countdown = getCountdown(eventDate);
               return (
                 <div key={evt.id || i}>
-                  {i > 0 && <div className="border-t border-dashed border-border/40 my-3" />}
-                  <Link href="/calendar?filter=key-dates" className="group flex items-center gap-3 sm:gap-4 py-1 hover:bg-primary/[0.02] -mx-2 px-2 rounded-lg transition-colors">
-                    {/* Date badge */}
-                    <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-lg bg-gold/10 flex flex-col items-center justify-center shrink-0">
-                      <span className="text-[10px] font-semibold text-gold uppercase leading-none">
+                  {i > 0 && <div className="border-t border-dashed border-border/40 my-2" />}
+                  <Link href="/calendar?filter=key-dates" className="group flex items-center gap-3 py-1 hover:bg-primary/[0.02] -mx-2 px-2 rounded-lg transition-colors">
+                    {/* Date badge — compact */}
+                    <div className="w-10 h-10 rounded-lg bg-gold/10 flex flex-col items-center justify-center shrink-0">
+                      <span className="text-[9px] font-semibold text-gold uppercase leading-none">
                         {format(eventDate, "MMM")}
                       </span>
-                      <span className="text-lg sm:text-xl font-bold text-gold leading-tight">
+                      <span className="text-base font-bold text-gold leading-tight">
                         {format(eventDate, "d")}
                       </span>
                     </div>
@@ -285,18 +292,18 @@ function ComingUpEvents({ allImportantDates }: { allImportantDates: any[] | unde
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
                         <span className={`w-1.5 h-1.5 rounded-full ${dot} shrink-0`} />
-                        <p className="font-semibold text-foreground text-sm truncate group-hover:text-primary transition-colors">
+                        <p className="font-medium text-foreground text-sm truncate group-hover:text-primary transition-colors">
                           {evt.title}
                         </p>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-0.5">
-                        {evt.location && <span>{evt.location}</span>}
-                        {evt.location && evt.note && <span> · </span>}
-                        {evt.note && <span>{evt.note}</span>}
-                        {!evt.location && !evt.note && <span>{format(eventDate, "EEEE")}</span>}
+                      <p className="text-xs text-muted-foreground">
+                        {evt.location || format(eventDate, "EEEE")}
                       </p>
                     </div>
-                    <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:text-primary transition-colors shrink-0" />
+                    {/* Countdown pill */}
+                    <span className="text-[10px] font-medium text-gold bg-gold/10 px-2 py-0.5 rounded-full shrink-0">
+                      {countdown}
+                    </span>
                   </Link>
                 </div>
               );
@@ -316,10 +323,10 @@ function ThisWeeksBulletin() {
 
   if (isLoading) {
     return (
-      <section className="reveal container mb-10 sm:mb-14">
+      <section className="reveal container mb-6 sm:mb-8">
         <div className="animate-pulse">
-          <div className="h-6 w-48 bg-muted rounded mb-4" />
-          <div className="h-32 bg-muted rounded-xl" />
+          <div className="h-5 w-40 bg-muted rounded mb-3" />
+          <div className="h-16 bg-muted rounded-xl" />
         </div>
       </section>
     );
@@ -330,16 +337,16 @@ function ThisWeeksBulletin() {
   const weekDate = new Date(latestBulletin.weekDate);
 
   return (
-    <section className="reveal container mb-10 sm:mb-14">
-      <div className="flex items-center justify-between mb-4">
+    <section className="reveal container mb-6 sm:mb-8">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-            <BookOpen className="w-4 h-4 text-primary" />
+          <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+            <BookOpen className="w-3.5 h-3.5 text-primary" />
           </div>
-          <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">This Week's Bulletin</h2>
+          <h2 className="font-serif text-sm sm:text-base font-bold text-foreground">This Week's Bulletin</h2>
         </div>
-        <Link href="/bulletins" className="text-sm text-primary hover:underline font-medium flex items-center gap-1">
-          All Bulletins <ArrowRight className="w-3.5 h-3.5" />
+        <Link href="/bulletins" className="text-xs text-primary hover:underline font-medium flex items-center gap-1">
+          All Bulletins <ArrowRight className="w-3 h-3" />
         </Link>
       </div>
 
@@ -357,26 +364,20 @@ function ThisWeeksBulletin() {
           <CardContent className="p-0">
             <div className="flex items-stretch">
               {/* Left accent strip */}
-              <div className="w-1.5 sm:w-2 bg-gradient-to-b from-primary via-primary to-gold shrink-0 rounded-l-xl" />
+              <div className="w-1 bg-gradient-to-b from-primary to-gold shrink-0 rounded-l-xl" />
               
               {/* Content */}
-              <div className="flex-1 p-4 sm:p-5 flex items-center gap-4">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-primary to-parish-green-dark flex items-center justify-center shrink-0 shadow-md group-hover:shadow-lg transition-shadow">
-                  <BookOpen className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+              <div className="flex-1 p-3 sm:p-4 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-parish-green-dark flex items-center justify-center shrink-0 shadow-sm">
+                  <BookOpen className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <span className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Week of {format(weekDate, "MMMM d, yyyy")}
-                    </span>
-                  </div>
-                  <h3 className="font-serif text-sm sm:text-base font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+                  <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                    Week of {format(weekDate, "MMM d, yyyy")}
+                  </span>
+                  <h3 className="font-semibold text-foreground text-sm truncate group-hover:text-primary transition-colors">
                     {latestBulletin.title}
                   </h3>
-                  <p className="text-xs text-primary/80 font-medium mt-1 flex items-center gap-1 group-hover:text-primary transition-colors">
-                    <BookOpen className="w-3 h-3" />
-                    Tap to read bulletin
-                  </p>
                 </div>
                 <a
                   href={latestBulletin.pdfUrl}
@@ -405,17 +406,17 @@ function PhotoGallerySection() {
   if (isLoading) {
     return (
       <div>
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <Camera className="w-4 h-4 text-primary" />
+            <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+              <Camera className="w-3.5 h-3.5 text-primary" />
             </div>
-            <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">Photo Gallery</h2>
+            <h2 className="font-serif text-sm sm:text-base font-bold text-foreground">Photo Gallery</h2>
           </div>
         </div>
-        <div className="flex gap-3 overflow-hidden">
+        <div className="flex gap-2 overflow-hidden">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="shrink-0 w-48 h-36 rounded-lg bg-muted animate-pulse" />
+            <div key={i} className="shrink-0 w-40 h-28 rounded-lg bg-muted animate-pulse" />
           ))}
         </div>
       </div>
@@ -425,21 +426,21 @@ function PhotoGallerySection() {
   if (!photos || photos.length === 0) {
     return (
       <div>
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <Camera className="w-4 h-4 text-primary" />
+            <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+              <Camera className="w-3.5 h-3.5 text-primary" />
             </div>
-            <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">Photo Gallery</h2>
+            <h2 className="font-serif text-sm sm:text-base font-bold text-foreground">Photo Gallery</h2>
           </div>
-          <Link href="/gallery" className="text-sm text-primary font-medium inline-flex items-center gap-1 hover:underline">
-            View All <ArrowRight className="w-3.5 h-3.5" />
+          <Link href="/gallery" className="text-xs text-primary font-medium inline-flex items-center gap-1 hover:underline">
+            View All <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
         <Card className="border-dashed">
-          <CardContent className="p-8 flex flex-col items-center text-center">
-            <ImageIcon className="w-10 h-10 text-muted-foreground/40 mb-2" />
-            <p className="text-muted-foreground text-sm">Photos coming soon!</p>
+          <CardContent className="p-5 flex flex-col items-center text-center">
+            <ImageIcon className="w-8 h-8 text-muted-foreground/40 mb-1.5" />
+            <p className="text-muted-foreground text-xs">Photos coming soon!</p>
           </CardContent>
         </Card>
       </div>
@@ -448,15 +449,15 @@ function PhotoGallerySection() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-            <Camera className="w-4 h-4 text-primary" />
+          <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+            <Camera className="w-3.5 h-3.5 text-primary" />
           </div>
-          <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">Photo Gallery</h2>
+          <h2 className="font-serif text-sm sm:text-base font-bold text-foreground">Photo Gallery</h2>
         </div>
-        <Link href="/gallery" className="text-sm text-primary font-medium inline-flex items-center gap-1 hover:underline">
-          View All <ArrowRight className="w-3.5 h-3.5" />
+        <Link href="/gallery" className="text-xs text-primary font-medium inline-flex items-center gap-1 hover:underline">
+          View All <ArrowRight className="w-3 h-3" />
         </Link>
       </div>
       <div className="relative">
@@ -709,47 +710,49 @@ function JourneyCardsSection() {
   const { ref, getItemStyle } = useStaggerReveal(journeyCards.length);
 
   return (
-    <section className="pb-10 sm:pb-14" ref={ref}>
+    <section className="pb-6 sm:pb-8" ref={ref}>
       <div className="container">
         {/* Mobile: horizontal scroll snap */}
-        <div className="sm:hidden flex gap-3 overflow-x-auto pb-3 scrollbar-hide snap-x snap-mandatory -mx-4 px-4">
+        <div className="sm:hidden flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory -mx-4 px-4">
           {journeyCards.map((card, i) => (
-            <Link key={card.href} href={card.href} className="shrink-0 w-[75vw] snap-start">
+            <Link key={card.href} href={card.href} className="shrink-0 w-[65vw] snap-start">
               <Card
                 className={`group cursor-pointer h-full border-0 shadow-sm border-l-3 ${card.borderColor} card-interactive`}
                 style={getItemStyle(i)}
               >
-                <CardContent className="p-4">
-                  <div className={`w-10 h-10 rounded-lg ${card.iconBg} flex items-center justify-center mb-2.5`}>
-                    <card.icon className={`w-5 h-5 ${card.iconColor}`} />
+                <CardContent className="p-3 flex items-center gap-3">
+                  <div className={`w-9 h-9 rounded-lg ${card.iconBg} flex items-center justify-center shrink-0`}>
+                    <card.icon className={`w-4 h-4 ${card.iconColor}`} />
                   </div>
-                  <h3 className="font-semibold text-foreground text-sm mb-0.5">{card.title}</h3>
-                  <p className="text-xs text-muted-foreground leading-snug mb-2">{card.description}</p>
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-primary group-hover:gap-1.5 transition-all">
-                    {card.cta} <ArrowRight className="w-3 h-3" />
-                  </span>
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-foreground text-sm">{card.title}</h3>
+                    <span className="inline-flex items-center gap-1 text-xs font-medium text-primary group-hover:gap-1.5 transition-all">
+                      {card.cta} <ArrowRight className="w-3 h-3" />
+                    </span>
+                  </div>
                 </CardContent>
               </Card>
             </Link>
           ))}
         </div>
-        {/* Desktop: 4-col grid */}
-        <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Desktop: 4-col grid — compact single-row cards */}
+        <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-3">
           {journeyCards.map((card, i) => (
             <Link key={card.href} href={card.href}>
               <Card
                 className={`group cursor-pointer h-full border-0 shadow-sm border-l-3 ${card.borderColor} hover-lift`}
                 style={getItemStyle(i)}
               >
-                <CardContent className="p-5">
-                  <div className={`w-9 h-9 rounded-lg ${card.iconBg} flex items-center justify-center mb-3`}>
-                    <card.icon className={`w-4.5 h-4.5 ${card.iconColor}`} />
+                <CardContent className="p-3 flex items-center gap-3">
+                  <div className={`w-8 h-8 rounded-lg ${card.iconBg} flex items-center justify-center shrink-0`}>
+                    <card.icon className={`w-4 h-4 ${card.iconColor}`} />
                   </div>
-                  <h3 className="font-semibold text-foreground text-base mb-1">{card.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-snug line-clamp-2">{card.description}</p>
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-primary mt-2 group-hover:gap-1.5 transition-all">
-                    {card.cta} <ArrowRight className="w-3 h-3" />
-                  </span>
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-foreground text-sm">{card.title}</h3>
+                    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-primary group-hover:gap-1.5 transition-all">
+                      {card.cta} <ArrowRight className="w-3 h-3" />
+                    </span>
+                  </div>
                 </CardContent>
               </Card>
             </Link>
@@ -828,11 +831,11 @@ function CatholicResources() {
       {/* Header with stats bar */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-            <Rss className="w-4 h-4 text-primary" />
+          <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+            <Rss className="w-3.5 h-3.5 text-primary" />
           </div>
           <div>
-            <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">Catholic Resources</h2>
+            <h2 className="font-serif text-sm sm:text-base font-bold text-foreground">Catholic Resources</h2>
             <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
               <span>{SOURCES.length} Sources</span>
               <span className="text-border">·</span>
@@ -976,7 +979,7 @@ export default function Home() {
         <ComingUpEvents allImportantDates={allImportantDates} />
 
         {/* Pastor's Welcome */}
-        <section className="reveal container py-8 sm:py-12 mb-2 sm:mb-6">
+        <section className="reveal container py-5 sm:py-8 mb-1 sm:mb-3">
           <div className="max-w-2xl mx-auto text-center">
             <div className="w-10 h-0.5 bg-gold mx-auto mb-5" />
             <blockquote className="font-serif text-lg sm:text-xl md:text-2xl text-foreground/90 italic leading-relaxed">
@@ -993,31 +996,31 @@ export default function Home() {
         <ThisWeeksBulletin />
 
         {/* Photo Gallery */}
-        <section className="reveal container mb-10 sm:mb-14">
+        <section className="reveal container mb-6 sm:mb-8">
           <PhotoGallerySection />
         </section>
 
         {/* Catholic Resources — Live Feeds by Source */}
-        <section className="reveal section-cream py-10 sm:py-14 -mx-4 px-4 sm:-mx-0 sm:px-0">
+        <section className="reveal section-cream py-6 sm:py-10 -mx-4 px-4 sm:-mx-0 sm:px-0">
           <div className="container">
             <CatholicResources />
           </div>
         </section>
 
         {/* Daily Readings — Dark Premium Section */}
-        <section className="reveal section-dark-green py-10 sm:py-14 -mx-4 px-4 sm:-mx-0 sm:px-0">
+        <section className="reveal section-dark-green py-6 sm:py-10 -mx-4 px-4 sm:-mx-0 sm:px-0">
           <div className="container">
             <DailyReadings />
           </div>
         </section>
 
         {/* Saint of the Day */}
-        <section className="reveal container py-10 sm:py-14">
+        <section className="reveal container py-6 sm:py-10">
           <SaintOfDayCard />
         </section>
 
         {/* Newsletter Subscription — Full-width dark CTA */}
-        <section className="reveal section-dark py-12 sm:py-16 -mx-4 px-4 sm:-mx-0 sm:px-0">
+        <section className="reveal section-dark py-8 sm:py-12 -mx-4 px-4 sm:-mx-0 sm:px-0">
           <div className="container">
             <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-10 max-w-4xl mx-auto">
               <div className="flex-1 text-center md:text-left">
