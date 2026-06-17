@@ -1,10 +1,33 @@
 /**
- * Service Card — Individual service row with live/next/past state and countdown.
+ * Service Card — Individual service row with live/next/past state, countdown, and weather.
  */
 
 import { CalendarPlus, Check } from "lucide-react";
+import { ColorfulWeatherIcon, DropletIcon } from "@/components/WeatherIcons";
 import { downloadMassICS } from "@/lib/icsGenerator";
 import { typeStyles, type ScheduleItem } from "./scheduleConfig";
+
+interface EventWeather {
+  temperature: number;
+  feelsLike: number;
+  precipProbability: number;
+  precipAmount: number;
+  weatherCode: number;
+  description: string;
+  icon: string;
+  windSpeed: number;
+  isDay: boolean;
+  isRainWarning: boolean;
+  isSevereWarning: boolean;
+  forecastStrip: Array<{
+    time: string;
+    label: string;
+    temperature: number;
+    precipProbability: number;
+    weatherCode: number;
+    icon: string;
+  }>;
+}
 
 interface ServiceCardProps {
   svc: ScheduleItem;
@@ -15,9 +38,10 @@ interface ServiceCardProps {
   countdown?: string;
   progress?: string;
   dayName: string;
+  weather?: EventWeather | null;
 }
 
-export function ServiceCard({ svc, idx, isPast, isLive, isNext, countdown, progress, dayName }: ServiceCardProps) {
+export function ServiceCard({ svc, idx, isPast, isLive, isNext, countdown, progress, dayName, weather }: ServiceCardProps) {
   const style = typeStyles[svc.type];
   const Icon = style.icon;
 
@@ -71,6 +95,27 @@ export function ServiceCard({ svc, idx, isPast, isLive, isNext, countdown, progr
         {isLive && <span className="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5 block font-medium">{progress}</span>}
         {countdown && !isLive && !isPast && <span className="text-xs text-muted-foreground mt-0.5 block">{countdown}</span>}
       </div>
+      {/* Service-time weather badge */}
+      {weather && !isPast && (
+        <span
+          className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[11px] font-medium ${
+            weather.isSevereWarning
+              ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
+              : weather.isRainWarning
+              ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300"
+              : "bg-sky-50 text-sky-700 dark:bg-sky-900/30 dark:text-sky-300"
+          }`}
+        >
+          <ColorfulWeatherIcon icon={weather.icon} className="w-3.5 h-3.5" />
+          <span className="font-semibold">{weather.temperature}°</span>
+          {weather.precipProbability > 20 && (
+            <span className="flex items-center gap-0.5 text-blue-600 dark:text-blue-400">
+              <DropletIcon className="w-2.5 h-2.5" />
+              {weather.precipProbability}%
+            </span>
+          )}
+        </span>
+      )}
       {!isPast && (
         <button
           onClick={(e) => {

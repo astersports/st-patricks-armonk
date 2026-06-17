@@ -109,8 +109,30 @@ export function ThisWeekAccordion() {
   // Daily forecast for weather icons in the header
   const { data: dailyForecast } = trpc.weather.daily.useQuery(undefined, { staleTime: 60 * 60 * 1000 });
 
+  // Build event list for the selected day to get per-service weather
   const selectedDayData = days[selectedIndex];
   const services = selectedDayData?.services || [];
+
+  const serviceEvents = useMemo(() => {
+    if (!selectedDayData || services.length === 0) return [];
+    return services.map((svc, idx) => {
+      const svcMin = parseServiceMinutes(svc.time);
+      const hours = Math.floor(svcMin / 60);
+      const mins = svcMin % 60;
+      const d = new Date(selectedDayData.date);
+      d.setHours(hours, mins, 0, 0);
+      return {
+        id: `svc-${selectedIndex}-${idx}`,
+        title: svc.label,
+        startDate: d.toISOString(),
+      };
+    });
+  }, [selectedDayData, services, selectedIndex]);
+
+  const { data: serviceWeatherMap } = trpc.weather.forEvents.useQuery(
+    { events: serviceEvents },
+    { enabled: serviceEvents.length > 0, staleTime: 60 * 60 * 1000 }
+  );
   const weekStart = days[0]?.date || now;
   const weekEnd = days[6]?.date || now;
   const dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][selectedDayData?.dayOfWeek || 0];
@@ -177,19 +199,24 @@ export function ThisWeekAccordion() {
 
         {services.length > 0 ? (
           <div className="space-y-2 mb-3">
-            {services.map((svc, idx) => (
-              <ServiceCard
-                key={`svc-${idx}`}
-                svc={svc}
-                idx={idx}
-                isPast={!!pastServices[idx]}
-                isLive={!!inProgress[idx]}
-                isNext={idx === nextServiceIdx && !inProgress[idx] && !pastServices[idx]}
-                countdown={countdowns[idx]}
-                progress={inProgress[idx]}
-                dayName={dayName}
-              />
-            ))}
+            {services.map((svc, idx) => {
+              const eventId = `svc-${selectedIndex}-${idx}`;
+              const svcWeather = serviceWeatherMap?.[eventId]?.weather || null;
+              return (
+                <ServiceCard
+                  key={`svc-${idx}`}
+                  svc={svc}
+                  idx={idx}
+                  isPast={!!pastServices[idx]}
+                  isLive={!!inProgress[idx]}
+                  isNext={idx === nextServiceIdx && !inProgress[idx] && !pastServices[idx]}
+                  countdown={countdowns[idx]}
+                  progress={inProgress[idx]}
+                  dayName={dayName}
+                  weather={svcWeather}
+                />
+              );
+            })}
           </div>
         ) : (
           <p className="text-sm text-muted-foreground text-center py-4 italic">No scheduled services on this day</p>
