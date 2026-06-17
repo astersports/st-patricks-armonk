@@ -627,3 +627,53 @@ export const volunteerNeedResponses = mysqlTable("volunteer_need_responses", {
 });
 export type VolunteerNeedResponse = typeof volunteerNeedResponses.$inferSelect;
 export type InsertVolunteerNeedResponse = typeof volunteerNeedResponses.$inferInsert;
+
+/**
+ * Audit Log — records admin actions for accountability and debugging.
+ */
+export const auditLogs = mysqlTable("audit_logs", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: varchar("userId", { length: 255 }).notNull(),
+  userName: varchar("userName", { length: 255 }),
+  action: varchar("action", { length: 100 }).notNull(), // e.g., "approve", "reject", "delete", "update"
+  entityType: varchar("entityType", { length: 100 }).notNull(), // e.g., "sacrament", "bulletin", "event"
+  entityId: varchar("entityId", { length: 100 }), // ID of the affected record
+  details: text("details"), // JSON string with additional context
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type AuditLog = typeof auditLogs.$inferSelect;
+export type InsertAuditLog = typeof auditLogs.$inferInsert;
+
+/**
+ * Homily Archive — recordings and metadata for past homilies.
+ */
+export const homilies = mysqlTable("homilies", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 500 }).notNull(),
+  date: timestamp("date").notNull(),
+  celebrant: varchar("celebrant", { length: 200 }),
+  topic: varchar("topic", { length: 200 }),
+  audioUrl: text("audioUrl"),
+  audioKey: varchar("audioKey", { length: 500 }),
+  notes: text("notes"),
+  published: boolean("published").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type Homily = typeof homilies.$inferSelect;
+export type InsertHomily = typeof homilies.$inferInsert;
+
+
+/**
+ * Saint of the Day Streaks — tracks daily visits for gamification.
+ */
+export const saintStreaks = mysqlTable("saint_streaks", {
+  id: int("id").primaryKey().autoincrement(),
+  userId: varchar("userId", { length: 255 }).notNull(),
+  currentStreak: int("current_streak").default(0).notNull(),
+  longestStreak: int("longest_streak").default(0).notNull(),
+  lastVisitDate: varchar("last_visit_date", { length: 10 }).notNull(), // YYYY-MM-DD
+  totalVisits: int("total_visits").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
+export type SaintStreak = typeof saintStreaks.$inferSelect;

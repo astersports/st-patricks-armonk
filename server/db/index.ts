@@ -50,3 +50,9 @@ export { getActiveVolunteerNeeds, getAllVolunteerNeeds, createVolunteerNeed, upd
 
 // Prayer Support ("I prayed for this")
 export { addPrayerSupport, getPrayerSupportCount, getPrayerSupportCounts, hasUserPrayed } from "./prayerSupport";
+
+// Homily Archive
+export { getPublishedHomilies, getAllHomilies, createHomily, deleteHomily, updateHomily } from "./homilies";
+
+// Saint of the Day Streaks
+export { getStreak, recordVisit } from "./saintStreaks";

@@ -2,7 +2,7 @@
  * Content Router — Catholic resources, daily readings, saint of the day, prayer wall.
  * ~80 lines
  */
-import { publicProcedure, router, z, db } from "./_helpers";
+import { publicProcedure, protectedProcedure, router, z, db } from "./_helpers";
 
 export const catholicResourcesRouter = router({
   feed: publicProcedure
@@ -66,6 +66,16 @@ export const saintOfDayRouter = router({
   today: publicProcedure.query(async () => {
     const { getSaintOfDay } = await import("../saintOfDay");
     return getSaintOfDay();
+  }),
+  /** Record a visit and return streak info (authenticated users only) */
+  recordVisit: protectedProcedure.mutation(async ({ ctx }) => {
+    return db.recordVisit(ctx.user.openId);
+  }),
+  /** Get current streak for the logged-in user */
+  getStreak: protectedProcedure.query(async ({ ctx }) => {
+    const streak = await db.getStreak(ctx.user.openId);
+    if (!streak) return { currentStreak: 0, longestStreak: 0, totalVisits: 0 };
+    return { currentStreak: streak.currentStreak, longestStreak: streak.longestStreak, totalVisits: streak.totalVisits };
   }),
 });
 

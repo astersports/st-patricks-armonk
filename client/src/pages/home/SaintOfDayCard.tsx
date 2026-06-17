@@ -1,7 +1,9 @@
 import { trpc } from "@/lib/trpc";
-import { ArrowRight, Cross } from "lucide-react";
+import { ArrowRight, Cross, Flame } from "lucide-react";
 import { SectionHeader } from "@/components/SectionHeader";
 import { Card, CardContent } from "@/components/ui/card";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { useEffect } from "react";
 
 function SaintOfDaySkeleton() {
   return (
@@ -23,11 +25,6 @@ function SaintOfDaySkeleton() {
               <div className="h-3 w-full bg-muted rounded animate-pulse" />
               <div className="h-3 w-full bg-muted rounded animate-pulse" />
               <div className="h-3 w-5/6 bg-muted rounded animate-pulse" />
-              <div className="h-3 w-2/3 bg-muted rounded animate-pulse" />
-            </div>
-            <div className="pt-2 pl-3 border-l-2 border-muted space-y-1.5">
-              <div className="h-3 w-full bg-muted rounded animate-pulse" />
-              <div className="h-3 w-4/5 bg-muted rounded animate-pulse" />
             </div>
           </div>
         </div>
@@ -36,8 +33,38 @@ function SaintOfDaySkeleton() {
   );
 }
 
+function StreakBadge({ streak, totalVisits }: { streak: number; totalVisits: number }) {
+  if (streak === 0 && totalVisits === 0) return null;
+
+  return (
+    <div className="flex items-center gap-1.5 text-xs font-medium">
+      <Flame className="w-3.5 h-3.5 text-orange-500" />
+      <span className="text-orange-600 dark:text-orange-400">
+        {streak} day{streak !== 1 ? "s" : ""}
+      </span>
+      {totalVisits > streak && (
+        <span className="text-muted-foreground ml-1">
+          ({totalVisits} total)
+        </span>
+      )}
+    </div>
+  );
+}
+
 export function SaintOfDayCard() {
   const { data: saint, isLoading } = trpc.saintOfDay.today.useQuery();
+  const { user } = useAuth();
+  const { data: streakData } = trpc.saintOfDay.getStreak.useQuery(undefined, {
+    enabled: !!user,
+  });
+  const recordVisit = trpc.saintOfDay.recordVisit.useMutation();
+
+  // Record visit when the card is viewed by an authenticated user
+  useEffect(() => {
+    if (user && saint?.featuredSaint) {
+      recordVisit.mutate();
+    }
+  }, [user, saint?.featuredSaint?.name]);
 
   if (isLoading) {
     return <SaintOfDaySkeleton />;
@@ -58,14 +85,19 @@ export function SaintOfDayCard() {
         iconBg="bg-gold/10"
         iconColor="text-gold"
         action={
-          <a
-            href="https://www.evangelizo.org"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1 transition-colors"
-          >
-            Evangelizo.org <ArrowRight className="w-3.5 h-3.5" />
-          </a>
+          <div className="flex items-center gap-3">
+            {user && streakData && (
+              <StreakBadge streak={streakData.currentStreak} totalVisits={streakData.totalVisits} />
+            )}
+            <a
+              href="https://www.evangelizo.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1 transition-colors"
+            >
+              Evangelizo.org <ArrowRight className="w-3.5 h-3.5" />
+            </a>
+          </div>
         }
       />
       <Card className="border-border/50 shadow-sm overflow-hidden">

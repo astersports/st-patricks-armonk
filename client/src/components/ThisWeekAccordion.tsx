@@ -228,6 +228,17 @@ export function ThisWeekAccordion() {
 
       {/* Selected day content */}
       <div className="p-4" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+        {/* Swipe navigation hint (mobile only) */}
+        <div className="sm:hidden flex items-center justify-center gap-1 mb-2">
+          {days.map((day) => (
+            <span
+              key={day.index}
+              className={`w-1.5 h-1.5 rounded-full transition-all duration-200 ${
+                selectedIndex === day.index ? "bg-primary w-3" : "bg-muted-foreground/30"
+              }`}
+            />
+          ))}
+        </div>
         <DayContent
           selectedDayData={selectedDayData}
           selectedIndex={selectedIndex}

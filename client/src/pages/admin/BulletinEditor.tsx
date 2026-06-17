@@ -8,7 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { toast } from "sonner";
-import { ArrowLeft, Save, FileText, Send, Loader2, Upload } from "lucide-react";
+import { ArrowLeft, Save, FileText, Send, Loader2, Upload, LayoutTemplate } from "lucide-react";
+import { bulletinTemplates } from "@shared/bulletinTemplates";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type BulletinEditorProps = {
   bulletinId?: number;
@@ -149,10 +151,32 @@ export function BulletinEditor({ bulletinId, onBack }: BulletinEditorProps) {
         </CardContent>
       </Card>
 
-      {/* Rich Text Editor */}
+      {/* Template Selector + Rich Text Editor */}
       <Card>
         <CardContent className="p-5">
-          <Label className="mb-3 block text-base font-medium">Bulletin Content</Label>
+          <div className="flex items-center justify-between mb-3">
+            <Label className="text-base font-medium">Bulletin Content</Label>
+            {isNewBulletin && !editorContent && (
+              <div className="flex items-center gap-2">
+                <LayoutTemplate className="w-4 h-4 text-muted-foreground" />
+                <Select onValueChange={(templateId) => {
+                  const tmpl = bulletinTemplates.find(t => t.id === templateId);
+                  if (tmpl) setEditorContent(tmpl.html);
+                }}>
+                  <SelectTrigger className="w-[200px] h-8 text-xs">
+                    <SelectValue placeholder="Start from template..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {bulletinTemplates.map(t => (
+                      <SelectItem key={t.id} value={t.id}>
+                        <span className="font-medium">{t.name}</span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+          </div>
           <RichTextEditor
             content={editorContent}
             onChange={setEditorContent}

@@ -8,6 +8,12 @@ import { nanoid } from "nanoid";
 import TurndownService from "turndown";
 import { sendBulletinNotifications } from "../notifications";
 import { sendPushToAll } from "./pushNotifications";
+import DOMPurify from "dompurify";
+import { JSDOM } from "jsdom";
+
+// Server-side DOMPurify instance
+const window = new JSDOM("").window;
+const purify = DOMPurify(window as any);
 
 const turndown = new TurndownService({ headingStyle: "atx", bulletListMarker: "-" });
 
@@ -52,8 +58,9 @@ export const bulletinComposeRouter = router({
   })).mutation(async ({ input }) => {
     const existing = await db.getBulletinById(input.id);
     if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
-    const sourceMarkdown = htmlToMarkdown(input.sourceHtml);
-    await db.updateBulletin(input.id, { sourceHtml: input.sourceHtml, sourceMarkdown } as any);
+    const sanitizedHtml = purify.sanitize(input.sourceHtml, { ALLOWED_TAGS: ["h1","h2","h3","h4","h5","h6","p","br","strong","em","u","s","a","ul","ol","li","blockquote","hr","img","table","thead","tbody","tr","th","td","span","div"], ALLOWED_ATTR: ["href","src","alt","class","style","target","rel"] });
+    const sourceMarkdown = htmlToMarkdown(sanitizedHtml);
+    await db.updateBulletin(input.id, { sourceHtml: sanitizedHtml, sourceMarkdown } as any);
     return { success: true };
   }),
 
@@ -139,7 +146,7 @@ function generatePdfHtml(title: string, weekDate: Date, bodyHtml: string): strin
   <hr>
   <h2>${title}</h2>
   <p class="date">Week of ${dateFormatted}</p>
-  ${bodyHtml}
+  ${purify.sanitize(bodyHtml, { ALLOWED_TAGS: ["h1","h2","h3","h4","h5","h6","p","br","strong","em","u","s","a","ul","ol","li","blockquote","hr","img","table","thead","tbody","tr","th","td","span","div"], ALLOWED_ATTR: ["href","src","alt","class","style","target","rel"] })}
   <hr>
   <div class="footer">
     <p>St. Patrick Church | 29 Cox Avenue, Armonk, NY 10504</p>

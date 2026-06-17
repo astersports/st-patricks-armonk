@@ -72,7 +72,7 @@ export function RainAlertBanner() {
 
   return (
     <div className="container mt-3 mb-0">
-      <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-800/40">
+      <div role="alert" aria-live="polite" className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-800/40">
         <CloudRain className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
         <p className="text-sm text-blue-800 dark:text-blue-200 flex-1">
           <span className="font-semibold">Rain likely {nextService.label}</span>

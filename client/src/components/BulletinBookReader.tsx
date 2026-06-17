@@ -31,7 +31,9 @@ function isHtmlBulletin(url: string): boolean {
 
 /** HTML Bulletin Viewer — renders composed bulletins in an iframe */
 function HtmlBulletinViewer({ pdfUrl, title, onClose }: BulletinBookReaderProps) {
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  // Auto-fullscreen on mobile for better reading experience
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
+  const [isFullscreen, setIsFullscreen] = useState(isMobile);
 
   useEffect(() => {
     if (isFullscreen) {

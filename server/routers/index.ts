@@ -27,6 +27,7 @@ import { catholicResourcesRouter, vaticanNewsRouter, dailyReadingsRouter, saintO
 import { faqRouter } from "./faq";
 import { pushNotificationsRouter } from "./pushNotifications";
 import { volunteerNeedsRouter } from "./volunteerNeeds";
+import { homiliesRouter } from "./homilies";
 
 export const appRouter = router({
   auth: authRouter,
@@ -64,6 +65,7 @@ export const appRouter = router({
   faq: faqRouter,
   pushNotifications: pushNotificationsRouter,
   volunteerNeeds: volunteerNeedsRouter,
+  homilies: homiliesRouter,
 });
 
 export type AppRouter = typeof appRouter;

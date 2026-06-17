@@ -41,6 +41,8 @@ import {
   Prayers,
   VolunteerNeeds,
   MyParish,
+  SacramentProgress,
+  HomilyArchive,
   AdminRouter,
 } from "./lazyPages";
 
@@ -79,6 +81,8 @@ function Router() {
           <Route path="/sponsor-form" component={SponsorForm} />
           <Route path="/marriage-form" component={MarriageForm} />
           <Route path="/funeral-form" component={FuneralForm} />
+          <Route path="/sacrament-preparation" component={SacramentProgress} />
+          <Route path="/homilies" component={HomilyArchive} />
           <Route path="/prayers" component={Prayers} />
           <Route path="/giving" component={Giving} />
           <Route path="/contact" component={Contact} />
