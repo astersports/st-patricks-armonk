@@ -815,3 +815,11 @@
 - [x] When all today's events have ended, show "No more events today" message
 - [x] Auto-display tomorrow's upcoming events below the empty-today message
 - [x] Keep day picker functional so users can still tap back to review today's ended events
+
+## Push Notifications for New Bulletins
+- [x] Generate VAPID keys and store as env secrets
+- [x] Create push_subscriptions DB table (endpoint, keys, userId, createdAt)
+- [x] Create service worker for handling push events (client/public/sw.js)
+- [x] Build backend: subscribe/unsubscribe endpoints, send push on bulletin publish (pushNotifications.ts + sendPushToAll in bulletinCompose.ts)
+- [x] Build frontend: opt-in bell icon/banner, permission flow, subscription management (usePushNotifications hook + PushNotificationBanner component)
+- [x] Mobile-optimized notification prompt (non-intrusive banner on Bulletins page, dismissible per session)

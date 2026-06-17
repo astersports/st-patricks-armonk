@@ -25,6 +25,7 @@ import { baptismRouter, sponsorRouter, marriageRouter, funeralRouter, documentsR
 import { adminStatsRouter, usersRouter, siteSettingsRouter, importantDatesRouter } from "./admin";
 import { catholicResourcesRouter, vaticanNewsRouter, dailyReadingsRouter, saintOfDayRouter, prayerWallRouter } from "./content";
 import { faqRouter } from "./faq";
+import { pushNotificationsRouter } from "./pushNotifications";
 
 export const appRouter = router({
   auth: authRouter,
@@ -60,6 +61,7 @@ export const appRouter = router({
   saintOfDay: saintOfDayRouter,
   prayerWall: prayerWallRouter,
   faq: faqRouter,
+  pushNotifications: pushNotificationsRouter,
 });
 
 export type AppRouter = typeof appRouter;

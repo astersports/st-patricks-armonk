@@ -16,6 +16,7 @@ import BulletinBookReader from "@/components/BulletinBookReader";
 import PageHeader from "@/components/PageHeader";
 import { BulletinSubscribeCTA } from "./bulletins/BulletinSubscribeCTA";
 import { BulletinArchive } from "./bulletins/BulletinArchive";
+import { PushNotificationBanner } from "@/components/PushNotificationBanner";
 
 export default function Bulletins() {
   const { data: bulletins, isLoading } = trpc.bulletins.listPublished.useQuery();
@@ -106,6 +107,9 @@ export default function Bulletins() {
                 <BulletinBookReader pdfUrl={activeBulletin!.pdfUrl} title={activeBulletin!.title} />
               </Card>
             </div>
+
+            {/* Push Notification Opt-in */}
+            <PushNotificationBanner />
 
             {/* Subscribe CTA */}
             <BulletinSubscribeCTA />

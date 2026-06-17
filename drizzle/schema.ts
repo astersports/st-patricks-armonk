@@ -560,3 +560,18 @@ export const parishFaqs = mysqlTable("parish_faqs", {
 });
 export type ParishFaq = typeof parishFaqs.$inferSelect;
 export type InsertParishFaq = typeof parishFaqs.$inferInsert;
+
+/**
+ * Push notification subscriptions for browser Web Push API.
+ * Stores the subscription endpoint and keys needed to send push notifications.
+ */
+export const pushSubscriptions = mysqlTable("push_subscriptions", {
+  id: int("id").autoincrement().primaryKey(),
+  endpoint: text("endpoint").notNull(),
+  p256dh: text("p256dh").notNull(),
+  auth: text("auth").notNull(),
+  userId: varchar("userId", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type PushSubscriptionRow = typeof pushSubscriptions.$inferSelect;
+export type InsertPushSubscription = typeof pushSubscriptions.$inferInsert;

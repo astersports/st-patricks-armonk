@@ -7,6 +7,7 @@ import { storagePut } from "../storage";
 import { nanoid } from "nanoid";
 import TurndownService from "turndown";
 import { sendBulletinNotifications } from "../notifications";
+import { sendPushToAll } from "./pushNotifications";
 
 const turndown = new TurndownService({ headingStyle: "atx", bulletListMarker: "-" });
 
@@ -95,6 +96,13 @@ export const bulletinComposeRouter = router({
     
     // Send notifications to subscribers
     await sendBulletinNotifications(input.id, bulletin.title);
+    
+    // Send push notifications to all subscribers
+    await sendPushToAll({
+      title: "New Bulletin Published",
+      body: bulletin.title,
+      url: "/bulletins",
+    });
     
     return { success: true };
   }),
