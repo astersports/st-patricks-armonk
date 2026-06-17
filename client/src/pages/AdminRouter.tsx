@@ -23,7 +23,7 @@ import {
   ParishRegistrationsManager,
   CcdPermissionsManager,
   KeyDatesManager,
-} from "./Admin";
+} from "./admin";
 
 function AdminFallback() {
   return (

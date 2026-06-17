@@ -726,3 +726,11 @@
 - [x] Add rain alert banner below hero when precipitation probability >60%
 - [x] Add daily high/low temperatures to each day in This Week accordion
 - [x] Set church exterior image as favicon (browser tab, home screen icon) and Open Graph preview image for link sharing
+
+## Code Organization Refactor
+
+- [x] Split server/routers.ts (1455 lines) into 16 domain-specific router files (~30-109 lines each)
+- [x] Split pages/Home.tsx (1565 lines) into 10 focused section components (~23-406 lines each)
+- [x] Split pages/Admin.tsx (1751 lines) into 16 focused manager components (~65-402 lines each)
+- [x] Verify all tests pass after refactor (31/31 pass)
+- [ ] Run Claude review on refactored files to confirm reviewability

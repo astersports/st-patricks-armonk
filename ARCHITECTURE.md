@@ -23,89 +23,121 @@ A modern parish website for St. Patrick Church in Armonk, NY (29 Cox Avenue, Arm
 | Calendar | ICS feed parsing (Google Calendar .ics feeds) |
 | Weather | Open-Meteo API (free, no key needed) |
 
-## Directory Structure
+## Directory Structure (Post-Refactor)
 
 ```
 ├── client/src/
-│   ├── pages/           # Page components (one per route)
-│   ├── components/      # Reusable UI components
-│   ├── components/ui/   # shadcn/ui primitives
-│   ├── hooks/           # Custom React hooks
-│   ├── lib/             # Utilities (trpc client, liturgical season calc)
-│   └── App.tsx          # Route definitions
+│   ├── pages/
+│   │   ├── Home.tsx              # Thin composition (95 lines) — imports from home/
+│   │   ├── home/                 # Homepage section components
+│   │   │   ├── HeroSection.tsx       (215 lines) — Hero image, weather widget, CTA buttons
+│   │   │   ├── NowAtStPatrick.tsx    (406 lines) — News highlight, Sunday preview, Coming Up
+│   │   │   ├── CatholicResources.tsx (197 lines) — Resource links section
+│   │   │   ├── DailyReadings.tsx     (164 lines) — USCCB readings display
+│   │   │   ├── JourneyCardsSection.tsx (103 lines) — 4 journey navigation cards
+│   │   │   ├── SaintOfDayCard.tsx    (104 lines) — Saint of the day
+│   │   │   ├── PhotoGallerySection.tsx (92 lines) — Photo gallery preview
+│   │   │   ├── ThisWeeksBulletin.tsx (90 lines) — Latest bulletin card
+│   │   │   ├── NewsletterSection.tsx (69 lines) — Email subscribe CTA
+│   │   │   └── RainAlertBanner.tsx   (23 lines) — Rain warning banner
+│   │   ├── Admin.tsx             # Thin composition (119 lines) — imports from admin/
+│   │   ├── AdminRouter.tsx       # Admin route definitions
+│   │   ├── admin/                # Admin manager components
+│   │   │   ├── DashboardHome.tsx     (318 lines) — Admin overview stats
+│   │   │   ├── GalleryManager.tsx    (402 lines) — Photo gallery CRUD
+│   │   │   ├── SacramentsManager.tsx (255 lines) — Sacrament form submissions
+│   │   │   ├── KeyDatesManager.tsx   (229 lines) — Important dates management
+│   │   │   ├── CcdManager.tsx        (213 lines) — CCD registrations
+│   │   │   ├── CyoManager.tsx        (202 lines) — CYO management
+│   │   │   ├── DocumentsManager.tsx  (171 lines) — Document uploads
+│   │   │   ├── BulletinManager.tsx   (160 lines) — Bulletin PDF uploads
+│   │   │   ├── NewsManager.tsx       (143 lines) — News post CRUD
+│   │   │   ├── VolunteerManager.tsx  (118 lines) — Volunteer signups
+│   │   │   ├── EventManager.tsx      (104 lines) — Event management
+│   │   │   ├── SettingsManager.tsx   (104 lines) — Site settings
+│   │   │   ├── UserManager.tsx       (123 lines) — User management
+│   │   │   ├── SubscriberList.tsx    (78 lines) — Email subscribers
+│   │   │   ├── CcdPermissionsManager.tsx (74 lines) — CCD permissions
+│   │   │   ├── ParishRegistrationsManager.tsx (65 lines) — Parish registrations
+│   │   │   └── index.ts             — Barrel exports
+│   │   ├── AllCalendars.tsx      (~400 lines) — Combined calendar with filters
+│   │   ├── MassTimes.tsx         (~300 lines) — Mass schedule
+│   │   ├── Sacraments.tsx        (~500 lines) — Sacrament info + forms
+│   │   ├── FaithFormation.tsx    (~400 lines) — CCD, Teen Life, RCIA
+│   │   ├── Staff.tsx             (~400 lines) — Staff directory
+│   │   └── Giving.tsx            (~200 lines) — Online giving
+│   ├── components/               # Reusable UI components
+│   │   ├── ThisWeekAccordion.tsx     — Week view with day tabs
+│   │   ├── TimelineFeed.tsx          — Timeline event list
+│   │   ├── WeatherIcons.tsx          — SVG weather icons (day + night)
+│   │   ├── Header.tsx                — Site navigation
+│   │   ├── Footer.tsx                — Site footer
+│   │   ├── MobileBottomNav.tsx       — Bottom tab bar
+│   │   └── ui/                       — shadcn/ui primitives
+│   ├── hooks/                    # Custom React hooks
+│   ├── lib/                      # Utilities (trpc client, liturgical season)
+│   └── App.tsx                   # Route definitions
 ├── server/
-│   ├── _core/           # Framework plumbing (DO NOT EDIT)
-│   ├── routers.ts       # All tRPC procedures (1455 lines)
-│   ├── db.ts            # Database query helpers (961 lines)
-│   ├── weather.ts       # Open-Meteo weather API integration
-│   ├── icsParser.ts     # Google Calendar ICS feed parser
-│   ├── dailyReadings.ts # USCCB daily readings scraper
-│   ├── saintOfDay.ts    # Saint of the day data
-│   └── storage.ts       # S3 storage helpers
+│   ├── _core/                    # Framework plumbing (DO NOT EDIT)
+│   ├── routers/                  # Split tRPC procedures by domain
+│   │   ├── index.ts                  (58 lines) — Merges all routers into appRouter
+│   │   ├── _helpers.ts               (49 lines) — Shared auth helpers (protectedProcedure, adminProcedure)
+│   │   ├── admin.ts                  (109 lines) — Admin stats, users, settings, important dates
+│   │   ├── content.ts                (92 lines) — Catholic resources, readings, saint, prayer wall
+│   │   ├── ccd.ts                    (99 lines) — CCD registration management
+│   │   ├── cyo.ts                    (92 lines) — CYO practice management
+│   │   ├── volunteer.ts              (80 lines) — Volunteer signups
+│   │   ├── news.ts                   (76 lines) — News post CRUD
+│   │   ├── bulletins.ts              (76 lines) — Bulletin management
+│   │   ├── calendar.ts               (73 lines) — ICS calendar feeds
+│   │   ├── gallery.ts                (69 lines) — Photo gallery
+│   │   ├── events.ts                 (57 lines) — Event management
+│   │   ├── forms.ts                  (329 lines) — All sacrament/registration forms
+│   │   ├── subscriptions.ts          (46 lines) — Email subscriptions
+│   │   ├── weather.ts                (30 lines) — Weather endpoints
+│   │   └── auth.ts                   (22 lines) — Auth/logout
+│   ├── db.ts                     (961 lines) — Database query helpers
+│   ├── weather.ts                (200 lines) — Open-Meteo API integration
+│   ├── notifications.ts          (~50 lines) — CCD reminder notifications
+│   ├── icsParser.ts              (136 lines) — Google Calendar ICS parser
+│   ├── dailyReadings.ts          (~100 lines) — USCCB daily readings
+│   ├── saintOfDay.ts             (~80 lines) — Saint of the day
+│   └── storage.ts                — S3 storage helpers
 ├── drizzle/
-│   ├── schema.ts        # Database schema (all tables)
-│   └── relations.ts     # Table relationships
+│   ├── schema.ts                 — Database schema (all tables)
+│   └── relations.ts              — Table relationships
 └── shared/
-    ├── types.ts         # Shared TypeScript types
-    ├── const.ts         # Shared constants
-    └── roles.ts         # User role definitions
+    ├── types.ts                  — Shared TypeScript types
+    └── const.ts                  — Shared constants
 ```
 
-## Key Files to Review
+## How to Review This Code
 
-### Backend (server/)
+The codebase is organized into small, focused files (most under 200 lines). When reviewing:
 
-| File | Lines | Purpose |
-|------|-------|---------|
-| `routers.ts` | 1455 | All tRPC API procedures — news, events, bulletins, forms, calendar, weather, admin |
-| `db.ts` | 961 | Database query helpers — CRUD for all entities |
-| `weather.ts` | 432 | Open-Meteo integration: current conditions, hourly forecast, daily forecast, event weather |
-| `icsParser.ts` | 136 | Parses Google Calendar .ics feeds into structured event objects |
-| `dailyReadings.ts` | ~100 | Fetches USCCB daily Mass readings |
-| `saintOfDay.ts` | ~80 | Returns today's saint info |
+**Pick any file from `server/routers/`** — each is a self-contained domain with clear inputs/outputs. Check:
+- Input validation (Zod schemas)
+- Auth guards (publicProcedure vs protectedProcedure vs adminProcedure)
+- Error handling
+- SQL injection prevention (Drizzle ORM handles this)
 
-### Frontend Pages (client/src/pages/)
+**Pick any file from `client/src/pages/home/`** — each is a standalone section component. Check:
+- Data fetching patterns (tRPC hooks)
+- Loading/error states
+- Mobile responsiveness
+- Accessibility
 
-| File | Lines | Purpose |
-|------|-------|---------|
-| `Home.tsx` | 1565 | Homepage: hero, weather widget, This Week accordion, journey cards, news highlight |
-| `Admin.tsx` | 1751 | Admin dashboard: news, bulletins, events, forms, subscribers management |
-| `AllCalendars.tsx` | ~400 | Combined calendar with Parish/CCD/CYO filters |
-| `MassTimes.tsx` | ~300 | Mass schedule, confession times, holy days |
-| `Sacraments.tsx` | ~500 | Baptism, Confirmation, Marriage, Funerals with digital forms |
-| `FaithFormation.tsx` | ~400 | CCD, Teen Life, RCIA, Walking With Purpose, Blaze |
-| `Giving.tsx` | ~200 | WeShare, Venmo QR, Cardinals Appeal |
-| `Staff.tsx` | ~400 | Staff directory with accordion sections |
+**Pick any file from `client/src/pages/admin/`** — each is a CRUD manager. Check:
+- Permission checks
+- Form validation
+- Optimistic updates vs invalidation
+- Error feedback to user
 
-### Frontend Components (client/src/components/)
+**For `server/weather.ts`:** Check caching logic, API error handling, timezone handling, and data transformation.
 
-| File | Purpose |
-|------|---------|
-| `ThisWeekAccordion.tsx` | Week view with day tabs, events, weather badges |
-| `TimelineFeed.tsx` | Timeline-style event list with date badges and category colors |
-| `WeatherIcons.tsx` | Colorful SVG weather icons (day + night variants) |
-| `WeatherBadge.tsx` | Small weather pill for event cards |
-| `Header.tsx` | Site navigation (desktop dropdowns + mobile hamburger) |
-| `Footer.tsx` | Site footer with links, Aster Sports attribution |
-| `MobileBottomNav.tsx` | Persistent bottom tab bar (Mass, Calendar, Give, More) |
-| `PageHeader.tsx` | Consistent page title headers with breadcrumbs |
+**For `drizzle/schema.ts`:** Check table relationships, index usage, and data types.
 
-### Database Schema (drizzle/schema.ts)
-
-Key tables:
-- `user` — Auth users with role (admin/user)
-- `news_posts` — Parish news/announcements
-- `bulletins` — Weekly bulletin PDFs
-- `events` — Parish events
-- `email_subscribers` — Newsletter subscribers
-- `baptism_submissions`, `marriage_submissions`, `funeral_submissions`, `sponsor_submissions` — Sacrament form data
-- `ccd_registrations`, `ccd_permissions` — Religious education forms
-- `parish_registrations` — New parishioner registration
-- `teen_life_registrations` — Teen program signups
-- `volunteer_signups` — Ministry volunteer forms
-- `documents` — Uploaded parish documents/forms
-- `site_settings` — Dynamic site configuration
-- `photo_gallery`, `gallery_images` — Photo galleries
+**For `server/db.ts`:** Check query efficiency, proper Drizzle ORM usage, and error handling.
 
 ## Data Flow
 
@@ -157,20 +189,6 @@ Frontend refreshes every 30 minutes. Weather widget in hero shows current condit
 - **Theme:** Light mode with green/gold parish branding
 - **Mobile:** Bottom tab bar, hamburger menu, responsive everything
 - **Animations:** Scroll reveal, staggered entrances, button press feedback
-
-## How to Review This Code
-
-When reviewing specific files, here's what to focus on:
-
-**For `server/routers.ts`:** Check input validation, error handling, auth guards, and SQL injection prevention.
-
-**For `server/weather.ts`:** Check caching logic, API error handling, and data transformation accuracy.
-
-**For `client/src/pages/Home.tsx`:** Check component composition, data fetching patterns, loading states, and mobile responsiveness.
-
-**For `drizzle/schema.ts`:** Check table relationships, index usage, and data types.
-
-**For `server/db.ts`:** Check query efficiency, proper use of Drizzle ORM, and error handling.
 
 ## Common Patterns
 

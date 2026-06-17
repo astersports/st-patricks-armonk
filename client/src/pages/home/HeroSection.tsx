@@ -1,0 +1,215 @@
+import { Link } from "wouter";
+import { trpc } from "@/lib/trpc";
+import { ArrowRight, Wind, Droplets, Thermometer, Sunrise, Sunset } from "lucide-react";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { ColorfulWeatherIcon } from "@/components/WeatherIcons";
+import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
+
+const TIMEZONE = "America/New_York";
+
+export function HeroSection() {
+  const [timeGreeting, setTimeGreeting] = useState("");
+  const { data: currentWeather } = trpc.weather.current.useQuery(undefined, {
+    staleTime: 15 * 60 * 1000, // 15 min
+    refetchInterval: 30 * 60 * 1000, // refresh every 30 min
+  });
+
+  useEffect(() => {
+    function getGreeting() {
+      const now = new Date();
+      const eastern = new Date(now.toLocaleString("en-US", { timeZone: TIMEZONE }));
+      const hour = eastern.getHours();
+      if (hour < 12) return "Good Morning";
+      if (hour < 17) return "Good Afternoon";
+      return "Good Evening";
+    }
+    setTimeGreeting(getGreeting());
+    const interval = setInterval(() => setTimeGreeting(getGreeting()), 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <section className="relative min-h-[520px] sm:min-h-[560px] md:min-h-[600px] flex flex-col overflow-hidden" aria-label="Parish welcome">
+      {/* Ken Burns background */}
+      <div className="absolute inset-0 will-change-transform">
+        <img
+          src="/manus-storage/st-patrick-church-front_2665392e.jpeg"
+          alt="St. Patrick's Church front exterior"
+          className="w-full h-[115%] object-cover object-center -translate-y-[7%] hero-ken-burns"
+        />
+      </div>
+
+      {/* Very light gradient overlay — just enough for text readability */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `linear-gradient(
+            165deg,
+            oklch(0.15 0.04 160 / 0.35) 0%,
+            oklch(0.20 0.03 160 / 0.25) 40%,
+            oklch(0.10 0.02 160 / 0.40) 100%
+          )`,
+        }}
+      />
+
+      {/* Current Weather — top right overlay with tap-to-expand */}
+      {currentWeather && (
+        <div
+          className="absolute top-4 right-4 sm:top-6 sm:right-6 md:top-8 md:right-12 lg:right-20 z-20 opacity-0"
+          style={{ animation: 'fadeSlideUp 0.6s ease 0.5s forwards' }}
+        >
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="flex items-center gap-2 px-3 py-2 rounded-full backdrop-blur-md bg-white/15 border border-white/20 shadow-lg cursor-pointer hover:bg-white/25 transition-colors duration-200 press-scale">
+                <ColorfulWeatherIcon icon={currentWeather.icon} className="w-5 h-5 sm:w-6 sm:h-6" isDay={currentWeather.isDay} />
+                <span className="text-white font-semibold text-sm sm:text-base drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                  {currentWeather.temperature}°F
+                </span>
+                <span className="text-white/80 text-xs sm:text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
+                  {currentWeather.description}
+                </span>
+              </button>
+            </PopoverTrigger>
+            <PopoverContent
+              side="bottom"
+              align="end"
+              className="w-56 p-3 rounded-xl backdrop-blur-xl bg-background/95 border border-border/50 shadow-xl"
+            >
+              <div className="space-y-2.5">
+                <div className="flex items-center gap-2">
+                  <ColorfulWeatherIcon icon={currentWeather.icon} className="w-8 h-8" isDay={currentWeather.isDay} />
+                  <div>
+                    <p className="text-lg font-bold text-foreground">{currentWeather.temperature}°F</p>
+                    <p className="text-xs text-muted-foreground">{currentWeather.description}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2 pt-1 border-t border-border/30">
+                  <div className="flex items-center gap-1.5">
+                    <Thermometer className="w-3.5 h-3.5 text-orange-500" />
+                    <div>
+                      <p className="text-[10px] text-muted-foreground">Feels like</p>
+                      <p className="text-xs font-semibold">{currentWeather.feelsLike}°F</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Droplets className="w-3.5 h-3.5 text-blue-500" />
+                    <div>
+                      <p className="text-[10px] text-muted-foreground">Humidity</p>
+                      <p className="text-xs font-semibold">{currentWeather.humidity}%</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Wind className="w-3.5 h-3.5 text-slate-500" />
+                    <div>
+                      <p className="text-[10px] text-muted-foreground">Wind</p>
+                      <p className="text-xs font-semibold">{currentWeather.windSpeed} mph</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Sunrise className="w-3.5 h-3.5 text-amber-500" />
+                    <div>
+                      <p className="text-[10px] text-muted-foreground">Sunrise</p>
+                      <p className="text-xs font-semibold">{currentWeather.sunrise}</p>
+                    </div>
+                  </div>
+                </div>
+                {currentWeather.sunset && (
+                  <div className="flex items-center justify-center gap-1.5 pt-1 border-t border-border/30">
+                    <Sunset className="w-3.5 h-3.5 text-orange-400" />
+                    <span className="text-[10px] text-muted-foreground">Sunset</span>
+                    <span className="text-xs font-semibold">{currentWeather.sunset}</span>
+                  </div>
+                )}
+                <p className="text-[10px] text-muted-foreground text-center pt-1">Armonk, NY · Updated every 15 min</p>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+      )}
+
+      {/* Content — left-aligned, bottom-anchored */}
+      <div className="relative z-10 flex flex-col flex-1 justify-end pb-14 sm:pb-16 md:pb-20 px-5 sm:px-8 md:px-12 lg:px-20 max-w-[1400px] mx-auto w-full">
+        <div className="max-w-3xl">
+          {/* Eyebrow — time greeting + current weather on mobile */}
+          <p
+            className="text-emerald-300 text-xs sm:text-sm font-medium tracking-[0.2em] uppercase mb-4 opacity-0 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]"
+            style={{ animation: 'fadeSlideUp 0.6s ease 0.1s forwards' }}
+          >
+            {timeGreeting || "Welcome"} · Armonk, New York
+          </p>
+
+          {/* Primary heading — Fraunces with gold accent */}
+          <h1
+            className="text-white mb-4 opacity-0 drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]"
+            style={{
+              fontFamily: "'Fraunces', Georgia, serif",
+              fontSize: 'clamp(2.5rem, 5vw + 1rem, 5.5rem)',
+              fontOpticalSizing: 'auto',
+              lineHeight: 1.08,
+              fontWeight: 700,
+              letterSpacing: '-0.02em',
+              animation: 'fadeSlideUp 0.7s ease 0.2s forwards',
+            }}
+          >
+            Welcome Home to<br />
+            <span className="text-emerald-300">St. Patrick</span>
+          </h1>
+
+          {/* Motto */}
+          <p
+            className="text-white/80 text-base sm:text-lg italic mb-2 opacity-0 max-w-xl drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]"
+            style={{
+              lineHeight: 1.6,
+              animation: 'fadeSlideUp 0.7s ease 0.3s forwards',
+            }}
+          >
+            God Bless the Whole World, No Exceptions
+          </p>
+
+          {/* Address */}
+          <p
+            className="text-white/70 text-xs sm:text-sm font-medium tracking-wide mb-8 opacity-0 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
+            style={{ animation: 'fadeSlideUp 0.7s ease 0.35s forwards' }}
+          >
+            29 Cox Avenue, Armonk, NY 10504
+          </p>
+
+          {/* CTA Group */}
+          <div
+            className="flex flex-col sm:flex-row flex-wrap gap-3 opacity-0"
+            style={{ animation: 'fadeSlideUp 0.7s ease 0.4s forwards' }}
+          >
+            <Link href="/new-here">
+              <Button
+                size="lg"
+                className="bg-gold text-parish-green hover:bg-gold/90 font-semibold px-7 py-3 rounded-full press-scale tracking-wide"
+              >
+                I'm New Here
+                <ArrowRight className="w-4 h-4 ml-1.5" />
+              </Button>
+            </Link>
+            <Link href="/mass-times">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border border-white/30 text-white hover:border-white/60 hover:bg-white/10 font-semibold px-7 py-3 rounded-full press-scale backdrop-blur-sm bg-white/5"
+              >
+                Mass Times
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Scroll indicator — desktop only */}
+      <div className="absolute bottom-6 right-6 md:right-12 lg:right-20 hidden md:flex flex-col items-center gap-2 opacity-50" aria-hidden="true">
+        <span className="text-white text-[10px] tracking-[0.2em] uppercase" style={{ writingMode: 'vertical-rl' }}>Scroll</span>
+        <div className="w-px h-12 bg-gradient-to-b from-white/60 to-transparent" style={{ animation: 'scrollLine 2s ease infinite' }} />
+      </div>
+
+      {/* Bottom fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background via-background/60 to-transparent" />
+    </section>
+  );
+}
