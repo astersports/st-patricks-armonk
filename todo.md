@@ -744,3 +744,27 @@
 - [x] Split ThisWeekAccordion.tsx (420 lines) into day tabs + event list
 - [x] Split NowAtStPatrick.tsx (406 lines) into individual sub-sections
 - [x] Update ARCHITECTURE.md with final file structure
+
+## Phase 43: Deep File Split (All Files Under 200 Lines)
+
+- [ ] Split GalleryManager.tsx (402 lines) into sub-components
+- [ ] Split CcdPermissions.tsx (392 lines) into form sections
+- [ ] Split MarriageForm.tsx (371 lines) into form sections
+- [ ] Split AIChatBox.tsx (335 lines) into message list + input + helpers
+- [ ] Split BulletinBookReader.tsx (333 lines) into reader + controls
+- [ ] Split AdminLayout.tsx (333 lines) into sidebar + header
+- [ ] Split server/routers/forms.ts (329 lines) into sub-routers
+- [ ] Split FuneralForm.tsx (325 lines) into form sections
+- [ ] Split WeatherIcons.tsx (324 lines) into day + night icon sets
+- [ ] Split BaptismForm.tsx (323 lines) into form sections
+- [ ] Split FaithFormation.tsx (322 lines) into sub-sections
+- [ ] Split DashboardHome.tsx (318 lines) into stat cards + charts
+- [ ] Split SponsorForm.tsx (315 lines) into form sections
+- [ ] Split Sacraments.tsx (298 lines) into accordion sections
+- [ ] Split Staff.tsx (290 lines) into staff sections
+- [ ] Split NowStatusBar.tsx (282 lines) into sub-components
+- [ ] Split TimelineFeed.tsx (277 lines) into event row + grouping
+- [ ] Split catholicResources.ts (270 lines) into data + fetchers
+- [ ] Split PrayerWall.tsx (268 lines) into wall + form + card
+- [ ] Split DashboardLayout.tsx (264 lines) into sidebar + shell
+- [x] Fix hero text contrast — add stronger text shadow/backdrop so letters are clear and prominent on mobile

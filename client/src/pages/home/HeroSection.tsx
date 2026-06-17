@@ -40,15 +40,15 @@ export function HeroSection() {
         />
       </div>
 
-      {/* Very light gradient overlay — just enough for text readability */}
+      {/* Dark gradient overlay — ensures text is always readable over busy backgrounds */}
       <div
         className="absolute inset-0"
         style={{
           background: `linear-gradient(
             165deg,
-            oklch(0.15 0.04 160 / 0.35) 0%,
-            oklch(0.20 0.03 160 / 0.25) 40%,
-            oklch(0.10 0.02 160 / 0.40) 100%
+            oklch(0.10 0.04 160 / 0.70) 0%,
+            oklch(0.12 0.03 160 / 0.55) 40%,
+            oklch(0.08 0.02 160 / 0.65) 100%
           )`,
         }}
       />
@@ -133,7 +133,7 @@ export function HeroSection() {
         <div className="max-w-3xl">
           {/* Eyebrow — time greeting + current weather on mobile */}
           <p
-            className="text-emerald-300 text-xs sm:text-sm font-medium tracking-[0.2em] uppercase mb-4 opacity-0 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]"
+            className="text-emerald-300 text-xs sm:text-sm font-medium tracking-[0.2em] uppercase mb-4 opacity-0 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
             style={{ animation: 'fadeSlideUp 0.6s ease 0.1s forwards' }}
           >
             {timeGreeting || "Welcome"} · Armonk, New York
@@ -141,7 +141,7 @@ export function HeroSection() {
 
           {/* Primary heading — Fraunces with gold accent */}
           <h1
-            className="text-white mb-4 opacity-0 drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]"
+            className="text-white mb-4 opacity-0 [text-shadow:_0_2px_8px_rgba(0,0,0,0.7),_0_4px_16px_rgba(0,0,0,0.4)]"
             style={{
               fontFamily: "'Fraunces', Georgia, serif",
               fontSize: 'clamp(2.5rem, 5vw + 1rem, 5.5rem)',
@@ -158,7 +158,7 @@ export function HeroSection() {
 
           {/* Motto */}
           <p
-            className="text-white/80 text-base sm:text-lg italic mb-2 opacity-0 max-w-xl drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]"
+            className="text-white text-base sm:text-lg italic mb-2 opacity-0 max-w-xl [text-shadow:_0_2px_6px_rgba(0,0,0,0.7),_0_1px_3px_rgba(0,0,0,0.5)]"
             style={{
               lineHeight: 1.6,
               animation: 'fadeSlideUp 0.7s ease 0.3s forwards',
@@ -169,7 +169,7 @@ export function HeroSection() {
 
           {/* Address */}
           <p
-            className="text-white/70 text-xs sm:text-sm font-medium tracking-wide mb-8 opacity-0 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
+            className="text-white/90 text-xs sm:text-sm font-medium tracking-wide mb-8 opacity-0 [text-shadow:_0_1px_4px_rgba(0,0,0,0.7),_0_2px_8px_rgba(0,0,0,0.4)]"
             style={{ animation: 'fadeSlideUp 0.7s ease 0.35s forwards' }}
           >
             29 Cox Avenue, Armonk, NY 10504
