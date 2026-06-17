@@ -631,3 +631,7 @@
 - [x] Show "Tomorrow" label on the second tab in the weekly schedule
 - [x] Add swipe gesture on weekly schedule for mobile left/right day navigation
 - [x] Grey out past services within today (dim completed services, show "Completed" label)
+
+## Auto-advance to Tomorrow
+
+- [x] Auto-advance weekly schedule to tomorrow once all of today's services have completed

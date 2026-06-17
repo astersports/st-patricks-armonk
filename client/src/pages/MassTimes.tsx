@@ -104,7 +104,26 @@ export default function MassTimes() {
   const today = now.getDay(); // 0 = Sunday
   const currentHour = now.getHours();
   const currentMinute = now.getMinutes();
-  const [selectedDay, setSelectedDay] = useState(today);
+  const tomorrow = (today + 1) % 7;
+
+  // Auto-advance to tomorrow if all of today's services have completed
+  const allTodayServicesPast = useMemo(() => {
+    const todaySchedule = WEEKLY_SCHEDULE[today];
+    if (todaySchedule.services.length === 1 && todaySchedule.services[0].type === "none") return true;
+    return todaySchedule.services.every(service => {
+      if (!service.time) return true;
+      const rangeMatch = service.time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)$/);
+      if (!rangeMatch) return true;
+      let hours = parseInt(rangeMatch[1]);
+      const minutes = parseInt(rangeMatch[2]);
+      const period = rangeMatch[3];
+      if (period === "PM" && hours !== 12) hours += 12;
+      if (period === "AM" && hours === 12) hours = 0;
+      return currentHour > hours || (currentHour === hours && currentMinute > minutes);
+    });
+  }, [today, currentHour, currentMinute]);
+
+  const [selectedDay, setSelectedDay] = useState(() => allTodayServicesPast ? tomorrow : today);
 
   // Reorder days starting from today (hide past days)
   const reorderedDays = useMemo(() => {
@@ -113,9 +132,6 @@ export default function MassTimes() {
   }, [today]);
 
   const currentSchedule = useMemo(() => WEEKLY_SCHEDULE[selectedDay], [selectedDay]);
-
-  // Get the "tomorrow" day index
-  const tomorrow = (today + 1) % 7;
 
   // Parse time string to check if a service has passed
   const isServicePast = useCallback((timeStr: string) => {
