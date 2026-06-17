@@ -88,7 +88,12 @@ export function ServiceCard({ svc, idx, isPast, isLive, isNext, countdown, progr
           )}
         </span>
         {isLive && <span className="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5 block font-medium">{progress}</span>}
-        {countdown && !isLive && !isPast && <span className="text-xs text-muted-foreground mt-0.5 block">{countdown}</span>}
+        {countdown && !isLive && !isPast && (
+          <span className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-tight">
+            <span className="relative flex h-1.5 w-1.5"><span className="animate-pulse absolute inline-flex h-full w-full rounded-full bg-primary/60" /><span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" /></span>
+            {countdown}
+          </span>
+        )}
       </div>
       {/* Service-time weather badge */}
       {weather && !isPast && (
