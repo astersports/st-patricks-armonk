@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Church, Cross, Sun, Calendar, CalendarPlus, Clock } from "lucide-react";
-import { downloadMassICS, downloadICS } from "@/lib/icsGenerator";
+import { downloadMassICS } from "@/lib/icsGenerator";
 import { format, addDays } from "date-fns";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
@@ -52,20 +52,7 @@ const typeStyles = {
 
 const DAY_LABELS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
-interface EventItem {
-  id?: number;
-  title: string;
-  eventDate: string;
-  category: string;
-  location?: string | null;
-  note?: string | null;
-}
-
-interface ThisWeekAccordionProps {
-  events?: EventItem[];
-}
-
-export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
+export function ThisWeekAccordion() {
   const now = useMemo(() => new Date(new Date().toLocaleString("en-US", { timeZone: TIMEZONE })), []);
 
   // Build 7 days starting from today
@@ -76,29 +63,18 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
       const dayOfWeek = date.getDay();
       const services = DAILY_SCHEDULE[dayOfWeek] || [];
 
-      // Find events on this day
-      const dayEvents = events.filter((e) => {
-        const eventDate = new Date(e.eventDate);
-        return (
-          eventDate.getFullYear() === date.getFullYear() &&
-          eventDate.getMonth() === date.getMonth() &&
-          eventDate.getDate() === date.getDate()
-        );
-      });
-
       result.push({
         index: i,
         dayOfWeek,
         date,
         services,
-        events: dayEvents,
         isToday: i === 0,
         label: DAY_LABELS[dayOfWeek],
         dateNum: date.getDate(),
       });
     }
     return result;
-  }, [events, now]);
+  }, [now]);
 
   const [selectedIndex, setSelectedIndex] = useState<number>(0); // Start on today
 
@@ -119,7 +95,7 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
   // Get the selected day's data
   const selectedDayData = days[selectedIndex];
   const services = selectedDayData?.services || [];
-  const dayEvents = selectedDayData?.events || [];
+
 
   // Week range for header
   const weekStart = days[0]?.date || now;
@@ -182,7 +158,7 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
             {weatherData?.[`day-${selectedIndex}`]?.weather && (
               <WeatherBadge weather={weatherData[`day-${selectedIndex}`].weather!} compact />
             )}
-            {services.length === 0 && dayEvents.length === 0 && (
+            {services.length === 0 && (
               <span className="text-xs text-muted-foreground italic">No services</span>
             )}
           </div>
@@ -227,41 +203,8 @@ export function ThisWeekAccordion({ events = [] }: ThisWeekAccordionProps) {
           </div>
         )}
 
-        {/* Events for this day */}
-        {dayEvents.length > 0 && (
-          <div className="space-y-2 mb-3">
-            {dayEvents.map((evt, idx) => (
-              <div key={`evt-${idx}`} className="flex items-center gap-3 p-3 rounded-lg bg-gold/5 border border-gold/15">
-                <div className="w-9 h-9 rounded-lg bg-gold/10 flex items-center justify-center">
-                  <Calendar className="w-4 h-4 text-gold" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <span className="text-sm font-medium text-foreground block">{evt.title}</span>
-                  {evt.location && (
-                    <span className="text-xs text-muted-foreground">{evt.location}</span>
-                  )}
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    downloadICS({
-                      title: evt.title,
-                      startDate: new Date(evt.eventDate),
-                      location: evt.location || "St. Patrick Church, 29 Cox Ave, Armonk NY 10504",
-                    });
-                  }}
-                  className="p-1.5 rounded-md hover:bg-gold/20 text-muted-foreground hover:text-gold transition-colors shrink-0"
-                  title="Add to Calendar"
-                >
-                  <CalendarPlus className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-
         {/* No services message */}
-        {services.length === 0 && dayEvents.length === 0 && (
+        {services.length === 0 && (
           <p className="text-sm text-muted-foreground text-center py-4 italic">
             No scheduled services on this day
           </p>

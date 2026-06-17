@@ -46,7 +46,7 @@ const navLinks: NavItem[] = [
     label: "Parish Life",
     children: [
       { href: "/news", label: "News" },
-      { href: "/calendar", label: "Calendar (All Events)" },
+      { href: "/calendar", label: "Full Calendar" },
       { href: "/gallery", label: "Photo Gallery" },
       { href: "/bulletins", label: "Weekly Bulletins" },
       { href: "/calendar?filter=cyo", label: "CYO Schedule" },
@@ -71,7 +71,7 @@ const searchablePages: SearchableItem[] = [
   { href: "/ccd-permissions", label: "CCD Permission Forms", keywords: ["ccd", "permission", "release", "bus", "medical", "allergy", "pickup", "dismissal", "photo"], icon: FileText },
   { href: "/faith-formation", label: "Teen Life & Youth Ministry", keywords: ["teen", "youth", "high school", "confirmation", "young", "teen life"], icon: Users },
   { href: "/news", label: "News", keywords: ["news", "announcement", "update", "parish"], icon: Newspaper },
-  { href: "/calendar", label: "Calendar (All Events)", keywords: ["calendar", "events", "schedule", "upcoming", "parish", "cyo", "ccd"], icon: Calendar },
+  { href: "/calendar", label: "Full Calendar", keywords: ["calendar", "events", "schedule", "upcoming", "parish", "cyo", "ccd", "full"], icon: Calendar },
 
   { href: "/bulletins", label: "Weekly Bulletins", keywords: ["bulletin", "weekly", "pdf", "download", "read"], icon: BookOpen },
   { href: "/calendar?filter=cyo", label: "CYO Schedule", keywords: ["cyo", "basketball", "sports", "practice", "youth", "athletics"], icon: Calendar },

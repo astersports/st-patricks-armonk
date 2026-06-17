@@ -127,7 +127,7 @@ export default function FaithFormation() {
                       </p>
                     </div>
                     <div className="flex flex-wrap gap-3">
-                      <Link href="/calendar" className="text-sm text-primary hover:underline font-medium">View Calendar →</Link>
+                      <Link href="/calendar" className="text-sm text-primary hover:underline font-medium">View Full Calendar →</Link>
                       <Link href="/contact" className="text-sm text-primary hover:underline font-medium">Contact Youth Ministry →</Link>
                     </div>
                   </AccordionContent>

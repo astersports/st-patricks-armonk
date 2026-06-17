@@ -429,7 +429,7 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
           <span className="font-serif text-lg font-bold text-foreground">Coming Up</span>
         </div>
         <Link href="/calendar" className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1">
-          All Events <ArrowRight className="w-3.5 h-3.5" />
+          View Full Calendar <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>
 
@@ -554,7 +554,7 @@ function LatestNewsCard({ latestNews }: { latestNews: any }) {
   );
 }
 
-// === COMING UP EVENTS — Compact timeline with countdown ===
+// getCountdown helper used by ComingUpFiltered
 function getCountdown(eventDate: Date): string {
   const now = new Date();
   const days = differenceInDays(eventDate, now);
@@ -567,83 +567,6 @@ function getCountdown(eventDate: Date): string {
   if (days < 7) return `in ${days} days`;
   if (days < 14) return "Next week";
   return `in ${Math.ceil(days / 7)} weeks`;
-}
-
-function ComingUpEvents({ allImportantDates }: { allImportantDates: any[] | undefined }) {
-  const upcomingEvents = useMemo(() => {
-    return allImportantDates
-      ?.filter((e) => new Date(e.eventDate as unknown as string) >= new Date())
-      ?.slice(0, 3) || [];
-  }, [allImportantDates]);
-
-  const catDots: Record<string, string> = {
-    ccd: "bg-green-500", cyo: "bg-orange-500", sacrament: "bg-purple-500",
-    parish: "bg-primary", teen_life: "bg-emerald-700", social: "bg-amber-500",
-  };
-
-  if (upcomingEvents.length === 0) return null;
-
-  return (
-    <section className="reveal container mb-6 sm:mb-8">
-      <Card className="border-0 shadow-md overflow-hidden">
-        <CardContent className="p-0">
-          {/* Header */}
-          <div className="px-4 pt-3 pb-2 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center">
-                <Clock className="w-3.5 h-3.5 text-gold" />
-              </div>
-              <h2 className="font-serif text-sm sm:text-base font-bold text-foreground">Coming Up</h2>
-            </div>
-            <Link href="/calendar" className="text-sm font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1">
-              View Calendar <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-
-          {/* Event rows — compact */}
-          <div className="px-4 pb-3">
-            {upcomingEvents.map((evt, i) => {
-              const eventDate = toEastern(evt.eventDate as unknown as string);
-              const dot = catDots[evt.category] || catDots.parish;
-              const countdown = getCountdown(eventDate);
-              return (
-                <div key={evt.id || i}>
-                  {i > 0 && <div className="border-t border-dashed border-border/40 my-2" />}
-                  <Link href="/calendar" className="group flex items-center gap-3 py-1 hover:bg-primary/[0.02] -mx-2 px-2 rounded-lg transition-colors">
-                    {/* Date badge — compact */}
-                    <div className="w-10 h-10 rounded-lg bg-gold/10 flex flex-col items-center justify-center shrink-0">
-                      <span className="text-xs font-semibold text-gold uppercase leading-none">
-                        {format(eventDate, "MMM")}
-                      </span>
-                      <span className="text-lg font-bold text-gold leading-tight">
-                        {format(eventDate, "d")}
-                      </span>
-                    </div>
-                    {/* Event details */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <span className={`w-1.5 h-1.5 rounded-full ${dot} shrink-0`} />
-                        <p className="font-semibold text-foreground text-base leading-snug group-hover:text-primary transition-colors">
-                          {evt.title}
-                        </p>
-                      </div>
-                      <p className="text-sm text-foreground/70">
-                        {evt.location || format(eventDate, "EEEE")}
-                      </p>
-                    </div>
-                    {/* Countdown pill */}
-                    <span className="text-sm font-medium text-gold bg-gold/10 px-2 py-0.5 rounded-full shrink-0">
-                      {countdown}
-                    </span>
-                  </Link>
-                </div>
-              );
-            })}
-          </div>
-        </CardContent>
-      </Card>
-    </section>
-  );
 }
 
 function ThisWeeksBulletin() {
@@ -1326,7 +1249,7 @@ export default function Home() {
 
         {/* This Week — Day-by-day schedule accordion */}
         <section className="reveal container mb-4 sm:mb-6">
-          <ThisWeekAccordion events={allImportantDates?.map(e => ({ ...e, eventDate: e.eventDate as unknown as string })) || []} />
+          <ThisWeekAccordion />
         </section>
 
         {/* Pastor's Welcome */}

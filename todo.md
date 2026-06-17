@@ -646,3 +646,12 @@
 
 - [x] Add Holy Day of Obligation alerts — detect upcoming Holy Days and show banner/badge in schedule
 - [x] Add live "Mass in progress" indicator with pulsing green dot when current time is within a service window
+
+## Unified Calendar Strategy Cleanup
+
+- [x] Remove Key Date events overlay from "This Week" section (keep it pure worship schedule only)
+- [x] Remove duplicate smaller "Coming Up" (ComingUpEvents) section from homepage
+- [x] Change "All Events →" link text to "View Full Calendar →" on homepage Coming Up section
+- [x] Ensure calendar page remains the single unified source with All/Parish/CCD/CYO/Key Dates filters
+- [x] Clean up nav links for consistency (keep CCD Calendar and CYO Schedule for parents)
+- [x] Update cross-page links (Faith Formation, Sacraments) to use consistent "View Full Calendar" language
