@@ -733,4 +733,4 @@
 - [x] Split pages/Home.tsx (1565 lines) into 10 focused section components (~23-406 lines each)
 - [x] Split pages/Admin.tsx (1751 lines) into 16 focused manager components (~65-402 lines each)
 - [x] Verify all tests pass after refactor (31/31 pass)
-- [ ] Run Claude review on refactored files to confirm reviewability
+- [x] Run Claude review on refactored files to confirm reviewability (7/10 score on news.ts — clear, auditable in isolation)
