@@ -10,6 +10,16 @@ const TIMEZONE = "America/New_York";
 
 export function HeroSection() {
   const [timeGreeting, setTimeGreeting] = useState("");
+  const [weatherOpen, setWeatherOpen] = useState(false);
+
+  // Close popover on scroll so it doesn't drag through the page
+  useEffect(() => {
+    if (!weatherOpen) return;
+    const close = () => setWeatherOpen(false);
+    window.addEventListener("scroll", close, { passive: true });
+    return () => window.removeEventListener("scroll", close);
+  }, [weatherOpen]);
+
   const { data: currentWeather } = trpc.weather.current.useQuery(undefined, {
     staleTime: 15 * 60 * 1000, // 15 min
     refetchInterval: 30 * 60 * 1000, // refresh every 30 min
@@ -59,7 +69,7 @@ export function HeroSection() {
           className="absolute top-4 right-4 sm:top-6 sm:right-6 md:top-8 md:right-12 lg:right-20 z-20 opacity-0"
           style={{ animation: 'fadeSlideUp 0.6s ease 0.5s forwards' }}
         >
-          <Popover>
+          <Popover open={weatherOpen} onOpenChange={setWeatherOpen}>
             <PopoverTrigger asChild>
               <button className="flex items-center gap-2 px-3 py-2 rounded-full backdrop-blur-md bg-white/15 border border-white/20 shadow-lg cursor-pointer hover:bg-white/25 transition-colors duration-200 press-scale">
                 <ColorfulWeatherIcon icon={currentWeather.icon} className="w-5 h-5 sm:w-6 sm:h-6" isDay={currentWeather.isDay} />
