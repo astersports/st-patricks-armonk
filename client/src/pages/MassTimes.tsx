@@ -123,6 +123,8 @@ function parseTimeStr(timeStr: string): { hours: number; minutes: number } | nul
 function getCountdown(targetHours: number, targetMinutes: number, currentHour: number, currentMinute: number, daysAhead: number): string {
   let totalMinutes = (targetHours * 60 + targetMinutes) - (currentHour * 60 + currentMinute) + daysAhead * 1440;
   if (totalMinutes <= 0) return "";
+  // Only show countdown for events within 24 hours
+  if (totalMinutes > 1440) return "";
   const h = Math.floor(totalMinutes / 60);
   const m = totalMinutes % 60;
   if (h === 0) return `in ${m}m`;
@@ -304,17 +306,21 @@ export default function MassTimes() {
     return -1; // all past
   }, [selectedDay, today, currentHour, currentMinute, WEEKLY_SCHEDULE]);
 
-  // Compute countdown for the next service
-  const nextServiceCountdown = useMemo(() => {
-    if (nextServiceIndex < 0) return "";
+  // Compute countdowns for ALL services within 24 hours
+  const serviceCountdowns = useMemo(() => {
     const services = WEEKLY_SCHEDULE[selectedDay].services;
-    const service = services[nextServiceIndex];
-    if (!service?.time) return "";
-    const parsed = parseTimeStr(service.time);
-    if (!parsed) return "";
     const daysAhead = selectedDay === today ? 0 : ((selectedDay - today + 7) % 7);
-    return getCountdown(parsed.hours, parsed.minutes, currentHour, currentMinute, daysAhead);
-  }, [nextServiceIndex, selectedDay, today, currentHour, currentMinute, WEEKLY_SCHEDULE]);
+    const result: Record<number, string> = {};
+    for (let i = 0; i < services.length; i++) {
+      const service = services[i];
+      if (!service?.time) continue;
+      const parsed = parseTimeStr(service.time);
+      if (!parsed) continue;
+      const countdown = getCountdown(parsed.hours, parsed.minutes, currentHour, currentMinute, daysAhead);
+      if (countdown) result[i] = countdown;
+    }
+    return result;
+  }, [selectedDay, today, currentHour, currentMinute, WEEKLY_SCHEDULE]);
 
   // Swipe gesture for mobile
   const touchStartX = useRef(0);
@@ -488,8 +494,8 @@ export default function MassTimes() {
                           {service.time}
                         </span>
                       )}
-                      {isNext && !inProgress && nextServiceCountdown && (
-                        <p className="text-[10px] font-medium text-primary/70 mt-0.5">{nextServiceCountdown}</p>
+                      {!inProgress && !past && serviceCountdowns[idx] && (
+                        <p className={`text-[10px] font-medium mt-0.5 ${isNext ? "text-primary/70" : "text-muted-foreground"}`}>{serviceCountdowns[idx]}</p>
                       )}
                     </div>
                   </div>

@@ -702,3 +702,16 @@
 - [x] Create reusable SectionHeader component (icon + label + title + action) and apply across all homepage sections
 - [x] Add "Mass in progress" live state to ThisWeekAccordion (replaces countdown when service is active)
 - [x] Make Coming Up event rows responsive (countdown pills below title on mobile to prevent text wrapping)
+
+## Past Services & Swipe Gestures
+
+- [x] Add "Mass ended" dimmed state for past services in today's schedule (strikethrough time, muted styling)
+- [x] Add swipe gestures on This Week day tabs for quicker day navigation on mobile
+
+## Countdown & Calendar Label Fixes
+
+- [x] Fix countdown to only show for events within 24 hours (not 49h+)
+- [x] Full review: calendar event labels must match filter pill categories (confirmed correct: sacrament regex → purple badge, parish non-sacrament → green badge, key dates → category badge)
+- [x] MassTimes countdown now shows for ALL services within 24 hours (not just next one)
+- [x] Add past service dimmed state (strikethrough time, muted styling) for today's ended services
+- [x] Add swipe gestures on This Week day tabs for mobile navigation

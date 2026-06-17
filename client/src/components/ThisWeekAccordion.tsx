@@ -1,5 +1,5 @@
-import { useState, useMemo, useEffect } from "react";
-import { Church, Cross, Sun, Calendar, CalendarPlus, Clock } from "lucide-react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
+import { Church, Cross, Sun, Calendar, CalendarPlus, Clock, Check } from "lucide-react";
 import { downloadMassICS } from "@/lib/icsGenerator";
 import { format, addDays } from "date-fns";
 import { Link } from "wouter";
@@ -91,49 +91,64 @@ export function ThisWeekAccordion() {
 
   const [selectedIndex, setSelectedIndex] = useState<number>(0); // Start on today
 
-  // Compute countdown and in-progress state for each service
+  // Compute countdown, in-progress, and past state for each service
   const [countdowns, setCountdowns] = useState<Record<number, string>>({});
   const [inProgress, setInProgress] = useState<Record<number, string>>({});
+  const [pastServices, setPastServices] = useState<Record<number, boolean>>({});
   useEffect(() => {
     function computeCountdowns() {
       const et = new Date(new Date().toLocaleString("en-US", { timeZone: TIMEZONE }));
       const currentMin = et.getHours() * 60 + et.getMinutes();
+      const todayDayOfWeek = et.getDay(); // 0=Sun..6=Sat
       const selected = days[selectedIndex];
-      if (!selected) { setCountdowns({}); setInProgress({}); return; }
+      if (!selected) { setCountdowns({}); setInProgress({}); setPastServices({}); return; }
       const svcs = selected.services;
       const newCountdowns: Record<number, string> = {};
       const newInProgress: Record<number, string> = {};
+      const newPast: Record<number, boolean> = {};
+
+      // Calculate days ahead from today to the selected day
+      const selectedDayOfWeek = selected.dayOfWeek; // 0=Sun..6=Sat
+      const daysAhead = (selectedDayOfWeek - todayDayOfWeek + 7) % 7;
+
       for (let i = 0; i < svcs.length; i++) {
         const svc = svcs[i];
         const svcMin = parseServiceMinutes(svc.time);
         const duration = SERVICE_DURATION[svc.type] || 30;
 
         if (selected.isToday) {
+          // Check if already ended
+          if (currentMin >= svcMin + duration) {
+            newPast[i] = true;
+            continue;
+          }
           // Check if currently in progress
           if (currentMin >= svcMin && currentMin < svcMin + duration) {
             const remaining = (svcMin + duration) - currentMin;
             newInProgress[i] = `${remaining}m remaining`;
             continue;
           }
-          // Check if upcoming
+          // Upcoming today — always within 24h
           const diff = svcMin - currentMin;
-          if (diff > 0 && diff <= 1440) {
+          if (diff > 0) {
             const hrs = Math.floor(diff / 60);
             const mins = diff % 60;
             newCountdowns[i] = hrs > 0 ? `in ${hrs}h ${mins}m` : `in ${mins}m`;
           }
         } else {
-          // For future days, compute minutes until that service
-          const diff = (selected.index * 1440) + svcMin - currentMin;
-          if (diff > 0 && diff <= 1440) {
-            const hrs = Math.floor(diff / 60);
-            const mins = diff % 60;
+          // For future days, compute total minutes until that service
+          const totalMinAhead = (daysAhead * 1440) + svcMin - currentMin;
+          // Only show countdown if within 24 hours (1440 minutes)
+          if (totalMinAhead > 0 && totalMinAhead <= 1440) {
+            const hrs = Math.floor(totalMinAhead / 60);
+            const mins = totalMinAhead % 60;
             newCountdowns[i] = hrs > 0 ? `in ${hrs}h ${mins}m` : `in ${mins}m`;
           }
         }
       }
       setCountdowns(newCountdowns);
       setInProgress(newInProgress);
+      setPastServices(newPast);
     }
     computeCountdowns();
     const interval = setInterval(computeCountdowns, 30000);
@@ -145,6 +160,30 @@ export function ThisWeekAccordion() {
     const indices = Object.keys(countdowns).map(Number).sort((a, b) => a - b);
     return indices.length > 0 ? indices[0] : -1;
   }, [countdowns]);
+
+  // Swipe gesture for mobile day navigation
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = e.touches[0].clientX;
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    const diff = touchStartX.current - touchEndX.current;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0 && selectedIndex < 6) {
+        setSelectedIndex(selectedIndex + 1);
+      } else if (diff < 0 && selectedIndex > 0) {
+        setSelectedIndex(selectedIndex - 1);
+      }
+    }
+  }, [selectedIndex]);
 
   // Fetch 7-day weather forecast for each day
   const weatherInput = useMemo(() => {
@@ -215,8 +254,13 @@ export function ThisWeekAccordion() {
         })}
       </div>
 
-      {/* Selected day content */}
-      <div className="p-4">
+      {/* Selected day content — swipeable */}
+      <div
+        className="p-4"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         {/* Day label with weather + next-up countdown */}
         <div className="flex items-center justify-between mb-1">
           <h3 className="text-base font-bold text-foreground">
@@ -240,24 +284,37 @@ export function ThisWeekAccordion() {
               const Icon = style.icon;
               const countdown = countdowns[idx];
               const progress = inProgress[idx];
-              const isNext = idx === nextServiceIdx && !progress;
+              const isPast = !!pastServices[idx];
+              const isNext = idx === nextServiceIdx && !progress && !isPast;
               const isLive = !!progress;
               return (
                 <div
                   key={`svc-${idx}`}
-                  className={`flex items-center gap-3 p-3 rounded-lg border-l-4 ${style.borderColor} ${
-                    isLive
-                      ? "bg-emerald-50/80 ring-1 ring-emerald-200 dark:bg-emerald-950/20 dark:ring-emerald-800"
-                      : isNext
-                        ? "bg-primary/[0.04] ring-1 ring-primary/20"
-                        : "bg-card"
-                  } shadow-sm hover:shadow-md transition-all duration-200`}
+                  className={`flex items-center gap-3 p-3 rounded-lg border-l-4 ${
+                    isPast ? "border-muted-foreground/20" : style.borderColor
+                  } ${
+                    isPast
+                      ? "bg-muted/30 opacity-60"
+                      : isLive
+                        ? "bg-emerald-50/80 ring-1 ring-emerald-200 dark:bg-emerald-950/20 dark:ring-emerald-800"
+                        : isNext
+                          ? "bg-primary/[0.04] ring-1 ring-primary/20"
+                          : "bg-card"
+                  } shadow-sm ${isPast ? "" : "hover:shadow-md"} transition-all duration-200`}
                 >
-                  <div className={`w-9 h-9 rounded-lg ${isLive ? "bg-emerald-100 dark:bg-emerald-900/30" : style.bg} flex items-center justify-center`}>
-                    <Icon className={`w-4 h-4 ${isLive ? "text-emerald-600" : style.color}`} />
+                  <div className={`w-9 h-9 rounded-lg ${
+                    isPast ? "bg-muted/50" : isLive ? "bg-emerald-100 dark:bg-emerald-900/30" : style.bg
+                  } flex items-center justify-center`}>
+                    {isPast ? (
+                      <Check className="w-4 h-4 text-muted-foreground/60" />
+                    ) : (
+                      <Icon className={`w-4 h-4 ${isLive ? "text-emerald-600" : style.color}`} />
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <span className="text-sm font-medium text-foreground flex items-center gap-1.5">
+                    <span className={`text-sm font-medium flex items-center gap-1.5 ${
+                      isPast ? "text-muted-foreground line-through" : "text-foreground"
+                    }`}>
                       {svc.label}
                       {isLive && (
                         <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
@@ -271,31 +328,40 @@ export function ThisWeekAccordion() {
                           Next
                         </span>
                       )}
+                      {isPast && (
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium uppercase tracking-wider bg-muted text-muted-foreground no-underline" style={{ textDecoration: 'none' }}>
+                          Ended
+                        </span>
+                      )}
                     </span>
                     {isLive && (
                       <span className="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5 block font-medium">{progress}</span>
                     )}
-                    {countdown && !isLive && (
+                    {countdown && !isLive && !isPast && (
                       <span className="text-xs text-muted-foreground mt-0.5 block">{countdown}</span>
                     )}
                   </div>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      const dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][selectedDayData?.dayOfWeek || 0];
-                      downloadMassICS({
-                        title: `${svc.label} - St. Patrick in Armonk`,
-                        day: dayName,
-                        time: svc.time,
-                      });
-                    }}
-                    className="p-1.5 rounded-md hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
-                    title="Add to Calendar"
-                  >
-                    <CalendarPlus className="w-3.5 h-3.5" />
-                  </button>
+                  {!isPast && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][selectedDayData?.dayOfWeek || 0];
+                        downloadMassICS({
+                          title: `${svc.label} - St. Patrick in Armonk`,
+                          day: dayName,
+                          time: svc.time,
+                        });
+                      }}
+                      className="p-1.5 rounded-md hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                      title="Add to Calendar"
+                    >
+                      <CalendarPlus className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                   <div className="text-right">
-                    <span className={`text-sm font-bold ${style.color}`}>
+                    <span className={`text-sm font-bold ${
+                      isPast ? "text-muted-foreground/50 line-through" : style.color
+                    }`}>
                       {svc.time}
                     </span>
                   </div>
