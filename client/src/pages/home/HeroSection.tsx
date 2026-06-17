@@ -152,8 +152,8 @@ export function HeroSection() {
               animation: 'fadeSlideUp 0.7s ease 0.2s forwards',
             }}
           >
-            Welcome Home to<br />
-            <span className="text-emerald-300">St. Patrick</span>
+            <span className="text-emerald-300">St. Patrick</span><br />
+            in Armonk
           </h1>
 
           {/* Motto */}
