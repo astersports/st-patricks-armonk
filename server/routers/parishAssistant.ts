@@ -84,6 +84,18 @@ export const parishAssistantRouter = router({
         }
       }
 
+      // Include Key Dates (important_dates table - includes Bag Bingo, Confirmation, etc.)
+      const keyDates = await db.getUpcomingImportantDates(30);
+      if (keyDates.length > 0) {
+        dynamicContext += "\n\nKEY DATES & SPECIAL EVENTS (from parish database):\n";
+        for (const kd of keyDates) {
+          const dateStr = new Date(kd.eventDate).toLocaleDateString("en-US", {
+            weekday: "short", month: "short", day: "numeric", year: "numeric",
+          });
+          dynamicContext += `- [${kd.category}] ${kd.title} — ${dateStr}${kd.location ? ` @ ${kd.location}` : ""}${kd.note ? ` (${kd.note})` : ""}\n`;
+        }
+      }
+
       // Also include DB events and news
       const upcomingEvents = await db.getUpcomingEvents(5);
       if (upcomingEvents.length > 0) {
