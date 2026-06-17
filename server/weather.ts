@@ -8,8 +8,14 @@
 const ARMONK_LAT = 41.1334;
 const ARMONK_LON = -73.7254;
 
+// Named constants
+const FORECAST_DAYS = 7;
+const FETCH_TIMEOUT_MS = 5000; // 5 second timeout for API calls
+const MAX_FORECAST_HOUR_GAP_MS = 6 * 60 * 60 * 1000; // 6 hours
+
 export interface HourlyForecast {
   time: string;
+  timestamp: number; // Pre-computed for performance
   temperature: number; // Fahrenheit
   apparentTemperature: number; // Fahrenheit (feels like)
   precipitationProbability: number; // 0-100
@@ -75,16 +81,53 @@ const WMO_CODES: Record<number, { description: string; icon: string }> = {
 };
 
 function getWeatherInfo(code: number): { description: string; icon: string } {
-  return WMO_CODES[code] || { description: "Unknown", icon: "clear" };
+  // Use "partly-cloudy" as neutral fallback instead of misleading "clear"
+  return WMO_CODES[code] ?? { description: "Unknown", icon: "partly-cloudy" };
+}
+
+/**
+ * Parse Open-Meteo local time strings (e.g. "2026-06-17T05:21") directly
+ * without going through new Date() which would apply server timezone.
+ * Open-Meteo returns times in the requested timezone (America/New_York).
+ */
+function parseOpenMeteoLocalTime(isoTime: string): string {
+  const [, timePart] = isoTime.split("T");
+  if (!timePart) return isoTime;
+  const [hourStr, minuteStr] = timePart.split(":");
+  const hours = parseInt(hourStr, 10);
+  const minutes = parseInt(minuteStr, 10);
+  const ampm = hours >= 12 ? "PM" : "AM";
+  const h = hours % 12 || 12;
+  return minutes === 0
+    ? `${h} ${ampm}`
+    : `${h}:${minutes.toString().padStart(2, "0")} ${ampm}`;
+}
+
+/**
+ * Create a fetch request with a timeout to prevent hanging if Open-Meteo is unresponsive.
+ */
+async function fetchWithTimeout(url: string, timeoutMs: number = FETCH_TIMEOUT_MS): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    return response;
+  } finally {
+    clearTimeout(timeoutId);
+  }
 }
 
 // In-memory cache (60 min TTL) for hourly forecast
 let weatherCache: { hourly: HourlyForecast[]; fetchedAt: number } | null = null;
 const CACHE_TTL = 60 * 60 * 1000;
 
+// In-flight promise deduplication to prevent cache stampede
+let forecastInflight: Promise<HourlyForecast[]> | null = null;
+
 // Current weather cache (15 min TTL) — real-time conditions
 let currentWeatherCache: { data: CurrentWeather; fetchedAt: number } | null = null;
 const CURRENT_CACHE_TTL = 15 * 60 * 1000; // 15 minutes
+let currentWeatherInflight: Promise<CurrentWeather | null> | null = null;
 
 export interface CurrentWeather {
   temperature: number;
@@ -111,171 +154,240 @@ export interface DailyForecast {
 // Daily forecast cache (60 min TTL)
 let dailyForecastCache: { data: DailyForecast[]; fetchedAt: number } | null = null;
 const DAILY_CACHE_TTL = 60 * 60 * 1000;
-
-function formatTimeToAMPM(isoTime: string): string {
-  const date = new Date(isoTime);
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const ampm = hours >= 12 ? "PM" : "AM";
-  const h = hours % 12 || 12;
-  return minutes === 0 ? `${h} ${ampm}` : `${h}:${minutes.toString().padStart(2, "0")} ${ampm}`;
-}
+let dailyForecastInflight: Promise<DailyForecast[]> | null = null;
 
 /**
  * Fetch real-time current weather from Open-Meteo's current endpoint.
  * Also fetches today's sunrise/sunset. Uses a separate 15-minute cache.
+ * Includes in-flight deduplication to prevent cache stampede.
  */
 export async function getCurrentWeather(): Promise<CurrentWeather | null> {
   if (currentWeatherCache && Date.now() - currentWeatherCache.fetchedAt < CURRENT_CACHE_TTL) {
     return currentWeatherCache.data;
   }
-  try {
-    const url = new URL("https://api.open-meteo.com/v1/forecast");
-    url.searchParams.set("latitude", ARMONK_LAT.toString());
-    url.searchParams.set("longitude", ARMONK_LON.toString());
-    url.searchParams.set("current", [
-      "temperature_2m",
-      "apparent_temperature",
-      "weather_code",
-      "wind_speed_10m",
-      "is_day",
-      "relative_humidity_2m",
-    ].join(","));
-    url.searchParams.set("daily", "sunrise,sunset");
-    url.searchParams.set("temperature_unit", "fahrenheit");
-    url.searchParams.set("wind_speed_unit", "mph");
-    url.searchParams.set("timezone", "America/New_York");
-    url.searchParams.set("forecast_days", "1");
-    const response = await fetch(url.toString());
-    if (!response.ok) {
-      console.error(`Open-Meteo current weather API error: ${response.status}`);
+  // Deduplicate concurrent requests
+  if (currentWeatherInflight) return currentWeatherInflight;
+
+  currentWeatherInflight = (async () => {
+    try {
+      const url = new URL("https://api.open-meteo.com/v1/forecast");
+      url.searchParams.set("latitude", ARMONK_LAT.toString());
+      url.searchParams.set("longitude", ARMONK_LON.toString());
+      url.searchParams.set("current", [
+        "temperature_2m",
+        "apparent_temperature",
+        "weather_code",
+        "wind_speed_10m",
+        "is_day",
+        "relative_humidity_2m",
+      ].join(","));
+      url.searchParams.set("daily", "sunrise,sunset");
+      url.searchParams.set("temperature_unit", "fahrenheit");
+      url.searchParams.set("wind_speed_unit", "mph");
+      url.searchParams.set("timezone", "America/New_York");
+      url.searchParams.set("forecast_days", "1");
+
+      const response = await fetchWithTimeout(url.toString());
+      if (!response.ok) {
+        console.error(`Open-Meteo current weather API error: ${response.status}`);
+        return currentWeatherCache?.data || null;
+      }
+
+      let data: any;
+      try {
+        data = await response.json();
+      } catch {
+        console.error("Open-Meteo current weather: failed to parse JSON response");
+        return currentWeatherCache?.data || null;
+      }
+
+      // Validate response shape
+      if (!data?.current?.temperature_2m === undefined || !data?.daily?.sunrise) {
+        console.error("Open-Meteo current weather: unexpected response shape");
+        return currentWeatherCache?.data || null;
+      }
+
+      const current = data.current;
+      const weatherInfo = getWeatherInfo(current.weather_code);
+      const sunrise = data.daily?.sunrise?.[0] ? parseOpenMeteoLocalTime(data.daily.sunrise[0]) : "";
+      const sunset = data.daily?.sunset?.[0] ? parseOpenMeteoLocalTime(data.daily.sunset[0]) : "";
+
+      const result: CurrentWeather = {
+        temperature: Math.round(current.temperature_2m),
+        feelsLike: Math.round(current.apparent_temperature),
+        weatherCode: current.weather_code,
+        description: weatherInfo.description,
+        icon: weatherInfo.icon,
+        windSpeed: Math.round(current.wind_speed_10m || 0),
+        isDay: current.is_day === 1,
+        humidity: current.relative_humidity_2m || 0,
+        sunrise,
+        sunset,
+      };
+
+      currentWeatherCache = { data: result, fetchedAt: Date.now() };
+      return result;
+    } catch (error) {
+      console.error("Current weather fetch error:", error);
       return currentWeatherCache?.data || null;
+    } finally {
+      currentWeatherInflight = null;
     }
-    const data = await response.json();
-    const current = data.current;
-    const weatherInfo = getWeatherInfo(current.weather_code);
-    const sunrise = data.daily?.sunrise?.[0] ? formatTimeToAMPM(data.daily.sunrise[0]) : "";
-    const sunset = data.daily?.sunset?.[0] ? formatTimeToAMPM(data.daily.sunset[0]) : "";
-    const result: CurrentWeather = {
-      temperature: Math.round(current.temperature_2m),
-      feelsLike: Math.round(current.apparent_temperature),
-      weatherCode: current.weather_code,
-      description: weatherInfo.description,
-      icon: weatherInfo.icon,
-      windSpeed: Math.round(current.wind_speed_10m || 0),
-      isDay: current.is_day === 1,
-      humidity: current.relative_humidity_2m || 0,
-      sunrise,
-      sunset,
-    };
-    currentWeatherCache = { data: result, fetchedAt: Date.now() };
-    return result;
-  } catch (error) {
-    console.error("Current weather fetch error:", error);
-    return currentWeatherCache?.data || null;
-  }
+  })();
+
+  return currentWeatherInflight;
 }
 
 /**
  * Fetch 7-day daily forecast: high/low temps, precipitation probability, sunrise/sunset.
- * Cached for 60 minutes.
+ * Cached for 60 minutes. Includes in-flight deduplication.
  */
 export async function getDailyForecast(): Promise<DailyForecast[]> {
   if (dailyForecastCache && Date.now() - dailyForecastCache.fetchedAt < DAILY_CACHE_TTL) {
     return dailyForecastCache.data;
   }
-  try {
-    const url = new URL("https://api.open-meteo.com/v1/forecast");
-    url.searchParams.set("latitude", ARMONK_LAT.toString());
-    url.searchParams.set("longitude", ARMONK_LON.toString());
-    url.searchParams.set("daily", [
-      "temperature_2m_max",
-      "temperature_2m_min",
-      "precipitation_probability_max",
-      "sunrise",
-      "sunset",
-    ].join(","));
-    url.searchParams.set("temperature_unit", "fahrenheit");
-    url.searchParams.set("timezone", "America/New_York");
-    url.searchParams.set("forecast_days", "7");
-    const response = await fetch(url.toString());
-    if (!response.ok) {
-      console.error(`Open-Meteo daily API error: ${response.status}`);
+  // Deduplicate concurrent requests
+  if (dailyForecastInflight) return dailyForecastInflight;
+
+  dailyForecastInflight = (async () => {
+    try {
+      const url = new URL("https://api.open-meteo.com/v1/forecast");
+      url.searchParams.set("latitude", ARMONK_LAT.toString());
+      url.searchParams.set("longitude", ARMONK_LON.toString());
+      url.searchParams.set("daily", [
+        "temperature_2m_max",
+        "temperature_2m_min",
+        "precipitation_probability_max",
+        "sunrise",
+        "sunset",
+      ].join(","));
+      url.searchParams.set("temperature_unit", "fahrenheit");
+      // Note: wind_speed_unit not set here; daily forecast does not include wind fields.
+      url.searchParams.set("timezone", "America/New_York");
+      url.searchParams.set("forecast_days", FORECAST_DAYS.toString());
+
+      const response = await fetchWithTimeout(url.toString());
+      if (!response.ok) {
+        console.error(`Open-Meteo daily API error: ${response.status}`);
+        return dailyForecastCache?.data || [];
+      }
+
+      let data: any;
+      try {
+        data = await response.json();
+      } catch {
+        console.error("Open-Meteo daily forecast: failed to parse JSON response");
+        return dailyForecastCache?.data || [];
+      }
+
+      // Validate response shape
+      if (!data?.daily?.time || !Array.isArray(data.daily.time)) {
+        console.error("Open-Meteo daily forecast: unexpected response shape");
+        return dailyForecastCache?.data || [];
+      }
+
+      const daily = data.daily;
+      const forecasts: DailyForecast[] = daily.time.map((date: string, i: number) => ({
+        date,
+        high: Math.round(daily.temperature_2m_max[i]),
+        low: Math.round(daily.temperature_2m_min[i]),
+        precipProbabilityMax: daily.precipitation_probability_max[i] || 0,
+        sunrise: parseOpenMeteoLocalTime(daily.sunrise[i]),
+        sunset: parseOpenMeteoLocalTime(daily.sunset[i]),
+      }));
+
+      dailyForecastCache = { data: forecasts, fetchedAt: Date.now() };
+      return forecasts;
+    } catch (error) {
+      console.error("Daily forecast fetch error:", error);
       return dailyForecastCache?.data || [];
+    } finally {
+      dailyForecastInflight = null;
     }
-    const data = await response.json();
-    const daily = data.daily;
-    const forecasts: DailyForecast[] = daily.time.map((date: string, i: number) => ({
-      date,
-      high: Math.round(daily.temperature_2m_max[i]),
-      low: Math.round(daily.temperature_2m_min[i]),
-      precipProbabilityMax: daily.precipitation_probability_max[i] || 0,
-      sunrise: formatTimeToAMPM(daily.sunrise[i]),
-      sunset: formatTimeToAMPM(daily.sunset[i]),
-    }));
-    dailyForecastCache = { data: forecasts, fetchedAt: Date.now() };
-    return forecasts;
-  } catch (error) {
-    console.error("Daily forecast fetch error:", error);
-    return dailyForecastCache?.data || [];
-  }
+  })();
+
+  return dailyForecastInflight;
 }
 
 /**
- * Fetch 7-day hourly forecast from Open-Meteo for Armonk, NY
+ * Fetch 7-day hourly forecast from Open-Meteo for Armonk, NY.
+ * Includes in-flight deduplication to prevent cache stampede.
  */
 async function fetchForecast(): Promise<HourlyForecast[]> {
   if (weatherCache && Date.now() - weatherCache.fetchedAt < CACHE_TTL) {
     return weatherCache.hourly;
   }
+  // Deduplicate concurrent requests
+  if (forecastInflight) return forecastInflight;
 
-  try {
-    const url = new URL("https://api.open-meteo.com/v1/forecast");
-    url.searchParams.set("latitude", ARMONK_LAT.toString());
-    url.searchParams.set("longitude", ARMONK_LON.toString());
-    url.searchParams.set("hourly", [
-      "temperature_2m",
-      "apparent_temperature",
-      "precipitation_probability",
-      "precipitation",
-      "weather_code",
-      "cloud_cover",
-      "wind_speed_10m",
-      "is_day",
-    ].join(","));
-    url.searchParams.set("temperature_unit", "fahrenheit");
-    url.searchParams.set("wind_speed_unit", "mph");
-    url.searchParams.set("precipitation_unit", "inch");
-    url.searchParams.set("timezone", "America/New_York");
-    url.searchParams.set("forecast_days", "7");
+  forecastInflight = (async () => {
+    try {
+      const url = new URL("https://api.open-meteo.com/v1/forecast");
+      url.searchParams.set("latitude", ARMONK_LAT.toString());
+      url.searchParams.set("longitude", ARMONK_LON.toString());
+      url.searchParams.set("hourly", [
+        "temperature_2m",
+        "apparent_temperature",
+        "precipitation_probability",
+        "precipitation",
+        "weather_code",
+        "cloud_cover",
+        "wind_speed_10m",
+        "is_day",
+      ].join(","));
+      url.searchParams.set("temperature_unit", "fahrenheit");
+      url.searchParams.set("wind_speed_unit", "mph");
+      url.searchParams.set("precipitation_unit", "inch");
+      url.searchParams.set("timezone", "America/New_York");
+      url.searchParams.set("forecast_days", FORECAST_DAYS.toString());
 
-    const response = await fetch(url.toString());
-    if (!response.ok) {
-      console.error(`Open-Meteo API error: ${response.status}`);
+      const response = await fetchWithTimeout(url.toString());
+      if (!response.ok) {
+        console.error(`Open-Meteo API error: ${response.status}`);
+        return weatherCache?.hourly || [];
+      }
+
+      let data: any;
+      try {
+        data = await response.json();
+      } catch {
+        console.error("Open-Meteo hourly forecast: failed to parse JSON response");
+        return weatherCache?.hourly || [];
+      }
+
+      // Validate response shape
+      if (!data?.hourly?.time || !Array.isArray(data.hourly.time)) {
+        console.error("Open-Meteo hourly forecast: unexpected response shape");
+        return weatherCache?.hourly || [];
+      }
+
+      const hourly = data.hourly;
+
+      // Pre-compute timestamps for O(1) lookups later
+      const forecasts: HourlyForecast[] = hourly.time.map((time: string, i: number) => ({
+        time,
+        timestamp: new Date(time).getTime(),
+        temperature: Math.round(hourly.temperature_2m[i]),
+        apparentTemperature: Math.round(hourly.apparent_temperature[i]),
+        precipitationProbability: hourly.precipitation_probability[i] || 0,
+        precipitation: hourly.precipitation[i] || 0,
+        weatherCode: hourly.weather_code[i] || 0,
+        cloudCover: hourly.cloud_cover[i] || 0,
+        windSpeed: Math.round(hourly.wind_speed_10m[i] || 0),
+        isDay: hourly.is_day[i] === 1,
+      }));
+
+      weatherCache = { hourly: forecasts, fetchedAt: Date.now() };
+      return forecasts;
+    } catch (error) {
+      console.error("Weather fetch error:", error);
       return weatherCache?.hourly || [];
+    } finally {
+      forecastInflight = null;
     }
+  })();
 
-    const data = await response.json();
-    const hourly = data.hourly;
-
-    const forecasts: HourlyForecast[] = hourly.time.map((time: string, i: number) => ({
-      time,
-      temperature: Math.round(hourly.temperature_2m[i]),
-      apparentTemperature: Math.round(hourly.apparent_temperature[i]),
-      precipitationProbability: hourly.precipitation_probability[i] || 0,
-      precipitation: hourly.precipitation[i] || 0,
-      weatherCode: hourly.weather_code[i] || 0,
-      cloudCover: hourly.cloud_cover[i] || 0,
-      windSpeed: Math.round(hourly.wind_speed_10m[i] || 0),
-      isDay: hourly.is_day[i] === 1,
-    }));
-
-    weatherCache = { hourly: forecasts, fetchedAt: Date.now() };
-    return forecasts;
-  } catch (error) {
-    console.error("Weather fetch error:", error);
-    return weatherCache?.hourly || [];
-  }
+  return forecastInflight;
 }
 
 /**
@@ -290,13 +402,13 @@ export async function getWeatherForEvent(eventStartISO: string): Promise<EventWe
   const forecasts = await fetchForecast();
   if (forecasts.length === 0) return null;
 
-  // Find closest forecast hour to event start
+  // Find closest forecast hour to event start using pre-computed timestamps
   const eventTime = eventDate.getTime();
   let closest = forecasts[0];
-  let closestDiff = Math.abs(new Date(closest.time).getTime() - eventTime);
+  let closestDiff = Math.abs(closest.timestamp - eventTime);
 
   for (const f of forecasts) {
-    const diff = Math.abs(new Date(f.time).getTime() - eventTime);
+    const diff = Math.abs(f.timestamp - eventTime);
     if (diff < closestDiff) {
       closest = f;
       closestDiff = diff;
@@ -304,20 +416,20 @@ export async function getWeatherForEvent(eventStartISO: string): Promise<EventWe
   }
 
   // If closest is more than 6 hours away, skip (relaxed for daily schedule views)
-  if (closestDiff > 6 * 60 * 60 * 1000) return null;
+  if (closestDiff > MAX_FORECAST_HOUR_GAP_MS) return null;
 
   const weatherInfo = getWeatherInfo(closest.weatherCode);
 
   // Build 3-slot forecast strip around event time
   const stripForecasts = forecasts.filter(f => {
-    const fTime = new Date(f.time).getTime();
-    return fTime >= eventTime - 2 * 60 * 60 * 1000 &&
-           fTime <= eventTime + 4 * 60 * 60 * 1000;
+    return f.timestamp >= eventTime - 2 * 60 * 60 * 1000 &&
+           f.timestamp <= eventTime + 4 * 60 * 60 * 1000;
   }).slice(0, 4);
 
   const forecastStrip = stripForecasts.map(f => {
-    const fDate = new Date(f.time);
-    const hour = fDate.getHours();
+    // Parse hour directly from the time string to avoid timezone issues
+    const [, timePart] = f.time.split("T");
+    const hour = parseInt(timePart?.split(":")[0] || "0", 10);
     let label = "Night";
     if (hour >= 5 && hour < 12) label = "Morning";
     else if (hour >= 12 && hour < 17) label = "Afternoon";
@@ -352,7 +464,8 @@ export async function getWeatherForEvent(eventStartISO: string): Promise<EventWe
 }
 
 /**
- * Detect outdoor events from title/description/location heuristics
+ * Detect outdoor events from title/description/location heuristics.
+ * Note: broad keyword matching — intentionally permissive for a small parish site.
  */
 export function isOutdoorEvent(event: { title: string; description?: string; location?: string }): boolean {
   const text = `${event.title} ${event.description || ""} ${event.location || ""}`.toLowerCase();
@@ -404,29 +517,36 @@ export function getParkingAdvisory(event: { title: string }): string | null {
 /**
  * Batch weather enrichment for events within 7 days.
  * Returns a map of event ID → enrichment data.
+ * Pre-warms the forecast cache and uses Promise.all for parallel processing.
  */
 export async function getWeatherForEvents(
   events: Array<{ id: string; title: string; description?: string; location?: string; startDate: string }>
 ): Promise<Record<string, { weather: EventWeather | null; isOutdoor: boolean; isHighAttendance: boolean; parkingAdvisory: string | null }>> {
-  const result: Record<string, { weather: EventWeather | null; isOutdoor: boolean; isHighAttendance: boolean; parkingAdvisory: string | null }> = {};
-
   const now = new Date();
-  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // Start of today
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const sevenDaysOut = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
-  for (const event of events) {
+  // Filter events that are within the forecast window
+  const eventsToEnrich = events.filter(event => {
     const eventDate = new Date(event.startDate);
-    if (eventDate > sevenDaysOut || eventDate < todayStart) continue;
+    return eventDate <= sevenDaysOut && eventDate >= todayStart;
+  });
 
-    const outdoor = isOutdoorEvent(event);
-    const highAttendance = isHighAttendanceEvent(event);
+  if (eventsToEnrich.length === 0) return {};
 
-    // Show weather for ALL events within 7 days
-    const weather = await getWeatherForEvent(event.startDate);
-    const parkingAdvisory = highAttendance ? getParkingAdvisory(event) : null;
+  // Pre-warm the forecast cache once before processing all events
+  await fetchForecast();
 
-    result[event.id] = { weather, isOutdoor: outdoor, isHighAttendance: highAttendance, parkingAdvisory };
-  }
+  // Process all events in parallel (cache is warm, so these are synchronous lookups)
+  const entries = await Promise.all(
+    eventsToEnrich.map(async (event) => {
+      const outdoor = isOutdoorEvent(event);
+      const highAttendance = isHighAttendanceEvent(event);
+      const weather = await getWeatherForEvent(event.startDate);
+      const parkingAdvisory = highAttendance ? getParkingAdvisory(event) : null;
+      return [event.id, { weather, isOutdoor: outdoor, isHighAttendance: highAttendance, parkingAdvisory }] as const;
+    })
+  );
 
-  return result;
+  return Object.fromEntries(entries);
 }
