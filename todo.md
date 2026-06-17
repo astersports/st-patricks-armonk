@@ -799,3 +799,8 @@
 - [x] Replace "More" tab in mobile bottom nav with "Ask" (Parish Assistant chat icon)
 - [x] Hide floating chat bubble on mobile (only show on desktop)
 - [x] Tapping "Ask" in bottom nav opens the Parish Assistant chat panel
+
+## Bug Fix: Bag Bingo Not Found + Assistant UX Improvements
+- [x] Fix Parish Assistant not finding Bag Bingo (was using limit(30) which cut off event #31+, now uses getAllPublishedImportantDates)
+- [x] Add suggested questions pills below chat input (Mass times, Bag Bingo, How to register, Confessions, CCD)
+- [x] Track assistant usage in PostHog (opened, question_asked, answer_received, error events)

@@ -84,8 +84,11 @@ export const parishAssistantRouter = router({
         }
       }
 
-      // Include Key Dates (important_dates table - includes Bag Bingo, Confirmation, etc.)
-      const keyDates = await db.getUpcomingImportantDates(30);
+      // Include ALL Key Dates (important_dates table - includes Bag Bingo, Confirmation, etc.)
+      // Use getAllPublishedImportantDates to get everything, then filter to future only
+      const allKeyDates = await db.getAllPublishedImportantDates();
+      const now = new Date();
+      const keyDates = allKeyDates.filter(kd => new Date(kd.eventDate) >= now);
       if (keyDates.length > 0) {
         dynamicContext += "\n\nKEY DATES & SPECIAL EVENTS (from parish database):\n";
         for (const kd of keyDates) {

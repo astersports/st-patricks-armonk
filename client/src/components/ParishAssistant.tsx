@@ -15,6 +15,24 @@ export function openParishAssistant(prefillQuestion?: string) {
   window.dispatchEvent(new CustomEvent(OPEN_EVENT, { detail: { prefillQuestion } }));
 }
 
+const SUGGESTED_QUESTIONS = [
+  "Mass times?",
+  "Bag Bingo?",
+  "How to register?",
+  "Confessions?",
+  "CCD info?",
+];
+
+/** Track assistant usage in PostHog */
+function trackAssistantEvent(action: string, props?: Record<string, string>) {
+  try {
+    const posthog = (window as any).posthog;
+    if (posthog?.capture) {
+      posthog.capture(`parish_assistant_${action}`, props);
+    }
+  } catch { /* PostHog not loaded — no-op */ }
+}
+
 export function ParishAssistant() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -33,6 +51,7 @@ export function ParishAssistant() {
     const handler = (e: Event) => {
       const detail = (e as CustomEvent).detail;
       setOpen(true);
+      trackAssistantEvent("opened", { source: "external" });
       if (detail?.prefillQuestion) {
         setInput(detail.prefillQuestion);
       }
@@ -44,6 +63,9 @@ export function ParishAssistant() {
   const handleSend = useCallback(async (overrideInput?: string) => {
     const text = (overrideInput || input).trim();
     if (!text || chatMutation.isPending) return;
+
+    trackAssistantEvent("question_asked", { question: text.slice(0, 100) });
+
     const userMsg: Message = { role: "user", content: text };
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
@@ -55,8 +77,10 @@ export function ParishAssistant() {
         history: messages.slice(-10),
       });
       setMessages([...newMessages, { role: "assistant", content: result.reply }]);
+      trackAssistantEvent("answer_received", { question: text.slice(0, 100) });
     } catch {
       setMessages([...newMessages, { role: "assistant", content: "Sorry, I'm having trouble. Please try again or call (914) 273-9724." }]);
+      trackAssistantEvent("error");
     }
   }, [input, messages, chatMutation]);
 
@@ -64,7 +88,7 @@ export function ParishAssistant() {
   if (!open) {
     return (
       <button
-        onClick={() => setOpen(true)}
+        onClick={() => { setOpen(true); trackAssistantEvent("opened", { source: "bubble" }); }}
         className="hidden lg:flex fixed bottom-6 right-6 z-50 bg-primary text-primary-foreground rounded-full p-4 shadow-lg hover:scale-105 transition-transform items-center justify-center"
         aria-label="Open Parish Assistant"
       >
@@ -91,11 +115,6 @@ export function ParishAssistant() {
           <div className="text-center py-6 text-muted-foreground text-sm">
             <Church className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p>Welcome! I can help with Mass times, events, programs, and more.</p>
-            <div className="mt-3 space-y-1">
-              {["What are the Mass times?", "How do I register for CCD?", "When are confessions?"].map(q => (
-                <button key={q} onClick={() => { setInput(q); }} className="block mx-auto text-xs text-primary hover:underline">{q}</button>
-              ))}
-            </div>
           </div>
         )}
         {messages.map((msg, i) => (
@@ -116,6 +135,21 @@ export function ParishAssistant() {
           </div>
         )}
       </div>
+
+      {/* Suggested Questions */}
+      {messages.length === 0 && (
+        <div className="px-3 pb-2 flex flex-wrap gap-1.5">
+          {SUGGESTED_QUESTIONS.map(q => (
+            <button
+              key={q}
+              onClick={() => handleSend(q)}
+              className="text-xs px-2.5 py-1 rounded-full border border-primary/30 text-primary hover:bg-primary/10 transition-colors"
+            >
+              {q}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Input */}
       <div className="p-3 border-t">
