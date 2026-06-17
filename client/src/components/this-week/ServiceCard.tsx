@@ -80,12 +80,7 @@ export function ServiceCard({ svc, idx, isPast, isLive, isNext, countdown, progr
               Live
             </span>
           )}
-          {isNext && (
-            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-primary/15 text-primary">
-              <span className="relative flex h-1.5 w-1.5"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-50" /><span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" /></span>
-              Next
-            </span>
-          )}
+
           {isPast && (
             <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium uppercase tracking-wider bg-muted text-muted-foreground no-underline" style={{ textDecoration: 'none' }}>
               Ended
