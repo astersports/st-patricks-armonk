@@ -378,8 +378,6 @@ const CATEGORIES = [
   { key: "ccd", label: "CCD", color: "bg-green-500/15 text-green-700" },
   { key: "cyo", label: "CYO", color: "bg-orange-500/15 text-orange-700" },
   { key: "sacrament", label: "Sacrament", color: "bg-purple-500/15 text-purple-700" },
-  { key: "teen_life", label: "Teen Life", color: "bg-emerald-700/15 text-emerald-800" },
-  { key: "social", label: "Social", color: "bg-amber-500/15 text-amber-700" },
 ];
 
 function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Record<string, { dot: string; bg: string }> }) {
@@ -387,13 +385,21 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
 
   const filteredEvents = useMemo(() => {
     if (activeFilter === "all") return events;
+    // Teen Life and Social fold into Parish
+    if (activeFilter === "parish") return events.filter((e) => e.category === "parish" || e.category === "teen_life" || e.category === "social");
     return events.filter((e) => e.category === activeFilter);
   }, [events, activeFilter]);
 
-  // Count per category
+  // Count per category (teen_life and social fold into parish)
   const counts = useMemo(() => {
     const c: Record<string, number> = { all: events.length };
-    events.forEach((e) => { c[e.category] = (c[e.category] || 0) + 1; });
+    events.forEach((e) => {
+      if (e.category === "teen_life" || e.category === "social") {
+        c["parish"] = (c["parish"] || 0) + 1;
+      } else {
+        c[e.category] = (c[e.category] || 0) + 1;
+      }
+    });
     return c;
   }, [events]);
 
@@ -890,6 +896,47 @@ function DailyReadingsSkeleton() {
 function DailyReadings() {
   const { data: readings, isLoading } = trpc.dailyReadings.today.useQuery();
   const [expandedReading, setExpandedReading] = useState<string | null>(null);
+  const [countdown, setCountdown] = useState<string | null>(null);
+
+  // Compute countdown to next Mass (< 24h)
+  useEffect(() => {
+    function getNextMassCountdown() {
+      const now = new Date();
+      const eastern = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
+      const day = eastern.getDay(); // 0=Sun
+      const h = eastern.getHours();
+      const m = eastern.getMinutes();
+      const nowMin = h * 60 + m;
+
+      // Mass times: Sun 8:30,10:30,12:30 | Sat 17:30 | Tue-Fri 8:30
+      const massTimes: { day: number; hour: number; min: number }[] = [
+        { day: 0, hour: 8, min: 30 }, { day: 0, hour: 10, min: 30 }, { day: 0, hour: 12, min: 30 },
+        { day: 2, hour: 8, min: 30 }, { day: 3, hour: 8, min: 30 },
+        { day: 4, hour: 8, min: 30 }, { day: 5, hour: 8, min: 30 },
+        { day: 6, hour: 17, min: 30 },
+      ];
+
+      let minDiff = Infinity;
+      for (const mt of massTimes) {
+        let dayDiff = mt.day - day;
+        if (dayDiff < 0) dayDiff += 7;
+        const targetMin = dayDiff * 24 * 60 + mt.hour * 60 + mt.min;
+        const diff = targetMin - nowMin;
+        if (diff > 0 && diff < 24 * 60 && diff < minDiff) minDiff = diff;
+      }
+
+      if (minDiff < 24 * 60) {
+        const hrs = Math.floor(minDiff / 60);
+        const mins = minDiff % 60;
+        return hrs > 0 ? `in ${hrs}h ${mins}m` : `in ${mins}m`;
+      }
+      return null;
+    }
+
+    setCountdown(getNextMassCountdown());
+    const interval = setInterval(() => setCountdown(getNextMassCountdown()), 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   if (isLoading) {
     return <DailyReadingsSkeleton />;
@@ -926,8 +973,16 @@ function DailyReadings() {
               <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
             </svg>
           </div>
-          <div className="min-w-0">
-            <h2 className="font-serif text-lg sm:text-xl font-bold text-white">Today's Readings</h2>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <h2 className="font-serif text-lg sm:text-xl font-bold text-white">Today's Readings</h2>
+              {countdown && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gold/20 text-gold text-xs font-bold animate-pulse">
+                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  Mass {countdown}
+                </span>
+              )}
+            </div>
             <p className="text-sm text-white/70 leading-snug">{readings.liturgicTitle}</p>
           </div>
         </div>
@@ -1244,13 +1299,13 @@ export default function Home() {
       <HeroSection />
 
       <div ref={revealRef}>
-        {/* Now at St. Patrick — Live status + upcoming events + latest news */}
-        <NowAtStPatrick latestNews={latestNews} newsItems={newsItems} allImportantDates={allImportantDates} />
-
-        {/* This Week — Day-by-day schedule accordion */}
+        {/* This Week — Day-by-day schedule accordion (worship schedule first) */}
         <section className="reveal container mb-4 sm:mb-6">
           <ThisWeekAccordion />
         </section>
+
+        {/* Now at St. Patrick — Live status + upcoming events + latest news */}
+        <NowAtStPatrick latestNews={latestNews} newsItems={newsItems} allImportantDates={allImportantDates} />
 
         {/* Pastor's Welcome */}
         <section className="reveal container py-5 sm:py-8 mb-1 sm:mb-3">

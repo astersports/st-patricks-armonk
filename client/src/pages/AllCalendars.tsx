@@ -16,12 +16,13 @@ function toEastern(isoString: string): Date {
   return new TZDate(isoString, TIMEZONE);
 }
 
-type SourceFilter = "all" | "key-dates" | "parish" | "ccd" | "cyo";
+type SourceFilter = "all" | "key-dates" | "parish" | "ccd" | "cyo" | "sacrament";
 
 const sourceConfig = {
   parish: { label: "Parish", icon: Calendar, color: "bg-primary/10 text-primary", border: "border-l-primary" },
   ccd: { label: "CCD", icon: BookOpen, color: "bg-green-100 text-green-700", border: "border-l-green-600" },
   cyo: { label: "CYO", icon: Dribbble, color: "bg-orange-100 text-orange-700", border: "border-l-orange-500" },
+  sacrament: { label: "Sacrament", icon: Clock, color: "bg-purple-100 text-purple-700", border: "border-l-purple-500" },
 };
 
 // Key dates category colors for the border
@@ -116,11 +117,23 @@ export default function AllCalendars() {
     category?: string;
   };
 
+  // Sacrament-related title patterns (Daily Mass, Adoration, etc.)
+  const sacramentPatterns = /^(daily mass|weekday mass|mass|first friday|adoration|eucharistic|confession|reconciliation|communion|confirmation|baptism|anointing|penance)/i;
+
   // Filter events by source
   const filteredEvents: UnifiedEvent[] = useMemo(() => {
     if (activeSource === "key-dates") return keyDatesNormalized;
     if (!allEvents) return [];
-    const events = activeSource === "all" ? allEvents : allEvents.filter((e) => e.source === activeSource);
+    let events: typeof allEvents;
+    if (activeSource === "sacrament") {
+      // Sacrament filter: Mass, Adoration, Confession from any source + sacrament key dates
+      events = allEvents.filter((e) => sacramentPatterns.test(e.title.trim()));
+    } else if (activeSource === "parish") {
+      // Parish filter: parish source events that are NOT sacrament-type
+      events = allEvents.filter((e) => e.source === "parish" && !sacramentPatterns.test(e.title.trim()));
+    } else {
+      events = activeSource === "all" ? allEvents : allEvents.filter((e) => e.source === activeSource);
+    }
     const mapped = events.map(e => ({
       id: e.id,
       title: e.title,
@@ -166,14 +179,16 @@ export default function AllCalendars() {
 
   // Count events per source for badges
   const counts = useMemo(() => {
-    if (!allEvents) return { all: 0, parish: 0, ccd: 0, cyo: 0 };
+    if (!allEvents) return { all: 0, parish: 0, ccd: 0, cyo: 0, sacrament: 0 };
     // All count includes merged key dates
     const calCount = allEvents.length;
+    const sacramentCount = allEvents.filter((e) => sacramentPatterns.test(e.title.trim())).length;
     return {
       all: calCount + keyDatesNormalized.length,
-      parish: allEvents.filter((e) => e.source === "parish").length,
+      parish: allEvents.filter((e) => e.source === "parish" && !sacramentPatterns.test(e.title.trim())).length,
       ccd: allEvents.filter((e) => e.source === "ccd").length,
       cyo: allEvents.filter((e) => e.source === "cyo").length,
+      sacrament: sacramentCount,
     };
   }, [allEvents, keyDatesNormalized]);
 

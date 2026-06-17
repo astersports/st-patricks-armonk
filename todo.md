@@ -655,3 +655,14 @@
 - [x] Ensure calendar page remains the single unified source with All/Parish/CCD/CYO/Key Dates filters
 - [x] Clean up nav links for consistency (keep CCD Calendar and CYO Schedule for parents)
 - [x] Update cross-page links (Faith Formation, Sacraments) to use consistent "View Full Calendar" language
+
+## Filter Consolidation & New Features
+
+- [x] Audit all event categories and consolidate filters (remove Teen Life as separate, propose clean set)
+- [x] Add Sacrament filter tab to calendar page (Daily Mass, Adoration, Confession events)
+- [x] Parish filter now excludes sacrament-type events for cleaner separation
+- [x] Move "This Week" section above "Coming Up" on homepage
+- [x] Remove Teen Life filter from Coming Up section (folded into Parish)
+- [x] Add animated "Mass in Xh Ym" countdown pill to Today's Readings section
+- [ ] Add "This Sunday" preview card to Coming Up section (readings, celebrant, or special intentions)
+- [ ] Pin calendar filter tabs on mobile (sticky when scrolling)
