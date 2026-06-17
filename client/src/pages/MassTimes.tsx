@@ -2,7 +2,7 @@ import PageLayout from "@/components/PageLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Clock, Church, Cross, MapPin, Phone, Sun, Calendar, ChevronRight } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useCallback } from "react";
 import PageHeader from "@/components/PageHeader";
 
 // Day schedule data
@@ -100,7 +100,10 @@ function getServiceIcon(type: ServiceType) {
 
 export default function MassTimes() {
   const revealRef = useReveal();
-  const today = new Date().getDay(); // 0 = Sunday
+  const now = new Date();
+  const today = now.getDay(); // 0 = Sunday
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
   const [selectedDay, setSelectedDay] = useState(today);
 
   // Reorder days starting from today (hide past days)
@@ -110,6 +113,50 @@ export default function MassTimes() {
   }, [today]);
 
   const currentSchedule = useMemo(() => WEEKLY_SCHEDULE[selectedDay], [selectedDay]);
+
+  // Get the "tomorrow" day index
+  const tomorrow = (today + 1) % 7;
+
+  // Parse time string to check if a service has passed
+  const isServicePast = useCallback((timeStr: string) => {
+    if (!timeStr || selectedDay !== today) return false;
+    // Parse "8:30 AM" or "4:30–5:15 PM" (use end time for ranges)
+    const rangeMatch = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)$/);
+    if (!rangeMatch) return false;
+    let hours = parseInt(rangeMatch[1]);
+    const minutes = parseInt(rangeMatch[2]);
+    const period = rangeMatch[3];
+    if (period === "PM" && hours !== 12) hours += 12;
+    if (period === "AM" && hours === 12) hours = 0;
+    return currentHour > hours || (currentHour === hours && currentMinute > minutes);
+  }, [selectedDay, today, currentHour, currentMinute]);
+
+  // Swipe gesture for mobile
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const diff = touchStartX.current - touchEndX.current;
+    if (Math.abs(diff) > 50) {
+      const currentIdx = reorderedDays.findIndex(d => d.originalIndex === selectedDay);
+      if (diff > 0 && currentIdx < reorderedDays.length - 1) {
+        // Swipe left = next day
+        setSelectedDay(reorderedDays[currentIdx + 1].originalIndex);
+      } else if (diff < 0 && currentIdx > 0) {
+        // Swipe right = previous day
+        setSelectedDay(reorderedDays[currentIdx - 1].originalIndex);
+      }
+    }
+  };
 
   return (
     <PageLayout>
@@ -135,6 +182,7 @@ export default function MassTimes() {
             {reorderedDays.map((day) => {
               const isSelected = selectedDay === day.originalIndex;
               const isToday = today === day.originalIndex;
+              const isTomorrow = tomorrow === day.originalIndex;
               return (
                 <button
                   key={day.shortDay}
@@ -153,18 +201,32 @@ export default function MassTimes() {
                   {isToday && (
                     <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full ${isSelected ? "bg-primary" : "bg-primary/60"}`} />
                   )}
+                  {isTomorrow && !isToday && (
+                    <span className={`absolute -bottom-0.5 left-1/2 -translate-x-1/2 text-[8px] font-medium ${isSelected ? "text-muted-foreground" : "text-muted-foreground/60"}`}>tmrw</span>
+                  )}
                 </button>
               );
             })}
           </div>
 
-          {/* Selected Day Content */}
-          <div className="animate-fade-in" key={selectedDay}>
+          {/* Selected Day Content — swipeable */}
+          <div
+            className="animate-fade-in"
+            key={selectedDay}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-semibold text-base text-foreground">{currentSchedule.day}</h3>
               {selectedDay === today && (
                 <span className="text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/8 px-2.5 py-1 rounded-full">
                   Today
+                </span>
+              )}
+              {selectedDay === tomorrow && (
+                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-500/8 px-2.5 py-1 rounded-full">
+                  Tomorrow
                 </span>
               )}
             </div>
@@ -173,22 +235,26 @@ export default function MassTimes() {
               {currentSchedule.services.map((service, idx) => {
                 const colors = getServiceColor(service.type);
                 const Icon = getServiceIcon(service.type);
+                const past = isServicePast(service.time);
                 return (
                   <div
                     key={idx}
-                    className={`flex items-center gap-3 p-3.5 rounded-xl border-l-3 ${colors.border} bg-card shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)]`}
+                    className={`flex items-center gap-3 p-3.5 rounded-xl border-l-3 ${colors.border} bg-card shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] ${past ? "opacity-50" : ""}`}
                   >
                     <div className={`w-9 h-9 rounded-lg ${colors.bg} flex items-center justify-center shrink-0`}>
                       <Icon className={`w-4.5 h-4.5 ${colors.text}`} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-sm text-foreground">{service.name}</p>
+                      <p className={`font-semibold text-sm ${past ? "text-muted-foreground line-through" : "text-foreground"}`}>{service.name}</p>
                       {service.note && (
                         <p className="text-xs text-muted-foreground mt-0.5">{service.note}</p>
                       )}
+                      {past && (
+                        <p className="text-[10px] font-medium text-muted-foreground mt-0.5">Completed</p>
+                      )}
                     </div>
                     {service.time && (
-                      <span className={`text-sm font-bold ${colors.text} shrink-0 tabular-nums`}>
+                      <span className={`text-sm font-bold ${past ? "text-muted-foreground" : colors.text} shrink-0 tabular-nums`}>
                         {service.time}
                       </span>
                     )}

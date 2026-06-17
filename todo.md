@@ -625,3 +625,9 @@
 ## Weekly Schedule Start on Today
 
 - [x] Adjust Mass Times weekly schedule to start on today's day (hide past days, show today first)
+
+## Weekly Schedule UX Improvements
+
+- [x] Show "Tomorrow" label on the second tab in the weekly schedule
+- [x] Add swipe gesture on weekly schedule for mobile left/right day navigation
+- [x] Grey out past services within today (dim completed services, show "Completed" label)
