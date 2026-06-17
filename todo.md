@@ -823,3 +823,7 @@
 - [x] Build backend: subscribe/unsubscribe endpoints, send push on bulletin publish (pushNotifications.ts + sendPushToAll in bulletinCompose.ts)
 - [x] Build frontend: opt-in bell icon/banner, permission flow, subscription management (usePushNotifications hook + PushNotificationBanner component)
 - [x] Mobile-optimized notification prompt (non-intrusive banner on Bulletins page, dismissible per session)
+
+## Bug Fix: Auto-Advance Tomorrow Events Missing Weather Badges
+- [x] When auto-advance shows tomorrow's events (today has no more events), the per-service weather badges are missing
+- [x] Ensure tomorrow's events in auto-advance view show the same weather info as when manually tapping that day

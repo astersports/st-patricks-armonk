@@ -130,20 +130,23 @@ export function DayContent({
         </div>
         {tomorrowData.services.length > 0 ? (
           <div className="space-y-2">
-            {tomorrowData.services.map((svc, idx) => (
-              <ServiceCard
-                key={`tomorrow-${idx}`}
-                svc={svc}
-                idx={idx}
-                isPast={false}
-                isLive={false}
-                isNext={idx === 0}
-                countdown={tomorrowCountdowns[idx]}
-                progress={undefined}
-                dayName={tomorrowDayName}
-                weather={null}
-              />
-            ))}
+            {tomorrowData.services.map((svc, idx) => {
+              const tomorrowWeather = serviceWeatherMap?.[`svc-tomorrow-${idx}`]?.weather || null;
+              return (
+                <ServiceCard
+                  key={`tomorrow-${idx}`}
+                  svc={svc}
+                  idx={idx}
+                  isPast={false}
+                  isLive={false}
+                  isNext={idx === 0}
+                  countdown={tomorrowCountdowns[idx]}
+                  progress={undefined}
+                  dayName={tomorrowDayName}
+                  weather={tomorrowWeather}
+                />
+              );
+            })}
           </div>
         ) : (
           <p className="text-sm text-muted-foreground text-center py-3 italic">

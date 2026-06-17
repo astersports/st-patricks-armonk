@@ -114,21 +114,56 @@ export function ThisWeekAccordion() {
   const selectedDayData = days[selectedIndex];
   const services = selectedDayData?.services || [];
 
+  // Determine if auto-advance is active (all today's events ended)
+  const allTodayEnded = useMemo(() => {
+    if (selectedIndex !== 0 || services.length === 0) return false;
+    return Object.keys(pastServices).length === services.length &&
+      services.every((_, idx) => pastServices[idx]);
+  }, [selectedIndex, services, pastServices]);
+
+  // Build service events for weather query — include tomorrow's if auto-advance is active
+  const tomorrowDayData = days[1];
+  const tomorrowServices = tomorrowDayData?.services || [];
+
   const serviceEvents = useMemo(() => {
-    if (!selectedDayData || services.length === 0) return [];
-    return services.map((svc, idx) => {
-      const svcMin = parseServiceMinutes(svc.time);
-      const hours = Math.floor(svcMin / 60);
-      const mins = svcMin % 60;
-      const d = new Date(selectedDayData.date);
-      d.setHours(hours, mins, 0, 0);
-      return {
-        id: `svc-${selectedIndex}-${idx}`,
-        title: svc.label,
-        startDate: d.toISOString(),
-      };
-    });
-  }, [selectedDayData, services, selectedIndex]);
+    const events: Array<{ id: string; title: string; startDate: string }> = [];
+
+    // Selected day events
+    if (selectedDayData && services.length > 0) {
+      for (let idx = 0; idx < services.length; idx++) {
+        const svc = services[idx];
+        const svcMin = parseServiceMinutes(svc.time);
+        const hours = Math.floor(svcMin / 60);
+        const mins = svcMin % 60;
+        const d = new Date(selectedDayData.date);
+        d.setHours(hours, mins, 0, 0);
+        events.push({
+          id: `svc-${selectedIndex}-${idx}`,
+          title: svc.label,
+          startDate: d.toISOString(),
+        });
+      }
+    }
+
+    // Tomorrow's events (for auto-advance weather)
+    if (allTodayEnded && tomorrowDayData && tomorrowServices.length > 0) {
+      for (let idx = 0; idx < tomorrowServices.length; idx++) {
+        const svc = tomorrowServices[idx];
+        const svcMin = parseServiceMinutes(svc.time);
+        const hours = Math.floor(svcMin / 60);
+        const mins = svcMin % 60;
+        const d = new Date(tomorrowDayData.date);
+        d.setHours(hours, mins, 0, 0);
+        events.push({
+          id: `svc-tomorrow-${idx}`,
+          title: svc.label,
+          startDate: d.toISOString(),
+        });
+      }
+    }
+
+    return events;
+  }, [selectedDayData, services, selectedIndex, allTodayEnded, tomorrowDayData, tomorrowServices]);
 
   const { data: serviceWeatherMap } = trpc.weather.forEvents.useQuery(
     { events: serviceEvents },
