@@ -65,6 +65,9 @@ export interface DailyForecast {
   high: number;
   low: number;
   precipProbabilityMax: number;
+  weatherCode: number; // WMO code
+  icon: string; // e.g. "clear", "rain", "partly-cloudy"
+  description: string; // e.g. "Clear sky", "Moderate rain"
   sunrise: string; // e.g. "5:21 AM"
   sunset: string; // e.g. "8:29 PM"
 }

@@ -5,7 +5,7 @@
 
 import type { DailyForecast } from "./types";
 import { ARMONK_LAT, ARMONK_LON, FORECAST_DAYS } from "./types";
-import { fetchWithTimeout, parseOpenMeteoLocalTime } from "./helpers";
+import { fetchWithTimeout, parseOpenMeteoLocalTime, getWeatherInfo } from "./helpers";
 
 // Daily forecast cache (60 min TTL)
 let dailyForecastCache: { data: DailyForecast[]; fetchedAt: number } | null = null;
@@ -32,6 +32,7 @@ export async function getDailyForecast(): Promise<DailyForecast[]> {
         "temperature_2m_max",
         "temperature_2m_min",
         "precipitation_probability_max",
+        "weather_code",
         "sunrise",
         "sunset",
       ].join(","));
@@ -60,14 +61,21 @@ export async function getDailyForecast(): Promise<DailyForecast[]> {
       }
 
       const daily = data.daily;
-      const forecasts: DailyForecast[] = daily.time.map((date: string, i: number) => ({
-        date,
-        high: Math.round(daily.temperature_2m_max[i]),
-        low: Math.round(daily.temperature_2m_min[i]),
-        precipProbabilityMax: daily.precipitation_probability_max[i] || 0,
-        sunrise: parseOpenMeteoLocalTime(daily.sunrise[i]),
-        sunset: parseOpenMeteoLocalTime(daily.sunset[i]),
-      }));
+      const forecasts: DailyForecast[] = daily.time.map((date: string, i: number) => {
+        const weatherCode = daily.weather_code?.[i] ?? 0;
+        const weatherInfo = getWeatherInfo(weatherCode);
+        return {
+          date,
+          high: Math.round(daily.temperature_2m_max[i]),
+          low: Math.round(daily.temperature_2m_min[i]),
+          precipProbabilityMax: daily.precipitation_probability_max[i] || 0,
+          weatherCode,
+          icon: weatherInfo.icon,
+          description: weatherInfo.description,
+          sunrise: parseOpenMeteoLocalTime(daily.sunrise[i]),
+          sunset: parseOpenMeteoLocalTime(daily.sunset[i]),
+        };
+      });
 
       dailyForecastCache = { data: forecasts, fetchedAt: Date.now() };
       return forecasts;

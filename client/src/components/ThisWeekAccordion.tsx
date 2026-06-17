@@ -8,6 +8,7 @@ import { format, addDays } from "date-fns";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { WeatherBadge } from "@/components/WeatherBadge";
+import { ColorfulWeatherIcon } from "@/components/WeatherIcons";
 import { ServiceCard } from "./this-week/ServiceCard";
 import {
   DAILY_SCHEDULE, SERVICE_DURATION, parseServiceMinutes,
@@ -162,9 +163,10 @@ export function ThisWeekAccordion() {
           </h3>
           <div className="flex items-center gap-2">
             {dailyForecast?.[selectedIndex] && (
-              <span className="text-[11px] text-muted-foreground font-medium">
-                <span className="text-foreground font-semibold">{dailyForecast[selectedIndex].high}°</span>
-                <span className="mx-0.5">/</span>
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-sky-50 text-sky-800 dark:bg-sky-900/30 dark:text-sky-300">
+                <ColorfulWeatherIcon icon={dailyForecast[selectedIndex].icon || 'clear'} className="w-4 h-4" />
+                <span className="font-semibold">{dailyForecast[selectedIndex].high}°</span>
+                <span className="text-muted-foreground/70">/</span>
                 <span>{dailyForecast[selectedIndex].low}°</span>
               </span>
             )}
