@@ -103,6 +103,12 @@ export default function MassTimes() {
   const today = new Date().getDay(); // 0 = Sunday
   const [selectedDay, setSelectedDay] = useState(today);
 
+  // Reorder days starting from today (hide past days)
+  const reorderedDays = useMemo(() => {
+    const days = WEEKLY_SCHEDULE.map((day, index) => ({ ...day, originalIndex: index }));
+    return [...days.slice(today), ...days.slice(0, today)];
+  }, [today]);
+
   const currentSchedule = useMemo(() => WEEKLY_SCHEDULE[selectedDay], [selectedDay]);
 
   return (
@@ -124,15 +130,15 @@ export default function MassTimes() {
             <h2 className="font-serif text-xl font-bold">Weekly Schedule</h2>
           </div>
 
-          {/* Day Tab Bar — refined with better active state */}
+          {/* Day Tab Bar — starts from today, no past days */}
           <div className="flex gap-0.5 mb-5 p-1 bg-muted/40 rounded-xl overflow-x-auto">
-            {WEEKLY_SCHEDULE.map((day, index) => {
-              const isSelected = selectedDay === index;
-              const isToday = today === index;
+            {reorderedDays.map((day) => {
+              const isSelected = selectedDay === day.originalIndex;
+              const isToday = today === day.originalIndex;
               return (
                 <button
                   key={day.shortDay}
-                  onClick={() => setSelectedDay(index)}
+                  onClick={() => setSelectedDay(day.originalIndex)}
                   className={`
                     relative flex-1 min-w-[44px] py-2.5 px-1.5 rounded-lg text-center transition-all duration-200
                     ${isSelected

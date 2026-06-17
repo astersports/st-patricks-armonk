@@ -621,3 +621,7 @@
 ## Key Date Star Badge in All View
 
 - [x] Add a star badge on events in the All view that also appear in Key Dates so milestones stand out
+
+## Weekly Schedule Start on Today
+
+- [x] Adjust Mass Times weekly schedule to start on today's day (hide past days, show today first)
