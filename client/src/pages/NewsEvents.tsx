@@ -1,5 +1,6 @@
 import { useState } from "react";
 import PageLayout from "@/components/PageLayout";
+import { SEO } from "@/components/SEO";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -133,6 +134,11 @@ export default function NewsEvents() {
 
   return (
     <PageLayout>
+      <SEO
+        title="News & Events"
+        path="/news-events"
+        description="Latest news, announcements, and upcoming events from St. Patrick Church, Armonk NY. Stay connected with our parish community."
+      />
       <PageHeader
         eyebrow="Parish Life"
         title="News & Announcements"

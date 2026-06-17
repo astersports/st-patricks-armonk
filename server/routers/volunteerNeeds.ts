@@ -1,0 +1,95 @@
+/**
+ * Volunteer Needs Board — urgent/time-sensitive volunteer requests.
+ * Public: list active needs, respond to a need.
+ * Admin: create, update, close needs.
+ */
+import { adminProcedure, publicProcedure, router, z, db } from "./_helpers";
+import { rateLimitedFormProcedure } from "./_rateLimited";
+
+export const volunteerNeedsRouter = router({
+  /** List active volunteer needs (public) */
+  list: publicProcedure.query(async () => {
+    return db.getActiveVolunteerNeeds();
+  }),
+
+  /** List all needs including inactive (admin) */
+  listAll: adminProcedure.query(async () => {
+    return db.getAllVolunteerNeeds();
+  }),
+
+  /** Get responses for a specific need (admin) */
+  getResponses: adminProcedure
+    .input(z.object({ needId: z.number() }))
+    .query(async ({ input }) => {
+      return db.getVolunteerNeedResponses(input.needId);
+    }),
+
+  /** Create a new volunteer need (admin) */
+  create: adminProcedure
+    .input(z.object({
+      title: z.string().min(1),
+      description: z.string().optional(),
+      urgency: z.enum(["low", "medium", "high"]).default("medium"),
+      category: z.string().optional(),
+      neededBy: z.date().optional(),
+      spotsNeeded: z.number().min(1).default(1),
+      contactName: z.string().optional(),
+      contactEmail: z.string().email().optional(),
+      contactPhone: z.string().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const id = await db.createVolunteerNeed({
+        title: input.title,
+        description: input.description,
+        urgency: input.urgency,
+        category: input.category,
+        neededBy: input.neededBy,
+        spotsNeeded: input.spotsNeeded,
+        contactName: input.contactName,
+        contactEmail: input.contactEmail,
+        contactPhone: input.contactPhone,
+      });
+      return { id };
+    }),
+
+  /** Update a volunteer need (admin) */
+  update: adminProcedure
+    .input(z.object({
+      id: z.number(),
+      title: z.string().min(1).optional(),
+      description: z.string().optional(),
+      urgency: z.enum(["low", "medium", "high"]).optional(),
+      category: z.string().optional(),
+      neededBy: z.date().nullable().optional(),
+      spotsNeeded: z.number().min(1).optional(),
+      contactName: z.string().optional(),
+      contactEmail: z.string().email().optional(),
+      contactPhone: z.string().optional(),
+      active: z.boolean().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const { id, ...updates } = input;
+      await db.updateVolunteerNeed(id, updates);
+      return { success: true };
+    }),
+
+  /** Respond to a volunteer need (public, rate-limited) */
+  respond: rateLimitedFormProcedure
+    .input(z.object({
+      needId: z.number(),
+      name: z.string().min(1),
+      email: z.string().email(),
+      phone: z.string().optional(),
+      message: z.string().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      await db.createVolunteerNeedResponse({
+        needId: input.needId,
+        name: input.name,
+        email: input.email,
+        phone: input.phone,
+        message: input.message,
+      });
+      return { success: true };
+    }),
+});

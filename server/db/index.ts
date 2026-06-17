@@ -40,7 +40,13 @@ export { getUpcomingImportantDates, getAllPublishedImportantDates, getAllImporta
 export { getPublishedGalleryPhotos, getAllGalleryPhotos, createGalleryPhoto, updateGalleryPhoto, deleteGalleryPhoto, getGalleryAlbums } from "./gallery";
 
 // Admin Stats, Settings, Prayer Wall, Activity Feed
-export { getAdminStats, getSiteSetting, upsertSiteSetting, getAllSiteSettings, createPrayerIntention, getRecentPrayerIntentions, getPrayerIntentionCount, getRecentFormSubmissions } from "./admin";
+export { getAdminStats, getSiteSetting, upsertSiteSetting, getAllSiteSettings, createPrayerIntention, getRecentPrayerIntentions, getPrayerIntentionCount, getRecentFormSubmissions, getPendingSubmissions, bulkUpdateStatus, updateAdminNote } from "./admin";
 
 // Parish FAQs (AI Assistant knowledge base)
 export { getActiveFaqs, getAllFaqs, createFaq, updateFaq, deleteFaq } from "./faqs";
+
+// Volunteer Needs Board
+export { getActiveVolunteerNeeds, getAllVolunteerNeeds, createVolunteerNeed, updateVolunteerNeed, getVolunteerNeedResponses, createVolunteerNeedResponse } from "./volunteerNeeds";
+
+// Prayer Support ("I prayed for this")
+export { addPrayerSupport, getPrayerSupportCount, getPrayerSupportCounts, hasUserPrayed } from "./prayerSupport";

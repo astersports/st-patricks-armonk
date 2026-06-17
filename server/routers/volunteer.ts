@@ -3,6 +3,7 @@
  * ~80 lines
  */
 import { adminProcedure, publicProcedure, router, z, db } from "./_helpers";
+import { rateLimitedFormProcedure } from "./_rateLimited";
 
 export const volunteerRouter = router({
   listOpportunities: publicProcedure.query(async () => {
@@ -51,7 +52,7 @@ export const volunteerRouter = router({
     await db.deleteVolunteerOpportunity(input.id);
     return { success: true };
   }),
-  signup: publicProcedure.input(z.object({
+  signup: rateLimitedFormProcedure.input(z.object({
     opportunityId: z.number(),
     name: z.string().min(1),
     email: z.string().email(),

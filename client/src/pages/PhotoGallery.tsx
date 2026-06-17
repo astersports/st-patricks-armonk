@@ -1,4 +1,5 @@
 import PageLayout from "@/components/PageLayout";
+import { SEO } from "@/components/SEO";
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
 import { Camera, X, ChevronLeft, ChevronRight } from "lucide-react";
@@ -40,6 +41,11 @@ export default function PhotoGallery() {
 
   return (
     <PageLayout>
+      <SEO
+        title="Photo Gallery"
+        path="/photo-gallery"
+        description="Browse photos from St. Patrick Church events, celebrations, and community life in Armonk, NY."
+      />
       {/* Page Header — refined */}
       <PageHeader
         eyebrow="Parish Life"

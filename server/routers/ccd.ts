@@ -3,9 +3,10 @@
  * ~130 lines
  */
 import { adminProcedure, publicProcedure, router, z, db, nanoid, notifyOwner } from "./_helpers";
+import { rateLimitedFormProcedure } from "./_rateLimited";
 
 export const ccdRouter = router({
-  register: publicProcedure.input(z.object({
+  register: rateLimitedFormProcedure.input(z.object({
     parentFirstName: z.string().min(1),
     parentLastName: z.string().min(1),
     parentEmail: z.string().email(),

@@ -3,6 +3,7 @@
  * ~75 lines
  */
 import { adminProcedure, publicProcedure, router, z, db, nanoid, storagePut, TRPCError } from "./_helpers";
+import { validateBase64File } from "../middleware";
 import { sendBulletinNotifications } from "../notifications";
 
 export const bulletinsRouter = router({
@@ -68,9 +69,13 @@ export const bulletinsRouter = router({
     fileBase64: z.string(),
     contentType: z.string().default("application/pdf"),
   })).mutation(async ({ input }) => {
-    const buffer = Buffer.from(input.fileBase64, "base64");
+    const validation = validateBase64File(input.fileBase64, input.contentType);
+    if (!validation.valid) {
+      throw new TRPCError({ code: "BAD_REQUEST", message: validation.error || "Invalid file" });
+    }
+    const buffer = validation.buffer!;
     const key = `bulletins/${nanoid()}-${input.fileName}`;
-    const { url } = await storagePut(key, buffer, input.contentType);
+    const { url } = await storagePut(key, buffer, validation.detectedMimeType || input.contentType);
     return { url, key };
   }),
 });

@@ -2,7 +2,8 @@
  * Gallery Router — photo albums and image management.
  * ~70 lines
  */
-import { publicProcedure, router, z, db, nanoid, storagePut, sectionProcedure } from "./_helpers";
+import { publicProcedure, router, z, db, nanoid, storagePut, sectionProcedure, TRPCError } from "./_helpers";
+import { validateBase64File } from "../middleware";
 
 export const galleryRouter = router({
   listPublished: publicProcedure
@@ -23,11 +24,14 @@ export const galleryRouter = router({
       contentType: z.string(),
     }))
     .mutation(async ({ input }) => {
-      const buffer = Buffer.from(input.fileData, "base64");
-      // Sanitize filename: replace spaces and special chars to avoid S3/CloudFront encoding issues
+      const validation = validateBase64File(input.fileData, input.contentType);
+      if (!validation.valid) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: validation.error || "Invalid file" });
+      }
+      const buffer = validation.buffer!;
       const safeFileName = input.fileName.replace(/[\s]+/g, "-").replace(/[^a-zA-Z0-9._-]/g, "");
       const key = `gallery/${nanoid()}-${safeFileName}`;
-      const { url } = await storagePut(key, buffer, input.contentType);
+      const { url } = await storagePut(key, buffer, validation.detectedMimeType || input.contentType);
       return { url, key };
     }),
   upload: sectionProcedure("gallery")

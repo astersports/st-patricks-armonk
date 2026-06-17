@@ -1,4 +1,5 @@
 import PageLayout from "@/components/PageLayout";
+import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useReveal } from "@/hooks/useReveal";
@@ -122,6 +123,11 @@ export default function Staff() {
 
   return (
     <PageLayout>
+      <SEO
+        title="Our Staff"
+        path="/staff"
+        description="Meet the clergy and staff of St. Patrick Church, Armonk NY. Our dedicated team serves the parish community with faith and compassion."
+      />
       {/* Page Header — refined */}
       <PageHeader
         eyebrow="Our Team"

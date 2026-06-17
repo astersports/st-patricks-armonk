@@ -1,4 +1,5 @@
 import PageLayout from "@/components/PageLayout";
+import { SEO } from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -94,6 +95,11 @@ export default function Volunteer() {
 
   return (
     <PageLayout>
+      <SEO
+        title="Volunteer Opportunities"
+        path="/volunteer"
+        description="Volunteer at St. Patrick Church, Armonk. Find opportunities to serve — liturgical ministry, outreach, youth programs, and parish events."
+      />
       {/* Page Header — refined */}
       <PageHeader
         eyebrow="Get Involved"

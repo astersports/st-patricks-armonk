@@ -11,6 +11,8 @@ const SettingsManager = lazy(() => import("./admin/SettingsManager"));
 
 import { FormExport } from "./admin/FormExport";
 const FaqManager = lazy(() => import("./admin/FaqManager"));
+const VolunteerNeedsManager = lazy(() => import("./admin/VolunteerNeedsManager"));
+const NeedsAttention = lazy(() => import("./admin/NeedsAttention"));
 
 // Legacy managers from Admin.tsx (imported eagerly since they're in a single file)
 import {
@@ -51,6 +53,8 @@ export default function AdminRouter() {
           <Route path="/events" component={() => <EventManager />} />
           <Route path="/key-dates" component={() => <KeyDatesManager />} />
           <Route path="/volunteers" component={() => <VolunteerManager />} />
+          <Route path="/volunteer-needs" component={() => <VolunteerNeedsManager />} />
+          <Route path="/needs-attention" component={() => <NeedsAttention />} />
           <Route path="/registrations" component={() => <ParishRegistrationsManager />} />
           <Route path="/ccd" component={() => <CcdManager />} />
           <Route path="/ccd-calendar" component={() => <CcdManager />} />

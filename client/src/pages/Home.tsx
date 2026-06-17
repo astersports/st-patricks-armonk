@@ -1,6 +1,7 @@
 import PageLayout from "@/components/PageLayout";
 import { trpc } from "@/lib/trpc";
 import { PrayerWall } from "@/components/PrayerWall";
+import { SEO, CHURCH_STRUCTURED_DATA } from "@/components/SEO";
 import { ThisWeekAccordion } from "@/components/ThisWeekAccordion";
 import { useReveal } from "@/hooks/useReveal";
 import {
@@ -26,6 +27,11 @@ export default function Home() {
 
   return (
     <PageLayout>
+      <SEO
+        path="/"
+        description="Welcome to St. Patrick Church in Armonk, NY. Join our vibrant Catholic community for Mass, sacraments, faith formation, and fellowship. Mass times, bulletins, events, and more."
+        structuredData={CHURCH_STRUCTURED_DATA}
+      />
       {/* Hero Section — Cinematic with Ken Burns + Time Greeting + Next Mass */}
       <HeroSection />
 

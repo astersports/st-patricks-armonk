@@ -1,4 +1,5 @@
 import PageLayout from "@/components/PageLayout";
+import { SEO } from "@/components/SEO";
 import { trpc } from "@/lib/trpc";
 import PageHeader from "@/components/PageHeader";
 import { Calendar, MapPin, Clock } from "lucide-react";
@@ -150,6 +151,11 @@ export default function KeyDates() {
 
   return (
     <PageLayout>
+      <SEO
+        title="Key Dates & Events"
+        path="/key-dates"
+        description="Upcoming events, holy days, and important dates at St. Patrick Church, Armonk. Parish calendar, CCD schedule, and community gatherings."
+      />
       <div ref={revealRef}>
         {/* Page Header — refined */}
         <PageHeader

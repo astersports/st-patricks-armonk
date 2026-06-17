@@ -9,7 +9,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import MobileBottomNav from "../MobileBottomNav";
-import { openParishAssistant } from "../ParishAssistant";
+
 import { navLinks } from "./menuData";
 import { DesktopDropdown } from "./DesktopNav";
 import { MobileMenu } from "./MobileMenu";
@@ -33,9 +33,7 @@ export default function Navigation() {
     setMobileOpen(false);
   }, [location]);
 
-  const handleAskClick = () => {
-    openParishAssistant();
-  };
+
 
   return (
     <>
@@ -147,7 +145,7 @@ export default function Navigation() {
       </header>
 
       {/* Bottom Tab Bar - Mobile only */}
-      <MobileBottomNav onAskClick={handleAskClick} />
+      <MobileBottomNav />
     </>
   );
 }

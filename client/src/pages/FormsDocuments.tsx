@@ -1,4 +1,5 @@
 import PageLayout from "@/components/PageLayout";
+import { SEO } from "@/components/SEO";
 import { Card } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
 import { FileText, Download, ExternalLink, Loader2, Droplets, Cross, Heart, Church, BookOpen, FolderOpen } from "lucide-react";
@@ -74,6 +75,11 @@ function CategorySection({ category }: { category: typeof CATEGORIES[number] }) 
 export default function FormsDocuments() {
   return (
     <PageLayout>
+      <SEO
+        title="Forms & Documents"
+        path="/forms-documents"
+        description="Download parish forms and documents — baptism registration, sponsor certificates, marriage inquiry, and other sacramental paperwork."
+      />
       {/* Page Header — refined */}
       <PageHeader
         eyebrow="Resources"

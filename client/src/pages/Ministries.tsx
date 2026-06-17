@@ -1,4 +1,5 @@
 import PageLayout from "@/components/PageLayout";
+import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Heart, Cross, BookOpen, Music, Users, HandHeart, Mail, Clock, MapPin, Calendar, ExternalLink } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
@@ -31,6 +32,11 @@ export default function Ministries() {
 
   return (
     <PageLayout>
+      <SEO
+        title="Ministries & Devotions"
+        path="/ministries"
+        description="Parish ministries and devotions at St. Patrick Church — liturgical ministers, prayer groups, community outreach, and service opportunities."
+      />
       {/* Page Header — refined */}
       <PageHeader
         eyebrow="Serve & Pray"

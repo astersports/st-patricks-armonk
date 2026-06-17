@@ -59,12 +59,13 @@ export default function Footer() {
             >
               St. Patrick in Armonk
             </h3>
-            <div className="flex flex-col gap-1.5 text-sm text-white/60">
-              <span className="flex items-center gap-2">
+            <div className="flex flex-col gap-1.5 text-sm text-white/60" itemScope itemType="https://schema.org/CatholicChurch">
+              <meta itemProp="name" content="St. Patrick Church" />
+              <span className="flex items-center gap-2" itemProp="address" itemScope itemType="https://schema.org/PostalAddress">
                 <MapPin className="w-3.5 h-3.5 text-gold/50 shrink-0" />
-                29 Cox Ave, Armonk NY 10504
+                <span><span itemProp="streetAddress">29 Cox Ave</span>, <span itemProp="addressLocality">Armonk</span> <span itemProp="addressRegion">NY</span> <span itemProp="postalCode">10504</span></span>
               </span>
-              <a href="tel:9142739724" className="flex items-center gap-2 hover:text-gold transition-colors">
+              <a href="tel:9142739724" className="flex items-center gap-2 hover:text-gold transition-colors" itemProp="telephone">
                 <Phone className="w-3.5 h-3.5 text-gold/50 shrink-0" />
                 (914) 273-9724
               </a>

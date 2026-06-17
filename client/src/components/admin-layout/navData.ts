@@ -1,6 +1,6 @@
 import type { AdminSection } from "@shared/roles";
 import {
-  Home, Newspaper, FileText, Calendar,
+  Home, Newspaper, FileText, Calendar, Inbox,
   Users, Camera, Heart, BookOpen, GraduationCap, Cross,
   UserPlus, Settings, Download, MessageCircle,
 } from "lucide-react";
@@ -20,6 +20,13 @@ export type NavGroup = {
 
 export const navGroups: NavGroup[] = [
   {
+    title: "Overview",
+    section: "news",
+    items: [
+      { label: "Needs Attention", section: "news", icon: Inbox, path: "/needs-attention" },
+    ],
+  },
+  {
     title: "Communications",
     section: "news",
     items: [
@@ -36,6 +43,7 @@ export const navGroups: NavGroup[] = [
       { label: "Events", section: "events", icon: Calendar, path: "/events" },
       { label: "Key Dates", section: "key_dates", icon: Calendar, path: "/key-dates" },
       { label: "Volunteers", section: "volunteers", icon: Heart, path: "/volunteers" },
+      { label: "Needs Board", section: "volunteers", icon: Heart, path: "/volunteer-needs" },
       { label: "Registrations", section: "registrations", icon: UserPlus, path: "/registrations" },
     ],
   },

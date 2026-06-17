@@ -1,4 +1,5 @@
 import PageLayout from "@/components/PageLayout";
+import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart, ExternalLink, QrCode, CreditCard } from "lucide-react";
@@ -10,6 +11,11 @@ export default function Giving() {
 
   return (
     <PageLayout>
+      <SEO
+        title="Giving & Stewardship"
+        path="/giving"
+        description="Support St. Patrick Church through online giving, weekly offertory, and special collections. Your generosity sustains our parish community."
+      />
       {/* Page Header — refined */}
       <PageHeader
         eyebrow="Stewardship"

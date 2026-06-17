@@ -3,6 +3,7 @@
  */
 
 import PageLayout from "@/components/PageLayout";
+import { SEO } from "@/components/SEO";
 import { trpc } from "@/lib/trpc";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,11 @@ export default function Bulletins() {
 
   return (
     <PageLayout>
+      <SEO
+        title="Weekly Bulletins"
+        path="/bulletins"
+        description="Read the latest weekly parish bulletin from St. Patrick Church, Armonk. Download current and past bulletins in PDF format."
+      />
       <PageHeader
         eyebrow="Weekly Bulletin"
         title="Parish Bulletin"

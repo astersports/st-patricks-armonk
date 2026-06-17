@@ -11,6 +11,28 @@ export const adminStatsRouter = router({
   recentActivity: staffProcedure.query(async () => {
     return db.getRecentFormSubmissions(12);
   }),
+  getPendingSubmissions: staffProcedure.query(async () => {
+    return db.getPendingSubmissions();
+  }),
+  bulkUpdateStatus: adminProcedure
+    .input(z.object({
+      items: z.array(z.object({ type: z.string(), id: z.number() })),
+      status: z.enum(["approved", "rejected"]),
+    }))
+    .mutation(async ({ input }) => {
+      const updated = await db.bulkUpdateStatus(input.items, input.status);
+      return { updated };
+    }),
+  updateNote: adminProcedure
+    .input(z.object({
+      id: z.number(),
+      type: z.string(),
+      note: z.string(),
+    }))
+    .mutation(async ({ input }) => {
+      await db.updateAdminNote(input.type, input.id, input.note);
+      return { success: true };
+    }),
 });
 
 export const usersRouter = router({

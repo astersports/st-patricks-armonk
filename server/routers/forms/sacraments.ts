@@ -1,10 +1,11 @@
 /**
  * Sacrament-related form routers: baptism, sponsor, marriage, funeral.
  */
-import { adminProcedure, publicProcedure, router, z, db, notifyOwner } from "../_helpers";
+import { adminProcedure, router, z, db, notifyOwner } from "../_helpers";
+import { rateLimitedFormProcedure } from "../_rateLimited";
 
 export const baptismRouter = router({
-  submit: publicProcedure.input(z.object({
+  submit: rateLimitedFormProcedure.input(z.object({
     childFirstName: z.string().min(1),
     childLastName: z.string().min(1),
     childDob: z.string().min(1),
@@ -38,7 +39,7 @@ export const baptismRouter = router({
 });
 
 export const sponsorRouter = router({
-  submit: publicProcedure.input(z.object({
+  submit: rateLimitedFormProcedure.input(z.object({
     sponsorFirstName: z.string().min(1),
     sponsorLastName: z.string().min(1),
     sponsorEmail: z.string().email(),
@@ -72,7 +73,7 @@ export const sponsorRouter = router({
 });
 
 export const marriageRouter = router({
-  submit: publicProcedure.input(z.object({
+  submit: rateLimitedFormProcedure.input(z.object({
     brideFirstName: z.string().min(1),
     brideLastName: z.string().min(1),
     brideEmail: z.string().email(),
@@ -111,7 +112,7 @@ export const marriageRouter = router({
 });
 
 export const funeralRouter = router({
-  submit: publicProcedure.input(z.object({
+  submit: rateLimitedFormProcedure.input(z.object({
     plannerName: z.string().min(1),
     plannerEmail: z.string().email(),
     plannerPhone: z.string().min(1),

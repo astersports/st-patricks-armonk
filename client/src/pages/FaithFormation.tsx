@@ -3,6 +3,7 @@
  */
 
 import PageLayout from "@/components/PageLayout";
+import { SEO } from "@/components/SEO";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { useReveal } from "@/hooks/useReveal";
@@ -15,6 +16,11 @@ export default function FaithFormation() {
 
   return (
     <PageLayout>
+      <SEO
+        title="Faith Formation"
+        path="/faith-formation"
+        description="Faith formation programs at St. Patrick Church — CCD religious education, RCIA, adult Bible study, sacrament preparation, and youth ministry."
+      />
       <PageHeader
         eyebrow="Growing in Faith"
         title="Faith Formation"

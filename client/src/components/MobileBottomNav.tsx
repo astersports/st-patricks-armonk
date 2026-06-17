@@ -1,49 +1,35 @@
 import { Link, useLocation } from "wouter";
-import { Clock, Calendar, Heart, MessageCircle } from "lucide-react";
+import { Home, Clock, BookOpen, Calendar, Heart } from "lucide-react";
 
 const tabs = [
+  { href: "/", label: "Home", icon: Home },
   { href: "/mass-times", label: "Mass", icon: Clock },
+  { href: "/bulletins", label: "Bulletin", icon: BookOpen },
   { href: "/calendar", label: "Calendar", icon: Calendar },
   { href: "/giving", label: "Give", icon: Heart },
-  { href: "/__ask__", label: "Ask", icon: MessageCircle },
 ];
 
-interface MobileBottomNavProps {
-  onAskClick: () => void;
-}
-
-export default function MobileBottomNav({ onAskClick }: MobileBottomNavProps) {
+export default function MobileBottomNav() {
   const [location] = useLocation();
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/[0.97] backdrop-blur-xl border-t border-border/20">
-      <div className="flex items-center justify-around h-14 max-w-md mx-auto px-3">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/[0.97] backdrop-blur-xl border-t border-border/20" role="navigation" aria-label="Mobile navigation">
+      <div className="flex items-center justify-around h-16 max-w-lg mx-auto px-2">
         {tabs.map((tab) => {
-          const isAsk = tab.href === "/__ask__";
-          const isActive = !isAsk && location === tab.href;
 
-          if (isAsk) {
-            return (
-              <button
-                key={tab.label}
-                onClick={onAskClick}
-                className="flex flex-col items-center justify-center gap-[3px] w-16 py-1.5 rounded-xl transition-all duration-200 text-muted-foreground/70 active:scale-[0.92] active:bg-muted/30"
-              >
-                <tab.icon className="w-[21px] h-[21px]" strokeWidth={1.8} />
-                <span className="text-[10px] font-medium tracking-tight">{tab.label}</span>
-              </button>
-            );
-          }
+          const isHome = tab.href === "/";
+          const isActive = isHome ? location === "/" : location.startsWith(tab.href);
 
           return (
             <Link
               key={tab.href}
               href={tab.href}
-              className={`relative flex flex-col items-center justify-center gap-[3px] w-16 py-1.5 rounded-xl transition-all duration-200 ${
+              className={`relative flex flex-col items-center justify-center gap-[3px] min-w-[44px] min-h-[44px] w-14 py-1.5 rounded-xl transition-all duration-200 ${
                 isActive
                   ? "text-primary"
                   : "text-muted-foreground/70 active:scale-[0.92] active:bg-muted/30"
               }`}
+              aria-current={isActive ? "page" : undefined}
             >
               {isActive && (
                 <span

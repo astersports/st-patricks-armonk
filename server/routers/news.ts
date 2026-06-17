@@ -2,7 +2,8 @@
  * News Posts Router — CRUD for parish news articles.
  * ~80 lines
  */
-import { adminProcedure, publicProcedure, router, z, db } from "./_helpers";
+import { adminProcedure, publicProcedure, router, z, db, TRPCError } from "./_helpers";
+import { validateBase64File } from "../middleware";
 import { sendNewsNotifications } from "../notifications";
 
 export const newsRouter = router({
@@ -68,9 +69,13 @@ export const newsRouter = router({
   })).mutation(async ({ input }) => {
     const { storagePut } = await import("../storage");
     const { nanoid } = await import("nanoid");
-    const buffer = Buffer.from(input.fileBase64, "base64");
+    const validation = validateBase64File(input.fileBase64, input.contentType);
+    if (!validation.valid) {
+      throw new TRPCError({ code: "BAD_REQUEST", message: validation.error || "Invalid file" });
+    }
+    const buffer = validation.buffer!;
     const key = `news/${nanoid()}-${input.fileName}`;
-    const { url } = await storagePut(key, buffer, input.contentType);
+    const { url } = await storagePut(key, buffer, validation.detectedMimeType || input.contentType);
     return { url, key };
   }),
 });

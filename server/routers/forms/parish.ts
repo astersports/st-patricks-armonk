@@ -2,6 +2,8 @@
  * Parish-related form routers: documents, teen life, parish registration, CCD permissions.
  */
 import { adminProcedure, publicProcedure, router, z, db, nanoid, storagePut, notifyOwner } from "../_helpers";
+import { rateLimitedFormProcedure } from "../_rateLimited";
+import { validateBase64File } from "../../middleware";
 
 export const documentsRouter = router({
   byCategory: publicProcedure.input(z.object({ category: z.string() })).query(async ({ input }) => {
@@ -43,15 +45,22 @@ export const documentsRouter = router({
     fileData: z.string(),
     contentType: z.string(),
   })).mutation(async ({ input }) => {
-    const buffer = Buffer.from(input.fileData, "base64");
+    const validation = validateBase64File(input.fileData, input.contentType);
+    if (!validation.valid) {
+      throw new (await import("@trpc/server")).TRPCError({
+        code: "BAD_REQUEST",
+        message: validation.error || "Invalid file",
+      });
+    }
+    const buffer = validation.buffer!;
     const key = `documents/${nanoid()}-${input.fileName}`;
-    const { url } = await storagePut(key, buffer, input.contentType);
+    const { url } = await storagePut(key, buffer, validation.detectedMimeType || input.contentType);
     return { url, key };
   }),
 });
 
 export const teenLifeRouter = router({
-  register: publicProcedure.input(z.object({
+  register: rateLimitedFormProcedure.input(z.object({
     teenFirstName: z.string().min(1),
     teenLastName: z.string().min(1),
     grade: z.string().min(1),
@@ -90,7 +99,7 @@ export const teenLifeRouter = router({
 });
 
 export const parishRegistrationRouter = router({
-  create: publicProcedure.input(z.object({
+  create: rateLimitedFormProcedure.input(z.object({
     headOfHousehold: z.string().min(1),
     spouseName: z.string().optional(),
     address: z.string().min(1),
@@ -124,7 +133,7 @@ export const parishRegistrationRouter = router({
 });
 
 export const ccdPermissionsRouter = router({
-  submit: publicProcedure.input(z.object({
+  submit: rateLimitedFormProcedure.input(z.object({
     childFirstName: z.string().min(1),
     childLastName: z.string().min(1),
     childGrade: z.string().min(1),

@@ -151,3 +151,110 @@ export async function getRecentFormSubmissions(limit = 15) {
   all.sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime());
   return all.slice(0, limit);
 }
+
+// ===== NEEDS ATTENTION (Pending Submissions) =====
+
+export async function getPendingSubmissions() {
+  const db = await getDb();
+  if (!db) return [];
+
+  const [baptisms, marriages, ccdRegs, parishRegs, teenLife, permissions] = await Promise.all([
+    db.select({
+      id: baptismRegistrations.id,
+      name: sql<string>`CONCAT(${baptismRegistrations.childFirstName}, ' ', ${baptismRegistrations.childLastName})`,
+      status: baptismRegistrations.status,
+      adminNotes: baptismRegistrations.adminNotes,
+      createdAt: baptismRegistrations.createdAt,
+    }).from(baptismRegistrations).where(eq(baptismRegistrations.status, "pending")),
+
+    db.select({
+      id: marriageInquiries.id,
+      name: sql<string>`CONCAT(${marriageInquiries.brideFirstName}, ' & ', ${marriageInquiries.groomFirstName})`,
+      status: marriageInquiries.status,
+      adminNotes: marriageInquiries.adminNotes,
+      createdAt: marriageInquiries.createdAt,
+    }).from(marriageInquiries).where(eq(marriageInquiries.status, "pending")),
+
+    db.select({
+      id: ccdRegistrations.id,
+      name: sql<string>`CONCAT(${ccdRegistrations.childFirstName}, ' ', ${ccdRegistrations.childLastName})`,
+      status: ccdRegistrations.status,
+      adminNotes: ccdRegistrations.notes,
+      createdAt: ccdRegistrations.createdAt,
+    }).from(ccdRegistrations).where(eq(ccdRegistrations.status, "pending")),
+
+    db.select({
+      id: parishRegistrations.id,
+      name: parishRegistrations.headOfHousehold,
+      status: parishRegistrations.status,
+      adminNotes: parishRegistrations.adminNotes,
+      createdAt: parishRegistrations.createdAt,
+    }).from(parishRegistrations).where(eq(parishRegistrations.status, "pending")),
+
+    db.select({
+      id: teenLifeRegistrations.id,
+      name: sql<string>`CONCAT(${teenLifeRegistrations.teenFirstName}, ' ', ${teenLifeRegistrations.teenLastName})`,
+      status: teenLifeRegistrations.status,
+      adminNotes: teenLifeRegistrations.adminNotes,
+      createdAt: teenLifeRegistrations.createdAt,
+    }).from(teenLifeRegistrations).where(eq(teenLifeRegistrations.status, "pending")),
+
+    db.select({
+      id: ccdPermissions.id,
+      name: sql<string>`CONCAT(${ccdPermissions.childFirstName}, ' ', ${ccdPermissions.childLastName})`,
+      status: sql<string>`'pending'`,
+      adminNotes: sql<string | null>`NULL`,
+      createdAt: ccdPermissions.createdAt,
+    }).from(ccdPermissions),
+  ]);
+
+  const all = [
+    ...baptisms.map(r => ({ ...r, type: "baptism" as const })),
+    ...marriages.map(r => ({ ...r, type: "marriage" as const })),
+    ...ccdRegs.map(r => ({ ...r, type: "ccd" as const })),
+    ...parishRegs.map(r => ({ ...r, type: "parish_registration" as const })),
+    ...teenLife.map(r => ({ ...r, type: "teen_life" as const })),
+    ...permissions.map(r => ({ ...r, type: "ccd_permission" as const })),
+  ];
+
+  all.sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime());
+  return all;
+}
+
+// Map type to table for bulk operations
+const tableMap: Record<string, any> = {
+  baptism: baptismRegistrations,
+  marriage: marriageInquiries,
+  ccd: ccdRegistrations,
+  parish_registration: parishRegistrations,
+  teen_life: teenLifeRegistrations,
+};
+
+// CCD uses 'notes' field instead of 'adminNotes'
+const noteFieldMap: Record<string, string> = {
+  ccd: "notes",
+};
+
+export async function bulkUpdateStatus(items: { type: string; id: number }[], status: string) {
+  const db = await getDb();
+  if (!db) return 0;
+
+  let updated = 0;
+  for (const item of items) {
+    const table = tableMap[item.type];
+    if (!table) continue;
+    await db.update(table).set({ status }).where(eq(table.id, item.id));
+    updated++;
+  }
+  return updated;
+}
+
+export async function updateAdminNote(type: string, id: number, note: string) {
+  const db = await getDb();
+  if (!db) return;
+
+  const table = tableMap[type];
+  if (!table) return;
+  const field = noteFieldMap[type] || "adminNotes";
+  await db.update(table).set({ [field]: note }).where(eq(table.id, id));
+}

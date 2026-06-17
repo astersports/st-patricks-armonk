@@ -1,17 +1,13 @@
 import { trpc } from "@/lib/trpc";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { useState } from "react";
+import { AdminTableControls } from "@/components/AdminTableControls";
+import { useState, useMemo } from "react";
 import { toast } from "sonner";
-import { format } from "date-fns";
-import { Plus, Trash2, Edit, FileText, Upload, Users, Shield } from "lucide-react";
+import { Plus, Trash2, Edit } from "lucide-react";
 
 export function CcdManager() {
   const { data: registrations, isLoading } = trpc.ccd.list.useQuery();
@@ -92,53 +88,7 @@ export function CcdManager() {
       {isLoading ? (
         <div className="space-y-3">{[1,2,3].map(i => <Skeleton key={i} className="h-16 w-full" />)}</div>
       ) : registrations && registrations.length > 0 ? (
-        <Card>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="border-b bg-secondary/50">
-                  <tr>
-                    <th className="text-left p-3 text-sm font-medium">Child</th>
-                    <th className="text-left p-3 text-sm font-medium">Grade</th>
-                    <th className="text-left p-3 text-sm font-medium">Parent</th>
-                    <th className="text-left p-3 text-sm font-medium">Email</th>
-                    <th className="text-center p-3 text-sm font-medium">Status</th>
-                    <th className="text-left p-3 text-sm font-medium">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {registrations.map((reg) => (
-                    <tr key={reg.id} className="border-b last:border-0">
-                      <td className="p-3 text-sm font-medium">{reg.childFirstName} {reg.childLastName}</td>
-                      <td className="p-3 text-sm">{reg.grade}</td>
-                      <td className="p-3 text-sm">{reg.parentFirstName} {reg.parentLastName}</td>
-                      <td className="p-3 text-sm text-muted-foreground">{reg.parentEmail}</td>
-                      <td className="p-3 text-center">
-                        <Badge variant={reg.status === "approved" ? "default" : reg.status === "pending" ? "secondary" : "destructive"} className="text-xs">
-                          {reg.status}
-                        </Badge>
-                      </td>
-                      <td className="p-3">
-                        <div className="flex gap-1">
-                          {reg.status !== "approved" && (
-                            <Button size="sm" variant="ghost" className="text-xs h-7" onClick={() => updateStatusMutation.mutate({ id: reg.id, status: "approved" })}>
-                              Approve
-                            </Button>
-                          )}
-                          {reg.status !== "waitlisted" && (
-                            <Button size="sm" variant="ghost" className="text-xs h-7" onClick={() => updateStatusMutation.mutate({ id: reg.id, status: "waitlisted" })}>
-                              Waitlist
-                            </Button>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
+        <CcdRegistrationsTable registrations={registrations} updateStatusMutation={updateStatusMutation} />
       ) : (
         <Card className="p-8 text-center">
           <p className="text-muted-foreground">No CCD registrations yet. Parents can register at /ccd-registration.</p>
@@ -211,3 +161,79 @@ export function CcdManager() {
   );
 }
 
+
+function CcdRegistrationsTable({ registrations, updateStatusMutation }: { registrations: any[]; updateStatusMutation: any }) {
+  const statusOptions = useMemo(() => {
+    const counts: Record<string, number> = {};
+    registrations.forEach((r: any) => { counts[r.status] = (counts[r.status] || 0) + 1; });
+    return Object.entries(counts).map(([value, count]) => ({ value, label: value, count }));
+  }, [registrations]);
+
+  const gradeOptions = useMemo(() => {
+    const counts: Record<string, number> = {};
+    registrations.forEach((r: any) => { counts[r.grade] = (counts[r.grade] || 0) + 1; });
+    return Object.entries(counts).sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true })).map(([value, count]) => ({ value, label: `Grade ${value}`, count }));
+  }, [registrations]);
+
+  return (
+    <AdminTableControls
+      items={registrations}
+      searchFn={(reg: any) => `${reg.childFirstName} ${reg.childLastName} ${reg.parentFirstName} ${reg.parentLastName} ${reg.parentEmail} ${reg.parentPhone}`}
+      searchPlaceholder="Search by child name, parent, email..."
+      filters={[
+        { key: "status", label: "Status", options: statusOptions, getItemValue: (r: any) => r.status },
+        { key: "grade", label: "Grade", options: gradeOptions, getItemValue: (r: any) => r.grade },
+      ]}
+    >
+      {(items) => (
+        <Card>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="border-b bg-secondary/50">
+                  <tr>
+                    <th className="text-left p-3 text-sm font-medium">Child</th>
+                    <th className="text-left p-3 text-sm font-medium">Grade</th>
+                    <th className="text-left p-3 text-sm font-medium">Parent</th>
+                    <th className="text-left p-3 text-sm font-medium">Email</th>
+                    <th className="text-center p-3 text-sm font-medium">Status</th>
+                    <th className="text-left p-3 text-sm font-medium">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {items.map((reg: any) => (
+                    <tr key={reg.id} className="border-b last:border-0">
+                      <td className="p-3 text-sm font-medium">{reg.childFirstName} {reg.childLastName}</td>
+                      <td className="p-3 text-sm">{reg.grade}</td>
+                      <td className="p-3 text-sm">{reg.parentFirstName} {reg.parentLastName}</td>
+                      <td className="p-3 text-sm text-muted-foreground">{reg.parentEmail}</td>
+                      <td className="p-3 text-center">
+                        <Badge variant={reg.status === "approved" ? "default" : reg.status === "pending" ? "secondary" : "destructive"} className="text-xs">
+                          {reg.status}
+                        </Badge>
+                      </td>
+                      <td className="p-3">
+                        <div className="flex gap-1">
+                          {reg.status !== "approved" && (
+                            <Button size="sm" variant="ghost" className="text-xs h-7" onClick={() => updateStatusMutation.mutate({ id: reg.id, status: "approved" })}>
+                              Approve
+                            </Button>
+                          )}
+                          {reg.status !== "waitlisted" && (
+                            <Button size="sm" variant="ghost" className="text-xs h-7" onClick={() => updateStatusMutation.mutate({ id: reg.id, status: "waitlisted" })}>
+                              Waitlist
+                            </Button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </AdminTableControls>
+  );
+}

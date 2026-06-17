@@ -3,6 +3,7 @@
  */
 
 import PageLayout from "@/components/PageLayout";
+import { SEO } from "@/components/SEO";
 import { useReveal } from "@/hooks/useReveal";
 import PageHeader from "@/components/PageHeader";
 import { HolyDayAlert } from "./mass-times/HolyDayAlert";
@@ -15,6 +16,11 @@ export default function MassTimes() {
 
   return (
     <PageLayout>
+      <SEO
+        title="Mass Times & Confession"
+        path="/mass-times"
+        description="Mass schedule at St. Patrick Church, Armonk NY. Saturday Vigil 5:00 PM, Sunday 8:00 AM, 10:00 AM, 12:00 PM. Daily Mass Mon-Fri 8:30 AM. Confessions Saturday 4:00-4:45 PM."
+      />
       <PageHeader
         eyebrow="Worship With Us"
         title="Mass Times & Confession"

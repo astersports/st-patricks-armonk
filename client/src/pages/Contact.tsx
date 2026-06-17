@@ -1,4 +1,5 @@
 import PageLayout from "@/components/PageLayout";
+import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Phone, Clock, Mail } from "lucide-react";
 import { MapView } from "@/components/Map";
@@ -22,6 +23,11 @@ export default function Contact() {
 
   return (
     <PageLayout>
+      <SEO
+        title="Contact Us"
+        path="/contact"
+        description="Contact St. Patrick Church, Armonk NY. Phone: (914) 273-9724. Address: 137 Moseman Road, Armonk, NY 10504. Office hours and directions."
+      />
       {/* Page Header — refined */}
       <PageHeader
         eyebrow="Get in Touch"

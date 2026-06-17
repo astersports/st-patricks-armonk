@@ -575,3 +575,55 @@ export const pushSubscriptions = mysqlTable("push_subscriptions", {
 });
 export type PushSubscriptionRow = typeof pushSubscriptions.$inferSelect;
 export type InsertPushSubscription = typeof pushSubscriptions.$inferInsert;
+
+
+/**
+ * Prayer support — tracks "I prayed for this" interactions on prayer intentions.
+ */
+export const prayerSupport = mysqlTable("prayer_support", {
+  id: int("id").autoincrement().primaryKey(),
+  intentionId: int("intentionId").notNull(),
+  userId: int("userId"),
+  name: varchar("name", { length: 100 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type PrayerSupportRow = typeof prayerSupport.$inferSelect;
+export type InsertPrayerSupport = typeof prayerSupport.$inferInsert;
+
+/**
+ * Volunteer Needs Board — urgent/time-sensitive needs posted by admin.
+ * Different from volunteer_opportunities: these are immediate, short-term requests.
+ */
+export const volunteerNeeds = mysqlTable("volunteer_needs", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 500 }).notNull(),
+  description: text("description"),
+  urgency: mysqlEnum("urgency", ["low", "medium", "high"]).default("medium").notNull(),
+  category: varchar("category", { length: 100 }),
+  neededBy: timestamp("neededBy"),
+  spotsNeeded: int("spotsNeeded").default(1).notNull(),
+  spotsFilled: int("spotsFilled").default(0).notNull(),
+  contactName: varchar("contactName", { length: 255 }),
+  contactEmail: varchar("contactEmail", { length: 320 }),
+  contactPhone: varchar("contactPhone", { length: 20 }),
+  active: boolean("active").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type VolunteerNeed = typeof volunteerNeeds.$inferSelect;
+export type InsertVolunteerNeed = typeof volunteerNeeds.$inferInsert;
+
+/**
+ * Volunteer Needs Responses — one-click signups for urgent needs.
+ */
+export const volunteerNeedResponses = mysqlTable("volunteer_need_responses", {
+  id: int("id").autoincrement().primaryKey(),
+  needId: int("needId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  phone: varchar("phone", { length: 20 }),
+  message: text("message"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type VolunteerNeedResponse = typeof volunteerNeedResponses.$inferSelect;
+export type InsertVolunteerNeedResponse = typeof volunteerNeedResponses.$inferInsert;

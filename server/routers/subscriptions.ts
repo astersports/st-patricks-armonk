@@ -3,9 +3,10 @@
  * ~45 lines
  */
 import { adminProcedure, publicProcedure, router, z, db, nanoid } from "./_helpers";
+import { rateLimitedPublicProcedure } from "./_rateLimited";
 
 export const subscriptionsRouter = router({
-  subscribe: publicProcedure.input(z.object({
+  subscribe: rateLimitedPublicProcedure.input(z.object({
     email: z.string().email(),
     name: z.string().optional(),
     subscribedToBulletins: z.boolean().default(true),

@@ -89,4 +89,27 @@ export const prayerWallRouter = router({
       });
       return { success: true, id };
     }),
+
+  /** Get prayer support counts for a list of intentions */
+  getSupportCounts: publicProcedure
+    .input(z.object({ intentionIds: z.array(z.number()) }))
+    .query(async ({ input }) => {
+      return db.getPrayerSupportCounts(input.intentionIds);
+    }),
+
+  /** "I prayed for this" — add prayer support */
+  prayForThis: publicProcedure
+    .input(z.object({
+      intentionId: z.number(),
+      name: z.string().max(100).optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const userId = (ctx as any).user?.id;
+      await db.addPrayerSupport({
+        intentionId: input.intentionId,
+        userId: userId || null,
+        name: input.name || null,
+      });
+      return { success: true };
+    }),
 });

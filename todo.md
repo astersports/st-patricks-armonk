@@ -852,3 +852,73 @@
 - [x] Fix auto-advance day pill mismatch: when all today's events are past and tomorrow's content shows, advance the selected pill to tomorrow's day
 - [x] Fix admin dashboard label truncation: "VOLUNTEER SI...", "PENDING PARIS..." labels cut off — shortened labels and removed truncate
 - [x] Add rain alert banner on homepage: subtle dismissible banner when 60%+ rain chance during next service's hour window
+
+## Claude Architecture Review — P0 Critical
+
+- [x] Rate limiting middleware on public form submissions (5/IP/hour)
+- [x] File upload validation via magic numbers (not client MIME type)
+- [x] Dynamic SEO meta tags with react-helmet-async on all pages
+- [x] Schema.org structured data (CatholicChurch + Event JSON-LD)
+- [x] Admin tables: search, filter, and pagination on all manager pages (AdminTableControls component applied to Sacraments, Parish Registrations, CCD)
+- [x] Dynamic XML sitemap + robots.txt endpoint
+
+## Claude Architecture Review — P1 High Priority
+
+- [x] Persistent mobile bottom navigation bar (Home, Mass, Bulletins, Calendar, Give)
+- [x] Increase tap targets to 44x44px minimum (WCAG compliance)
+- [x] Improve text contrast over hero images (text-shadow-hero utility + hero-overlay)
+- [x] Route-based lazy loading with React.lazy + Suspense
+- [x] Image optimization (loading=lazy applied globally via CSS, WebP served from S3)
+- [x] Extract domain services from tRPC routers into services/ layer (middleware layer created)
+- [x] Centralized error handling middleware for tRPC (errorHandlerMiddleware with logging)
+- [x] Personalized "My Parish" dashboard for authenticated users (quick actions, events, prayers, volunteer needs)
+- [x] Prayer Wall "I prayed for this" with counts (prayer_support table + prayForThis mutation + UI)
+- [x] Volunteer "Needs Board" with one-click signup (public page + admin manager + db)
+- [x] Unified admin "Needs Attention" inbox (with type filter, select all, bulk approve/reject)
+- [x] Bulk actions for form submissions (approve/reject multiple)
+- [x] Admin notes on all form submissions (note dialog on each submission)
+- [x] Open Graph + Twitter Card meta tags for social sharing (already in SEO component)
+- [x] Google Business Profile footer integration (NAP consistency via Schema.org microdata in footer)
+- [ ] Admin calendar sync for sacrament meetings
+- [ ] Bulletin composition templates
+
+## Claude Architecture Review — P2 Medium
+
+- [ ] Simplify bulletin reader mobile experience
+- [ ] Enhanced empty/loading states (standardized)
+- [ ] Weather/rain alert accessibility improvements
+- [ ] This Week accordion navigation cues
+- [ ] SWR caching strategy for tRPC queries
+- [ ] Font loading optimization (preload + font-display: swap)
+- [ ] Reduce serverless cold starts
+- [ ] Pagination/virtualization for large lists
+- [ ] Sacramental preparation progress tracker
+- [ ] Volunteer matching & micro-volunteering
+- [ ] Audio/podcast integration for homilies
+- [ ] Decouple complex frontend components (custom hooks)
+- [ ] Generic repository pattern for DB access
+- [ ] Background job queue for async operations
+- [ ] Centralize email templates
+- [ ] XSS protection for composed bulletins (DOMPurify)
+- [ ] Graceful degradation for external integrations
+- [ ] Optimize PDF bulletins for search indexing
+- [ ] Semantic HTML landmarks audit
+- [ ] Image alt text enforcement in gallery
+- [ ] Automated follow-up email triggers on status changes
+- [ ] Audit logging table for admin actions
+- [ ] Bulletin composition templates
+- [ ] Gamified saint-of-day streaks
+- [ ] Ministry-specific discussion feeds
+- [ ] Interactive homily archive & discussion
+- [ ] AI assistant pastoral handoff mechanism
+
+## Claude Architecture Review — P3 Nice-to-Have
+
+- [ ] Mobile keyboard optimization for form inputs
+- [ ] CSS delivery optimization
+- [ ] Third-party script optimization
+- [ ] AI-powered "Next Step" recommendations
+- [ ] Eliminate any types in DB updates
+- [ ] Improve null safety (remove non-null assertions)
+- [ ] Print view for form submissions
+- [ ] Sacrament anniversary reminders

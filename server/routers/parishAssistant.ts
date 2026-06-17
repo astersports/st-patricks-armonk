@@ -4,6 +4,7 @@
  * ~140 lines
  */
 import { publicProcedure, router, z, db } from "./_helpers";
+import { rateLimitedChatProcedure } from "./_rateLimited";
 import { invokeLLM } from "../_core/llm";
 
 const PARISH_CONTEXT = `You are the AI Parish Assistant for St. Patrick Church in Armonk, New York.
@@ -38,7 +39,7 @@ GUIDELINES:
 
 export const parishAssistantRouter = router({
   /** Chat with the AI Parish Assistant */
-  chat: publicProcedure.input(z.object({
+  chat: rateLimitedChatProcedure.input(z.object({
     message: z.string().min(1).max(2000),
     history: z.array(z.object({
       role: z.enum(["user", "assistant"]),

@@ -1,4 +1,5 @@
 import PageLayout from "@/components/PageLayout";
+import { SEO } from "@/components/SEO";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -221,6 +222,11 @@ export default function Sacraments() {
 
   return (
     <PageLayout>
+      <SEO
+        title="Sacraments"
+        path="/sacraments"
+        description="Sacrament preparation at St. Patrick Church — Baptism, First Communion, Confirmation, Marriage, Anointing of the Sick, and Reconciliation."
+      />
       {/* Page Header — refined */}
       <PageHeader
         eyebrow="Sacred Rites"

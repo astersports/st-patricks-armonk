@@ -518,3 +518,54 @@
     print-color-adjust: exact !important;
   }
 }
+
+/* ===== Accessibility: Tap Targets (WCAG 2.5.5 — 44x44px minimum) ===== */
+@layer base {
+  /* Ensure all interactive elements meet minimum tap target */
+  a, button, [role="button"], input, select, textarea, [tabindex]:not([tabindex="-1"]) {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Exception: inline links within paragraphs */
+  p a, li a, span a, td a {
+    min-height: unset;
+    min-width: unset;
+  }
+
+  /* Exception: table header buttons, tiny icon buttons that have adequate spacing */
+  th button, .text-xs button {
+    min-height: 28px;
+    min-width: 28px;
+  }
+}
+
+/* ===== Accessibility: Hero Image Text Contrast ===== */
+@layer utilities {
+  /* Text shadow for readability over images */
+  .text-shadow-hero {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Gradient overlay for hero sections */
+  .hero-overlay::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.1) 0%,
+      rgba(0, 0, 0, 0.4) 50%,
+      rgba(0, 0, 0, 0.6) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+/* ===== Mobile: Add padding for fixed bottom nav ===== */
+@media (max-width: 1023px) {
+  body {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+  }
+}

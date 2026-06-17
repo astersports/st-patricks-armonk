@@ -1,4 +1,5 @@
 import PageLayout from "@/components/PageLayout";
+import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import { useReveal } from "@/hooks/useReveal";
@@ -10,6 +11,11 @@ export default function About() {
 
   return (
     <PageLayout>
+      <SEO
+        title="About Our Parish"
+        path="/about"
+        description="Learn about St. Patrick Church in Armonk, NY — our history, mission, and vibrant Catholic community serving Westchester County since 1852."
+      />
       {/* Page Header — refined */}
       <PageHeader
         eyebrow="Est. 1924"

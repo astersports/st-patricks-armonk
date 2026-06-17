@@ -1,4 +1,5 @@
 import PageLayout from "@/components/PageLayout";
+import { SEO } from "@/components/SEO";
 import { Link } from "wouter";
 import { MapPin, Clock, Heart, Users, ArrowRight, Church, BookOpen, Car } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,11 @@ import PageHeader from "@/components/PageHeader";
 export default function NewHere() {
   return (
     <PageLayout>
+      <SEO
+        title="New Here? Welcome!"
+        path="/new-here"
+        description="Welcome to St. Patrick Church, Armonk! Everything you need to know as a new visitor — Mass times, parking, what to expect, and how to register."
+      />
       {/* Page Header — refined */}
       <PageHeader
         eyebrow="Welcome"
