@@ -1,32 +1,32 @@
 import { Link, useLocation } from "wouter";
-import { Clock, Calendar, Heart, MoreHorizontal } from "lucide-react";
+import { Clock, Calendar, Heart, MessageCircle } from "lucide-react";
 
 const tabs = [
   { href: "/mass-times", label: "Mass", icon: Clock },
   { href: "/calendar", label: "Calendar", icon: Calendar },
   { href: "/giving", label: "Give", icon: Heart },
-  { href: "/__more__", label: "More", icon: MoreHorizontal },
+  { href: "/__ask__", label: "Ask", icon: MessageCircle },
 ];
 
 interface MobileBottomNavProps {
-  onMoreClick: () => void;
+  onAskClick: () => void;
 }
 
-export default function MobileBottomNav({ onMoreClick }: MobileBottomNavProps) {
+export default function MobileBottomNav({ onAskClick }: MobileBottomNavProps) {
   const [location] = useLocation();
 
   return (
     <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/[0.97] backdrop-blur-xl border-t border-border/20">
       <div className="flex items-center justify-around h-14 max-w-md mx-auto px-3">
         {tabs.map((tab) => {
-          const isMore = tab.href === "/__more__";
-          const isActive = !isMore && location === tab.href;
+          const isAsk = tab.href === "/__ask__";
+          const isActive = !isAsk && location === tab.href;
 
-          if (isMore) {
+          if (isAsk) {
             return (
               <button
                 key={tab.label}
-                onClick={onMoreClick}
+                onClick={onAskClick}
                 className="flex flex-col items-center justify-center gap-[3px] w-16 py-1.5 rounded-xl transition-all duration-200 text-muted-foreground/70 active:scale-[0.92] active:bg-muted/30"
               >
                 <tab.icon className="w-[21px] h-[21px]" strokeWidth={1.8} />

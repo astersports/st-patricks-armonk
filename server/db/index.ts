@@ -41,3 +41,6 @@ export { getPublishedGalleryPhotos, getAllGalleryPhotos, createGalleryPhoto, upd
 
 // Admin Stats, Settings, Prayer Wall, Activity Feed
 export { getAdminStats, getSiteSetting, upsertSiteSetting, getAllSiteSettings, createPrayerIntention, getRecentPrayerIntentions, getPrayerIntentionCount, getRecentFormSubmissions } from "./admin";
+
+// Parish FAQs (AI Assistant knowledge base)
+export { getActiveFaqs, getAllFaqs, createFaq, updateFaq, deleteFaq } from "./faqs";

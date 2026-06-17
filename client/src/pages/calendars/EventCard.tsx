@@ -2,7 +2,8 @@
  * Event Card — Individual event row in the calendar list view.
  */
 
-import { Clock, MapPin, Star } from "lucide-react";
+import { Clock, MapPin, Star, MessageCircle } from "lucide-react";
+import { openParishAssistant } from "@/components/ParishAssistant";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { WeatherBadge, ParkingAdvisory } from "@/components/WeatherBadge";
@@ -107,6 +108,15 @@ export function EventCard({ event, activeSource, weatherData }: EventCardProps) 
             {eventWeather.parkingAdvisory && <ParkingAdvisory advisory={eventWeather.parkingAdvisory} />}
           </div>
         )}
+
+        {/* Ask about this event */}
+        <button
+          onClick={() => openParishAssistant(`Tell me about ${event.title} on ${format(eventDate, "MMMM d")}`)}
+          className="mt-2 inline-flex items-center gap-1 text-xs text-primary hover:underline opacity-70 hover:opacity-100 transition-opacity"
+        >
+          <MessageCircle className="w-3 h-3" />
+          Ask about this
+        </button>
       </div>
     </div>
   );

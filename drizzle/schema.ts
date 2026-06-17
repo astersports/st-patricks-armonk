@@ -543,3 +543,20 @@ export const prayerIntentions = mysqlTable("prayer_intentions", {
 });
 export type PrayerIntention = typeof prayerIntentions.$inferSelect;
 export type InsertPrayerIntention = typeof prayerIntentions.$inferInsert;
+
+/**
+ * Parish FAQ — admin-editable knowledge base for the AI Parish Assistant.
+ * Each entry is a question/answer pair that gets injected into the LLM context.
+ */
+export const parishFaqs = mysqlTable("parish_faqs", {
+  id: int("id").autoincrement().primaryKey(),
+  question: varchar("question", { length: 500 }).notNull(),
+  answer: text("answer").notNull(),
+  category: varchar("category", { length: 100 }).default("general").notNull(),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  active: boolean("active").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ParishFaq = typeof parishFaqs.$inferSelect;
+export type InsertParishFaq = typeof parishFaqs.$inferInsert;

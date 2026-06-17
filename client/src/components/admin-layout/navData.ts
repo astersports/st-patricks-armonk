@@ -2,7 +2,7 @@ import type { AdminSection } from "@shared/roles";
 import {
   Home, Newspaper, FileText, Calendar,
   Users, Camera, Heart, BookOpen, GraduationCap, Cross,
-  UserPlus, Settings, Download,
+  UserPlus, Settings, Download, MessageCircle,
 } from "lucide-react";
 
 export type NavItem = {
@@ -71,6 +71,7 @@ export const navGroups: NavGroup[] = [
       { label: "Site Settings", section: "settings", icon: Settings, path: "/settings" },
       { label: "User Management", section: "users", icon: Users, path: "/users" },
       { label: "Form Export", section: "form_export", icon: Download, path: "/form-export" },
+      { label: "FAQ Knowledge Base", section: "faq", icon: MessageCircle, path: "/faq" },
     ],
   },
 ];

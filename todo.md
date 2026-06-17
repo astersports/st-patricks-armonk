@@ -787,3 +787,15 @@
 
 - [x] Update Parish Assistant to also search ICS calendar feed events (not just DB events)
 - [x] Fix Mass times in assistant system prompt (corrected to Sat 5:30, Sun 8:30/10:30/12:30, Weekday Tue-Fri 8:30)
+
+## Parish Assistant Enhancements
+
+- [x] Add curated FAQ knowledge base to assistant (parking, dress code, nursery, directions, accessibility, etc.)
+- [x] Make FAQ admin-editable (store in DB, admin can add/edit/delete FAQ entries)
+- [x] Add "Ask about this event" button on calendar event cards that pre-fills chat with event name
+
+## Mobile Bottom Nav: Replace "More" with Parish Assistant
+
+- [x] Replace "More" tab in mobile bottom nav with "Ask" (Parish Assistant chat icon)
+- [x] Hide floating chat bubble on mobile (only show on desktop)
+- [x] Tapping "Ask" in bottom nav opens the Parish Assistant chat panel

@@ -75,6 +75,15 @@ export const parishAssistantRouter = router({
         }
       }
 
+      // Inject FAQ knowledge base
+      const faqs = await db.getActiveFaqs();
+      if (faqs.length > 0) {
+        dynamicContext += "\n\nFAQ KNOWLEDGE BASE (use these to answer common questions):\n";
+        for (const faq of faqs) {
+          dynamicContext += `Q: ${faq.question}\nA: ${faq.answer}\n\n`;
+        }
+      }
+
       // Also include DB events and news
       const upcomingEvents = await db.getUpcomingEvents(5);
       if (upcomingEvents.length > 0) {

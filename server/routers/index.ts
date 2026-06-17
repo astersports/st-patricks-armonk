@@ -24,6 +24,7 @@ import { galleryRouter } from "./gallery";
 import { baptismRouter, sponsorRouter, marriageRouter, funeralRouter, documentsRouter, teenLifeRouter, parishRegistrationRouter, ccdPermissionsRouter } from "./forms";
 import { adminStatsRouter, usersRouter, siteSettingsRouter, importantDatesRouter } from "./admin";
 import { catholicResourcesRouter, vaticanNewsRouter, dailyReadingsRouter, saintOfDayRouter, prayerWallRouter } from "./content";
+import { faqRouter } from "./faq";
 
 export const appRouter = router({
   auth: authRouter,
@@ -58,6 +59,7 @@ export const appRouter = router({
   dailyReadings: dailyReadingsRouter,
   saintOfDay: saintOfDayRouter,
   prayerWall: prayerWallRouter,
+  faq: faqRouter,
 });
 
 export type AppRouter = typeof appRouter;

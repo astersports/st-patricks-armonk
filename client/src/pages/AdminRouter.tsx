@@ -10,6 +10,7 @@ const UserManager = lazy(() => import("./admin/UserManager"));
 const SettingsManager = lazy(() => import("./admin/SettingsManager"));
 
 import { FormExport } from "./admin/FormExport";
+const FaqManager = lazy(() => import("./admin/FaqManager"));
 
 // Legacy managers from Admin.tsx (imported eagerly since they're in a single file)
 import {
@@ -61,6 +62,7 @@ export default function AdminRouter() {
           <Route path="/users" component={() => <UserManager />} />
           <Route path="/settings" component={() => <SettingsManager />} />
           <Route path="/form-export" component={() => <FormExport />} />
+          <Route path="/faq" component={() => <FaqManager />} />
           {/* Fallback to dashboard */}
           <Route component={() => <DashboardHome />} />
         </Switch>

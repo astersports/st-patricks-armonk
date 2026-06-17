@@ -1,12 +1,19 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { MessageCircle, Send, X, Loader2, Church } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Message = { role: "user" | "assistant"; content: string };
+
+// Global event for opening the assistant from external components (e.g., bottom nav, event cards)
+const OPEN_EVENT = "parish-assistant:open";
+
+export function openParishAssistant(prefillQuestion?: string) {
+  window.dispatchEvent(new CustomEvent(OPEN_EVENT, { detail: { prefillQuestion } }));
+}
 
 export function ParishAssistant() {
   const [open, setOpen] = useState(false);
@@ -21,9 +28,23 @@ export function ParishAssistant() {
     }
   }, [messages]);
 
-  const handleSend = async () => {
-    if (!input.trim() || chatMutation.isPending) return;
-    const userMsg: Message = { role: "user", content: input.trim() };
+  // Listen for external open events
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      setOpen(true);
+      if (detail?.prefillQuestion) {
+        setInput(detail.prefillQuestion);
+      }
+    };
+    window.addEventListener(OPEN_EVENT, handler);
+    return () => window.removeEventListener(OPEN_EVENT, handler);
+  }, []);
+
+  const handleSend = useCallback(async (overrideInput?: string) => {
+    const text = (overrideInput || input).trim();
+    if (!text || chatMutation.isPending) return;
+    const userMsg: Message = { role: "user", content: text };
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput("");
@@ -37,13 +58,14 @@ export function ParishAssistant() {
     } catch {
       setMessages([...newMessages, { role: "assistant", content: "Sorry, I'm having trouble. Please try again or call (914) 273-9724." }]);
     }
-  };
+  }, [input, messages, chatMutation]);
 
+  // Floating bubble — hidden on mobile (bottom nav handles it), shown on desktop
   if (!open) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-50 bg-primary text-primary-foreground rounded-full p-4 shadow-lg hover:scale-105 transition-transform"
+        className="hidden lg:flex fixed bottom-6 right-6 z-50 bg-primary text-primary-foreground rounded-full p-4 shadow-lg hover:scale-105 transition-transform items-center justify-center"
         aria-label="Open Parish Assistant"
       >
         <MessageCircle className="w-6 h-6" />
@@ -52,7 +74,7 @@ export function ParishAssistant() {
   }
 
   return (
-    <Card className="fixed bottom-6 right-6 z-50 w-[360px] max-w-[calc(100vw-2rem)] shadow-2xl border-primary/20 flex flex-col" style={{ height: "500px", maxHeight: "70vh" }}>
+    <Card className="fixed bottom-6 right-6 z-[60] w-[360px] max-w-[calc(100vw-2rem)] shadow-2xl border-primary/20 flex flex-col max-lg:bottom-16 max-lg:right-2 max-lg:left-2 max-lg:w-auto" style={{ height: "500px", maxHeight: "70vh" }}>
       {/* Header */}
       <div className="flex items-center gap-2 p-3 border-b bg-primary text-primary-foreground rounded-t-lg">
         <Church className="w-5 h-5" />
