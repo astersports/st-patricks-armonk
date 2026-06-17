@@ -24,7 +24,9 @@ export const galleryRouter = router({
     }))
     .mutation(async ({ input }) => {
       const buffer = Buffer.from(input.fileData, "base64");
-      const key = `gallery/${nanoid()}-${input.fileName}`;
+      // Sanitize filename: replace spaces and special chars to avoid S3/CloudFront encoding issues
+      const safeFileName = input.fileName.replace(/[\s]+/g, "-").replace(/[^a-zA-Z0-9._-]/g, "");
+      const key = `gallery/${nanoid()}-${safeFileName}`;
       const { url } = await storagePut(key, buffer, input.contentType);
       return { url, key };
     }),

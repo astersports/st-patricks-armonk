@@ -1,5 +1,6 @@
 /**
  * Bulletin Book Reader — PDF viewer with inline and fullscreen modes.
+ * Also handles HTML bulletins (composed in-app) via iframe rendering.
  * Composed from bulletin-reader/ sub-components.
  */
 
@@ -21,7 +22,100 @@ interface BulletinBookReaderProps {
   onClose?: () => void;
 }
 
+/** Detect if the URL points to an HTML file (composed bulletin) vs a PDF */
+function isHtmlBulletin(url: string): boolean {
+  // Strip query params and check extension
+  const path = url.split("?")[0];
+  return path.endsWith(".html") || path.endsWith(".htm");
+}
+
+/** HTML Bulletin Viewer — renders composed bulletins in an iframe */
+function HtmlBulletinViewer({ pdfUrl, title, onClose }: BulletinBookReaderProps) {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    if (isFullscreen) {
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
+      document.body.style.top = `-${window.scrollY}px`;
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.top = "";
+      if (scrollY) window.scrollTo(0, parseInt(scrollY || "0") * -1);
+    }
+    return () => { document.body.style.overflow = ""; document.body.style.position = ""; document.body.style.width = ""; document.body.style.top = ""; };
+  }, [isFullscreen]);
+
+  useEffect(() => {
+    if (!isFullscreen) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsFullscreen(false);
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [isFullscreen]);
+
+  const toggleFullscreen = (e?: React.MouseEvent) => { if (e) { e.preventDefault(); e.stopPropagation(); } setIsFullscreen(!isFullscreen); };
+
+  const iframeContent = (
+    <iframe
+      src={pdfUrl}
+      title={title}
+      className="w-full border-0"
+      style={{ height: isFullscreen ? "calc(100vh - 56px)" : "500px" }}
+      sandbox="allow-same-origin"
+    />
+  );
+
+  if (isFullscreen) {
+    return createPortal(
+      <div className="fixed inset-0 z-[9999] bg-black/95 flex flex-col">
+        <div className="flex items-center justify-between px-4 py-3 bg-black/80 border-b border-white/10">
+          <h3 className="text-white font-serif font-semibold truncate text-sm flex-1 mr-2">{title}</h3>
+          <div className="flex items-center gap-1">
+            <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
+              <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 h-8 w-8 p-0" title="Open in new tab"><Download className="w-4 h-4" /></Button>
+            </a>
+            <Button variant="ghost" size="sm" onClick={() => setIsFullscreen(false)} className="text-white hover:bg-white/10 h-8 w-8 p-0"><X className="w-4 h-4" /></Button>
+          </div>
+        </div>
+        <div className="flex-1 overflow-auto bg-white">
+          {iframeContent}
+        </div>
+      </div>,
+      document.body
+    );
+  }
+
+  return (
+    <div className="relative w-full bg-stone-50 rounded-xl overflow-hidden border border-border/40">
+      <div className="flex items-center justify-between w-full px-3 sm:px-4 py-2.5 border-b border-border/40 bg-white/80">
+        <h3 className="font-serif font-semibold truncate text-foreground text-sm flex-1 mr-2">{title}</h3>
+        <div className="flex items-center gap-1">
+          <a href={pdfUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Open in new tab"><Download className="w-4 h-4" /></Button>
+          </a>
+          <Button variant="ghost" size="sm" onClick={toggleFullscreen} title="Full screen" className="h-8 w-8 p-0"><Maximize2 className="w-4 h-4" /></Button>
+          {onClose && <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0"><X className="w-4 h-4" /></Button>}
+        </div>
+      </div>
+      <div className="overflow-hidden">
+        {iframeContent}
+      </div>
+    </div>
+  );
+}
+
 export default function BulletinBookReader({ pdfUrl, title, onClose }: BulletinBookReaderProps) {
+  // Route to HTML viewer for composed bulletins
+  if (isHtmlBulletin(pdfUrl)) {
+    return <HtmlBulletinViewer pdfUrl={pdfUrl} title={title} onClose={onClose} />;
+  }
+
   const [numPages, setNumPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isFullscreen, setIsFullscreen] = useState(false);

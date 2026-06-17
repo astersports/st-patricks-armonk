@@ -827,3 +827,22 @@
 ## Bug Fix: Auto-Advance Tomorrow Events Missing Weather Badges
 - [x] When auto-advance shows tomorrow's events (today has no more events), the per-service weather badges are missing
 - [x] Ensure tomorrow's events in auto-advance view show the same weather info as when manually tapping that day
+
+## Bug Fix: Auto-Advance Weather Missing Per-Service Temperature
+- [x] Show at-that-hour temperature badge on tomorrow's services in auto-advance view (fixed: pre-fetch tomorrow weather in ThisWeekAccordion, pass to DayContent ServiceCards)
+
+## Improvement: Bulletins Admin List Year-Based Grouping
+- [x] Group bulletins by year with collapsible sections (2026 expanded, 2025 and older collapsed)
+- [x] Reduce endless scrolling in the admin bulletins list
+
+## Claude AI Review of All Screens
+- [x] Have Claude review all uploaded screenshots and provide design opinions
+- [x] Get Claude's opinions on suggestion 2 (rain alert banner) and suggestion 3 (temp on day tabs)
+
+## Bug Fix: Photo Gallery Broken Images
+- [x] Uploaded photo shows broken image icon (?) in both admin gallery and public homepage
+- [x] Fixed: filenames with spaces caused S3 presigned URL mismatch; sanitized in storagePut and gallery router
+
+## Bug Fix: Bulletin PDF Not Loading
+- [x] Composed bulletin (June 17, 2026) shows "Unable to load PDF" on the public bulletins page
+- [x] Fixed: BulletinBookReader now detects HTML URLs and renders in iframe (HtmlBulletinViewer) instead of react-pdf

@@ -145,8 +145,9 @@ export function ThisWeekAccordion() {
       }
     }
 
-    // Tomorrow's events (for auto-advance weather)
-    if (allTodayEnded && tomorrowDayData && tomorrowServices.length > 0) {
+    // Tomorrow's events — always include when viewing today so weather is pre-fetched
+    // before allTodayEnded triggers (avoids flash of cards without weather badges)
+    if (selectedIndex === 0 && tomorrowDayData && tomorrowServices.length > 0) {
       for (let idx = 0; idx < tomorrowServices.length; idx++) {
         const svc = tomorrowServices[idx];
         const svcMin = parseServiceMinutes(svc.time);
@@ -163,7 +164,7 @@ export function ThisWeekAccordion() {
     }
 
     return events;
-  }, [selectedDayData, services, selectedIndex, allTodayEnded, tomorrowDayData, tomorrowServices]);
+  }, [selectedDayData, services, selectedIndex, tomorrowDayData, tomorrowServices]);
 
   const { data: serviceWeatherMap } = trpc.weather.forEvents.useQuery(
     { events: serviceEvents },
