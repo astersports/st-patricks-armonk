@@ -635,3 +635,9 @@
 ## Auto-advance to Tomorrow
 
 - [x] Auto-advance weekly schedule to tomorrow once all of today's services have completed
+
+## Next Service Highlight & First Friday
+
+- [x] Add "Next service" accent highlight on the first upcoming service that hasn't passed yet
+- [x] Add countdown pill on the next upcoming service (e.g., "in 11h 53m")
+- [x] Add First Friday Adoration as a special monthly event that auto-appears on the first Friday

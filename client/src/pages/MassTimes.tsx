@@ -21,7 +21,7 @@ interface DaySchedule {
   services: Service[];
 }
 
-const WEEKLY_SCHEDULE: DaySchedule[] = [
+const BASE_WEEKLY_SCHEDULE: DaySchedule[] = [
   {
     day: "Sunday",
     shortDay: "Sun",
@@ -80,6 +80,56 @@ const WEEKLY_SCHEDULE: DaySchedule[] = [
   },
 ];
 
+// Check if a given date is the first Friday of its month
+function isFirstFriday(date: Date): boolean {
+  return date.getDay() === 5 && date.getDate() <= 7;
+}
+
+// Get the schedule with First Friday Adoration injected when applicable
+function getWeeklySchedule(today: number): DaySchedule[] {
+  const schedule = BASE_WEEKLY_SCHEDULE.map(day => ({ ...day, services: [...day.services] }));
+  // Check if this Friday in the current week is a First Friday
+  const now = new Date();
+  const todayDate = now.getDate();
+  const todayDay = now.getDay();
+  // Calculate the date of this week's Friday
+  const daysUntilFriday = (5 - todayDay + 7) % 7;
+  const fridayDate = new Date(now);
+  fridayDate.setDate(todayDate + daysUntilFriday);
+  if (isFirstFriday(fridayDate)) {
+    schedule[5].services.push({
+      type: "prayer",
+      name: "First Friday Adoration",
+      time: "9:00 AM",
+      note: "Eucharistic Adoration following Mass",
+    });
+  }
+  return schedule;
+}
+
+// Parse a time string like "8:30 AM" or "4:30–5:15 PM" into { hours, minutes } (24h)
+function parseTimeStr(timeStr: string): { hours: number; minutes: number } | null {
+  const match = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)$/);
+  if (!match) return null;
+  let hours = parseInt(match[1]);
+  const minutes = parseInt(match[2]);
+  const period = match[3];
+  if (period === "PM" && hours !== 12) hours += 12;
+  if (period === "AM" && hours === 12) hours = 0;
+  return { hours, minutes };
+}
+
+// Compute countdown string from now to a target time today or on a future day
+function getCountdown(targetHours: number, targetMinutes: number, currentHour: number, currentMinute: number, daysAhead: number): string {
+  let totalMinutes = (targetHours * 60 + targetMinutes) - (currentHour * 60 + currentMinute) + daysAhead * 1440;
+  if (totalMinutes <= 0) return "";
+  const h = Math.floor(totalMinutes / 60);
+  const m = totalMinutes % 60;
+  if (h === 0) return `in ${m}m`;
+  if (m === 0) return `in ${h}h`;
+  return `in ${h}h ${m}m`;
+}
+
 function getServiceColor(type: ServiceType) {
   switch (type) {
     case "mass": return { bg: "bg-primary/8", text: "text-primary", border: "border-l-primary", dot: "bg-primary" };
@@ -106,22 +156,20 @@ export default function MassTimes() {
   const currentMinute = now.getMinutes();
   const tomorrow = (today + 1) % 7;
 
+  // Get schedule with First Friday injected
+  const WEEKLY_SCHEDULE = useMemo(() => getWeeklySchedule(today), [today]);
+
   // Auto-advance to tomorrow if all of today's services have completed
   const allTodayServicesPast = useMemo(() => {
     const todaySchedule = WEEKLY_SCHEDULE[today];
     if (todaySchedule.services.length === 1 && todaySchedule.services[0].type === "none") return true;
     return todaySchedule.services.every(service => {
       if (!service.time) return true;
-      const rangeMatch = service.time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)$/);
-      if (!rangeMatch) return true;
-      let hours = parseInt(rangeMatch[1]);
-      const minutes = parseInt(rangeMatch[2]);
-      const period = rangeMatch[3];
-      if (period === "PM" && hours !== 12) hours += 12;
-      if (period === "AM" && hours === 12) hours = 0;
-      return currentHour > hours || (currentHour === hours && currentMinute > minutes);
+      const parsed = parseTimeStr(service.time);
+      if (!parsed) return true;
+      return currentHour > parsed.hours || (currentHour === parsed.hours && currentMinute > parsed.minutes);
     });
-  }, [today, currentHour, currentMinute]);
+  }, [today, currentHour, currentMinute, WEEKLY_SCHEDULE]);
 
   const [selectedDay, setSelectedDay] = useState(() => allTodayServicesPast ? tomorrow : today);
 
@@ -129,23 +177,44 @@ export default function MassTimes() {
   const reorderedDays = useMemo(() => {
     const days = WEEKLY_SCHEDULE.map((day, index) => ({ ...day, originalIndex: index }));
     return [...days.slice(today), ...days.slice(0, today)];
-  }, [today]);
+  }, [today, WEEKLY_SCHEDULE]);
 
-  const currentSchedule = useMemo(() => WEEKLY_SCHEDULE[selectedDay], [selectedDay]);
+  const currentSchedule = useMemo(() => WEEKLY_SCHEDULE[selectedDay], [selectedDay, WEEKLY_SCHEDULE]);
 
   // Parse time string to check if a service has passed
   const isServicePast = useCallback((timeStr: string) => {
     if (!timeStr || selectedDay !== today) return false;
-    // Parse "8:30 AM" or "4:30–5:15 PM" (use end time for ranges)
-    const rangeMatch = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)$/);
-    if (!rangeMatch) return false;
-    let hours = parseInt(rangeMatch[1]);
-    const minutes = parseInt(rangeMatch[2]);
-    const period = rangeMatch[3];
-    if (period === "PM" && hours !== 12) hours += 12;
-    if (period === "AM" && hours === 12) hours = 0;
-    return currentHour > hours || (currentHour === hours && currentMinute > minutes);
+    const parsed = parseTimeStr(timeStr);
+    if (!parsed) return false;
+    return currentHour > parsed.hours || (currentHour === parsed.hours && currentMinute > parsed.minutes);
   }, [selectedDay, today, currentHour, currentMinute]);
+
+  // Find the index of the next upcoming service (first one not past)
+  const nextServiceIndex = useMemo(() => {
+    if (selectedDay !== today) return 0; // On non-today days, highlight first service
+    const services = WEEKLY_SCHEDULE[selectedDay].services;
+    for (let i = 0; i < services.length; i++) {
+      if (services[i].type === "none") continue;
+      if (!services[i].time) continue;
+      const parsed = parseTimeStr(services[i].time);
+      if (!parsed) continue;
+      const isPast = currentHour > parsed.hours || (currentHour === parsed.hours && currentMinute > parsed.minutes);
+      if (!isPast) return i;
+    }
+    return -1; // all past
+  }, [selectedDay, today, currentHour, currentMinute, WEEKLY_SCHEDULE]);
+
+  // Compute countdown for the next service
+  const nextServiceCountdown = useMemo(() => {
+    if (nextServiceIndex < 0) return "";
+    const services = WEEKLY_SCHEDULE[selectedDay].services;
+    const service = services[nextServiceIndex];
+    if (!service?.time) return "";
+    const parsed = parseTimeStr(service.time);
+    if (!parsed) return "";
+    const daysAhead = selectedDay === today ? 0 : ((selectedDay - today + 7) % 7);
+    return getCountdown(parsed.hours, parsed.minutes, currentHour, currentMinute, daysAhead);
+  }, [nextServiceIndex, selectedDay, today, currentHour, currentMinute, WEEKLY_SCHEDULE]);
 
   // Swipe gesture for mobile
   const touchStartX = useRef(0);
@@ -252,16 +321,22 @@ export default function MassTimes() {
                 const colors = getServiceColor(service.type);
                 const Icon = getServiceIcon(service.type);
                 const past = isServicePast(service.time);
+                const isNext = idx === nextServiceIndex;
                 return (
                   <div
                     key={idx}
-                    className={`flex items-center gap-3 p-3.5 rounded-xl border-l-3 ${colors.border} bg-card shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] ${past ? "opacity-50" : ""}`}
+                    className={`flex items-center gap-3 p-3.5 rounded-xl border-l-3 ${isNext ? "border-l-primary ring-1 ring-primary/20 bg-primary/4 shadow-[0_2px_8px_rgba(0,0,0,0.06)]" : `${colors.border} bg-card shadow-[0_1px_3px_rgba(0,0,0,0.04)]`} transition-all duration-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] ${past ? "opacity-50" : ""}`}
                   >
-                    <div className={`w-9 h-9 rounded-lg ${colors.bg} flex items-center justify-center shrink-0`}>
-                      <Icon className={`w-4.5 h-4.5 ${colors.text}`} />
+                    <div className={`w-9 h-9 rounded-lg ${isNext ? "bg-primary/12" : colors.bg} flex items-center justify-center shrink-0`}>
+                      <Icon className={`w-4.5 h-4.5 ${isNext ? "text-primary" : colors.text}`} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className={`font-semibold text-sm ${past ? "text-muted-foreground line-through" : "text-foreground"}`}>{service.name}</p>
+                      <div className="flex items-center gap-2">
+                        <p className={`font-semibold text-sm ${past ? "text-muted-foreground line-through" : isNext ? "text-primary" : "text-foreground"}`}>{service.name}</p>
+                        {isNext && (
+                          <span className="text-[9px] font-bold uppercase tracking-wider text-white bg-primary px-1.5 py-0.5 rounded-full">Next</span>
+                        )}
+                      </div>
                       {service.note && (
                         <p className="text-xs text-muted-foreground mt-0.5">{service.note}</p>
                       )}
@@ -269,11 +344,16 @@ export default function MassTimes() {
                         <p className="text-[10px] font-medium text-muted-foreground mt-0.5">Completed</p>
                       )}
                     </div>
-                    {service.time && (
-                      <span className={`text-sm font-bold ${past ? "text-muted-foreground" : colors.text} shrink-0 tabular-nums`}>
-                        {service.time}
-                      </span>
-                    )}
+                    <div className="shrink-0 text-right">
+                      {service.time && (
+                        <span className={`text-sm font-bold ${past ? "text-muted-foreground" : isNext ? "text-primary" : colors.text} tabular-nums`}>
+                          {service.time}
+                        </span>
+                      )}
+                      {isNext && nextServiceCountdown && (
+                        <p className="text-[10px] font-medium text-primary/70 mt-0.5">{nextServiceCountdown}</p>
+                      )}
+                    </div>
                   </div>
                 );
               })}
