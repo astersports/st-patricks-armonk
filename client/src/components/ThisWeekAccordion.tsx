@@ -7,7 +7,6 @@ import { Calendar, Clock } from "lucide-react";
 import { format, addDays } from "date-fns";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { WeatherBadge } from "@/components/WeatherBadge";
 import { ColorfulWeatherIcon } from "@/components/WeatherIcons";
 import { ServiceCard } from "./this-week/ServiceCard";
 import {
@@ -107,13 +106,7 @@ export function ThisWeekAccordion() {
   }, [selectedIndex]);
 
   // Fetch weather data
-  const weatherInput = useMemo(() => days.map((day) => ({
-    id: `day-${day.index}`,
-    title: day.isToday ? "Today" : format(day.date, "EEEE"),
-    startDate: day.date.toISOString(),
-  })), [days]);
-
-  const { data: weatherData } = trpc.weather.forEvents.useQuery({ events: weatherInput }, { staleTime: 60 * 60 * 1000 });
+  // Daily forecast for weather icons in the header
   const { data: dailyForecast } = trpc.weather.daily.useQuery(undefined, { staleTime: 60 * 60 * 1000 });
 
   const selectedDayData = days[selectedIndex];
@@ -168,10 +161,13 @@ export function ThisWeekAccordion() {
                 <span className="font-semibold">{dailyForecast[selectedIndex].high}°</span>
                 <span className="text-muted-foreground/70">/</span>
                 <span>{dailyForecast[selectedIndex].low}°</span>
+                {dailyForecast[selectedIndex].precipProbabilityMax > 20 && (
+                  <span className="inline-flex items-center gap-0.5 text-blue-600 dark:text-blue-400">
+                    <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" /></svg>
+                    {dailyForecast[selectedIndex].precipProbabilityMax}%
+                  </span>
+                )}
               </span>
-            )}
-            {weatherData?.[`day-${selectedIndex}`]?.weather && (
-              <WeatherBadge weather={weatherData[`day-${selectedIndex}`].weather!} compact />
             )}
             {services.length === 0 && !dailyForecast?.[selectedIndex] && (
               <span className="text-xs text-muted-foreground italic">No services</span>
