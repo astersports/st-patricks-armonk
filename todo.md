@@ -641,3 +641,8 @@
 - [x] Add "Next service" accent highlight on the first upcoming service that hasn't passed yet
 - [x] Add countdown pill on the next upcoming service (e.g., "in 11h 53m")
 - [x] Add First Friday Adoration as a special monthly event that auto-appears on the first Friday
+
+## Holy Day Alerts & Mass In Progress
+
+- [x] Add Holy Day of Obligation alerts — detect upcoming Holy Days and show banner/badge in schedule
+- [x] Add live "Mass in progress" indicator with pulsing green dot when current time is within a service window

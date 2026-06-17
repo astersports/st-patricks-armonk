@@ -130,6 +130,102 @@ function getCountdown(targetHours: number, targetMinutes: number, currentHour: n
   return `in ${h}h ${m}m`;
 }
 
+// Holy Days of Obligation (US) - fixed dates
+// These are the standard US Holy Days. Dates that can be moved to Sunday are noted.
+interface HolyDay {
+  month: number; // 1-indexed
+  day: number;
+  name: string;
+  massTime?: string;
+}
+
+const HOLY_DAYS: HolyDay[] = [
+  { month: 1, day: 1, name: "Solemnity of Mary, Mother of God", massTime: "10:00 AM" },
+  { month: 8, day: 15, name: "Assumption of the Blessed Virgin Mary", massTime: "8:30 AM" },
+  { month: 11, day: 1, name: "All Saints' Day", massTime: "8:30 AM" },
+  { month: 12, day: 8, name: "Immaculate Conception", massTime: "8:30 AM" },
+  { month: 12, day: 25, name: "Christmas", massTime: "10:00 AM" },
+];
+// Ascension Thursday is 39 days after Easter - computed dynamically
+
+// Get Easter date for a given year (Anonymous Gregorian algorithm)
+function getEasterDate(year: number): Date {
+  const a = year % 19;
+  const b = Math.floor(year / 100);
+  const c = year % 100;
+  const d = Math.floor(b / 4);
+  const e = b % 4;
+  const f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3);
+  const h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4);
+  const k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const month = Math.floor((h + l - 7 * m + 114) / 31);
+  const day = ((h + l - 7 * m + 114) % 31) + 1;
+  return new Date(year, month - 1, day);
+}
+
+// Check for upcoming Holy Days within the next 7 days
+function getUpcomingHolyDays(): { name: string; date: Date; massTime: string; daysUntil: number }[] {
+  const now = new Date();
+  const year = now.getFullYear();
+  const upcoming: { name: string; date: Date; massTime: string; daysUntil: number }[] = [];
+
+  // Check fixed Holy Days
+  for (const hd of HOLY_DAYS) {
+    const hdDate = new Date(year, hd.month - 1, hd.day);
+    const diffMs = hdDate.getTime() - new Date(year, now.getMonth(), now.getDate()).getTime();
+    const daysUntil = Math.round(diffMs / (1000 * 60 * 60 * 24));
+    if (daysUntil >= 0 && daysUntil <= 7) {
+      upcoming.push({ name: hd.name, date: hdDate, massTime: hd.massTime || "8:30 AM", daysUntil });
+    }
+  }
+
+  // Check Ascension Thursday (39 days after Easter)
+  const easter = getEasterDate(year);
+  const ascension = new Date(easter);
+  ascension.setDate(easter.getDate() + 39);
+  const ascDiffMs = ascension.getTime() - new Date(year, now.getMonth(), now.getDate()).getTime();
+  const ascDaysUntil = Math.round(ascDiffMs / (1000 * 60 * 60 * 24));
+  if (ascDaysUntil >= 0 && ascDaysUntil <= 7) {
+    upcoming.push({ name: "Ascension of the Lord", date: ascension, massTime: "8:30 AM", daysUntil: ascDaysUntil });
+  }
+
+  return upcoming.sort((a, b) => a.daysUntil - b.daysUntil);
+}
+
+// Check if a service is currently in progress (within its time window)
+// Mass ~1hr, Confession ~45min, Prayer ~30min
+function getServiceDuration(type: ServiceType): number {
+  switch (type) {
+    case "mass": return 60;
+    case "confession": return 45;
+    case "prayer": return 30;
+    default: return 30;
+  }
+}
+
+function isServiceInProgress(timeStr: string, type: ServiceType, currentHour: number, currentMinute: number, isToday: boolean): boolean {
+  if (!isToday || !timeStr) return false;
+  // For range times like "4:30–5:15 PM", parse the start time
+  const startMatch = timeStr.match(/^(\d{1,2}):(\d{2})/);
+  const periodMatch = timeStr.match(/(AM|PM)/);
+  if (!startMatch || !periodMatch) return false;
+  let startHours = parseInt(startMatch[1]);
+  const startMinutes = parseInt(startMatch[2]);
+  const period = periodMatch[1];
+  if (period === "PM" && startHours !== 12) startHours += 12;
+  if (period === "AM" && startHours === 12) startHours = 0;
+
+  const startTotal = startHours * 60 + startMinutes;
+  const nowTotal = currentHour * 60 + currentMinute;
+  const duration = getServiceDuration(type);
+
+  return nowTotal >= startTotal && nowTotal < startTotal + duration;
+}
+
 function getServiceColor(type: ServiceType) {
   switch (type) {
     case "mass": return { bg: "bg-primary/8", text: "text-primary", border: "border-l-primary", dot: "bg-primary" };
@@ -188,6 +284,9 @@ export default function MassTimes() {
     if (!parsed) return false;
     return currentHour > parsed.hours || (currentHour === parsed.hours && currentMinute > parsed.minutes);
   }, [selectedDay, today, currentHour, currentMinute]);
+
+  // Check for upcoming Holy Days
+  const upcomingHolyDays = useMemo(() => getUpcomingHolyDays(), []);
 
   // Find the index of the next upcoming service (first one not past)
   const nextServiceIndex = useMemo(() => {
@@ -253,6 +352,34 @@ export default function MassTimes() {
       />
 
       <div ref={revealRef} className="container py-6 sm:py-10 space-y-8">
+        {/* Holy Day of Obligation Alert */}
+        {upcomingHolyDays.length > 0 && (
+          <div className="rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/60 p-4 shadow-sm">
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-lg bg-amber-500/12 flex items-center justify-center shrink-0 mt-0.5">
+                <svg className="w-4 h-4 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                  <path d="M2 17l10 5 10-5" />
+                  <path d="M2 12l10 5 10-5" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-amber-700 mb-1">Holy Day of Obligation</p>
+                {upcomingHolyDays.map((hd, i) => (
+                  <div key={i} className={i > 0 ? "mt-2 pt-2 border-t border-amber-200/50" : ""}>
+                    <p className="font-semibold text-sm text-amber-900">{hd.name}</p>
+                    <p className="text-xs text-amber-700 mt-0.5">
+                      {hd.daysUntil === 0 ? "Today" : hd.daysUntil === 1 ? "Tomorrow" : `${hd.date.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" })}`}
+                      {" "}&middot; Mass at <span className="font-semibold">{hd.massTime}</span>
+                    </p>
+                  </div>
+                ))}
+                <p className="text-[10px] text-amber-600 mt-2 italic">Catholics are obligated to attend Mass on this day.</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Interactive Day Tabs */}
         <div>
           <div className="flex items-center gap-2.5 mb-4">
@@ -322,35 +449,45 @@ export default function MassTimes() {
                 const Icon = getServiceIcon(service.type);
                 const past = isServicePast(service.time);
                 const isNext = idx === nextServiceIndex;
+                const inProgress = isServiceInProgress(service.time, service.type, currentHour, currentMinute, selectedDay === today);
                 return (
                   <div
                     key={idx}
-                    className={`flex items-center gap-3 p-3.5 rounded-xl border-l-3 ${isNext ? "border-l-primary ring-1 ring-primary/20 bg-primary/4 shadow-[0_2px_8px_rgba(0,0,0,0.06)]" : `${colors.border} bg-card shadow-[0_1px_3px_rgba(0,0,0,0.04)]`} transition-all duration-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] ${past ? "opacity-50" : ""}`}
+                    className={`flex items-center gap-3 p-3.5 rounded-xl border-l-3 ${inProgress ? "border-l-emerald-500 ring-1 ring-emerald-500/20 bg-emerald-50/50 shadow-[0_2px_8px_rgba(0,0,0,0.06)]" : isNext ? "border-l-primary ring-1 ring-primary/20 bg-primary/4 shadow-[0_2px_8px_rgba(0,0,0,0.06)]" : `${colors.border} bg-card shadow-[0_1px_3px_rgba(0,0,0,0.04)]`} transition-all duration-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] ${past && !inProgress ? "opacity-50" : ""}`}
                   >
-                    <div className={`w-9 h-9 rounded-lg ${isNext ? "bg-primary/12" : colors.bg} flex items-center justify-center shrink-0`}>
-                      <Icon className={`w-4.5 h-4.5 ${isNext ? "text-primary" : colors.text}`} />
+                    <div className={`relative w-9 h-9 rounded-lg ${inProgress ? "bg-emerald-500/12" : isNext ? "bg-primary/12" : colors.bg} flex items-center justify-center shrink-0`}>
+                      <Icon className={`w-4.5 h-4.5 ${inProgress ? "text-emerald-600" : isNext ? "text-primary" : colors.text}`} />
+                      {inProgress && (
+                        <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse ring-2 ring-white" />
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <p className={`font-semibold text-sm ${past ? "text-muted-foreground line-through" : isNext ? "text-primary" : "text-foreground"}`}>{service.name}</p>
-                        {isNext && (
+                        <p className={`font-semibold text-sm ${past && !inProgress ? "text-muted-foreground line-through" : inProgress ? "text-emerald-700" : isNext ? "text-primary" : "text-foreground"}`}>{service.name}</p>
+                        {inProgress && (
+                          <span className="text-[9px] font-bold uppercase tracking-wider text-white bg-emerald-500 px-1.5 py-0.5 rounded-full animate-pulse">Live</span>
+                        )}
+                        {isNext && !inProgress && (
                           <span className="text-[9px] font-bold uppercase tracking-wider text-white bg-primary px-1.5 py-0.5 rounded-full">Next</span>
                         )}
                       </div>
                       {service.note && (
                         <p className="text-xs text-muted-foreground mt-0.5">{service.note}</p>
                       )}
-                      {past && (
+                      {inProgress && (
+                        <p className="text-[10px] font-medium text-emerald-600 mt-0.5">In progress now</p>
+                      )}
+                      {past && !inProgress && (
                         <p className="text-[10px] font-medium text-muted-foreground mt-0.5">Completed</p>
                       )}
                     </div>
                     <div className="shrink-0 text-right">
                       {service.time && (
-                        <span className={`text-sm font-bold ${past ? "text-muted-foreground" : isNext ? "text-primary" : colors.text} tabular-nums`}>
+                        <span className={`text-sm font-bold ${past && !inProgress ? "text-muted-foreground" : inProgress ? "text-emerald-600" : isNext ? "text-primary" : colors.text} tabular-nums`}>
                           {service.time}
                         </span>
                       )}
-                      {isNext && nextServiceCountdown && (
+                      {isNext && !inProgress && nextServiceCountdown && (
                         <p className="text-[10px] font-medium text-primary/70 mt-0.5">{nextServiceCountdown}</p>
                       )}
                     </div>
