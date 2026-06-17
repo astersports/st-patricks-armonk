@@ -259,7 +259,7 @@ export function NowStatusBar() {
                     ${item.isCurrent
                       ? "bg-primary/10 text-primary ring-1 ring-primary/20"
                       : item.isPast
-                        ? "bg-muted/40 text-muted-foreground line-through opacity-60"
+                        ? "bg-muted/40 text-muted-foreground opacity-60"
                         : "bg-muted/60 text-foreground/70"
                     }
                   `}

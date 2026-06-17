@@ -47,7 +47,7 @@ export function ServiceCard({ svc, idx, isPast, isLive, isNext, countdown, progr
       </div>
       <div className="flex-1 min-w-0">
         <span className={`text-sm font-medium flex items-center gap-1.5 ${
-          isPast ? "text-muted-foreground line-through" : "text-foreground"
+          isPast ? "text-muted-foreground" : "text-foreground"
         }`}>
           {svc.label}
           {isLive && (
@@ -89,7 +89,7 @@ export function ServiceCard({ svc, idx, isPast, isLive, isNext, countdown, progr
       )}
       <div className="text-right">
         <span className={`text-sm font-bold ${
-          isPast ? "text-muted-foreground/50 line-through" : style.color
+          isPast ? "text-muted-foreground/50" : style.color
         }`}>
           {svc.time}
         </span>

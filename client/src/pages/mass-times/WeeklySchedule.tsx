@@ -143,7 +143,7 @@ export function WeeklySchedule() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <p className={`font-semibold text-sm ${past && !inProgress ? "text-muted-foreground line-through" : inProgress ? "text-emerald-700" : isNext ? "text-primary" : "text-foreground"}`}>{service.name}</p>
+                    <p className={`font-semibold text-sm ${past && !inProgress ? "text-muted-foreground" : inProgress ? "text-emerald-700" : isNext ? "text-primary" : "text-foreground"}`}>{service.name}</p>
                     {inProgress && <span className="text-[9px] font-bold uppercase tracking-wider text-white bg-emerald-500 px-1.5 py-0.5 rounded-full animate-pulse">Live</span>}
                     {isNext && !inProgress && <span className="text-[9px] font-bold uppercase tracking-wider text-white bg-primary px-1.5 py-0.5 rounded-full">Next</span>}
                   </div>
