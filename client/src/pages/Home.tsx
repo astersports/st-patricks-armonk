@@ -8,6 +8,7 @@ import { PrayerWall } from "@/components/PrayerWall";
 import { LiturgicalSeasonBadge } from "@/components/LiturgicalSeasonBadge";
 import { WeatherBadge, ParkingAdvisory } from "@/components/WeatherBadge";
 import { ThisWeekAccordion } from "@/components/ThisWeekAccordion";
+import { SectionHeader } from "@/components/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -269,16 +270,17 @@ function LatestNewsEditorial({ newsItems }: { newsItems: any[] | undefined }) {
 
   return (
     <div>
-      {/* Section header */}
-      <div className="flex items-end justify-between mb-4">
-        <div>
-          <p className="text-gold text-xs font-semibold tracking-[0.15em] uppercase mb-1">Parish Life</p>
-          <h2 className="font-serif text-xl sm:text-2xl font-bold text-foreground" style={{ letterSpacing: '-0.02em' }}>Latest News</h2>
-        </div>
-        <Link href="/news" className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1 pb-1 border-b border-primary/30 hover:border-primary transition-colors">
-          All News <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
-      </div>
+      <SectionHeader
+        icon={Newspaper}
+        title="Latest News"
+        label="Parish Life"
+        size="lg"
+        action={
+          <Link href="/news" className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1 pb-1 border-b border-primary/30 hover:border-primary transition-colors">
+            All News <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        }
+      />
 
       {/* News grid: featured + secondary */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -495,16 +497,16 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
 
   return (
     <div className="px-4 py-3">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <Clock className="w-4 h-4 text-primary" />
-          <span className="font-serif text-lg font-bold text-foreground">Coming Up</span>
-        </div>
-        <Link href="/calendar" className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1">
-          View Full Calendar <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
-      </div>
+      <SectionHeader
+        icon={Clock}
+        title="Coming Up"
+        size="sm"
+        action={
+          <Link href="/calendar" className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1 pb-1 border-b border-primary/30 hover:border-primary transition-colors">
+            View Full Calendar <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        }
+      />
 
       {/* Category filter chips — refined */}
       <div className="flex flex-wrap gap-1.5 pb-3 mb-3 border-b border-border/30">
@@ -537,8 +539,8 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
             const evtWeather = weatherData?.[evtKey];
             return (
               <div key={evt.id || i} className="group py-2 px-2 -mx-2 rounded-lg hover:bg-muted/40 transition-colors">
-                <div className="flex items-center gap-3">
-                  <Link href="/calendar" className="flex items-center gap-3 flex-1 min-w-0">
+                <div className="flex items-start sm:items-center gap-3">
+                  <Link href="/calendar" className="flex items-start sm:items-center gap-3 flex-1 min-w-0">
                     {/* Date badge */}
                     <div className={`w-10 h-10 rounded-lg ${colors.bg} flex flex-col items-center justify-center shrink-0`}>
                       <span className="text-[10px] font-bold uppercase leading-none text-primary/70">
@@ -550,12 +552,16 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
                     </div>
                     {/* Event info */}
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-foreground text-base leading-snug group-hover:text-primary transition-colors">
+                      <p className="font-semibold text-foreground text-sm sm:text-base leading-snug group-hover:text-primary transition-colors">
                         {evt.title}
                       </p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-xs sm:text-sm text-muted-foreground">
                         {evt.location || format(eventDate, "EEEE \u00b7 h:mm a")}
                       </p>
+                      {/* Countdown — below title on mobile */}
+                      <span className="inline-flex sm:hidden text-[11px] font-medium text-gold bg-gold/15 px-2 py-0.5 rounded-full mt-1">
+                        {countdown}
+                      </span>
                     </div>
                   </Link>
                   {/* Add to Calendar */}
@@ -574,8 +580,8 @@ function ComingUpFiltered({ events, catColors }: { events: any[]; catColors: Rec
                   >
                     <CalendarPlus className="w-4 h-4" />
                   </button>
-                  {/* Countdown */}
-                  <span className="text-xs font-medium text-gold bg-gold/15 px-2 py-0.5 rounded-full shrink-0 whitespace-nowrap">
+                  {/* Countdown — inline on desktop */}
+                  <span className="hidden sm:inline-flex text-xs font-medium text-gold bg-gold/15 px-2 py-0.5 rounded-full shrink-0 whitespace-nowrap">
                     {countdown}
                   </span>
                 </div>
@@ -665,17 +671,16 @@ function ThisWeeksBulletin() {
 
   return (
     <section className="reveal container mb-6 sm:mb-8">
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
-            <BookOpen className="w-3.5 h-3.5 text-primary" />
-          </div>
-          <h2 className="font-serif text-base sm:text-lg font-bold text-foreground">This Week's Bulletin</h2>
-        </div>
-        <Link href="/bulletins" className="text-sm text-primary hover:underline font-medium flex items-center gap-1">
-          All Bulletins <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
-      </div>
+      <SectionHeader
+        icon={BookOpen}
+        title="This Week's Bulletin"
+        size="sm"
+        action={
+          <Link href="/bulletins" className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1 pb-1 border-b border-primary/30 hover:border-primary transition-colors">
+            All Bulletins <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        }
+      />
 
       {showReader ? (
         <BulletinBookReader
@@ -733,14 +738,7 @@ function PhotoGallerySection() {
   if (isLoading) {
     return (
       <div>
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Camera className="w-3.5 h-3.5 text-primary" />
-            </div>
-            <h2 className="font-serif text-base sm:text-lg font-bold text-foreground">Photo Gallery</h2>
-          </div>
-        </div>
+        <SectionHeader icon={Camera} title="Photo Gallery" size="sm" />
         <div className="flex gap-2 overflow-hidden">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="shrink-0 w-40 h-28 rounded-lg bg-muted animate-pulse" />
@@ -753,17 +751,16 @@ function PhotoGallerySection() {
   if (!photos || photos.length === 0) {
     return (
       <div>
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Camera className="w-3.5 h-3.5 text-primary" />
-            </div>
-            <h2 className="font-serif text-base sm:text-lg font-bold text-foreground">Photo Gallery</h2>
-          </div>
-          <Link href="/gallery" className="text-sm text-primary font-medium inline-flex items-center gap-1 hover:underline">
-            View All <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
+        <SectionHeader
+          icon={Camera}
+          title="Photo Gallery"
+          size="sm"
+          action={
+            <Link href="/gallery" className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1 pb-1 border-b border-primary/30 hover:border-primary transition-colors">
+              View All <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          }
+        />
         <Card className="border-dashed">
           <CardContent className="p-5 flex flex-col items-center text-center">
             <ImageIcon className="w-8 h-8 text-muted-foreground/40 mb-1.5" />
@@ -776,17 +773,16 @@ function PhotoGallerySection() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
-            <Camera className="w-4 h-4 text-primary" />
-          </div>
-          <h2 className="font-serif text-lg font-bold text-foreground">Photo Gallery</h2>
-        </div>
-        <Link href="/gallery" className="text-sm text-primary font-medium inline-flex items-center gap-1 hover:underline">
-          View All <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
-      </div>
+      <SectionHeader
+        icon={Camera}
+        title="Photo Gallery"
+        size="md"
+        action={
+          <Link href="/gallery" className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1 pb-1 border-b border-primary/30 hover:border-primary transition-colors">
+            View All <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        }
+      />
       <div className="relative">
         <div className="flex gap-3 overflow-x-auto pb-3 scrollbar-hide snap-x snap-mandatory">
           {photos.map((photo) => (
@@ -872,26 +868,23 @@ function SaintOfDayCard() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-gold/10 flex items-center justify-center">
-            <svg className="w-3.5 h-3.5 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="8" r="5" />
-              <path d="M12 13v8" />
-              <path d="M9 18h6" />
-            </svg>
-          </div>
-          <h2 className="font-serif text-base sm:text-lg font-bold text-foreground">Saint of the Day</h2>
-        </div>
-        <a
-          href="https://www.evangelizo.org"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1 transition-colors"
-        >
-          Evangelizo.org <ArrowRight className="w-3.5 h-3.5" />
-        </a>
-      </div>
+      <SectionHeader
+        icon={Cross}
+        title="Saint of the Day"
+        size="sm"
+        iconBg="bg-gold/10"
+        iconColor="text-gold"
+        action={
+          <a
+            href="https://www.evangelizo.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1 transition-colors"
+          >
+            Evangelizo.org <ArrowRight className="w-3.5 h-3.5" />
+          </a>
+        }
+      />
       <Card className="border-border/50 shadow-sm overflow-hidden">
         <CardContent className="p-3 sm:p-4">
           <div className="flex gap-3">
@@ -1223,11 +1216,11 @@ function CatholicResources() {
       {/* Header with stats bar */}
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
             <Rss className="w-4 h-4 text-primary" />
           </div>
           <div>
-            <h2 className="font-serif text-lg font-bold text-foreground">Catholic Resources</h2>
+            <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground" style={{ letterSpacing: '-0.02em' }}>Catholic Resources</h2>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span>{SOURCES.length} Sources</span>
               <span>·</span>

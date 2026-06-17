@@ -44,6 +44,19 @@ const DAILY_SCHEDULE: Record<number, ScheduleItem[]> = {
   ],
 };
 
+// Service durations in minutes
+const SERVICE_DURATION: Record<string, number> = {
+  mass: 60,
+  confession: 45,
+  prayer: 30,
+};
+
+function parseServiceMinutes(time: string): number {
+  const [timePart, ampm] = time.split(" ");
+  const [h, m] = timePart.split(":").map(Number);
+  return (ampm === "PM" && h !== 12 ? h + 12 : h === 12 && ampm === "AM" ? 0 : h) * 60 + m;
+}
+
 const typeStyles = {
   mass: { icon: Church, color: "text-primary", bg: "bg-primary/10", borderColor: "border-l-primary" },
   confession: { icon: Cross, color: "text-purple-600", bg: "bg-purple-500/10", borderColor: "border-l-purple-500" },
@@ -78,35 +91,49 @@ export function ThisWeekAccordion() {
 
   const [selectedIndex, setSelectedIndex] = useState<number>(0); // Start on today
 
-  // Compute countdown for each service within 24 hours (today or selected day)
+  // Compute countdown and in-progress state for each service
   const [countdowns, setCountdowns] = useState<Record<number, string>>({});
+  const [inProgress, setInProgress] = useState<Record<number, string>>({});
   useEffect(() => {
     function computeCountdowns() {
       const et = new Date(new Date().toLocaleString("en-US", { timeZone: TIMEZONE }));
       const currentMin = et.getHours() * 60 + et.getMinutes();
       const selected = days[selectedIndex];
-      if (!selected) { setCountdowns({}); return; }
+      if (!selected) { setCountdowns({}); setInProgress({}); return; }
       const svcs = selected.services;
       const newCountdowns: Record<number, string> = {};
+      const newInProgress: Record<number, string> = {};
       for (let i = 0; i < svcs.length; i++) {
         const svc = svcs[i];
-        const [timePart, ampm] = svc.time.split(" ");
-        const [h, m] = timePart.split(":").map(Number);
-        const svcMin = (ampm === "PM" && h !== 12 ? h + 12 : h === 12 && ampm === "AM" ? 0 : h) * 60 + m;
-        let diff: number;
+        const svcMin = parseServiceMinutes(svc.time);
+        const duration = SERVICE_DURATION[svc.type] || 30;
+
         if (selected.isToday) {
-          diff = svcMin - currentMin;
+          // Check if currently in progress
+          if (currentMin >= svcMin && currentMin < svcMin + duration) {
+            const remaining = (svcMin + duration) - currentMin;
+            newInProgress[i] = `${remaining}m remaining`;
+            continue;
+          }
+          // Check if upcoming
+          const diff = svcMin - currentMin;
+          if (diff > 0 && diff <= 1440) {
+            const hrs = Math.floor(diff / 60);
+            const mins = diff % 60;
+            newCountdowns[i] = hrs > 0 ? `in ${hrs}h ${mins}m` : `in ${mins}m`;
+          }
         } else {
           // For future days, compute minutes until that service
-          diff = (selected.index * 1440) + svcMin - currentMin;
-        }
-        if (diff > 0 && diff <= 1440) { // within 24 hours
-          const hrs = Math.floor(diff / 60);
-          const mins = diff % 60;
-          newCountdowns[i] = hrs > 0 ? `in ${hrs}h ${mins}m` : `in ${mins}m`;
+          const diff = (selected.index * 1440) + svcMin - currentMin;
+          if (diff > 0 && diff <= 1440) {
+            const hrs = Math.floor(diff / 60);
+            const mins = diff % 60;
+            newCountdowns[i] = hrs > 0 ? `in ${hrs}h ${mins}m` : `in ${mins}m`;
+          }
         }
       }
       setCountdowns(newCountdowns);
+      setInProgress(newInProgress);
     }
     computeCountdowns();
     const interval = setInterval(computeCountdowns, 30000);
@@ -212,18 +239,32 @@ export function ThisWeekAccordion() {
               const style = typeStyles[svc.type];
               const Icon = style.icon;
               const countdown = countdowns[idx];
-              const isNext = idx === nextServiceIdx;
+              const progress = inProgress[idx];
+              const isNext = idx === nextServiceIdx && !progress;
+              const isLive = !!progress;
               return (
                 <div
                   key={`svc-${idx}`}
-                  className={`flex items-center gap-3 p-3 rounded-lg border-l-4 ${style.borderColor} ${isNext ? "bg-primary/[0.04] ring-1 ring-primary/20" : "bg-card"} shadow-sm hover:shadow-md transition-all duration-200`}
+                  className={`flex items-center gap-3 p-3 rounded-lg border-l-4 ${style.borderColor} ${
+                    isLive
+                      ? "bg-emerald-50/80 ring-1 ring-emerald-200 dark:bg-emerald-950/20 dark:ring-emerald-800"
+                      : isNext
+                        ? "bg-primary/[0.04] ring-1 ring-primary/20"
+                        : "bg-card"
+                  } shadow-sm hover:shadow-md transition-all duration-200`}
                 >
-                  <div className={`w-9 h-9 rounded-lg ${style.bg} flex items-center justify-center`}>
-                    <Icon className={`w-4 h-4 ${style.color}`} />
+                  <div className={`w-9 h-9 rounded-lg ${isLive ? "bg-emerald-100 dark:bg-emerald-900/30" : style.bg} flex items-center justify-center`}>
+                    <Icon className={`w-4 h-4 ${isLive ? "text-emerald-600" : style.color}`} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <span className="text-sm font-medium text-foreground flex items-center gap-1.5">
                       {svc.label}
+                      {isLive && (
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
+                          <span className="relative flex h-1.5 w-1.5"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-50" /><span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" /></span>
+                          Live
+                        </span>
+                      )}
                       {isNext && (
                         <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-primary/15 text-primary">
                           <span className="relative flex h-1.5 w-1.5"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-50" /><span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" /></span>
@@ -231,7 +272,10 @@ export function ThisWeekAccordion() {
                         </span>
                       )}
                     </span>
-                    {countdown && (
+                    {isLive && (
+                      <span className="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5 block font-medium">{progress}</span>
+                    )}
+                    {countdown && !isLive && (
                       <span className="text-xs text-muted-foreground mt-0.5 block">{countdown}</span>
                     )}
                   </div>

@@ -696,3 +696,9 @@
 - [x] Standardize icon containers (rounded-full → rounded-lg)
 - [x] Fix section header sizes (Bulletin, Photo Gallery → text-base sm:text-lg)
 - [x] Fix day tab touch targets (min-w-[44px], reduced gap)
+
+## Three Enhancement Suggestions
+
+- [x] Create reusable SectionHeader component (icon + label + title + action) and apply across all homepage sections
+- [x] Add "Mass in progress" live state to ThisWeekAccordion (replaces countdown when service is active)
+- [x] Make Coming Up event rows responsive (countdown pills below title on mobile to prevent text wrapping)
