@@ -1,176 +1,32 @@
+/**
+ * Bulletins Page — Latest bulletin reader, subscribe CTA, and archive.
+ */
+
 import PageLayout from "@/components/PageLayout";
 import { trpc } from "@/lib/trpc";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FileText, Download, Calendar, ExternalLink, ChevronLeft, ChevronRight, Mail, Bell, CheckCircle2, Share2, Link2, Copy, Filter, X, Search, Eye } from "lucide-react";
+import { FileText, Download, Calendar, ChevronLeft, Mail, Share2, Link2, Copy } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import BulletinBookReader from "@/components/BulletinBookReader";
 import PageHeader from "@/components/PageHeader";
-
-const MONTH_NAMES = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
-
-function BulletinSubscribeCTA() {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-
-  const subscribeMutation = trpc.subscriptions.subscribe.useMutation({
-    onSuccess: (data) => {
-      setSubmitted(true);
-      toast.success(data.message || "You're subscribed!");
-    },
-    onError: (err) => {
-      toast.error(err.message || "Something went wrong. Please try again.");
-    },
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) {
-      toast.error("Please enter your email address");
-      return;
-    }
-    subscribeMutation.mutate({
-      email,
-      name: name || undefined,
-      subscribedToBulletins: true,
-      subscribedToNews: true,
-    });
-  };
-
-  if (submitted) {
-    return (
-      <div className="rounded-xl bg-primary/5 border border-primary/10 p-4 sm:p-6 text-center">
-        <CheckCircle2 className="w-6 h-6 text-primary mx-auto mb-2" />
-        <h3 className="font-serif text-base font-bold mb-1">You're Subscribed!</h3>
-        <p className="text-muted-foreground text-xs">
-          You'll receive the weekly bulletin in your inbox every Sunday.
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="rounded-xl bg-primary/5 border border-primary/10 p-4 sm:p-6">
-      <div className="flex items-center gap-2 mb-3">
-        <Bell className="w-4 h-4 text-primary" />
-        <span className="text-xs font-bold uppercase tracking-wider text-primary">Never Miss a Bulletin</span>
-      </div>
-      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
-        <div className="relative flex-1">
-          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/60" />
-          <Input
-            type="email"
-            placeholder="Your email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="pl-9 h-9 text-sm"
-            required
-          />
-        </div>
-        <Input
-          type="text"
-          placeholder="Name (optional)"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="h-9 text-sm sm:w-40"
-        />
-        <Button type="submit" size="sm" className="h-9 gap-1.5 text-sm px-4" disabled={subscribeMutation.isPending}>
-          {subscribeMutation.isPending ? "..." : "Subscribe"}
-        </Button>
-      </form>
-      <p className="text-xs text-muted-foreground/60 mt-2">Unsubscribe anytime.</p>
-    </div>
-  );
-}
-
-const ITEMS_PER_PAGE = 20;
+import { BulletinSubscribeCTA } from "./bulletins/BulletinSubscribeCTA";
+import { BulletinArchive } from "./bulletins/BulletinArchive";
 
 export default function Bulletins() {
   const { data: bulletins, isLoading } = trpc.bulletins.listPublished.useQuery();
-  const [selectedYear, setSelectedYear] = useState<string>("all");
-  const [selectedMonth, setSelectedMonth] = useState<string>("all");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
   const [viewingBulletin, setViewingBulletin] = useState<typeof bulletins extends (infer T)[] | undefined ? T | null : null>(null);
 
   const latestBulletin = bulletins?.[0];
   const archiveBulletins = bulletins?.slice(1) || [];
-
-  // Get available years from archive
-  const availableYears = useMemo(() => {
-    const years = new Set<number>();
-    archiveBulletins.forEach((b) => {
-      years.add(new Date(b.weekDate).getFullYear());
-    });
-    return Array.from(years).sort((a, b) => b - a);
-  }, [archiveBulletins]);
-
-  // Get available months for the selected year
-  const availableMonths = useMemo(() => {
-    if (selectedYear === "all") {
-      return Array.from({ length: 12 }, (_, i) => i);
-    }
-    const months = new Set<number>();
-    archiveBulletins.forEach((b) => {
-      const d = new Date(b.weekDate);
-      if (d.getFullYear() === Number(selectedYear)) {
-        months.add(d.getMonth());
-      }
-    });
-    return Array.from(months).sort((a, b) => b - a);
-  }, [archiveBulletins, selectedYear]);
-
-  // Filter archive bulletins
-  const filteredBulletins = useMemo(() => {
-    const query = searchQuery.toLowerCase().trim();
-    return archiveBulletins.filter((b) => {
-      const d = new Date(b.weekDate);
-      if (selectedYear !== "all" && d.getFullYear() !== Number(selectedYear)) return false;
-      if (selectedMonth !== "all" && d.getMonth() !== Number(selectedMonth)) return false;
-      if (query) {
-        const titleMatch = b.title?.toLowerCase().includes(query);
-        const descMatch = b.description?.toLowerCase().includes(query);
-        const dateStr = format(d, "MMMM d, yyyy").toLowerCase();
-        const dateMatch = dateStr.includes(query);
-        if (!titleMatch && !descMatch && !dateMatch) return false;
-      }
-      return true;
-    });
-  }, [archiveBulletins, selectedYear, selectedMonth, searchQuery]);
-
-  const hasActiveFilter = selectedYear !== "all" || selectedMonth !== "all" || searchQuery.trim() !== "";
-
-  // Pagination
-  const totalItems = filteredBulletins.length;
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-  const paginatedBulletins = useMemo(() => {
-    const start = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredBulletins.slice(start, start + ITEMS_PER_PAGE);
-  }, [filteredBulletins, currentPage]);
-
-  const clearFilters = () => {
-    setSelectedYear("all");
-    setSelectedMonth("all");
-    setSearchQuery("");
-    setCurrentPage(1);
-  };
-
-  // The bulletin currently being read (either latest or one from archive)
   const activeBulletin = viewingBulletin || latestBulletin;
 
   return (
     <PageLayout>
-      {/* Page Header — refined */}
       <PageHeader
         eyebrow="Weekly Bulletin"
         title="Parish Bulletin"
@@ -251,164 +107,15 @@ export default function Bulletins() {
               </Card>
             </div>
 
-            {/* Subscribe CTA — compact */}
+            {/* Subscribe CTA */}
             <BulletinSubscribeCTA />
 
-            {/* Archive — Vertical List */}
+            {/* Archive */}
             {archiveBulletins.length > 0 && (
-              <div>
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
-                  <h3 className="font-serif text-lg font-bold text-foreground">Past Bulletins</h3>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <Select value={selectedYear} onValueChange={(v) => { setSelectedYear(v); setSelectedMonth("all"); setCurrentPage(1); }}>
-                      <SelectTrigger className="w-[100px] h-8 text-xs">
-                        <SelectValue placeholder="Year" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Years</SelectItem>
-                        {availableYears.map((year) => (
-                          <SelectItem key={year} value={String(year)}>{year}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Select value={selectedMonth} onValueChange={(v) => { setSelectedMonth(v); setCurrentPage(1); }}>
-                      <SelectTrigger className="w-[110px] h-8 text-xs">
-                        <SelectValue placeholder="Month" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Months</SelectItem>
-                        {availableMonths.map((month) => (
-                          <SelectItem key={month} value={String(month)}>{MONTH_NAMES[month]}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {hasActiveFilter && (
-                      <Button variant="ghost" size="sm" onClick={clearFilters} className="h-8 px-2 text-xs text-muted-foreground">
-                        <X className="w-3 h-3 mr-1" /> Clear
-                      </Button>
-                    )}
-                  </div>
-                </div>
-
-                {/* Search */}
-                <div className="relative mb-3">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/60" />
-                  <Input
-                    type="text"
-                    placeholder="Search bulletins..."
-                    value={searchQuery}
-                    onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-                    className="pl-9 h-8 text-sm"
-                  />
-                  {searchQuery && (
-                    <button onClick={() => { setSearchQuery(""); setCurrentPage(1); }} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/60 hover:text-foreground">
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-
-                {hasActiveFilter && (
-                  <p className="text-xs text-muted-foreground mb-3">
-                    {filteredBulletins.length} bulletin{filteredBulletins.length !== 1 ? "s" : ""} found
-                  </p>
-                )}
-
-                {filteredBulletins.length === 0 ? (
-                  <div className="text-center py-6 text-muted-foreground">
-                    <FileText className="w-6 h-6 mx-auto mb-2 opacity-40" />
-                    <p className="text-xs">No bulletins found.</p>
-                    <Button variant="link" size="sm" onClick={clearFilters} className="mt-1 text-xs">Clear filters</Button>
-                  </div>
-                ) : (
-                  <div>
-                    {/* Vertical list of bulletin rows */}
-                    <div className="divide-y divide-border/50 border rounded-lg overflow-hidden">
-                      {paginatedBulletins.map((bulletin) => {
-                        const weekDate = new Date(bulletin.weekDate);
-                        return (
-                          <div
-                            key={bulletin.id}
-                            className="flex items-center gap-3 px-3 py-2.5 hover:bg-muted/30 transition-colors group"
-                          >
-                            {/* Date */}
-                            <div className="w-12 text-center shrink-0">
-                              <p className="text-xs font-bold uppercase text-muted-foreground leading-none">
-                                {format(weekDate, "MMM")}
-                              </p>
-                              <p className="text-lg font-bold text-foreground leading-tight">
-                                {format(weekDate, "d")}
-                              </p>
-                              <p className="text-xs text-muted-foreground leading-none">
-                                {format(weekDate, "yyyy")}
-                              </p>
-                            </div>
-
-                            {/* Title */}
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-foreground truncate">
-                                {bulletin.title || `Bulletin — ${format(weekDate, "MMMM d, yyyy")}`}
-                              </p>
-                              {bulletin.description && (
-                                <p className="text-sm text-muted-foreground truncate">{bulletin.description}</p>
-                              )}
-                            </div>
-
-                            {/* Actions */}
-                            <div className="flex items-center gap-1 shrink-0">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-7 w-7 p-0 text-muted-foreground hover:text-primary"
-                                onClick={() => setViewingBulletin(bulletin)}
-                                title="Read inline"
-                              >
-                                <Eye className="w-3.5 h-3.5" />
-                              </Button>
-                              <a href={bulletin.pdfUrl} target="_blank" rel="noopener noreferrer">
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-7 w-7 p-0 text-muted-foreground hover:text-primary"
-                                  title="Download PDF"
-                                >
-                                  <Download className="w-3.5 h-3.5" />
-                                </Button>
-                              </a>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    {/* Pagination */}
-                    {totalPages > 1 && (
-                      <div className="flex items-center justify-center gap-3 pt-3">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                          disabled={currentPage === 1}
-                          className="h-7 px-2 text-xs"
-                        >
-                          <ChevronLeft className="w-3 h-3 mr-1" /> Newer
-                        </Button>
-                        <span className="text-xs text-muted-foreground">
-                          {currentPage} / {totalPages}
-                        </span>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                          disabled={currentPage === totalPages}
-                          className="h-7 px-2 text-xs"
-                        >
-                          Older <ChevronRight className="w-3 h-3 ml-1" />
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
+              <BulletinArchive
+                bulletins={archiveBulletins}
+                onViewBulletin={(b) => setViewingBulletin(b as any)}
+              />
             )}
           </div>
         ) : (

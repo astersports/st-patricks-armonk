@@ -1,7 +1,7 @@
 import { useLocation } from "wouter";
 import { Link } from "wouter";
 import { ArrowLeft } from "lucide-react";
-import Navigation from "./Navigation";
+import Navigation from "./navigation";
 import Footer from "./Footer";
 import ScrollToTopButton from "./ScrollToTopButton";
 

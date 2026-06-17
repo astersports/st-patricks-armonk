@@ -31,7 +31,11 @@ A modern parish website for St. Patrick Church in Armonk, NY (29 Cox Avenue, Arm
 │   │   ├── Home.tsx              # Thin composition (95 lines) — imports from home/
 │   │   ├── home/                 # Homepage section components
 │   │   │   ├── HeroSection.tsx       (215 lines) — Hero image, weather widget, CTA buttons
-│   │   │   ├── NowAtStPatrick.tsx    (406 lines) — News highlight, Sunday preview, Coming Up
+│   │   │   ├── NowAtStPatrick.tsx    (40 lines) — Thin composition importing sub-sections
+│   │   │   ├── now-sections/
+│   │   │   │   ├── ThisSundayPreview.tsx  (68 lines) — Sunday Mass readings preview
+│   │   │   │   ├── ComingUpFiltered.tsx  (173 lines) — Filtered events list with weather
+│   │   │   │   └── LatestNewsEditorial.tsx (133 lines) — Featured + secondary news
 │   │   │   ├── CatholicResources.tsx (197 lines) — Resource links section
 │   │   │   ├── DailyReadings.tsx     (164 lines) — USCCB readings display
 │   │   │   ├── JourneyCardsSection.tsx (103 lines) — 4 journey navigation cards
@@ -60,17 +64,39 @@ A modern parish website for St. Patrick Church in Armonk, NY (29 Cox Avenue, Arm
 │   │   │   ├── CcdPermissionsManager.tsx (74 lines) — CCD permissions
 │   │   │   ├── ParishRegistrationsManager.tsx (65 lines) — Parish registrations
 │   │   │   └── index.ts             — Barrel exports
-│   │   ├── AllCalendars.tsx      (~400 lines) — Combined calendar with filters
-│   │   ├── MassTimes.tsx         (~300 lines) — Mass schedule
+│   │   ├── AllCalendars.tsx      (257 lines) — Thin composition importing from calendars/
+│   │   ├── calendars/
+│   │   │   ├── calendarData.ts       (79 lines) — Types, constants, utilities
+│   │   │   ├── FilterNav.tsx         (86 lines) — Sticky source filter tabs
+│   │   │   └── EventCard.tsx         (113 lines) — Individual event row
+│   │   ├── MassTimes.tsx         (32 lines) — Thin composition importing from mass-times/
+│   │   ├── mass-times/
+│   │   │   ├── scheduleData.ts       (237 lines) — Types, schedule constants, utilities
+│   │   │   ├── WeeklySchedule.tsx    (171 lines) — Interactive day tabs + service cards
+│   │   │   ├── AtAGlance.tsx         (51 lines) — Quick reference grid
+│   │   │   ├── WhatToExpect.tsx      (73 lines) — First-time visitor info
+│   │   │   └── HolyDayAlert.tsx      (38 lines) — Holy day announcement
+│   │   ├── Bulletins.tsx         (136 lines) — Thin composition importing from bulletins/
+│   │   ├── bulletins/
+│   │   │   ├── BulletinSubscribeCTA.tsx (85 lines) — Email subscribe form
+│   │   │   └── BulletinArchive.tsx   (190 lines) — Filterable paginated archive
 │   │   ├── Sacraments.tsx        (~500 lines) — Sacrament info + forms
 │   │   ├── FaithFormation.tsx    (~400 lines) — CCD, Teen Life, RCIA
 │   │   ├── Staff.tsx             (~400 lines) — Staff directory
 │   │   └── Giving.tsx            (~200 lines) — Online giving
 │   ├── components/               # Reusable UI components
-│   │   ├── ThisWeekAccordion.tsx     — Week view with day tabs
+│   │   ├── navigation/              — Split navigation module
+│   │   │   ├── menuData.ts           (142 lines) — Menu structure and data
+│   │   │   ├── DesktopNav.tsx        (70 lines) — Desktop dropdown navigation
+│   │   │   ├── MobileMenu.tsx        (180 lines) — Mobile slide-out menu
+│   │   │   ├── Navigation.tsx        (153 lines) — Main navigation wrapper
+│   │   │   └── index.ts              — Barrel export
+│   │   ├── this-week/               — Split This Week module
+│   │   │   ├── scheduleConfig.ts     (62 lines) — Schedule data and utilities
+│   │   │   └── ServiceCard.tsx       (99 lines) — Individual service row
+│   │   ├── ThisWeekAccordion.tsx     (227 lines) — Thin composition importing from this-week/
 │   │   ├── TimelineFeed.tsx          — Timeline event list
 │   │   ├── WeatherIcons.tsx          — SVG weather icons (day + night)
-│   │   ├── Header.tsx                — Site navigation
 │   │   ├── Footer.tsx                — Site footer
 │   │   ├── MobileBottomNav.tsx       — Bottom tab bar
 │   │   └── ui/                       — shadcn/ui primitives
@@ -96,8 +122,16 @@ A modern parish website for St. Patrick Church in Armonk, NY (29 Cox Avenue, Arm
 │   │   ├── subscriptions.ts          (46 lines) — Email subscriptions
 │   │   ├── weather.ts                (30 lines) — Weather endpoints
 │   │   └── auth.ts                   (22 lines) — Auth/logout
-│   ├── db.ts                     (961 lines) — Database query helpers
-│   ├── weather.ts                (200 lines) — Open-Meteo API integration
+│   ├── db/                       # Split database query helpers by domain
+│   │   ├── index.ts                  — Barrel re-exports all query functions
+│   │   ├── news.ts, bulletins.ts, events.ts, etc. (~20-120 lines each)
+│   ├── weather/                  # Split weather module
+│   │   ├── index.ts                  — Barrel re-exports
+│   │   ├── types.ts                  (70 lines) — Shared types and interfaces
+│   │   ├── helpers.ts                (75 lines) — Caching, geocoding, utilities
+│   │   ├── current.ts                (96 lines) — Current conditions
+│   │   ├── daily.ts                  (83 lines) — 7-day daily forecast
+│   │   └── forecast.ts              (257 lines) — Hourly forecast + event weather
 │   ├── notifications.ts          (~50 lines) — CCD reminder notifications
 │   ├── icsParser.ts              (136 lines) — Google Calendar ICS parser
 │   ├── dailyReadings.ts          (~100 lines) — USCCB daily readings
@@ -133,11 +167,23 @@ The codebase is organized into small, focused files (most under 200 lines). When
 - Optimistic updates vs invalidation
 - Error feedback to user
 
-**For `server/weather.ts`:** Check caching logic, API error handling, timezone handling, and data transformation.
+**Pick any file from `server/weather/`** — each handles one concern (types, caching, current, daily, forecast). Check:
+- API error handling and fallback behavior
+- Cache TTL logic (15-min for current, 30-min for daily)
+- Timezone handling (America/New_York)
+- Data transformation from raw API response
+
+**Pick any file from `server/db/`** — each is a domain-specific query module. Check:
+- Query efficiency and proper Drizzle ORM usage
+- Error handling
+- Return types matching what routers expect
+
+**Pick any file from `client/src/components/navigation/`** — split navigation module. Check:
+- Menu data structure and route correctness
+- Mobile vs desktop rendering
+- Accessibility (keyboard nav, ARIA)
 
 **For `drizzle/schema.ts`:** Check table relationships, index usage, and data types.
-
-**For `server/db.ts`:** Check query efficiency, proper Drizzle ORM usage, and error handling.
 
 ## Data Flow
 
@@ -193,7 +239,7 @@ Frontend refreshes every 30 minutes. Weather widget in hero shows current condit
 ## Common Patterns
 
 - All API calls use tRPC procedures (never raw fetch)
-- Database queries go through `server/db.ts` helpers
+- Database queries go through `server/db/` domain helpers (barrel-exported via `server/db/index.ts`)
 - Forms use React Hook Form + Zod validation
 - Loading states use skeleton components
 - Errors show toast notifications via Sonner

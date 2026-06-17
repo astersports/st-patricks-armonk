@@ -734,3 +734,13 @@
 - [x] Split pages/Admin.tsx (1751 lines) into 16 focused manager components (~65-402 lines each)
 - [x] Verify all tests pass after refactor (31/31 pass)
 - [x] Run Claude review on refactored files to confirm reviewability (7/10 score on news.ts — clear, auditable in isolation)
+- [x] Split server/db.ts (961 lines) into 15 domain-specific query files (~20-120 lines each)
+- [x] Identify remaining files over 400 lines (7 files found)
+- [x] Split server/weather.ts (552 lines) into current, forecast, and helpers
+- [x] Split Navigation.tsx (515 lines) into desktop nav, mobile nav, and menu data
+- [x] Split MassTimes.tsx (594 lines) into sub-components
+- [x] Split AllCalendars.tsx (537 lines) into calendar views
+- [x] Split Bulletins.tsx (429 lines) into list view + reader
+- [x] Split ThisWeekAccordion.tsx (420 lines) into day tabs + event list
+- [x] Split NowAtStPatrick.tsx (406 lines) into individual sub-sections
+- [x] Update ARCHITECTURE.md with final file structure
