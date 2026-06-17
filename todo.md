@@ -667,3 +667,12 @@
 - [x] Add "This Sunday" preview card to Coming Up section (readings, celebrant, or special intentions)
 - [x] Pin calendar filter tabs on mobile (sticky when scrolling)
 - [x] Fix sticky positioning across site (changed overflow-x: hidden to overflow-x: clip on html/body)
+
+## Duplicate Banner Removal
+
+- [x] Remove NowStatusBar ("Next Mass in Xh Ym") from middle of homepage (duplicate of This Week schedule info)
+
+## Duplicate Banner Removal & Next-Up Pill
+
+- [x] Remove NowStatusBar ("Next Mass in Xh Ym") floating banner from middle of homepage (duplicate)
+- [x] Add compact "next up" countdown pill inside This Week section (shows next service time + countdown with pulsing dot)

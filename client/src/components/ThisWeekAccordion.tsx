@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Church, Cross, Sun, Calendar, CalendarPlus, Clock } from "lucide-react";
 import { downloadMassICS } from "@/lib/icsGenerator";
 import { format, addDays } from "date-fns";
@@ -78,6 +78,34 @@ export function ThisWeekAccordion() {
 
   const [selectedIndex, setSelectedIndex] = useState<number>(0); // Start on today
 
+  // Next-up countdown for today
+  const [nextUpText, setNextUpText] = useState<string | null>(null);
+  useEffect(() => {
+    function computeNextUp() {
+      const et = new Date(new Date().toLocaleString("en-US", { timeZone: TIMEZONE }));
+      const todayDow = et.getDay();
+      const todayServices = DAILY_SCHEDULE[todayDow] || [];
+      const currentMin = et.getHours() * 60 + et.getMinutes();
+      for (const svc of todayServices) {
+        const [timePart, ampm] = svc.time.split(" ");
+        const [h, m] = timePart.split(":").map(Number);
+        let svcMin = (ampm === "PM" && h !== 12 ? h + 12 : h === 12 && ampm === "AM" ? 0 : h) * 60 + m;
+        if (svcMin > currentMin) {
+          const diff = svcMin - currentMin;
+          const hrs = Math.floor(diff / 60);
+          const mins = diff % 60;
+          const countdown = hrs > 0 ? `${hrs}h ${mins}m` : `${mins}m`;
+          setNextUpText(`${svc.label} at ${svc.time} · in ${countdown}`);
+          return;
+        }
+      }
+      setNextUpText(null);
+    }
+    computeNextUp();
+    const interval = setInterval(computeNextUp, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
   // Fetch 7-day weather forecast for each day
   const weatherInput = useMemo(() => {
     return days.map((day) => ({
@@ -149,8 +177,8 @@ export function ThisWeekAccordion() {
 
       {/* Selected day content */}
       <div className="p-4">
-        {/* Day label with weather */}
-        <div className="flex items-center justify-between mb-3">
+        {/* Day label with weather + next-up countdown */}
+        <div className="flex items-center justify-between mb-1">
           <h3 className="text-base font-bold text-foreground">
             {selectedDayData?.isToday ? "Today" : format(selectedDayData?.date || now, "EEEE")}
           </h3>
@@ -163,6 +191,16 @@ export function ThisWeekAccordion() {
             )}
           </div>
         </div>
+
+        {/* Next-up countdown pill for today */}
+        {selectedDayData?.isToday && nextUpText && (
+          <div className="mb-3">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+              <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-50" /><span className="relative inline-flex rounded-full h-2 w-2 bg-primary" /></span>
+              {nextUpText}
+            </span>
+          </div>
+        )}
 
         {/* Services list */}
         {services.length > 0 && (

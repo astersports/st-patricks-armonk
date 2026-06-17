@@ -5,7 +5,6 @@ import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin
 import { downloadICS } from "@/lib/icsGenerator";
 import BulletinBookReader from "@/components/BulletinBookReader";
 import { PrayerWall } from "@/components/PrayerWall";
-import { NowStatusBar } from "@/components/NowStatusBar";
 import { LiturgicalSeasonBadge } from "@/components/LiturgicalSeasonBadge";
 import { WeatherBadge, ParkingAdvisory } from "@/components/WeatherBadge";
 import { ThisWeekAccordion } from "@/components/ThisWeekAccordion";
@@ -218,11 +217,6 @@ function NowAtStPatrick({ latestNews, newsItems, allImportantDates }: { latestNe
 
   return (
     <section className="reveal container -mt-10 relative z-20 mb-6 sm:mb-8">
-      {/* Live Status Strip */}
-      <div className="mb-6">
-        <NowStatusBar />
-      </div>
-
       {/* Latest News — Editorial hierarchy: 1 featured + 2 secondary */}
       <LatestNewsEditorial newsItems={newsItems} />
 
