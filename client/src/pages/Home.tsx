@@ -216,7 +216,7 @@ function NowAtStPatrick({ latestNews, newsItems, allImportantDates }: { latestNe
   };
 
   return (
-    <section className="reveal container -mt-10 relative z-20 mb-6 sm:mb-8">
+    <section className="reveal container mt-0 pt-4 sm:pt-6 relative z-20 mb-6 sm:mb-8">
       {/* Latest News — Editorial hierarchy: 1 featured + 2 secondary */}
       <LatestNewsEditorial newsItems={newsItems} />
 
@@ -667,10 +667,10 @@ function ThisWeeksBulletin() {
     <section className="reveal container mb-6 sm:mb-8">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+          <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
             <BookOpen className="w-3.5 h-3.5 text-primary" />
           </div>
-          <h2 className="font-serif text-sm sm:text-base font-bold text-foreground">This Week's Bulletin</h2>
+          <h2 className="font-serif text-base sm:text-lg font-bold text-foreground">This Week's Bulletin</h2>
         </div>
         <Link href="/bulletins" className="text-sm text-primary hover:underline font-medium flex items-center gap-1">
           All Bulletins <ArrowRight className="w-3.5 h-3.5" />
@@ -735,10 +735,10 @@ function PhotoGallerySection() {
       <div>
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+            <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
               <Camera className="w-3.5 h-3.5 text-primary" />
             </div>
-            <h2 className="font-serif text-sm sm:text-base font-bold text-foreground">Photo Gallery</h2>
+            <h2 className="font-serif text-base sm:text-lg font-bold text-foreground">Photo Gallery</h2>
           </div>
         </div>
         <div className="flex gap-2 overflow-hidden">
@@ -755,10 +755,10 @@ function PhotoGallerySection() {
       <div>
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+            <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
               <Camera className="w-3.5 h-3.5 text-primary" />
             </div>
-            <h2 className="font-serif text-sm sm:text-base font-bold text-foreground">Photo Gallery</h2>
+            <h2 className="font-serif text-base sm:text-lg font-bold text-foreground">Photo Gallery</h2>
           </div>
           <Link href="/gallery" className="text-sm text-primary font-medium inline-flex items-center gap-1 hover:underline">
             View All <ArrowRight className="w-3.5 h-3.5" />
@@ -874,7 +874,7 @@ function SaintOfDayCard() {
     <div>
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center">
+          <div className="w-7 h-7 rounded-lg bg-gold/10 flex items-center justify-center">
             <svg className="w-3.5 h-3.5 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="8" r="5" />
               <path d="M12 13v8" />
@@ -1103,7 +1103,7 @@ function JourneyCardsSection() {
           {journeyCards.map((card, i) => (
             <Link key={card.href} href={card.href}>
               <Card
-                className={`group cursor-pointer border-0 shadow-sm border-l-3 ${card.borderColor} card-interactive`}
+                className={`group cursor-pointer border-0 shadow-sm border-l-4 ${card.borderColor} card-interactive`}
                 style={getItemStyle(i)}
               >
                 <CardContent className="p-3 flex items-center gap-3">
@@ -1125,7 +1125,7 @@ function JourneyCardsSection() {
           {journeyCards.map((card, i) => (
             <Link key={card.href} href={card.href}>
               <Card
-                className={`group cursor-pointer h-full border-0 shadow-sm border-l-3 ${card.borderColor} hover-lift`}
+                className={`group cursor-pointer h-full border-0 shadow-sm border-l-4 ${card.borderColor} hover-lift`}
                 style={getItemStyle(i)}
               >
                 <CardContent className="p-3 flex items-center gap-3">
@@ -1375,7 +1375,7 @@ export default function Home() {
         <NowAtStPatrick latestNews={latestNews} newsItems={newsItems} allImportantDates={allImportantDates} />
 
         {/* Pastor's Welcome */}
-        <section className="reveal container py-5 sm:py-8 mb-1 sm:mb-3">
+        <section className="reveal container py-8 sm:py-12 mb-4 sm:mb-6">
           <div className="max-w-2xl mx-auto text-center">
             <div className="w-10 h-0.5 bg-gold mx-auto mb-5" />
             <blockquote className="font-serif text-lg sm:text-xl md:text-2xl text-foreground/90 italic leading-relaxed">
@@ -1397,14 +1397,14 @@ export default function Home() {
         </section>
 
         {/* Catholic Resources — Live Feeds by Source */}
-        <section className="reveal section-cream py-4 sm:py-6 -mx-4 px-4 sm:-mx-0 sm:px-0">
+        <section className="reveal section-cream py-8 sm:py-10 -mx-4 px-4 sm:-mx-0 sm:px-0">
           <div className="container">
             <CatholicResources />
           </div>
         </section>
 
         {/* Daily Readings — Dark Premium Section */}
-        <section className="reveal section-dark-green py-4 sm:py-6 -mx-4 px-4 sm:-mx-0 sm:px-0">
+        <section className="reveal section-dark-green py-8 sm:py-10 -mx-4 px-4 sm:-mx-0 sm:px-0">
           <div className="container">
             <DailyReadings />
           </div>
@@ -1416,7 +1416,7 @@ export default function Home() {
         </section>
 
         {/* Prayer Wall — Light a Candle */}
-        <section className="reveal section-cream py-4 sm:py-6 -mx-4 px-4 sm:-mx-0 sm:px-0">
+        <section className="reveal section-cream py-8 sm:py-10 -mx-4 px-4 sm:-mx-0 sm:px-0">
           <PrayerWall />
         </section>
 

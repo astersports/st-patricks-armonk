@@ -156,14 +156,14 @@ export function ThisWeekAccordion() {
       </div>
 
       {/* Horizontal day tabs — refined with rounded selected state */}
-      <div className="flex gap-1 p-1.5 border-b border-border/30 bg-muted/20">
+      <div className="flex gap-0.5 p-1 border-b border-border/30 bg-muted/20">
         {days.map((day) => {
           const isSelected = selectedIndex === day.index;
           return (
             <button
               key={day.index}
               onClick={() => setSelectedIndex(day.index)}
-              className={`flex-1 py-2 px-1 rounded-lg text-center transition-all duration-200 relative flex flex-col items-center gap-0.5 ${
+              className={`flex-1 min-w-[44px] py-2 px-0.5 rounded-lg text-center transition-all duration-200 relative flex flex-col items-center gap-0.5 ${
                 isSelected
                   ? "bg-primary text-white shadow-md shadow-primary/20"
                   : "hover:bg-muted/60 text-muted-foreground"

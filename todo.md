@@ -684,3 +684,15 @@
 - [x] Add spacing between This Week card and Latest News section on homepage
 - [x] Move countdown directly into each service card (inline with time) instead of separate pill
 - [x] Fix MassTimes page not updating to current day (timezone issue - now uses America/New_York)
+
+## Homepage Spacing & Consistency Review
+
+- [x] Fix overlap between This Week card bottom and Latest News section header
+- [x] Use Claude API to review full homepage for spacing/consistency issues
+- [x] Implement recommended enhancements from Claude review
+- [x] Standardize section padding (py-8 sm:py-10 for full-width sections)
+- [x] Fix Pastor's Welcome breathing room (py-8 sm:py-12, mb-4 sm:mb-6)
+- [x] Fix border-l-3 invalid class → border-l-4
+- [x] Standardize icon containers (rounded-full → rounded-lg)
+- [x] Fix section header sizes (Bulletin, Photo Gallery → text-base sm:text-lg)
+- [x] Fix day tab touch targets (min-w-[44px], reduced gap)
