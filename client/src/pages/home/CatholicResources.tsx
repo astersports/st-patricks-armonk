@@ -49,7 +49,7 @@ export function CatholicResources() {
   const { data: gnFeed, isLoading: gLoading } = trpc.catholicResources.goodNewsroom.useQuery({ limit: 3 });
   const { data: usccbFeed, isLoading: uLoading } = trpc.catholicResources.usccb.useQuery({ limit: 3 });
   const { data: archnyFeed, isLoading: aLoading } = trpc.catholicResources.archny.useQuery({ limit: 3 });
-  const [expandedSources, setExpandedSources] = useState<string[]>([]);
+  const [expandedSources, setExpandedSources] = useState<string[]>(SOURCES.map(s => s.key));
 
   const isLoading = vLoading || gLoading || uLoading || aLoading;
   if (isLoading) return <CatholicResourcesSkeleton />;
