@@ -110,3 +110,76 @@ export async function getDailyReadings(): Promise<DailyReadingsData | null> {
     return cache?.data || null;
   }
 }
+
+interface SundayReadingsData {
+  date: string;
+  dateFormatted: string; // e.g., "June 21, 2026"
+  liturgicTitle: string;
+  firstReading: { title: string };
+  psalm: { title: string };
+  secondReading?: { title: string };
+  gospel: { title: string };
+  daysUntil: number;
+}
+
+let sundayCache: { data: SundayReadingsData; fetchedAt: number; dateKey: string } | null = null;
+
+function getNextSundayDateString(): { dateStr: string; daysUntil: number; formatted: string } {
+  const now = new Date();
+  const eastern = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
+  const dayOfWeek = eastern.getDay(); // 0=Sun
+  
+  // If today is Sunday, use today; otherwise find next Sunday
+  let daysUntil = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
+  
+  const sunday = new Date(eastern);
+  sunday.setDate(sunday.getDate() + daysUntil);
+  
+  const year = sunday.getFullYear();
+  const month = String(sunday.getMonth() + 1).padStart(2, "0");
+  const day = String(sunday.getDate()).padStart(2, "0");
+  
+  const formatted = sunday.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  
+  return { dateStr: `${year}${month}${day}`, daysUntil, formatted };
+}
+
+export async function getSundayReadings(): Promise<SundayReadingsData | null> {
+  const { dateStr, daysUntil, formatted } = getNextSundayDateString();
+  
+  // Return cached data if still valid and for the same Sunday
+  if (sundayCache && sundayCache.dateKey === dateStr && Date.now() - sundayCache.fetchedAt < CACHE_DURATION) {
+    // Update daysUntil in case it changed
+    return { ...sundayCache.data, daysUntil };
+  }
+
+  try {
+    const [liturgicTitle, frTitle, psTitle, gspTitle, srTitle] = await Promise.all([
+      fetchReading(dateStr, "liturgic_t"),
+      fetchReading(dateStr, "reading_lt", "FR"),
+      fetchReading(dateStr, "reading_lt", "PS"),
+      fetchReading(dateStr, "reading_lt", "GSP"),
+      fetchReading(dateStr, "reading_lt", "SR"),
+    ]);
+
+    const data: SundayReadingsData = {
+      date: dateStr,
+      dateFormatted: formatted,
+      liturgicTitle: stripHtmlTags(liturgicTitle) || "Sunday Mass",
+      firstReading: { title: stripHtmlTags(frTitle) || "First Reading" },
+      psalm: { title: stripHtmlTags(psTitle) || "Responsorial Psalm" },
+      gospel: { title: stripHtmlTags(gspTitle) || "Gospel" },
+      daysUntil,
+    };
+
+    if (srTitle) {
+      data.secondReading = { title: stripHtmlTags(srTitle) || "Second Reading" };
+    }
+
+    sundayCache = { data, fetchedAt: Date.now(), dateKey: dateStr };
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch Sunday readings:", error);
+    return sundayCache?.data ? { ...sundayCache.data, daysUntil } : null;
+  }
+}

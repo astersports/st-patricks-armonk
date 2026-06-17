@@ -664,5 +664,6 @@
 - [x] Move "This Week" section above "Coming Up" on homepage
 - [x] Remove Teen Life filter from Coming Up section (folded into Parish)
 - [x] Add animated "Mass in Xh Ym" countdown pill to Today's Readings section
-- [ ] Add "This Sunday" preview card to Coming Up section (readings, celebrant, or special intentions)
-- [ ] Pin calendar filter tabs on mobile (sticky when scrolling)
+- [x] Add "This Sunday" preview card to Coming Up section (readings, celebrant, or special intentions)
+- [x] Pin calendar filter tabs on mobile (sticky when scrolling)
+- [x] Fix sticky positioning across site (changed overflow-x: hidden to overflow-x: clip on html/body)

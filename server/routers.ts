@@ -1199,6 +1199,10 @@ export const appRouter = router({
       const { getDailyReadings } = await import("./dailyReadings");
       return getDailyReadings();
     }),
+    nextSunday: publicProcedure.query(async () => {
+      const { getSundayReadings } = await import("./dailyReadings");
+      return getSundayReadings();
+    }),
   }),
 
   // ===== SAINT OF THE DAY (Evangelizo.org) =====

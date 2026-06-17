@@ -79,7 +79,15 @@
   }
   html {
     scroll-behavior: smooth;
-    overflow-x: hidden;
+    overflow-x: clip;
+    /* Nav height: announcement bar (~36px) + nav bar (64px) = ~100px on mobile */
+    --nav-height: 6.25rem;
+  }
+  @media (min-width: 1024px) {
+    html {
+      /* Desktop: announcement bar (~36px) + nav bar (72px) = ~108px */
+      --nav-height: 6.75rem;
+    }
   }
 
   /* ===== Candle & Prayer Animations ===== */
@@ -126,7 +134,7 @@
     font-family: var(--font-sans);
     color: var(--color-foreground);
     background-color: var(--color-background);
-    overflow-x: hidden;
+    overflow-x: clip;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-size: 16px;

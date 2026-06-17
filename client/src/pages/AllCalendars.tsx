@@ -246,8 +246,8 @@ export default function AllCalendars() {
 
   return (
     <PageLayout hideBackButton>
-      {/* Sticky Nav Bar */}
-      <div className="bg-background border-b border-border/60 sticky top-0 z-30">
+      {/* Sticky Nav Bar — pinned below the global nav on scroll */}
+      <div className="bg-background/95 backdrop-blur-md border-b border-border/60 sticky top-[var(--nav-height,5.5rem)] z-30">
         <div className="container max-w-4xl">
           <div className="flex items-center gap-2 py-2.5">
             {/* Back to Home button */}
