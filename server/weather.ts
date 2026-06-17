@@ -95,11 +95,35 @@ export interface CurrentWeather {
   windSpeed: number;
   isDay: boolean;
   humidity: number;
+  sunrise: string; // e.g. "5:21 AM"
+  sunset: string; // e.g. "8:29 PM"
+}
+
+export interface DailyForecast {
+  date: string; // ISO date e.g. "2026-06-17"
+  high: number;
+  low: number;
+  precipProbabilityMax: number;
+  sunrise: string; // e.g. "5:21 AM"
+  sunset: string; // e.g. "8:29 PM"
+}
+
+// Daily forecast cache (60 min TTL)
+let dailyForecastCache: { data: DailyForecast[]; fetchedAt: number } | null = null;
+const DAILY_CACHE_TTL = 60 * 60 * 1000;
+
+function formatTimeToAMPM(isoTime: string): string {
+  const date = new Date(isoTime);
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? "PM" : "AM";
+  const h = hours % 12 || 12;
+  return minutes === 0 ? `${h} ${ampm}` : `${h}:${minutes.toString().padStart(2, "0")} ${ampm}`;
 }
 
 /**
- * Fetch real-time current weather from Open-Meteo's current_weather endpoint.
- * Uses a separate 15-minute cache for freshness.
+ * Fetch real-time current weather from Open-Meteo's current endpoint.
+ * Also fetches today's sunrise/sunset. Uses a separate 15-minute cache.
  */
 export async function getCurrentWeather(): Promise<CurrentWeather | null> {
   if (currentWeatherCache && Date.now() - currentWeatherCache.fetchedAt < CURRENT_CACHE_TTL) {
@@ -117,9 +141,11 @@ export async function getCurrentWeather(): Promise<CurrentWeather | null> {
       "is_day",
       "relative_humidity_2m",
     ].join(","));
+    url.searchParams.set("daily", "sunrise,sunset");
     url.searchParams.set("temperature_unit", "fahrenheit");
     url.searchParams.set("wind_speed_unit", "mph");
     url.searchParams.set("timezone", "America/New_York");
+    url.searchParams.set("forecast_days", "1");
     const response = await fetch(url.toString());
     if (!response.ok) {
       console.error(`Open-Meteo current weather API error: ${response.status}`);
@@ -128,6 +154,8 @@ export async function getCurrentWeather(): Promise<CurrentWeather | null> {
     const data = await response.json();
     const current = data.current;
     const weatherInfo = getWeatherInfo(current.weather_code);
+    const sunrise = data.daily?.sunrise?.[0] ? formatTimeToAMPM(data.daily.sunrise[0]) : "";
+    const sunset = data.daily?.sunset?.[0] ? formatTimeToAMPM(data.daily.sunset[0]) : "";
     const result: CurrentWeather = {
       temperature: Math.round(current.temperature_2m),
       feelsLike: Math.round(current.apparent_temperature),
@@ -137,12 +165,59 @@ export async function getCurrentWeather(): Promise<CurrentWeather | null> {
       windSpeed: Math.round(current.wind_speed_10m || 0),
       isDay: current.is_day === 1,
       humidity: current.relative_humidity_2m || 0,
+      sunrise,
+      sunset,
     };
     currentWeatherCache = { data: result, fetchedAt: Date.now() };
     return result;
   } catch (error) {
     console.error("Current weather fetch error:", error);
     return currentWeatherCache?.data || null;
+  }
+}
+
+/**
+ * Fetch 7-day daily forecast: high/low temps, precipitation probability, sunrise/sunset.
+ * Cached for 60 minutes.
+ */
+export async function getDailyForecast(): Promise<DailyForecast[]> {
+  if (dailyForecastCache && Date.now() - dailyForecastCache.fetchedAt < DAILY_CACHE_TTL) {
+    return dailyForecastCache.data;
+  }
+  try {
+    const url = new URL("https://api.open-meteo.com/v1/forecast");
+    url.searchParams.set("latitude", ARMONK_LAT.toString());
+    url.searchParams.set("longitude", ARMONK_LON.toString());
+    url.searchParams.set("daily", [
+      "temperature_2m_max",
+      "temperature_2m_min",
+      "precipitation_probability_max",
+      "sunrise",
+      "sunset",
+    ].join(","));
+    url.searchParams.set("temperature_unit", "fahrenheit");
+    url.searchParams.set("timezone", "America/New_York");
+    url.searchParams.set("forecast_days", "7");
+    const response = await fetch(url.toString());
+    if (!response.ok) {
+      console.error(`Open-Meteo daily API error: ${response.status}`);
+      return dailyForecastCache?.data || [];
+    }
+    const data = await response.json();
+    const daily = data.daily;
+    const forecasts: DailyForecast[] = daily.time.map((date: string, i: number) => ({
+      date,
+      high: Math.round(daily.temperature_2m_max[i]),
+      low: Math.round(daily.temperature_2m_min[i]),
+      precipProbabilityMax: daily.precipitation_probability_max[i] || 0,
+      sunrise: formatTimeToAMPM(daily.sunrise[i]),
+      sunset: formatTimeToAMPM(daily.sunset[i]),
+    }));
+    dailyForecastCache = { data: forecasts, fetchedAt: Date.now() };
+    return forecasts;
+  } catch (error) {
+    console.error("Daily forecast fetch error:", error);
+    return dailyForecastCache?.data || [];
   }
 }
 

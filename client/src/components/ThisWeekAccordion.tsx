@@ -199,6 +199,11 @@ export function ThisWeekAccordion() {
     { staleTime: 60 * 60 * 1000 }
   );
 
+  // Fetch 7-day daily forecast for high/low temps
+  const { data: dailyForecast } = trpc.weather.daily.useQuery(undefined, {
+    staleTime: 60 * 60 * 1000,
+  });
+
   // Get the selected day's data
   const selectedDayData = days[selectedIndex];
   const services = selectedDayData?.services || [];
@@ -267,10 +272,17 @@ export function ThisWeekAccordion() {
             {selectedDayData?.isToday ? "Today" : format(selectedDayData?.date || now, "EEEE")}
           </h3>
           <div className="flex items-center gap-2">
+            {dailyForecast?.[selectedIndex] && (
+              <span className="text-[11px] text-muted-foreground font-medium">
+                <span className="text-foreground font-semibold">{dailyForecast[selectedIndex].high}°</span>
+                <span className="mx-0.5">/</span>
+                <span>{dailyForecast[selectedIndex].low}°</span>
+              </span>
+            )}
             {weatherData?.[`day-${selectedIndex}`]?.weather && (
               <WeatherBadge weather={weatherData[`day-${selectedIndex}`].weather!} compact />
             )}
-            {services.length === 0 && (
+            {services.length === 0 && !dailyForecast?.[selectedIndex] && (
               <span className="text-xs text-muted-foreground italic">No services</span>
             )}
           </div>

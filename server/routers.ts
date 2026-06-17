@@ -265,6 +265,11 @@ export const appRouter = router({
       // Get real-time current conditions (15-min cache)
       return getCurrentWeather();
     }),
+    daily: publicProcedure.query(async () => {
+      const { getDailyForecast } = await import("./weather");
+      // 7-day daily forecast: high/low, precip probability, sunrise/sunset
+      return getDailyForecast();
+    }),
   }),
 
   // ===== GOOGLE CALENDAR (ICS) =====

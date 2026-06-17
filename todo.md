@@ -722,3 +722,6 @@
 - [x] Show weather description on mobile (not just temp)
 - [x] Add tap-to-expand popover showing feels-like, humidity, and wind speed
 - [x] Add night-mode weather icons (moon/stars variant when isDay=false)
+- [x] Add sunrise/sunset times to weather popover
+- [x] Add rain alert banner below hero when precipitation probability >60%
+- [x] Add daily high/low temperatures to each day in This Week accordion

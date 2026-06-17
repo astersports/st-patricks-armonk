@@ -1,7 +1,7 @@
 import PageLayout from "@/components/PageLayout";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin, Clock, ExternalLink, Globe, Camera, ImageIcon, BookOpen, Download, RefreshCw, ChevronDown, ChevronLeft, ChevronRight, Rss, CalendarPlus, CloudSun, Wind, Droplets, Thermometer } from "lucide-react";
+import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin, Clock, ExternalLink, Globe, Camera, ImageIcon, BookOpen, Download, RefreshCw, ChevronDown, ChevronLeft, ChevronRight, Rss, CalendarPlus, CloudSun, Wind, Droplets, Thermometer, Sunrise, Sunset, CloudRain } from "lucide-react";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { ColorfulWeatherIcon } from "@/components/WeatherIcons";
 import { downloadICS } from "@/lib/icsGenerator";
@@ -170,7 +170,21 @@ function HeroSection() {
                       <p className="text-xs font-semibold">{currentWeather.windSpeed} mph</p>
                     </div>
                   </div>
+                  <div className="flex items-center gap-1.5">
+                    <Sunrise className="w-3.5 h-3.5 text-amber-500" />
+                    <div>
+                      <p className="text-[10px] text-muted-foreground">Sunrise</p>
+                      <p className="text-xs font-semibold">{currentWeather.sunrise}</p>
+                    </div>
+                  </div>
                 </div>
+                {currentWeather.sunset && (
+                  <div className="flex items-center justify-center gap-1.5 pt-1 border-t border-border/30">
+                    <Sunset className="w-3.5 h-3.5 text-orange-400" />
+                    <span className="text-[10px] text-muted-foreground">Sunset</span>
+                    <span className="text-xs font-semibold">{currentWeather.sunset}</span>
+                  </div>
+                )}
                 <p className="text-[10px] text-muted-foreground text-center pt-1">Armonk, NY · Updated every 15 min</p>
               </div>
             </PopoverContent>
@@ -1406,6 +1420,10 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const { data: newsItems } = trpc.news.listPublished.useQuery();
   const { data: allImportantDates } = trpc.importantDates.allPublished.useQuery();
+  const { data: dailyForecast } = trpc.weather.daily.useQuery(undefined, {
+    staleTime: 30 * 60 * 1000,
+    refetchInterval: 30 * 60 * 1000,
+  });
   const subscribeMutation = trpc.subscriptions.subscribe.useMutation({
     onSuccess: () => {
       toast.success("Successfully subscribed to parish updates!");
@@ -1422,6 +1440,18 @@ export default function Home() {
     <PageLayout>
       {/* Hero Section — Cinematic with Ken Burns + Time Greeting + Next Mass */}
       <HeroSection />
+
+      {/* Rain Alert Banner — shows when today's precipitation probability > 60% */}
+      {dailyForecast && dailyForecast[0]?.precipProbabilityMax > 60 && (
+        <div className="container mt-2 mb-0">
+          <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-200 text-sm">
+            <CloudRain className="w-4 h-4 shrink-0" />
+            <span className="font-medium">Rain likely today</span>
+            <span className="text-blue-600 dark:text-blue-300">·</span>
+            <span className="text-xs">{dailyForecast[0].precipProbabilityMax}% chance — bring an umbrella to Mass</span>
+          </div>
+        </div>
+      )}
 
       <div ref={revealRef}>
         {/* This Week — Day-by-day schedule accordion (worship schedule first) */}
