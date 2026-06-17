@@ -676,3 +676,11 @@
 
 - [x] Remove NowStatusBar ("Next Mass in Xh Ym") floating banner from middle of homepage (duplicate)
 - [x] Add compact "next up" countdown pill inside This Week section (shows next service time + countdown with pulsing dot)
+
+## Sacrament Filter & Spacing Fixes
+
+- [x] Fix Sacrament filter badge - events now show 'Sacrament' badge instead of 'Parish' when in sacrament view
+- [x] Add URL query param support for calendar filters (?filter=sacrament)
+- [x] Add spacing between This Week card and Latest News section on homepage
+- [x] Move countdown directly into each service card (inline with time) instead of separate pill
+- [x] Fix MassTimes page not updating to current day (timezone issue - now uses America/New_York)

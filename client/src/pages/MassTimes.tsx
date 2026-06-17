@@ -89,7 +89,7 @@ function isFirstFriday(date: Date): boolean {
 function getWeeklySchedule(today: number): DaySchedule[] {
   const schedule = BASE_WEEKLY_SCHEDULE.map(day => ({ ...day, services: [...day.services] }));
   // Check if this Friday in the current week is a First Friday
-  const now = new Date();
+  const now = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
   const todayDate = now.getDate();
   const todayDay = now.getDay();
   // Calculate the date of this week's Friday
@@ -169,7 +169,7 @@ function getEasterDate(year: number): Date {
 
 // Check for upcoming Holy Days within the next 7 days
 function getUpcomingHolyDays(): { name: string; date: Date; massTime: string; daysUntil: number }[] {
-  const now = new Date();
+  const now = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
   const year = now.getFullYear();
   const upcoming: { name: string; date: Date; massTime: string; daysUntil: number }[] = [];
 
@@ -246,7 +246,8 @@ function getServiceIcon(type: ServiceType) {
 
 export default function MassTimes() {
   const revealRef = useReveal();
-  const now = new Date();
+  // Use Eastern Time to determine "today" since the parish is in Armonk, NY
+  const now = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
   const today = now.getDay(); // 0 = Sunday
   const currentHour = now.getHours();
   const currentMinute = now.getMinutes();

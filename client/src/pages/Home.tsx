@@ -1367,7 +1367,7 @@ export default function Home() {
 
       <div ref={revealRef}>
         {/* This Week — Day-by-day schedule accordion (worship schedule first) */}
-        <section className="reveal container mb-4 sm:mb-6">
+        <section className="reveal container mb-6 sm:mb-8">
           <ThisWeekAccordion />
         </section>
 

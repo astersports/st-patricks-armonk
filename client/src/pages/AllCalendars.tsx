@@ -70,7 +70,14 @@ export default function AllCalendars() {
   const { data: allEvents, isLoading } = trpc.googleCalendar.allEvents.useQuery();
   const { data: keyDatesRaw, isLoading: keyDatesLoading } = trpc.importantDates.allPublished.useQuery();
 
-  const [activeSource, setActiveSource] = useState<SourceFilter>("all");
+  // Read initial filter from URL query param
+  const [activeSource, setActiveSource] = useState<SourceFilter>(() => {
+    const params = new URLSearchParams(window.location.search);
+    const filter = params.get("filter");
+    const validFilters: SourceFilter[] = ["all", "key-dates", "parish", "ccd", "cyo", "sacrament"];
+    if (filter && validFilters.includes(filter as SourceFilter)) return filter as SourceFilter;
+    return "all";
+  });
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
 
   const toggleGroup = (label: string) => {
@@ -412,15 +419,23 @@ export default function AllCalendars() {
                           const eventCategory = (event as any).category as string | undefined;
 
                           // Determine border and badge colors
+                          // Check if this event matches sacrament patterns
+                          const isSacramentEvent = !isKeyDate && /^(daily mass|weekday mass|mass|first friday|adoration|eucharistic|confession|reconciliation|communion|confirmation|baptism|anointing|penance)/i.test(event.title.trim());
                           const borderClass = isKeyDate
                             ? (keyDateCategoryBorder[eventCategory || "parish"] || "border-l-gold")
-                            : sourceConfig[event.source as keyof typeof sourceConfig]?.border || "border-l-primary";
+                            : isSacramentEvent
+                              ? sourceConfig.sacrament.border
+                              : sourceConfig[event.source as keyof typeof sourceConfig]?.border || "border-l-primary";
                           const badgeClass = isKeyDate
                             ? (keyDateCategoryColor[eventCategory || "parish"] || "bg-gold/10 text-gold")
-                            : sourceConfig[event.source as keyof typeof sourceConfig]?.color || "bg-primary/10 text-primary";
+                            : isSacramentEvent
+                              ? sourceConfig.sacrament.color
+                              : sourceConfig[event.source as keyof typeof sourceConfig]?.color || "bg-primary/10 text-primary";
                           const badgeLabel = isKeyDate
                             ? (keyDateCategoryLabel[eventCategory || "parish"] || "Key Date")
-                            : sourceConfig[event.source as keyof typeof sourceConfig]?.label || "Parish";
+                            : isSacramentEvent
+                              ? sourceConfig.sacrament.label
+                              : sourceConfig[event.source as keyof typeof sourceConfig]?.label || "Parish";
 
                           return (
                             <div

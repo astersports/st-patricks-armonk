@@ -78,33 +78,46 @@ export function ThisWeekAccordion() {
 
   const [selectedIndex, setSelectedIndex] = useState<number>(0); // Start on today
 
-  // Next-up countdown for today
-  const [nextUpText, setNextUpText] = useState<string | null>(null);
+  // Compute countdown for each service within 24 hours (today or selected day)
+  const [countdowns, setCountdowns] = useState<Record<number, string>>({});
   useEffect(() => {
-    function computeNextUp() {
+    function computeCountdowns() {
       const et = new Date(new Date().toLocaleString("en-US", { timeZone: TIMEZONE }));
-      const todayDow = et.getDay();
-      const todayServices = DAILY_SCHEDULE[todayDow] || [];
       const currentMin = et.getHours() * 60 + et.getMinutes();
-      for (const svc of todayServices) {
+      const selected = days[selectedIndex];
+      if (!selected) { setCountdowns({}); return; }
+      const svcs = selected.services;
+      const newCountdowns: Record<number, string> = {};
+      for (let i = 0; i < svcs.length; i++) {
+        const svc = svcs[i];
         const [timePart, ampm] = svc.time.split(" ");
         const [h, m] = timePart.split(":").map(Number);
-        let svcMin = (ampm === "PM" && h !== 12 ? h + 12 : h === 12 && ampm === "AM" ? 0 : h) * 60 + m;
-        if (svcMin > currentMin) {
-          const diff = svcMin - currentMin;
+        const svcMin = (ampm === "PM" && h !== 12 ? h + 12 : h === 12 && ampm === "AM" ? 0 : h) * 60 + m;
+        let diff: number;
+        if (selected.isToday) {
+          diff = svcMin - currentMin;
+        } else {
+          // For future days, compute minutes until that service
+          diff = (selected.index * 1440) + svcMin - currentMin;
+        }
+        if (diff > 0 && diff <= 1440) { // within 24 hours
           const hrs = Math.floor(diff / 60);
           const mins = diff % 60;
-          const countdown = hrs > 0 ? `${hrs}h ${mins}m` : `${mins}m`;
-          setNextUpText(`${svc.label} at ${svc.time} · in ${countdown}`);
-          return;
+          newCountdowns[i] = hrs > 0 ? `in ${hrs}h ${mins}m` : `in ${mins}m`;
         }
       }
-      setNextUpText(null);
+      setCountdowns(newCountdowns);
     }
-    computeNextUp();
-    const interval = setInterval(computeNextUp, 30000);
+    computeCountdowns();
+    const interval = setInterval(computeCountdowns, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [selectedIndex, days]);
+
+  // Determine the next upcoming service index (first with a countdown)
+  const nextServiceIdx = useMemo(() => {
+    const indices = Object.keys(countdowns).map(Number).sort((a, b) => a - b);
+    return indices.length > 0 ? indices[0] : -1;
+  }, [countdowns]);
 
   // Fetch 7-day weather forecast for each day
   const weatherInput = useMemo(() => {
@@ -192,31 +205,36 @@ export function ThisWeekAccordion() {
           </div>
         </div>
 
-        {/* Next-up countdown pill for today */}
-        {selectedDayData?.isToday && nextUpText && (
-          <div className="mb-3">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-              <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-50" /><span className="relative inline-flex rounded-full h-2 w-2 bg-primary" /></span>
-              {nextUpText}
-            </span>
-          </div>
-        )}
-
-        {/* Services list */}
+        {/* Services list with inline countdowns */}
         {services.length > 0 && (
           <div className="space-y-2 mb-3">
             {services.map((svc, idx) => {
               const style = typeStyles[svc.type];
               const Icon = style.icon;
+              const countdown = countdowns[idx];
+              const isNext = idx === nextServiceIdx;
               return (
                 <div
                   key={`svc-${idx}`}
-                  className={`flex items-center gap-3 p-3 rounded-lg border-l-4 ${style.borderColor} bg-card shadow-sm hover:shadow-md transition-all duration-200`}
+                  className={`flex items-center gap-3 p-3 rounded-lg border-l-4 ${style.borderColor} ${isNext ? "bg-primary/[0.04] ring-1 ring-primary/20" : "bg-card"} shadow-sm hover:shadow-md transition-all duration-200`}
                 >
                   <div className={`w-9 h-9 rounded-lg ${style.bg} flex items-center justify-center`}>
                     <Icon className={`w-4 h-4 ${style.color}`} />
                   </div>
-                  <span className="text-sm font-medium text-foreground flex-1">{svc.label}</span>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-sm font-medium text-foreground flex items-center gap-1.5">
+                      {svc.label}
+                      {isNext && (
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-primary/15 text-primary">
+                          <span className="relative flex h-1.5 w-1.5"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-50" /><span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" /></span>
+                          Next
+                        </span>
+                      )}
+                    </span>
+                    {countdown && (
+                      <span className="text-xs text-muted-foreground mt-0.5 block">{countdown}</span>
+                    )}
+                  </div>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -232,9 +250,11 @@ export function ThisWeekAccordion() {
                   >
                     <CalendarPlus className="w-3.5 h-3.5" />
                   </button>
-                  <span className={`text-sm font-bold ${style.color}`}>
-                    {svc.time}
-                  </span>
+                  <div className="text-right">
+                    <span className={`text-sm font-bold ${style.color}`}>
+                      {svc.time}
+                    </span>
+                  </div>
                 </div>
               );
             })}
