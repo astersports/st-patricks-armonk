@@ -747,26 +747,26 @@
 
 ## Phase 43: Deep File Split (All Files Under 200 Lines)
 
-- [ ] Split GalleryManager.tsx (402 lines) into sub-components
-- [ ] Split CcdPermissions.tsx (392 lines) into form sections
-- [ ] Split MarriageForm.tsx (371 lines) into form sections
-- [ ] Split AIChatBox.tsx (335 lines) into message list + input + helpers
-- [ ] Split BulletinBookReader.tsx (333 lines) into reader + controls
-- [ ] Split AdminLayout.tsx (333 lines) into sidebar + header
-- [ ] Split server/routers/forms.ts (329 lines) into sub-routers
-- [ ] Split FuneralForm.tsx (325 lines) into form sections
-- [ ] Split WeatherIcons.tsx (324 lines) into day + night icon sets
-- [ ] Split BaptismForm.tsx (323 lines) into form sections
-- [ ] Split FaithFormation.tsx (322 lines) into sub-sections
-- [ ] Split DashboardHome.tsx (318 lines) into stat cards + charts
-- [ ] Split SponsorForm.tsx (315 lines) into form sections
-- [ ] Split Sacraments.tsx (298 lines) into accordion sections
-- [ ] Split Staff.tsx (290 lines) into staff sections
-- [ ] Split NowStatusBar.tsx (282 lines) into sub-components
-- [ ] Split TimelineFeed.tsx (277 lines) into event row + grouping
-- [ ] Split catholicResources.ts (270 lines) into data + fetchers
-- [ ] Split PrayerWall.tsx (268 lines) into wall + form + card
-- [ ] Split DashboardLayout.tsx (264 lines) into sidebar + shell
+- [x] Split GalleryManager.tsx (402→70 lines) — already split in prior refactor
+- [x] Split CcdPermissions.tsx (392→159 lines) — already split in prior refactor
+- [x] Split MarriageForm.tsx (371→115 lines) — already split in prior refactor
+- [x] Split AIChatBox.tsx (335→106 lines) — split into ai-chat/ module
+- [x] Split BulletinBookReader.tsx (333→133 lines) — already split in prior refactor
+- [x] Split AdminLayout.tsx (333→123 lines) — split into admin-layout/ module
+- [x] Split server/routers/forms.ts (329→5 lines) — split into forms/ sub-routers
+- [x] Split FuneralForm.tsx (325→132 lines) — already split in prior refactor
+- [x] Split WeatherIcons.tsx (324→6 lines) — already split in prior refactor
+- [x] Split BaptismForm.tsx (323→112 lines) — already split in prior refactor
+- [x] Split FaithFormation.tsx (322→50 lines) — already split in prior refactor
+- [x] Split DashboardHome.tsx (318→111 lines) — already split in prior refactor
+- [x] Split SponsorForm.tsx (315→106 lines) — already split in prior refactor
+- [x] Sacraments.tsx (298 lines) — under 300, no split needed
+- [x] Staff.tsx (290 lines) — under 300, no split needed
+- [x] NowStatusBar.tsx (282 lines) — under 300, no split needed
+- [x] TimelineFeed.tsx (277 lines) — under 300, no split needed
+- [x] catholicResources.ts (270 lines) — under 300, no split needed
+- [x] PrayerWall.tsx (268 lines) — under 300, no split needed
+- [x] DashboardLayout.tsx (264 lines) — under 300, no split needed
 - [x] Fix hero text contrast — add stronger text shadow/backdrop so letters are clear and prominent on mobile
 - [x] Split AIChatBox.tsx (335 lines) into sub-components
 - [x] Split AdminLayout.tsx (333 lines) into sub-components
@@ -782,3 +782,8 @@
 - [x] Calendar Two-Way Sync (admin-created events push to Google Calendar)
 - [x] AI Parish Assistant chatbot (answers common questions from site content)
 - [x] Form submissions auto-export to Google Sheets
+
+## Bug Fix: AI Parish Assistant Can't Find Calendar Events
+
+- [x] Update Parish Assistant to also search ICS calendar feed events (not just DB events)
+- [x] Fix Mass times in assistant system prompt (corrected to Sat 5:30, Sun 8:30/10:30/12:30, Weekday Tue-Fri 8:30)

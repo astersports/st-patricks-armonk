@@ -1,7 +1,7 @@
 /**
  * Parish Assistant Router — AI chatbot that answers common parish questions.
- * Uses the built-in LLM with parish context to help parishioners.
- * ~130 lines
+ * Uses the built-in LLM with parish context + live ICS calendar events.
+ * ~140 lines
  */
 import { publicProcedure, router, z, db } from "./_helpers";
 import { invokeLLM } from "../_core/llm";
@@ -12,28 +12,29 @@ You help parishioners and visitors with questions about the parish.
 KEY INFORMATION:
 - Location: 29 Cox Avenue, Armonk, NY 10504
 - Phone: (914) 273-9724
-- Pastor: Please check the website for current pastor information
-- Weekend Masses: Saturday 5:00 PM, Sunday 8:00 AM, 10:00 AM, 12:00 PM
-- Daily Mass: Monday–Friday 8:30 AM
-- Confessions: Saturday 4:00–4:45 PM or by appointment
-- Parish Office Hours: Monday–Friday 9:00 AM – 4:00 PM
+- Pastor: Fr. Thadeus Aravindathu
+- Weekend Masses: Saturday Vigil 5:30 PM, Sunday 8:30 AM, 10:30 AM, 12:30 PM (Oct–Jun only)
+- Weekday Mass: Tuesday–Friday 8:30 AM (no Monday Mass)
+- Morning Prayer (Lauds): Tuesday–Friday 8:00 AM
+- Confessions: Saturday 4:30–5:15 PM or by appointment
+- Parish Office Hours: Monday–Thursday 10:00 AM – 5:00 PM, Friday Closed
 
 PROGRAMS:
 - CCD (Religious Education): Classes for grades 1-8, registration required
-- Teen Life: Youth ministry for high school students
-- CYO Basketball: Parish basketball program
-- RCIA: Rite of Christian Initiation of Adults (for those interested in becoming Catholic)
+- Teen Life: Youth ministry for high school students (meets in St. Francis Hall)
+- CYO Basketball: Grades 3-8, November–March, St. Francis Hall
+- RCIA: Rite of Christian Initiation of Adults
 - Baptism: Contact the parish office to schedule
 - Marriage: Contact the parish office at least 6 months in advance
 - Funeral: Contact the parish office
 
 GUIDELINES:
 - Be warm, welcoming, and helpful
-- If you don't know something specific, direct them to call the parish office at (914) 273-9724
+- If you have calendar event data below, USE IT to answer questions about upcoming events
 - Keep answers concise but informative
-- Never make up information about specific people, dates, or events
-- For current events and schedules, suggest checking the website calendar
-- You can reference the bulletin, events calendar, and news sections of the website`;
+- Never make up information about specific people, dates, or events you don't have data for
+- You can reference the bulletin, events calendar, and news sections of the website
+- If unsure, direct them to call the parish office at (914) 273-9724`;
 
 export const parishAssistantRouter = router({
   /** Chat with the AI Parish Assistant */
@@ -44,17 +45,45 @@ export const parishAssistantRouter = router({
       content: z.string(),
     })).max(20).default([]),
   })).mutation(async ({ input }) => {
-    // Build context with recent events and news
     let dynamicContext = "";
+
     try {
+      // Fetch ICS calendar events (the same data that powers the calendar page)
+      const { parseICSFeed, PARISH_CALENDAR_ICS, CCD_CALENDAR_ICS, CYO_CALENDAR_ICS } = await import("../icsParser");
+      const [parishIcs, ccdIcs, cyoIcs] = await Promise.all([
+        parseICSFeed(PARISH_CALENDAR_ICS, { daysAhead: 90, maxEvents: 40 }),
+        parseICSFeed(CCD_CALENDAR_ICS, { daysAhead: 90, maxEvents: 20 }),
+        parseICSFeed(CYO_CALENDAR_ICS, { daysAhead: 90, maxEvents: 20 }),
+      ]);
+
+      const allCalEvents = [
+        ...parishIcs.map(e => ({ ...e, source: "Parish" })),
+        ...ccdIcs.map(e => ({ ...e, source: "CCD" })),
+        ...cyoIcs.map(e => ({ ...e, source: "CYO" })),
+      ].sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+
+      if (allCalEvents.length > 0) {
+        dynamicContext += "\n\nUPCOMING CALENDAR EVENTS (from Google Calendar feeds):\n";
+        for (const e of allCalEvents.slice(0, 40)) {
+          const dateStr = new Date(e.startDate).toLocaleDateString("en-US", {
+            weekday: "short", month: "short", day: "numeric",
+          });
+          const timeStr = e.allDay ? "All Day" : new Date(e.startDate).toLocaleTimeString("en-US", {
+            hour: "numeric", minute: "2-digit", timeZone: "America/New_York",
+          });
+          dynamicContext += `- [${e.source}] ${e.title} — ${dateStr}, ${timeStr}${e.location ? ` @ ${e.location}` : ""}\n`;
+        }
+      }
+
+      // Also include DB events and news
       const upcomingEvents = await db.getUpcomingEvents(5);
       if (upcomingEvents.length > 0) {
-        dynamicContext += "\n\nUPCOMING EVENTS:\n";
+        dynamicContext += "\n\nDB PARISH EVENTS:\n";
         for (const e of upcomingEvents) {
           const dateStr = new Date(e.startDate).toLocaleDateString("en-US", {
-            weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit",
+            weekday: "short", month: "short", day: "numeric",
           });
-          dynamicContext += `- ${e.title} — ${dateStr}${e.location ? ` at ${e.location}` : ""}\n`;
+          dynamicContext += `- ${e.title} — ${dateStr}${e.location ? ` @ ${e.location}` : ""}\n`;
         }
       }
 
@@ -65,8 +94,8 @@ export const parishAssistantRouter = router({
           dynamicContext += `- ${n.title}: ${n.excerpt || n.content?.substring(0, 80) || ""}\n`;
         }
       }
-    } catch {
-      // If DB is unavailable, continue without dynamic context
+    } catch (err) {
+      console.error("[Parish Assistant] Context fetch error:", err);
     }
 
     const systemPrompt = PARISH_CONTEXT + dynamicContext;
