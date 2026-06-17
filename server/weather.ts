@@ -78,9 +78,73 @@ function getWeatherInfo(code: number): { description: string; icon: string } {
   return WMO_CODES[code] || { description: "Unknown", icon: "clear" };
 }
 
-// In-memory cache (60 min TTL)
+// In-memory cache (60 min TTL) for hourly forecast
 let weatherCache: { hourly: HourlyForecast[]; fetchedAt: number } | null = null;
 const CACHE_TTL = 60 * 60 * 1000;
+
+// Current weather cache (15 min TTL) — real-time conditions
+let currentWeatherCache: { data: CurrentWeather; fetchedAt: number } | null = null;
+const CURRENT_CACHE_TTL = 15 * 60 * 1000; // 15 minutes
+
+export interface CurrentWeather {
+  temperature: number;
+  feelsLike: number;
+  weatherCode: number;
+  description: string;
+  icon: string;
+  windSpeed: number;
+  isDay: boolean;
+  humidity: number;
+}
+
+/**
+ * Fetch real-time current weather from Open-Meteo's current_weather endpoint.
+ * Uses a separate 15-minute cache for freshness.
+ */
+export async function getCurrentWeather(): Promise<CurrentWeather | null> {
+  if (currentWeatherCache && Date.now() - currentWeatherCache.fetchedAt < CURRENT_CACHE_TTL) {
+    return currentWeatherCache.data;
+  }
+  try {
+    const url = new URL("https://api.open-meteo.com/v1/forecast");
+    url.searchParams.set("latitude", ARMONK_LAT.toString());
+    url.searchParams.set("longitude", ARMONK_LON.toString());
+    url.searchParams.set("current", [
+      "temperature_2m",
+      "apparent_temperature",
+      "weather_code",
+      "wind_speed_10m",
+      "is_day",
+      "relative_humidity_2m",
+    ].join(","));
+    url.searchParams.set("temperature_unit", "fahrenheit");
+    url.searchParams.set("wind_speed_unit", "mph");
+    url.searchParams.set("timezone", "America/New_York");
+    const response = await fetch(url.toString());
+    if (!response.ok) {
+      console.error(`Open-Meteo current weather API error: ${response.status}`);
+      return currentWeatherCache?.data || null;
+    }
+    const data = await response.json();
+    const current = data.current;
+    const weatherInfo = getWeatherInfo(current.weather_code);
+    const result: CurrentWeather = {
+      temperature: Math.round(current.temperature_2m),
+      feelsLike: Math.round(current.apparent_temperature),
+      weatherCode: current.weather_code,
+      description: weatherInfo.description,
+      icon: weatherInfo.icon,
+      windSpeed: Math.round(current.wind_speed_10m || 0),
+      isDay: current.is_day === 1,
+      humidity: current.relative_humidity_2m || 0,
+    };
+    currentWeatherCache = { data: result, fetchedAt: Date.now() };
+    return result;
+  } catch (error) {
+    console.error("Current weather fetch error:", error);
+    return currentWeatherCache?.data || null;
+  }
+}
 
 /**
  * Fetch 7-day hourly forecast from Open-Meteo for Armonk, NY

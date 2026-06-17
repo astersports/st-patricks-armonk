@@ -74,8 +74,8 @@ const journeyCards = [
 function HeroSection() {
   const [timeGreeting, setTimeGreeting] = useState("");
   const { data: currentWeather } = trpc.weather.current.useQuery(undefined, {
-    staleTime: 10 * 60 * 1000, // 10 min
-    refetchInterval: 10 * 60 * 1000,
+    staleTime: 15 * 60 * 1000, // 15 min
+    refetchInterval: 30 * 60 * 1000, // refresh every 30 min
   });
 
   useEffect(() => {

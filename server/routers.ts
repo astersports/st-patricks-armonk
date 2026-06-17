@@ -261,9 +261,9 @@ export const appRouter = router({
         return getWeatherForEvents(input.events);
       }),
     current: publicProcedure.query(async () => {
-      const { getWeatherForEvent } = await import("./weather");
-      // Get weather for right now
-      return getWeatherForEvent(new Date().toISOString());
+      const { getCurrentWeather } = await import("./weather");
+      // Get real-time current conditions (15-min cache)
+      return getCurrentWeather();
     }),
   }),
 
