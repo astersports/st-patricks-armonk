@@ -768,3 +768,6 @@
 - [ ] Split PrayerWall.tsx (268 lines) into wall + form + card
 - [ ] Split DashboardLayout.tsx (264 lines) into sidebar + shell
 - [x] Fix hero text contrast — add stronger text shadow/backdrop so letters are clear and prominent on mobile
+- [x] Split AIChatBox.tsx (335 lines) into sub-components
+- [x] Split AdminLayout.tsx (333 lines) into sub-components
+- [x] Split server/routers/forms.ts (329 lines) into sub-routers
