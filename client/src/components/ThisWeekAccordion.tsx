@@ -9,6 +9,7 @@ import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { ColorfulWeatherIcon } from "@/components/WeatherIcons";
 import { ServiceCard } from "./this-week/ServiceCard";
+import { DayContent } from "./this-week/DayContent";
 import {
   DAILY_SCHEDULE, SERVICE_DURATION, parseServiceMinutes,
   DAY_LABELS, TIMEZONE,
@@ -172,55 +173,19 @@ export function ThisWeekAccordion() {
 
       {/* Selected day content */}
       <div className="p-4" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
-        <div className="flex items-center justify-between mb-1">
-          <h3 className="text-base font-bold text-foreground">
-            {selectedDayData?.isToday ? "Today" : format(selectedDayData?.date || now, "EEEE")}
-          </h3>
-          <div className="flex items-center gap-2">
-            {dailyForecast?.[selectedIndex] && (
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-sky-50 text-sky-800 dark:bg-sky-900/30 dark:text-sky-300">
-                <ColorfulWeatherIcon icon={dailyForecast[selectedIndex].icon || 'clear'} className="w-4 h-4" />
-                <span className="font-semibold">{dailyForecast[selectedIndex].high}°</span>
-                <span className="text-muted-foreground/70">/</span>
-                <span>{dailyForecast[selectedIndex].low}°</span>
-                {dailyForecast[selectedIndex].precipProbabilityMax > 20 && (
-                  <span className="inline-flex items-center gap-0.5 text-blue-600 dark:text-blue-400">
-                    <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" /></svg>
-                    {dailyForecast[selectedIndex].precipProbabilityMax}%
-                  </span>
-                )}
-              </span>
-            )}
-            {services.length === 0 && !dailyForecast?.[selectedIndex] && (
-              <span className="text-xs text-muted-foreground italic">No services</span>
-            )}
-          </div>
-        </div>
-
-        {services.length > 0 ? (
-          <div className="space-y-2 mb-3">
-            {services.map((svc, idx) => {
-              const eventId = `svc-${selectedIndex}-${idx}`;
-              const svcWeather = serviceWeatherMap?.[eventId]?.weather || null;
-              return (
-                <ServiceCard
-                  key={`svc-${idx}`}
-                  svc={svc}
-                  idx={idx}
-                  isPast={!!pastServices[idx]}
-                  isLive={!!inProgress[idx]}
-                  isNext={idx === nextServiceIdx && !inProgress[idx] && !pastServices[idx]}
-                  countdown={countdowns[idx]}
-                  progress={inProgress[idx]}
-                  dayName={dayName}
-                  weather={svcWeather}
-                />
-              );
-            })}
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground text-center py-4 italic">No scheduled services on this day</p>
-        )}
+        <DayContent
+          selectedDayData={selectedDayData}
+          selectedIndex={selectedIndex}
+          now={now}
+          dailyForecast={dailyForecast}
+          services={services}
+          pastServices={pastServices}
+          inProgress={inProgress}
+          countdowns={countdowns}
+          nextServiceIdx={nextServiceIdx}
+          dayName={dayName}
+          serviceWeatherMap={serviceWeatherMap}
+        />
       </div>
 
       {/* At a Glance footer */}

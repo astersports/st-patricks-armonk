@@ -804,3 +804,13 @@
 - [x] Fix Parish Assistant not finding Bag Bingo (was using limit(30) which cut off event #31+, now uses getAllPublishedImportantDates)
 - [x] Add suggested questions pills below chat input (Mass times, Bag Bingo, How to register, Confessions, CCD)
 - [x] Track assistant usage in PostHog (opened, question_asked, answer_received, error events)
+
+## Monday Morning Analytics Email
+- [ ] Create scheduled handler for Monday 8 AM ET analytics digest
+- [ ] Pull top pages, form submissions count, and chatbot question topics from PostHog
+- [ ] Format into a clean branded email and send via Resend to owner
+
+## This Week Widget: Smart Auto-Advance
+- [x] When all today's events have ended, show "No more events today" message
+- [x] Auto-display tomorrow's upcoming events below the empty-today message
+- [x] Keep day picker functional so users can still tap back to review today's ended events
