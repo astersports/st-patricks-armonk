@@ -6,6 +6,7 @@ import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
 import { registerStorageProxy } from "./storageProxy";
 import { appRouter, sendCcdReminders } from "../routers";
+import { handleWeeklyDigest } from "../scheduledDigest";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { sdk } from "./sdk";
@@ -66,6 +67,26 @@ async function startServer() {
       res.json({ ok: true, ...result });
     } catch (error: any) {
       console.error("[Scheduled] CCD reminder error:", error);
+      res.status(500).json({
+        error: error.message || "Unknown error",
+        stack: error.stack,
+        context: { url: req.url, taskUid: (req as any).taskUid },
+        timestamp: new Date().toISOString(),
+      });
+    }
+  });
+
+  // Weekly Digest cron handler - sends weekly email digest to all subscribers
+  app.post("/api/scheduled/weekly-digest", async (req, res) => {
+    try {
+      const user = await sdk.authenticateRequest(req);
+      if (!user || !(user as any).isCron) {
+        return res.status(403).json({ error: "cron-only" });
+      }
+      const result = await handleWeeklyDigest();
+      res.json({ ok: true, ...result });
+    } catch (error: any) {
+      console.error("[Scheduled] Weekly digest error:", error);
       res.status(500).json({
         error: error.message || "Unknown error",
         stack: error.stack,

@@ -34,6 +34,7 @@ import CcdPermissions from "./pages/CcdPermissions";
 import NewHere from "./pages/NewHere";
 import PhotoGallery from "./pages/PhotoGallery";
 import Prayers from "./pages/Prayers";
+import { ParishAssistant } from "./components/ParishAssistant";
 // KeyDates is now integrated into AllCalendars page
 
 function Router() {
@@ -88,6 +89,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <Router />
+          <ParishAssistant />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

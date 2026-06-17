@@ -771,3 +771,14 @@
 - [x] Split AIChatBox.tsx (335 lines) into sub-components
 - [x] Split AdminLayout.tsx (333 lines) into sub-components
 - [x] Split server/routers/forms.ts (329 lines) into sub-routers
+
+## Phase: Next-Level Features (Connections & Automation)
+
+- [x] In-Platform Bulletin Editor with rich text composing in admin dashboard
+- [x] Bulletin PDF generation via Lumin PDF with parish branding
+- [x] Bulletin publish triggers Resend email broadcast to subscribers
+- [x] Resend Weekly Digest automation (auto-email this week's highlights every Thursday)
+- [x] PostHog Analytics integration (page views, form completions, popular content)
+- [x] Calendar Two-Way Sync (admin-created events push to Google Calendar)
+- [x] AI Parish Assistant chatbot (answers common questions from site content)
+- [x] Form submissions auto-export to Google Sheets

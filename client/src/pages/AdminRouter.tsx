@@ -9,6 +9,8 @@ const GalleryManager = lazy(() => import("./admin/GalleryManager"));
 const UserManager = lazy(() => import("./admin/UserManager"));
 const SettingsManager = lazy(() => import("./admin/SettingsManager"));
 
+import { FormExport } from "./admin/FormExport";
+
 // Legacy managers from Admin.tsx (imported eagerly since they're in a single file)
 import {
   NewsManager,
@@ -58,6 +60,7 @@ export default function AdminRouter() {
           <Route path="/sacraments" component={() => <SacramentsManager />} />
           <Route path="/users" component={() => <UserManager />} />
           <Route path="/settings" component={() => <SettingsManager />} />
+          <Route path="/form-export" component={() => <FormExport />} />
           {/* Fallback to dashboard */}
           <Route component={() => <DashboardHome />} />
         </Switch>

@@ -9,6 +9,10 @@ import { router } from "./_helpers";
 import { authRouter } from "./auth";
 import { newsRouter } from "./news";
 import { bulletinsRouter } from "./bulletins";
+import { bulletinComposeRouter } from "./bulletinCompose";
+import { calendarSyncRouter } from "./calendarSync";
+import { parishAssistantRouter } from "./parishAssistant";
+import { formExportRouter } from "./formExport";
 import { eventsRouter } from "./events";
 import { weatherRouter } from "./weather";
 import { calendarRouter } from "./calendar";
@@ -25,6 +29,10 @@ export const appRouter = router({
   auth: authRouter,
   news: newsRouter,
   bulletins: bulletinsRouter,
+  bulletinCompose: bulletinComposeRouter,
+  calendarSync: calendarSyncRouter,
+  parishAssistant: parishAssistantRouter,
+  formExport: formExportRouter,
   events: eventsRouter,
   weather: weatherRouter,
   googleCalendar: calendarRouter,
