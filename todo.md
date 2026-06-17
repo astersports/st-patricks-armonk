@@ -715,3 +715,7 @@
 - [x] MassTimes countdown now shows for ALL services within 24 hours (not just next one)
 - [x] Add past service dimmed state (strikethrough time, muted styling) for today's ended services
 - [x] Add swipe gestures on This Week day tabs for mobile navigation
+
+## Current Weather Widget
+
+- [x] Add standalone current weather widget on homepage showing live real-time conditions (temp, description, icon) — separate from existing forecast badges in This Week accordion

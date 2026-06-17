@@ -1,7 +1,8 @@
 import PageLayout from "@/components/PageLayout";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin, Clock, ExternalLink, Globe, Camera, ImageIcon, BookOpen, Download, RefreshCw, ChevronDown, ChevronLeft, ChevronRight, Rss, CalendarPlus } from "lucide-react";
+import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin, Clock, ExternalLink, Globe, Camera, ImageIcon, BookOpen, Download, RefreshCw, ChevronDown, ChevronLeft, ChevronRight, Rss, CalendarPlus, CloudSun } from "lucide-react";
+import { ColorfulWeatherIcon } from "@/components/WeatherIcons";
 import { downloadICS } from "@/lib/icsGenerator";
 import BulletinBookReader from "@/components/BulletinBookReader";
 import { PrayerWall } from "@/components/PrayerWall";
@@ -72,6 +73,10 @@ const journeyCards = [
 // ===== HERO SECTION — L99 Cinematic with left-aligned content, green gradient, gold accent =====
 function HeroSection() {
   const [timeGreeting, setTimeGreeting] = useState("");
+  const { data: currentWeather } = trpc.weather.current.useQuery(undefined, {
+    staleTime: 10 * 60 * 1000, // 10 min
+    refetchInterval: 10 * 60 * 1000,
+  });
 
   useEffect(() => {
     function getGreeting() {
@@ -111,12 +116,28 @@ function HeroSection() {
         }}
       />
 
-
+      {/* Current Weather — top right overlay */}
+      {currentWeather && (
+        <div
+          className="absolute top-4 right-4 sm:top-6 sm:right-6 md:top-8 md:right-12 lg:right-20 z-20 opacity-0"
+          style={{ animation: 'fadeSlideUp 0.6s ease 0.5s forwards' }}
+        >
+          <div className="flex items-center gap-2 px-3 py-2 rounded-full backdrop-blur-md bg-white/15 border border-white/20 shadow-lg">
+            <ColorfulWeatherIcon icon={currentWeather.icon} className="w-5 h-5 sm:w-6 sm:h-6" />
+            <span className="text-white font-semibold text-sm sm:text-base drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+              {currentWeather.temperature}°F
+            </span>
+            <span className="hidden sm:inline text-white/80 text-xs sm:text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
+              {currentWeather.description}
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Content — left-aligned, bottom-anchored */}
       <div className="relative z-10 flex flex-col flex-1 justify-end pb-14 sm:pb-16 md:pb-20 px-5 sm:px-8 md:px-12 lg:px-20 max-w-[1400px] mx-auto w-full">
         <div className="max-w-3xl">
-          {/* Eyebrow — time greeting */}
+          {/* Eyebrow — time greeting + current weather on mobile */}
           <p
             className="text-emerald-300 text-xs sm:text-sm font-medium tracking-[0.2em] uppercase mb-4 opacity-0 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]"
             style={{ animation: 'fadeSlideUp 0.6s ease 0.1s forwards' }}
