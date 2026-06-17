@@ -846,3 +846,9 @@
 ## Bug Fix: Bulletin PDF Not Loading
 - [x] Composed bulletin (June 17, 2026) shows "Unable to load PDF" on the public bulletins page
 - [x] Fixed: BulletinBookReader now detects HTML URLs and renders in iframe (HtmlBulletinViewer) instead of react-pdf
+
+## Claude Review Follow-Up Fixes
+
+- [x] Fix auto-advance day pill mismatch: when all today's events are past and tomorrow's content shows, advance the selected pill to tomorrow's day
+- [x] Fix admin dashboard label truncation: "VOLUNTEER SI...", "PENDING PARIS..." labels cut off — shortened labels and removed truncate
+- [x] Add rain alert banner on homepage: subtle dismissible banner when 60%+ rain chance during next service's hour window

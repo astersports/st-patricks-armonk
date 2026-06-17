@@ -32,6 +32,25 @@ export function ThisWeekAccordion() {
 
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
+  // Auto-advance: when all today's events have ended, move pill to tomorrow
+  const [autoAdvanced, setAutoAdvanced] = useState(false);
+  useEffect(() => {
+    if (autoAdvanced || selectedIndex !== 0) return;
+    const todayServices = days[0]?.services || [];
+    if (todayServices.length === 0) return;
+    const et = new Date(new Date().toLocaleString("en-US", { timeZone: TIMEZONE }));
+    const currentMin = et.getHours() * 60 + et.getMinutes();
+    const allEnded = todayServices.every((svc) => {
+      const svcMin = parseServiceMinutes(svc.time);
+      const duration = SERVICE_DURATION[svc.type] || 30;
+      return currentMin >= svcMin + duration;
+    });
+    if (allEnded) {
+      setSelectedIndex(1);
+      setAutoAdvanced(true);
+    }
+  }, [days, selectedIndex, autoAdvanced]);
+
   // Compute countdown, in-progress, and past state for each service
   const [countdowns, setCountdowns] = useState<Record<number, string>>({});
   const [inProgress, setInProgress] = useState<Record<number, string>>({});
