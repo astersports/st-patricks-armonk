@@ -719,3 +719,6 @@
 ## Current Weather Widget
 
 - [x] Add standalone current weather widget on homepage showing live real-time conditions (temp, description, icon) — separate from existing forecast badges in This Week accordion
+- [x] Show weather description on mobile (not just temp)
+- [x] Add tap-to-expand popover showing feels-like, humidity, and wind speed
+- [x] Add night-mode weather icons (moon/stars variant when isDay=false)

@@ -231,6 +231,50 @@ export function WindIcon({ className = "w-4 h-4" }: IconProps) {
   );
 }
 
+/** Clear night — crescent moon with stars */
+export function ClearNightIcon({ className = "w-4 h-4" }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="moonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FDD835" />
+          <stop offset="100%" stopColor="#F9A825" />
+        </linearGradient>
+      </defs>
+      {/* Crescent moon */}
+      <path d="M12 3a7 7 0 0 0 0 14 7 7 0 0 1 0-14z" fill="url(#moonGrad)" transform="translate(1, 2)" />
+      {/* Stars */}
+      <circle cx="18" cy="5" r="1" fill="#FDD835" opacity="0.9" />
+      <circle cx="20" cy="9" r="0.7" fill="#FDD835" opacity="0.7" />
+      <circle cx="15" cy="3" r="0.6" fill="#FDD835" opacity="0.6" />
+    </svg>
+  );
+}
+
+/** Partly cloudy night — moon peeking behind cloud */
+export function PartlyCloudyNightIcon({ className = "w-4 h-4" }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="pcnMoonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FDD835" />
+          <stop offset="100%" stopColor="#F9A825" />
+        </linearGradient>
+        <linearGradient id="pcnCloudGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#E8EDF2" />
+          <stop offset="100%" stopColor="#B0BEC5" />
+        </linearGradient>
+      </defs>
+      {/* Moon behind */}
+      <path d="M9 2a5 5 0 0 0 0 10 5 5 0 0 1 0-10z" fill="url(#pcnMoonGrad)" transform="translate(1, 1)" />
+      {/* Star */}
+      <circle cx="16" cy="4" r="0.8" fill="#FDD835" opacity="0.8" />
+      {/* Cloud in front */}
+      <path d="M8 19a4 4 0 0 1 .6-7.9 5.5 5.5 0 0 1 10.3 1.4A3.5 3.5 0 0 1 19 19H8z" fill="url(#pcnCloudGrad)" />
+    </svg>
+  );
+}
+
 /** Droplet icon for precipitation probability */
 export function DropletIcon({ className = "w-3 h-3" }: IconProps) {
   return (
@@ -248,14 +292,15 @@ export function DropletIcon({ className = "w-3 h-3" }: IconProps) {
 
 /**
  * Main weather icon dispatcher — maps icon string to colorful component.
+ * When isDay is false, uses night variants for clear/partly-cloudy.
  */
-export function ColorfulWeatherIcon({ icon, className = "w-4 h-4" }: { icon: string; className?: string }) {
+export function ColorfulWeatherIcon({ icon, className = "w-4 h-4", isDay = true }: { icon: string; className?: string; isDay?: boolean }) {
   switch (icon) {
     case "clear":
     case "mostly-clear":
-      return <SunnyIcon className={className} />;
+      return isDay ? <SunnyIcon className={className} /> : <ClearNightIcon className={className} />;
     case "partly-cloudy":
-      return <PartlyCloudyIcon className={className} />;
+      return isDay ? <PartlyCloudyIcon className={className} /> : <PartlyCloudyNightIcon className={className} />;
     case "overcast":
       return <OvercastIcon className={className} />;
     case "fog":
@@ -274,6 +319,6 @@ export function ColorfulWeatherIcon({ icon, className = "w-4 h-4" }: { icon: str
     case "thunderstorm":
       return <ThunderstormIcon className={className} />;
     default:
-      return <SunnyIcon className={className} />;
+      return isDay ? <SunnyIcon className={className} /> : <ClearNightIcon className={className} />;
   }
 }

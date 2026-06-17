@@ -1,7 +1,8 @@
 import PageLayout from "@/components/PageLayout";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin, Clock, ExternalLink, Globe, Camera, ImageIcon, BookOpen, Download, RefreshCw, ChevronDown, ChevronLeft, ChevronRight, Rss, CalendarPlus, CloudSun } from "lucide-react";
+import { ArrowRight, Mail, Heart, GraduationCap, Users, Cross, Newspaper, MapPin, Clock, ExternalLink, Globe, Camera, ImageIcon, BookOpen, Download, RefreshCw, ChevronDown, ChevronLeft, ChevronRight, Rss, CalendarPlus, CloudSun, Wind, Droplets, Thermometer } from "lucide-react";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { ColorfulWeatherIcon } from "@/components/WeatherIcons";
 import { downloadICS } from "@/lib/icsGenerator";
 import BulletinBookReader from "@/components/BulletinBookReader";
@@ -116,21 +117,64 @@ function HeroSection() {
         }}
       />
 
-      {/* Current Weather — top right overlay */}
+      {/* Current Weather — top right overlay with tap-to-expand */}
       {currentWeather && (
         <div
           className="absolute top-4 right-4 sm:top-6 sm:right-6 md:top-8 md:right-12 lg:right-20 z-20 opacity-0"
           style={{ animation: 'fadeSlideUp 0.6s ease 0.5s forwards' }}
         >
-          <div className="flex items-center gap-2 px-3 py-2 rounded-full backdrop-blur-md bg-white/15 border border-white/20 shadow-lg">
-            <ColorfulWeatherIcon icon={currentWeather.icon} className="w-5 h-5 sm:w-6 sm:h-6" />
-            <span className="text-white font-semibold text-sm sm:text-base drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
-              {currentWeather.temperature}°F
-            </span>
-            <span className="hidden sm:inline text-white/80 text-xs sm:text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
-              {currentWeather.description}
-            </span>
-          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="flex items-center gap-2 px-3 py-2 rounded-full backdrop-blur-md bg-white/15 border border-white/20 shadow-lg cursor-pointer hover:bg-white/25 transition-colors duration-200 press-scale">
+                <ColorfulWeatherIcon icon={currentWeather.icon} className="w-5 h-5 sm:w-6 sm:h-6" isDay={currentWeather.isDay} />
+                <span className="text-white font-semibold text-sm sm:text-base drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                  {currentWeather.temperature}°F
+                </span>
+                <span className="text-white/80 text-xs sm:text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
+                  {currentWeather.description}
+                </span>
+              </button>
+            </PopoverTrigger>
+            <PopoverContent
+              side="bottom"
+              align="end"
+              className="w-56 p-3 rounded-xl backdrop-blur-xl bg-background/95 border border-border/50 shadow-xl"
+            >
+              <div className="space-y-2.5">
+                <div className="flex items-center gap-2">
+                  <ColorfulWeatherIcon icon={currentWeather.icon} className="w-8 h-8" isDay={currentWeather.isDay} />
+                  <div>
+                    <p className="text-lg font-bold text-foreground">{currentWeather.temperature}°F</p>
+                    <p className="text-xs text-muted-foreground">{currentWeather.description}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2 pt-1 border-t border-border/30">
+                  <div className="flex items-center gap-1.5">
+                    <Thermometer className="w-3.5 h-3.5 text-orange-500" />
+                    <div>
+                      <p className="text-[10px] text-muted-foreground">Feels like</p>
+                      <p className="text-xs font-semibold">{currentWeather.feelsLike}°F</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Droplets className="w-3.5 h-3.5 text-blue-500" />
+                    <div>
+                      <p className="text-[10px] text-muted-foreground">Humidity</p>
+                      <p className="text-xs font-semibold">{currentWeather.humidity}%</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Wind className="w-3.5 h-3.5 text-slate-500" />
+                    <div>
+                      <p className="text-[10px] text-muted-foreground">Wind</p>
+                      <p className="text-xs font-semibold">{currentWeather.windSpeed} mph</p>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-[10px] text-muted-foreground text-center pt-1">Armonk, NY · Updated every 15 min</p>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
       )}
 
