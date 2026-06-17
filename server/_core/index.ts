@@ -76,6 +76,27 @@ async function startServer() {
     }
   });
 
+  // Monday Analytics Digest cron handler - sends weekly analytics summary to owner
+  app.post("/api/scheduled/analytics-digest", async (req, res) => {
+    try {
+      const user = await sdk.authenticateRequest(req);
+      if (!user || !(user as any).isCron) {
+        return res.status(403).json({ error: "cron-only" });
+      }
+      const { handleAnalyticsDigest } = await import("../scheduledAnalytics");
+      const result = await handleAnalyticsDigest();
+      res.json({ ok: true, ...result });
+    } catch (error: any) {
+      console.error("[Scheduled] Analytics digest error:", error);
+      res.status(500).json({
+        error: error.message || "Unknown error",
+        stack: error.stack,
+        context: { url: req.url, taskUid: (req as any).taskUid },
+        timestamp: new Date().toISOString(),
+      });
+    }
+  });
+
   // Weekly Digest cron handler - sends weekly email digest to all subscribers
   app.post("/api/scheduled/weekly-digest", async (req, res) => {
     try {

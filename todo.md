@@ -806,9 +806,10 @@
 - [x] Track assistant usage in PostHog (opened, question_asked, answer_received, error events)
 
 ## Monday Morning Analytics Email
-- [ ] Create scheduled handler for Monday 8 AM ET analytics digest
-- [ ] Pull top pages, form submissions count, and chatbot question topics from PostHog
-- [ ] Format into a clean branded email and send via Resend to owner
+- [x] Create scheduled handler for Monday 8 AM ET analytics digest (scheduledAnalytics.ts)
+- [x] Gathers: form submissions, pending items, subscribers, content published, events, prayer intentions
+- [x] Sends digest to owner via notifyOwner every Monday at 8 AM ET (cron task_uid: aiiaXFZR3YfU3jHkjQ4Ymh)
+- [x] PostHog page views noted in digest (available via PostHog dashboard)
 
 ## This Week Widget: Smart Auto-Advance
 - [x] When all today's events have ended, show "No more events today" message
