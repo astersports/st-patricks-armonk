@@ -5,6 +5,8 @@
 import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { TodayCard } from "./now-sections/TodayCard";
+import { SectionHeader } from "@/components/SectionHeader";
+import { BookOpen } from "lucide-react";
 import { ComingUpFiltered } from "./now-sections/ComingUpFiltered";
 import { LatestNewsEditorial } from "./now-sections/LatestNewsEditorial";
 
@@ -27,7 +29,15 @@ export function NowAtStPatrick({ latestNews, newsItems, allImportantDates }: { l
   return (
     <section className="reveal container mt-0 pt-4 sm:pt-6 relative z-20 mb-6 sm:mb-8">
       <LatestNewsEditorial newsItems={newsItems} />
-      <TodayCard />
+      <div className="mt-6">
+        <SectionHeader
+          icon={BookOpen}
+          label="WORSHIP"
+          title="Today's Readings, Saint & Catholic News"
+          size="sm"
+        />
+        <TodayCard />
+      </div>
       {upcomingEvents.length > 0 && (
         <Card className="rounded-xl border border-border/60 shadow-sm overflow-hidden mt-4">
           <CardContent className="p-0">

@@ -27,7 +27,7 @@ const GREEN = "#2E7D4F"; // var(--color-primary) equivalent
 const GREEN_DARK = "#0F2A1C"; // wordmark ink
 const GOLD = "#B8860B"; // var(--color-accent) equivalent
 
-export default function Footer() {
+export default function Footer({ variant = "compact" }: { variant?: "full" | "compact" }) {
   const { info } = useParishInfo();
   const { season } = useLiturgicalSeason();
   const { user, isAuthenticated } = useAuth();
@@ -61,12 +61,15 @@ export default function Footer() {
           letter-spacing:1.5px;line-height:1.3;display:block;margin-bottom:14px;}
         .spf-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
         .spf-season{display:inline-flex;align-items:center;gap:6px;background:#eef6f1;
-          border:1px solid #cfe6da;border-radius:50px;padding:5px 11px;flex-shrink:0;}
+          border:1px solid #cfe6da;border-radius:50px;padding:5px 11px;flex-shrink:0;
+          transition:all .2s ease;cursor:pointer;}
+        .spf-season:hover{background:#e3f0e9;border-color:${GREEN};}
         .spf-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;flex-shrink:0;
           animation:spf-pulse 2s infinite;}
         @keyframes spf-pulse{0%,100%{opacity:1}50%{opacity:.4}}
         .spf-season-txt{font-size:11px;font-weight:700;color:${GREEN};text-transform:uppercase;
           letter-spacing:.8px;line-height:1;}
+        .spf-season-cta{font-size:11px;font-weight:700;color:${GOLD};letter-spacing:.3px;line-height:1;}
         .spf-vdot{width:3px;height:3px;border-radius:50%;background:#cfe6da;flex-shrink:0;}
         .spf-ico{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;
           border:1px solid #e1e4e8;border-radius:8px;background:#fff;transition:all .2s ease;flex-shrink:0;}
@@ -113,10 +116,16 @@ export default function Footer() {
             <span className="spf-brand">St. Patrick in Armonk</span>
             <span className="spf-tagline">God Bless the Whole World, No Exceptions</span>
             <div className="spf-meta">
-              <div className="spf-season">
+              {/* Liturgical season is the DOOR to Today's Readings, Saint & Catholic News */}
+              <Link
+                href="/worship/today"
+                className="spf-season"
+                aria-label={`${seasonLabel} — open Today's Readings, Saint & Catholic News`}
+              >
                 <span className="spf-dot" />
                 <span className="spf-season-txt">{seasonLabel}</span>
-              </div>
+                <span className="spf-season-cta">· Readings &amp; News &#8594;</span>
+              </Link>
               <span className="spf-vdot" />
               <a className="spf-ico" href={`mailto:${email}`} aria-label="Email the parish office">
                 <Mail size={15} color={GREEN} />
@@ -133,6 +142,7 @@ export default function Footer() {
             </div>
           </div>
 
+          {variant === "full" && (
           <div className="spf-tools">
             <Link href="/mass-times" className="spf-card green">
               <div className="spf-tico green"><Calendar size={14} /></div>
@@ -156,6 +166,7 @@ export default function Footer() {
               <span className="spf-arrow">View &#8594;</span>
             </Link>
           </div>
+          )}
         </div>
       </div>
 

@@ -20,7 +20,7 @@ export function TodayCard() {
 
   return (
     <Link href="/worship/today">
-      <Card className="group relative overflow-hidden rounded-xl border border-border/60 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer mt-4">
+      <Card className="group relative overflow-hidden rounded-xl border border-border/60 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer">
         {/* Season accent top border */}
         <div className="absolute top-0 inset-x-0 h-1" style={{ backgroundColor: theme.accentHex }} />
 

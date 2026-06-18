@@ -42,7 +42,7 @@ export default function PageLayout({ children, hideBackButton }: PageLayoutProps
         </div>
       )}
       <main id="main-content" className="flex-1" role="main">{children}</main>
-      <Footer />
+      <Footer variant={isHome ? "full" : "compact"} />
       <ScrollToTopButton />
       {/* Spacer for mobile bottom tab bar + safe area */}
       <div className="lg:hidden h-24" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }} />

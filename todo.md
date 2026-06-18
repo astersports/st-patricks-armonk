@@ -1014,3 +1014,7 @@
 - [x] A12. Remove "This Sunday"; add "Today" card linking to /worship/today; rename menu label
 - [x] A10. Remove "At a Glance" from homepage ThisWeekAccordion (keep on /mass-times only)
 - [x] A9.2. Clear seeded test prayers from production Prayer Wall
+
+### Clarity Pass
+- [x] Footer: replace with v3 (variant prop: full on home, compact elsewhere); wire in PageLayout
+- [x] TodayCard: add section header (WORSHIP eyebrow + "Today's Readings, Saint & Catholic News" heading)
