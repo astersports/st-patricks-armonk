@@ -4,7 +4,7 @@
 
 import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { ThisSundayPreview } from "./now-sections/ThisSundayPreview";
+import { TodayCard } from "./now-sections/TodayCard";
 import { ComingUpFiltered } from "./now-sections/ComingUpFiltered";
 import { LatestNewsEditorial } from "./now-sections/LatestNewsEditorial";
 
@@ -27,7 +27,7 @@ export function NowAtStPatrick({ latestNews, newsItems, allImportantDates }: { l
   return (
     <section className="reveal container mt-0 pt-4 sm:pt-6 relative z-20 mb-6 sm:mb-8">
       <LatestNewsEditorial newsItems={newsItems} />
-      <ThisSundayPreview />
+      <TodayCard />
       {upcomingEvents.length > 0 && (
         <Card className="rounded-xl border border-border/60 shadow-sm overflow-hidden mt-4">
           <CardContent className="p-0">

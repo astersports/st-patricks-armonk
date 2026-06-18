@@ -49,18 +49,31 @@ export function WeeklySchedule() {
   }, [selectedDay, today, currentHour, currentMinute]);
 
   const nextServiceIndex = useMemo(() => {
-    if (selectedDay !== today) return 0;
+    // "Next" only applies to the day that actually contains the next upcoming service:
+    //  - today, if today still has an upcoming service
+    //  - tomorrow (auto-advance), only when all of today's services are past
+    const isNextDay =
+      (selectedDay === today && !allTodayServicesPast) ||
+      (allTodayServicesPast && selectedDay === tomorrow);
+    if (!isNextDay) return -1;
+
     const services = WEEKLY_SCHEDULE[selectedDay].services;
+
+    // Auto-advanced to tomorrow → the first real service of tomorrow is "next".
+    if (selectedDay !== today) {
+      return services.findIndex(s => s.type !== "none" && s.time);
+    }
+
+    // Today → first service whose start time is still in the future.
     for (let i = 0; i < services.length; i++) {
-      if (services[i].type === "none") continue;
-      if (!services[i].time) continue;
+      if (services[i].type === "none" || !services[i].time) continue;
       const parsed = parseTimeStr(services[i].time);
       if (!parsed) continue;
       const isPast = currentHour > parsed.hours || (currentHour === parsed.hours && currentMinute > parsed.minutes);
       if (!isPast) return i;
     }
     return -1;
-  }, [selectedDay, today, currentHour, currentMinute, WEEKLY_SCHEDULE]);
+  }, [selectedDay, today, tomorrow, allTodayServicesPast, currentHour, currentMinute, WEEKLY_SCHEDULE]);
 
   const serviceCountdowns = useMemo(() => {
     const services = WEEKLY_SCHEDULE[selectedDay].services;

@@ -1,146 +1,185 @@
+/**
+ * Footer — St. Patrick in Armonk
+ *
+ * Ported from the Legacy Hoopers "ultra footer" pattern (operator reference),
+ * adapted to the parish palette (green + gold) and parish content.
+ *
+ * Structure: 3px green→gold accent top border → wordmark + motto → liturgical
+ * season badge + icon-button row → three quick-link tool cards → slim legal bar
+ * with a clearly-visible Aster Sports credit.
+ *
+ * All identity values should come from `useParishInfo()` (the single source);
+ * the literals below are fallbacks only. The liturgical season comes from
+ * `useLiturgicalSeason()` so the badge auto-updates with the Church calendar.
+ *
+ * Self-contained scoped styles (prefix `spf-`) keep it pixel-faithful and out of
+ * Tailwind's way — same approach as the reference markup.
+ */
 import { Link } from "wouter";
-import { MapPin, Phone, Shield } from "lucide-react";
+import { Mail, Phone, Youtube, Bell, Calendar, Heart, MapPin, Shield } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
+import { useParishInfo } from "@/hooks/useParishSchedule";
+import { useLiturgicalSeason } from "@/contexts/LiturgicalSeasonContext";
 
-function StaffAccessBar() {
+// Parish palette (matches the locked design tokens — green primary, gold accent)
+const GREEN = "#2E7D4F"; // var(--color-primary) equivalent
+const GREEN_DARK = "#0F2A1C"; // wordmark ink
+const GOLD = "#B8860B"; // var(--color-accent) equivalent
+
+export default function Footer() {
+  const { info } = useParishInfo();
+  const { season } = useLiturgicalSeason();
   const { user, isAuthenticated } = useAuth();
   const isAdmin = isAuthenticated && user?.role === "admin";
 
-  return (
-    <div className="border-t border-white/[0.06]">
-      <div className="container py-2 flex items-center justify-center">
-        {isAdmin ? (
-          <Link
-            href="/admin"
-            className="inline-flex items-center gap-1.5 text-xs text-white/50 hover:text-gold transition-colors"
-          >
-            <Shield className="w-3 h-3" />
-            Admin Dashboard
-          </Link>
-        ) : (
-          <a
-            href={getLoginUrl()}
-            className="inline-flex items-center gap-1.5 text-xs text-white/40 hover:text-white/60 transition-colors"
-          >
-            <Shield className="w-3 h-3" />
-            Staff Login
-          </a>
-        )}
-      </div>
-    </div>
-  );
-}
+  const phone = info?.phone ?? "(914) 273-9724";
+  const tel = (info?.phone ?? "9142739724").replace(/\D/g, "");
+  const email = info?.officeEmail ?? "office@stpatrickinarmonk.org";
+  const flocknote = info?.flocknoteUrl ?? "https://stpatarmonk.flocknote.com/home";
+  const youtube = info?.youtubeUrl ?? "https://www.youtube.com/@stpatrickinarmonk";
+  const city = info?.city ?? "Armonk";
+  const state = info?.state ?? "NY";
+  const seasonLabel = season
+    ? season.charAt(0).toUpperCase() + season.slice(1).replace(/_/g, " ")
+    : "Ordinary Time";
 
-export default function Footer() {
   return (
-    <footer className="bg-parish-green text-white relative overflow-hidden">
-      {/* Subtle texture overlay */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.03]"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }}
-      />
+    <footer className="spf-root">
+      <style>{`
+        .spf-root{background:#f8f9fc;color:#555;border-top:3px solid transparent;
+          border-image:linear-gradient(90deg, ${GREEN} 0%, ${GOLD} 100%) 1;
+          -webkit-font-smoothing:antialiased;}
+        .spf-root *{box-sizing:border-box;}
+        .spf-main{padding:22px 20px 20px;}
+        .spf-inner{max-width:1100px;margin:0 auto;}
+        .spf-head{padding-bottom:16px;border-bottom:1px solid #e1e4e8;margin-bottom:16px;}
+        .spf-brand{color:${GREEN_DARK};font-size:18px;font-weight:800;text-transform:uppercase;
+          letter-spacing:.5px;line-height:1;display:block;margin-bottom:3px;
+          font-family:'Fraunces',Georgia,serif;}
+        .spf-tagline{color:${GOLD};font-size:10px;font-weight:700;text-transform:uppercase;
+          letter-spacing:1.5px;line-height:1.3;display:block;margin-bottom:14px;}
+        .spf-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+        .spf-season{display:inline-flex;align-items:center;gap:6px;background:#eef6f1;
+          border:1px solid #cfe6da;border-radius:50px;padding:5px 11px;flex-shrink:0;}
+        .spf-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;flex-shrink:0;
+          animation:spf-pulse 2s infinite;}
+        @keyframes spf-pulse{0%,100%{opacity:1}50%{opacity:.4}}
+        .spf-season-txt{font-size:11px;font-weight:700;color:${GREEN};text-transform:uppercase;
+          letter-spacing:.8px;line-height:1;}
+        .spf-vdot{width:3px;height:3px;border-radius:50%;background:#cfe6da;flex-shrink:0;}
+        .spf-ico{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;
+          border:1px solid #e1e4e8;border-radius:8px;background:#fff;transition:all .2s ease;flex-shrink:0;}
+        .spf-ico:hover{border-color:${GREEN};background:#eef6f1;}
+        .spf-ico.yt:hover{border-color:#e0301e;background:#fdecea;}
+        .spf-tools{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+        .spf-card{background:#fff;border:1.5px solid #e1e4e8;border-radius:12px;padding:16px 14px 14px;
+          display:flex;flex-direction:column;gap:5px;position:relative;overflow:hidden;transition:all .2s ease;}
+        .spf-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+        .spf-card.green::before{background:${GREEN};}
+        .spf-card.gold::before{background:${GOLD};}
+        .spf-card.navy::before{background:${GREEN_DARK};}
+        .spf-card:hover{border-color:${GREEN};box-shadow:0 6px 20px rgba(46,125,79,.14);transform:translateY(-2px);}
+        .spf-tico{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+          flex-shrink:0;margin-bottom:6px;}
+        .spf-tico.green{background:#f0fdf4;color:${GREEN};}
+        .spf-tico.gold{background:#fbf3dc;color:${GOLD};}
+        .spf-tico.navy{background:#e8efe9;color:${GREEN_DARK};}
+        .spf-label{font-size:9px;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;line-height:1;}
+        .spf-name{font-size:13px;font-weight:800;color:${GREEN_DARK};line-height:1.2;}
+        .spf-desc{font-size:11px;color:#6b7280;line-height:1.4;margin-top:2px;}
+        .spf-arrow{font-size:12px;color:#c0cad6;margin-top:auto;padding-top:10px;font-weight:700;}
+        .spf-legal{background:#edf3ef;border-top:2px solid #cfe6da;padding:9px 20px;margin-top:20px;}
+        .spf-legal-in{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+        .spf-legal p{margin:0;font-size:11px;color:#6b7280;line-height:1.4;}
+        .spf-power{display:inline-flex;align-items:center;gap:5px;}
+        .spf-power span{font-size:11px;color:#6b7280;}
+        .spf-power b{font-size:11px;font-weight:700;color:${GOLD};}
+        .spf-staff{font-size:11px;color:#9ca3af;display:inline-flex;align-items:center;gap:4px;}
+        .spf-staff:hover{color:${GREEN};}
+        @media(max-width:520px){
+          .spf-main{padding:18px 14px 16px;}
+          .spf-tools{gap:8px;}
+          .spf-card{padding:12px 10px 10px;border-radius:10px;}
+          .spf-desc,.spf-arrow{display:none;}
+          .spf-name{font-size:12px;}
+          .spf-legal{padding:9px 14px;margin-top:16px;}
+        }
+      `}</style>
 
-      {/* Main Footer Content */}
-      <div className="container relative py-6 sm:py-12">
-        <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between md:gap-10">
-          {/* Left: Church identity — compact on mobile */}
-          <div className="space-y-2 sm:space-y-3 max-w-xs">
-            <h3
-              className="text-gold leading-tight"
-              style={{
-                fontFamily: "'Fraunces', Georgia, serif",
-                fontSize: "1.125rem",
-                fontWeight: 600,
-                letterSpacing: "-0.01em",
-              }}
-            >
-              St. Patrick in Armonk
-            </h3>
-            <div className="flex flex-col gap-1.5 text-sm text-white/60" itemScope itemType="https://schema.org/CatholicChurch">
-              <meta itemProp="name" content="St. Patrick Church" />
-              {/* Mobile: single row with call + directions */}
-              <div className="flex items-center gap-3 sm:flex-col sm:items-start sm:gap-1.5">
-                <a href="tel:9142739724" className="flex items-center gap-1.5 hover:text-gold transition-colors" itemProp="telephone">
-                  <Phone className="w-3.5 h-3.5 text-gold/50 shrink-0" />
-                  <span className="text-sm">(914) 273-9724</span>
-                </a>
-                <a
-                  href="https://maps.google.com/?q=29+Cox+Ave+Armonk+NY+10504"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 hover:text-gold transition-colors"
-                  itemProp="address"
-                  itemScope
-                  itemType="https://schema.org/PostalAddress"
-                >
-                  <MapPin className="w-3.5 h-3.5 text-gold/50 shrink-0" />
-                  <span className="text-sm"><span itemProp="streetAddress">29 Cox Ave</span>, <span itemProp="addressLocality">Armonk</span> <span itemProp="addressRegion">NY</span></span>
-                </a>
+      <div className="spf-main">
+        <div className="spf-inner">
+          <div className="spf-head">
+            <span className="spf-brand">St. Patrick in Armonk</span>
+            <span className="spf-tagline">God Bless the Whole World, No Exceptions</span>
+            <div className="spf-meta">
+              <div className="spf-season">
+                <span className="spf-dot" />
+                <span className="spf-season-txt">{seasonLabel}</span>
               </div>
+              <span className="spf-vdot" />
+              <a className="spf-ico" href={`mailto:${email}`} aria-label="Email the parish office">
+                <Mail size={15} color={GREEN} />
+              </a>
+              <a className="spf-ico" href={`tel:${tel}`} aria-label={`Call ${phone}`}>
+                <Phone size={15} color={GREEN} />
+              </a>
+              <a className="spf-ico" href={flocknote} target="_blank" rel="noopener noreferrer" aria-label="Join Flocknote for updates">
+                <Bell size={15} color={GOLD} />
+              </a>
+              <a className="spf-ico yt" href={youtube} target="_blank" rel="noopener noreferrer" aria-label="Watch on YouTube">
+                <Youtube size={16} color="#e0301e" />
+              </a>
             </div>
-            {/* Tagline — desktop only */}
-            <p className="hidden sm:block text-xs text-white/35 leading-relaxed pt-1">
-              A welcoming Catholic community in northern Westchester County, serving families since 1924.
-            </p>
           </div>
 
-          {/* Center: Quick links - hidden on mobile (bottom nav + Menu cover it) */}
-          <nav className="hidden sm:grid grid-cols-2 gap-x-10 gap-y-2.5">
-            <Link href="/mass-times" className="text-sm text-white/60 hover:text-gold transition-colors duration-200">Mass Times</Link>
-            <Link href="/giving" className="text-sm text-white/60 hover:text-gold transition-colors duration-200">Giving</Link>
-            <Link href="/news" className="text-sm text-white/60 hover:text-gold transition-colors duration-200">News</Link>
-            <Link href="/bulletins" className="text-sm text-white/60 hover:text-gold transition-colors duration-200">Bulletin</Link>
-            <Link href="/calendar" className="text-sm text-white/60 hover:text-gold transition-colors duration-200">Calendar</Link>
-            <Link href="/contact" className="text-sm text-white/60 hover:text-gold transition-colors duration-200">Contact</Link>
-            <Link href="/faith-formation" className="text-sm text-white/60 hover:text-gold transition-colors duration-200">Faith Formation</Link>
-            <Link href="/sacraments" className="text-sm text-white/60 hover:text-gold transition-colors duration-200">Sacraments</Link>
-          </nav>
-
-          {/* Right: Stay connected */}
-          <div className="flex flex-col gap-2 sm:gap-3">
-            <p className="text-[10px] uppercase tracking-[0.15em] text-white/40 font-semibold">Stay Connected</p>
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <a
-                href="https://stpatarmonk.flocknote.com/home"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs bg-gold/10 border border-gold/25 text-gold px-3.5 py-1.5 rounded-full hover:bg-gold/20 active:scale-[0.97] transition-all duration-200 font-bold"
-              >
-                Flocknote
-              </a>
-              <a
-                href="http://www.youtube.com/@StPatricksArmonk"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs bg-white/5 border border-white/10 text-white/70 px-3.5 py-1.5 rounded-full hover:bg-red-600/10 hover:border-red-500/20 hover:text-white active:scale-[0.97] transition-all duration-200"
-              >
-                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                </svg>
-                YouTube
-              </a>
-            </div>
+          <div className="spf-tools">
+            <Link href="/mass-times" className="spf-card green">
+              <div className="spf-tico green"><Calendar size={14} /></div>
+              <span className="spf-label">Mass Times</span>
+              <span className="spf-name">This Week's Schedule</span>
+              <span className="spf-desc">Mass, Confession &amp; Adoration</span>
+              <span className="spf-arrow">View &#8594;</span>
+            </Link>
+            <Link href="/giving" className="spf-card gold">
+              <div className="spf-tico gold"><Heart size={14} /></div>
+              <span className="spf-label">Giving</span>
+              <span className="spf-name">Support the Parish</span>
+              <span className="spf-desc">Give online or by text</span>
+              <span className="spf-arrow">View &#8594;</span>
+            </Link>
+            <Link href="/contact" className="spf-card navy">
+              <div className="spf-tico navy"><MapPin size={14} /></div>
+              <span className="spf-label">Contact</span>
+              <span className="spf-name">Visit &amp; Directions</span>
+              <span className="spf-desc">29 Cox Ave, {city} {state}</span>
+              <span className="spf-arrow">View &#8594;</span>
+            </Link>
           </div>
         </div>
       </div>
 
-      {/* Staff Access Bar */}
-      <StaffAccessBar />
-
-      {/* Bottom Bar — slim on mobile */}
-      <div className="border-t border-white/[0.06]">
-        <div className="container py-2.5 sm:py-3 flex flex-col sm:flex-row items-center justify-between gap-1.5 sm:gap-2">
-          <p className="text-[10px] sm:text-[11px] text-white/35 text-center sm:text-left">
-            © {new Date().getFullYear()} St. Patrick in Armonk · <a href="https://archny.org" target="_blank" rel="noopener noreferrer" className="hover:text-gold/60 transition-colors">Archdiocese of NY</a> · <a href="https://www.ecatholic.com" target="_blank" rel="noopener noreferrer" className="hover:text-gold/60 transition-colors">eCatholic</a> · <a href="https://www.vatican.va" target="_blank" rel="noopener noreferrer" className="hover:text-gold/60 transition-colors">Vatican</a>
+      <div className="spf-legal">
+        <div className="spf-legal-in">
+          <p>
+            &copy; {new Date().getFullYear()} St. Patrick in {city} ·{" "}
+            <a href="https://archny.org" target="_blank" rel="noopener noreferrer" style={{ color: "#6b7280" }}>
+              Archdiocese of New York
+            </a>{" "}
+            · {city}, {state}
           </p>
-          <a href="https://www.astersports.io" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:opacity-80 transition-opacity">
-            <span className="text-[10px] sm:text-[11px] text-white/35">powered by</span>
-            <img src="/manus-storage/aster_logo_clean_854bf8b0.png" alt="Aster Sports" className="h-3.5 w-3.5 object-contain opacity-50" />
-            <span className="text-[10px] sm:text-[11px] font-medium text-white/45">Aster Sports</span>
-          </a>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            {isAdmin ? (
+              <Link href="/admin" className="spf-staff"><Shield size={11} /> Admin Dashboard</Link>
+            ) : (
+              <a href={getLoginUrl()} className="spf-staff"><Shield size={11} /> Staff Login</a>
+            )}
+            <a className="spf-power" href="https://www.astersports.io" target="_blank" rel="noopener noreferrer">
+              <span>powered by</span>
+              <img src="/manus-storage/aster_logo_clean_854bf8b0.png" alt="" width={16} height={16} style={{ objectFit: "contain" }} />
+              <b>Aster Sports</b>
+            </a>
+          </div>
         </div>
       </div>
     </footer>

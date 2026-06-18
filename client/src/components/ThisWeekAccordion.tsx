@@ -3,9 +3,8 @@
  */
 
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
-import { Calendar, Clock } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { format, addDays } from "date-fns";
-import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { ColorfulWeatherIcon } from "@/components/WeatherIcons";
 import { ServiceCard } from "./this-week/ServiceCard";
@@ -14,57 +13,8 @@ import { SundayOutlook } from "./this-week/SundayOutlook";
 import {
   DAILY_SCHEDULE, SERVICE_DURATION, parseServiceMinutes,
   DAY_LABELS, TIMEZONE,
+
 } from "./this-week/scheduleConfig";
-import { useParishSchedule, getServicesForDay } from "@/hooks/useParishSchedule";
-
-/** At a Glance footer — derives all times from the schedule engine. */
-function AtAGlanceFooter() {
-  const { schedule } = useParishSchedule();
-  const month = new Date().getMonth() + 1;
-
-  if (!schedule) return null;
-
-  // Saturday vigil
-  const satMasses = getServicesForDay(schedule, 6, month).filter(s => s.type === "mass");
-  const satVigilTime = satMasses.length > 0 ? satMasses[satMasses.length - 1].time : null;
-
-  // Sunday masses
-  const sunMasses = getServicesForDay(schedule, 0, month).filter(s => s.type === "mass");
-  const sunTimes = sunMasses.map(s => s.time.replace(/ [AP]M$/, ""));
-  const sunDisplay = sunTimes.length > 0
-    ? sunTimes.length === 1 ? sunMasses[0].time : sunTimes.join(" & ")
-    : null;
-
-  // Weekday mass (Tue=2 as representative)
-  const weekdayMasses = getServicesForDay(schedule, 2, month).filter(s => s.type === "mass");
-  const weekdayTime = weekdayMasses.length > 0 ? weekdayMasses[0].time : null;
-
-  return (
-    <div className="border-t border-border/30 px-4 py-3 bg-muted/10">
-      <div className="flex items-center gap-1.5 mb-2.5">
-        <Clock className="w-3.5 h-3.5 text-muted-foreground" />
-        <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">At a Glance</span>
-      </div>
-      <div className="grid grid-cols-3 gap-2">
-        <div className="rounded-lg bg-card p-2.5 text-center shadow-sm">
-          <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Sat Vigil</p>
-          <p className="text-sm font-bold text-primary mt-0.5">{satVigilTime || "—"}</p>
-        </div>
-        <div className="rounded-lg bg-card p-2.5 text-center shadow-sm">
-          <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Sunday</p>
-          <p className="text-sm font-bold text-primary mt-0.5">{sunDisplay || "—"}</p>
-        </div>
-        <div className="rounded-lg bg-card p-2.5 text-center shadow-sm">
-          <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Tue\u2013Fri</p>
-          <p className="text-sm font-bold text-primary mt-0.5">{weekdayTime || "—"}</p>
-        </div>
-      </div>
-      <Link href="/mass-times" className="flex items-center justify-center gap-1 mt-3 text-sm font-medium text-primary hover:text-primary/80 transition-colors">
-        Full schedule & details <span className="text-sm">\u2192</span>
-      </Link>
-    </div>
-  );
-}
 
 export function ThisWeekAccordion() {
   const now = useMemo(() => new Date(new Date().toLocaleString("en-US", { timeZone: TIMEZONE })), []);
@@ -310,8 +260,6 @@ export function ThisWeekAccordion() {
         <SundayOutlook dailyForecast={dailyForecast} />
       </div>
 
-      {/* At a Glance footer — derived from schedule engine */}
-      <AtAGlanceFooter />
     </div>
   );
 }

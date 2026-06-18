@@ -1007,3 +1007,10 @@
 - [x] Add logAuditEvent to volunteer opportunity create/update/delete
 - [x] Add logAuditEvent to document upload/delete
 - [x] Add logAuditEvent to form submission status changes (baptism, marriage, sponsor cert)
+
+### MANUS-FINISH-NOW (Architect Review 36569e28)
+- [x] A11. P0 BUG: Fix false "Next" badge on every day tab (WeeklySchedule + ThisWeekAccordion)
+- [x] A7+A13. Footer redesign (replace with provided Footer.stpatrick.tsx) + visible Aster Sports credit
+- [x] A12. Remove "This Sunday"; add "Today" card linking to /worship/today; rename menu label
+- [x] A10. Remove "At a Glance" from homepage ThisWeekAccordion (keep on /mass-times only)
+- [x] A9.2. Clear seeded test prayers from production Prayer Wall

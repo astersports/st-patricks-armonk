@@ -20,7 +20,7 @@ export const navLinks: NavItem[] = [
       { href: "/mass-times", label: "Mass Times & Confession" },
       { href: "/sacraments", label: "Sacraments" },
       { href: "/prayers", label: "Prayers & Devotions" },
-      { href: "/worship/today", label: "Today's Readings & Saint" },
+      { href: "/worship/today", label: "Today's Readings, Saint & News" },
     ],
   },
   {
@@ -66,7 +66,7 @@ export const searchablePages: SearchableItem[] = [
   { href: "/mass-times", label: "Mass Times & Confession", keywords: ["mass", "confession", "reconciliation", "schedule", "saturday", "sunday", "weekday", "holy day", "prayer", "lauds"], icon: Clock },
   { href: "/sacraments", label: "Sacraments", keywords: ["baptism", "confirmation", "marriage", "wedding", "funeral", "communion", "eucharist", "sponsor", "rcia", "anointing"], icon: Cross },
   { href: "/prayers", label: "Prayers & Devotions", keywords: ["prayer", "rosary", "novena", "adoration", "devotion", "candle", "intention"], icon: Flame },
-  { href: "/worship/today", label: "Today's Readings & Saint", keywords: ["readings", "saint", "daily", "gospel", "liturgy", "today", "catholic resources", "usccb", "formed"], icon: Sun },
+  { href: "/worship/today", label: "Today's Readings, Saint & News", keywords: ["readings", "saint", "daily", "gospel", "liturgy", "today", "catholic resources", "usccb", "formed"], icon: Sun },
   { href: "/faith-formation", label: "Faith Formation", keywords: ["faith", "formation", "religious education", "rcia", "walking with purpose", "blaze", "adult"], icon: GraduationCap },
   { href: "/calendar?filter=ccd", label: "CCD Calendar", keywords: ["ccd", "religious ed", "class", "schedule", "catechism"], icon: Calendar },
   { href: "/ccd-registration", label: "CCD Registration", keywords: ["ccd", "register", "enroll", "religious ed", "sign up", "child"], icon: FileText },
@@ -101,7 +101,7 @@ export const mobileMenuSections: MobileMenuSection[] = [
       { href: "/mass-times", label: "Mass Times & Confession", icon: Clock },
       { href: "/sacraments", label: "Sacraments", icon: Cross },
       { href: "/prayers", label: "Prayers & Devotions", icon: Flame },
-      { href: "/worship/today", label: "Today's Readings & Saint", icon: Sun },
+      { href: "/worship/today", label: "Today's Readings, Saint & News", icon: Sun },
     ],
   },
   {
