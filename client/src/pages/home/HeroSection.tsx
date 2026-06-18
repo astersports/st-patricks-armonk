@@ -73,20 +73,20 @@ export function HeroSection() {
         }}
       />
 
-      {/* Current Weather — top right overlay with tap-to-expand */}
+      {/* Current Weather — top right on md+, hidden on mobile (shown inline in CTA row instead) */}
       {currentWeather && (
         <div
-          className="absolute top-4 right-4 sm:top-6 sm:right-6 md:top-8 md:right-12 lg:right-20 z-20 opacity-0"
+          className="absolute top-8 right-12 lg:right-20 z-20 opacity-0 hidden md:block"
           style={{ animation: 'fadeSlideUp 0.6s ease 0.5s forwards' }}
         >
           <Popover open={weatherOpen} onOpenChange={setWeatherOpen}>
             <PopoverTrigger asChild>
               <button className="flex items-center gap-2 px-3 py-2 rounded-full backdrop-blur-md bg-white/15 border border-white/20 shadow-lg cursor-pointer hover:bg-white/25 transition-colors duration-200 press-scale">
-                <ColorfulWeatherIcon icon={currentWeather.icon} className="w-5 h-5 sm:w-6 sm:h-6" isDay={currentWeather.isDay} />
-                <span className="text-white font-semibold text-sm sm:text-base drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                <ColorfulWeatherIcon icon={currentWeather.icon} className="w-6 h-6" isDay={currentWeather.isDay} />
+                <span className="text-white font-semibold text-base drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
                   {currentWeather.temperature}°F
                 </span>
-                <span className="text-white/80 text-xs sm:text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
+                <span className="text-white/80 text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
                   {currentWeather.description}
                 </span>
               </button>
@@ -210,9 +210,9 @@ export function HeroSection() {
             </p>
           )}
 
-          {/* CTA Group */}
+          {/* CTA Group + Weather on mobile */}
           <div
-            className="flex flex-col sm:flex-row flex-wrap gap-3 opacity-0"
+            className="flex flex-row flex-wrap items-center gap-3 opacity-0"
             style={{ animation: 'fadeSlideUp 0.7s ease 0.4s forwards' }}
           >
             <Link href="/new-here">
@@ -224,6 +224,72 @@ export function HeroSection() {
                 <ArrowRight className="w-4 h-4 ml-1.5" />
               </Button>
             </Link>
+            {/* Weather pill — mobile only (inline next to I'm New Here) */}
+            {currentWeather && (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button className="flex md:hidden items-center gap-1.5 px-2.5 py-2 rounded-full backdrop-blur-md bg-white/15 border border-white/20 shadow-lg cursor-pointer hover:bg-white/25 transition-colors duration-200 press-scale">
+                    <ColorfulWeatherIcon icon={currentWeather.icon} className="w-4 h-4" isDay={currentWeather.isDay} />
+                    <span className="text-white font-semibold text-xs drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                      {currentWeather.temperature}°F
+                    </span>
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent
+                  side="top"
+                  align="start"
+                  className="w-56 p-3 rounded-xl backdrop-blur-xl bg-background/95 border border-border/50 shadow-xl"
+                >
+                  <div className="space-y-2.5">
+                    <div className="flex items-center gap-2">
+                      <ColorfulWeatherIcon icon={currentWeather.icon} className="w-8 h-8" isDay={currentWeather.isDay} />
+                      <div>
+                        <p className="text-lg font-bold text-foreground">{currentWeather.temperature}°F</p>
+                        <p className="text-xs text-muted-foreground">{currentWeather.description}</p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 pt-1 border-t border-border/30">
+                      <div className="flex items-center gap-1.5">
+                        <Thermometer className="w-3.5 h-3.5 text-orange-500" />
+                        <div>
+                          <p className="text-xs text-muted-foreground">Feels like</p>
+                          <p className="text-xs font-semibold">{currentWeather.feelsLike}°F</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Droplets className="w-3.5 h-3.5 text-blue-500" />
+                        <div>
+                          <p className="text-xs text-muted-foreground">Humidity</p>
+                          <p className="text-xs font-semibold">{currentWeather.humidity}%</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Wind className="w-3.5 h-3.5 text-slate-500" />
+                        <div>
+                          <p className="text-xs text-muted-foreground">Wind</p>
+                          <p className="text-xs font-semibold">{currentWeather.windSpeed} mph</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Sunrise className="w-3.5 h-3.5 text-amber-500" />
+                        <div>
+                          <p className="text-xs text-muted-foreground">Sunrise</p>
+                          <p className="text-xs font-semibold">{currentWeather.sunrise}</p>
+                        </div>
+                      </div>
+                    </div>
+                    {currentWeather.sunset && (
+                      <div className="flex items-center justify-center gap-1.5 pt-1 border-t border-border/30">
+                        <Sunset className="w-3.5 h-3.5 text-orange-400" />
+                        <span className="text-xs text-muted-foreground">Sunset</span>
+                        <span className="text-xs font-semibold">{currentWeather.sunset}</span>
+                      </div>
+                    )}
+                    <p className="text-xs text-muted-foreground text-center pt-1">Armonk, NY</p>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            )}
             <Link href="/mass-times">
               <Button
                 size="lg"
