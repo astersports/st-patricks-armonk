@@ -48,9 +48,16 @@ function getMassStatus(now: Date, services: ScheduledService[]): MassStatus {
   const month = now.getMonth() + 1;
   const currentMin = now.getHours() * 60 + now.getMinutes();
 
-  // Get today's services from the shared engine
+  // Get today's services from the shared engine (date-aware: respects firstOfMonth)
+  const today = new Date();
+  const dayOfMonth = today.getDate();
   const todayServices = services
-    .filter(s => s.dayOfWeek === day && (!s.seasonal || s.seasonal.months.includes(month)))
+    .filter(s => {
+      if (s.dayOfWeek !== day) return false;
+      if (s.seasonal && !s.seasonal.months.includes(month)) return false;
+      if (s.firstOfMonth && dayOfMonth > 7) return false;
+      return true;
+    })
     .sort((a, b) => parseTimeToMinutes(a.time) - parseTimeToMinutes(b.time));
 
   const todaySchedule = todayServices.map(s => {

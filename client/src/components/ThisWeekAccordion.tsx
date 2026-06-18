@@ -12,20 +12,19 @@ import { DayContent } from "./this-week/DayContent";
 import { SundayOutlook } from "./this-week/SundayOutlook";
 import {
   DAILY_SCHEDULE, SERVICE_DURATION, parseServiceMinutes,
-  DAY_LABELS, TIMEZONE,
-
+  DAY_LABELS, TIMEZONE, getScheduleForDate,
 } from "./this-week/scheduleConfig";
 
 export function ThisWeekAccordion() {
   const now = useMemo(() => new Date(new Date().toLocaleString("en-US", { timeZone: TIMEZONE })), []);
 
-  // Build 7 days starting from today
+  // Build 7 days starting from today (date-aware: respects firstOfMonth)
   const days = useMemo(() => {
     const result = [];
     for (let i = 0; i < 7; i++) {
       const date = addDays(now, i);
       const dayOfWeek = date.getDay();
-      const services = DAILY_SCHEDULE[dayOfWeek] || [];
+      const services = getScheduleForDate(date);
       result.push({ index: i, dayOfWeek, date, services, isToday: i === 0, label: DAY_LABELS[dayOfWeek], dateNum: date.getDate() });
     }
     return result;

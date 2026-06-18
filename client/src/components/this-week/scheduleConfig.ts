@@ -8,7 +8,7 @@
 import { Church, Cross, Sun, Heart } from "lucide-react";
 import {
   parseTimeToMinutes,
-  getWeeklySchedule,
+  getServicesForDate,
   DEFAULT_PARISH_SCHEDULE,
   TIMEZONE as ENGINE_TZ,
   DAY_LABELS as ENGINE_DAYS,
@@ -40,22 +40,33 @@ export const typeStyles: Record<string, { icon: typeof Church; color: string; bg
 };
 
 /**
- * DAILY_SCHEDULE — derived from the shared engine's DEFAULT_PARISH_SCHEDULE.
- * Single source of truth: edit shared/scheduleEngine.ts DEFAULT_PARISH_SCHEDULE
- * or use the admin panel to update via siteSettings.
+ * getScheduleForDate — date-aware schedule builder that respects firstOfMonth.
+ * Used by ThisWeekAccordion to get the correct services for each specific date.
  */
-function buildDailySchedule(): Record<number, ScheduleItem[]> {
-  const month = new Date().getMonth() + 1;
-  const weekly = getWeeklySchedule(DEFAULT_PARISH_SCHEDULE, month);
+export function getScheduleForDate(date: Date): ScheduleItem[] {
+  const services = getServicesForDate(DEFAULT_PARISH_SCHEDULE, date);
+  return services.map(s => ({
+    time: s.time,
+    label: s.name,
+    type: s.type as "mass" | "confession" | "prayer" | "adoration",
+  }));
+}
+
+/**
+ * DAILY_SCHEDULE — backward-compatible static map for today's week.
+ * Uses date-aware filtering for the next 7 days starting from today.
+ */
+function buildDailyScheduleForWeek(): Record<number, ScheduleItem[]> {
+  const today = new Date();
   const result: Record<number, ScheduleItem[]> = {};
-  for (let day = 0; day <= 6; day++) {
-    result[day] = (weekly[day] || []).map(s => ({
-      time: s.time,
-      label: s.name,
-      type: s.type as "mass" | "confession" | "prayer" | "adoration",
-    }));
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() + i);
+    const dayOfWeek = date.getDay();
+    // Use the date-aware version for today's actual week
+    result[dayOfWeek] = getScheduleForDate(date);
   }
   return result;
 }
 
-export const DAILY_SCHEDULE: Record<number, ScheduleItem[]> = buildDailySchedule();
+export const DAILY_SCHEDULE: Record<number, ScheduleItem[]> = buildDailyScheduleForWeek();

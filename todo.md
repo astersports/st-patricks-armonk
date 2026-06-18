@@ -1167,3 +1167,5 @@
 - [x] Remove "Good Afternoon · Armonk, New York" greeting line from hero for more space
 - [x] Move weather widget from top-right (overlapping title) to inline next to "I'm New Here" button on mobile
 - [x] Fix crash when clicking FRI 19 in This Week: "adoration" type missing from typeStyles in scheduleConfig.ts
+- [x] Fix: September 12:30 PM Sunday Mass should resume Sept 13 (not excluded entire month). Bulletin says "No 12:30 Mass July 5 – September 6 (Resumes 9/13/26)"
+- [x] Fix: First Friday Adoration should only show on first Friday of each month, not every Friday

@@ -22,6 +22,7 @@ export interface ScheduledService {
     months: number[];     // 1-indexed months when active (e.g., [10,11,12,1,2,3,4,5,6] for Oct–Jun)
     note: string;         // e.g. "1st weekend in July through Labor Day: no 12:30 PM Mass"
   };
+  firstOfMonth?: boolean; // If true, only active on the first occurrence of dayOfWeek in the month
   note?: string;          // any additional note
 }
 
@@ -61,7 +62,7 @@ export const DEFAULT_PARISH_SCHEDULE: ParishSchedule = {
     // Sunday
     { type: "mass", name: "Mass", dayOfWeek: 0, time: "8:30 AM", durationMin: 60 },
     { type: "mass", name: "Mass", dayOfWeek: 0, time: "10:30 AM", durationMin: 60 },
-    { type: "mass", name: "Mass", dayOfWeek: 0, time: "12:30 PM", durationMin: 60, seasonal: { months: [10, 11, 12, 1, 2, 3, 4, 5, 6], note: "1st weekend in July through Labor Day: no 12:30 PM Mass" } },
+    { type: "mass", name: "Mass", dayOfWeek: 0, time: "12:30 PM", durationMin: 60, seasonal: { months: [9, 10, 11, 12, 1, 2, 3, 4, 5, 6], note: "No 12:30 PM Mass from 1st Sunday in July through Labor Day weekend (resumes mid-September)" } },
     // Monday — no services
     // Tuesday
     { type: "mass", name: "Mass", dayOfWeek: 2, time: "8:30 AM", durationMin: 30 },
@@ -72,7 +73,7 @@ export const DEFAULT_PARISH_SCHEDULE: ParishSchedule = {
     { type: "prayer", name: "Rosary", dayOfWeek: 4, time: "7:30 PM", durationMin: 30 },
     // Friday
     { type: "mass", name: "Mass", dayOfWeek: 5, time: "8:30 AM", durationMin: 30 },
-    { type: "adoration", name: "First Friday Adoration", dayOfWeek: 5, time: "9:00 AM", durationMin: 600, seasonal: { months: [9, 10, 11, 12, 1, 2, 3, 4, 5, 6], note: "First Fridays, Sept–June, 9 AM – 7 PM" }, note: "Exposition of the Blessed Sacrament (1st Friday only)" },
+    { type: "adoration", name: "First Friday Adoration", dayOfWeek: 5, time: "9:00 AM", durationMin: 600, seasonal: { months: [9, 10, 11, 12, 1, 2, 3, 4, 5, 6], note: "First Fridays, Sept–June, 9 AM – 7 PM" }, firstOfMonth: true, note: "Exposition of the Blessed Sacrament" },
     // Saturday
     { type: "confession", name: "Confession", dayOfWeek: 6, time: "4:30 PM", durationMin: 45 },
     { type: "mass", name: "Vigil Mass", dayOfWeek: 6, time: "5:30 PM", durationMin: 60 },
@@ -143,6 +144,35 @@ export function isServiceActiveInMonth(service: ScheduledService, month: number)
 }
 
 /**
+ * Check if a specific date is the first occurrence of its weekday in its month.
+ * e.g., is this Friday the "first Friday" of the month?
+ */
+export function isFirstOccurrenceInMonth(date: Date): boolean {
+  return date.getDate() <= 7;
+}
+
+/**
+ * Date-aware service filter: checks both seasonal months AND firstOfMonth constraint.
+ * Use this when you have the actual date (not just the day-of-week).
+ */
+export function isServiceActiveOnDate(service: ScheduledService, date: Date): boolean {
+  const month = date.getMonth() + 1;
+  if (service.seasonal && !service.seasonal.months.includes(month)) return false;
+  if (service.firstOfMonth && !isFirstOccurrenceInMonth(date)) return false;
+  return true;
+}
+
+/**
+ * Get services for a specific date (date-aware: respects firstOfMonth).
+ */
+export function getServicesForDate(schedule: ParishSchedule, date: Date): ScheduledService[] {
+  const dayOfWeek = date.getDay();
+  return schedule.services
+    .filter(s => s.dayOfWeek === dayOfWeek && isServiceActiveOnDate(s, date))
+    .sort((a, b) => parseTimeToMinutes(a.time) - parseTimeToMinutes(b.time));
+}
+
+/**
  * Get services for a specific day of the week, filtered by current month.
  */
 export function getServicesForDay(schedule: ParishSchedule, dayOfWeek: number, month: number): ScheduledService[] {
@@ -187,14 +217,13 @@ export function isServiceInProgress(service: ScheduledService, currentMinutes: n
 
 /**
  * Find the next upcoming service from now (across today and tomorrow).
+ * Uses date-aware filtering to respect firstOfMonth constraints.
  */
 export function getNextService(schedule: ParishSchedule, now: Date): { service: ScheduledService; daysAhead: number; countdown: string } | null {
-  const month = now.getMonth() + 1;
-  const currentDay = now.getDay();
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
   // Check today's remaining services
-  const todayServices = getServicesForDay(schedule, currentDay, month);
+  const todayServices = getServicesForDate(schedule, now);
   for (const service of todayServices) {
     const serviceMin = parseTimeToMinutes(service.time);
     if (serviceMin > currentMinutes) {
@@ -202,21 +231,15 @@ export function getNextService(schedule: ParishSchedule, now: Date): { service: 
     }
   }
 
-  // Check tomorrow
-  const tomorrowDay = (currentDay + 1) % 7;
-  const tomorrowServices = getServicesForDay(schedule, tomorrowDay, month);
-  if (tomorrowServices.length > 0) {
-    const service = tomorrowServices[0];
-    const serviceMin = parseTimeToMinutes(service.time);
-    return { service, daysAhead: 1, countdown: getCountdown(serviceMin, currentMinutes, 1) };
-  }
-
   // Check next 7 days
-  for (let ahead = 2; ahead <= 7; ahead++) {
-    const futureDay = (currentDay + ahead) % 7;
-    const services = getServicesForDay(schedule, futureDay, month);
+  for (let ahead = 1; ahead <= 7; ahead++) {
+    const futureDate = new Date(now);
+    futureDate.setDate(now.getDate() + ahead);
+    const services = getServicesForDate(schedule, futureDate);
     if (services.length > 0) {
-      return { service: services[0], daysAhead: ahead, countdown: "" };
+      const service = services[0];
+      const serviceMin = parseTimeToMinutes(service.time);
+      return { service, daysAhead: ahead, countdown: getCountdown(serviceMin, currentMinutes, ahead) };
     }
   }
 

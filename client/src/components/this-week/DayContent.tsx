@@ -8,7 +8,7 @@ import { useMemo } from "react";
 import { format, addDays } from "date-fns";
 import { ColorfulWeatherIcon } from "@/components/WeatherIcons";
 import { ServiceCard } from "./ServiceCard";
-import { type ScheduleItem, DAILY_SCHEDULE, parseServiceMinutes, TIMEZONE } from "./scheduleConfig";
+import { type ScheduleItem, DAILY_SCHEDULE, parseServiceMinutes, TIMEZONE, getScheduleForDate } from "./scheduleConfig";
 
 interface DayData {
   index: number;
@@ -85,7 +85,7 @@ export function DayContent({
     if (!allTodayEnded) return null;
     const tomorrow = addDays(now, 1);
     const tomorrowDow = tomorrow.getDay();
-    const tomorrowServices = DAILY_SCHEDULE[tomorrowDow] || [];
+    const tomorrowServices = getScheduleForDate(tomorrow);
     return { date: tomorrow, services: tomorrowServices, dayOfWeek: tomorrowDow };
   }, [allTodayEnded, now]);
 
