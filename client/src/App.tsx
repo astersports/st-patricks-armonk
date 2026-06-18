@@ -23,7 +23,6 @@ import {
   Contact,
   Unsubscribe,
   CcdRegistration,
-  Volunteer,
   CcdUnsubscribe,
   Sacraments,
   AllCalendars,
@@ -39,10 +38,9 @@ import {
   NewHere,
   PhotoGallery,
   Prayers,
-  VolunteerNeeds,
-  MyParish,
   SacramentProgress,
-  HomilyArchive,
+  Serve,
+  WorshipToday,
   AdminRouter,
 } from "./lazyPages";
 
@@ -73,16 +71,18 @@ function Router() {
           <Route path="/teen-life"><Redirect to="/faith-formation" /></Route>
           <Route path="/ministries" component={Ministries} />
           <Route path="/gallery" component={PhotoGallery} />
-          <Route path="/volunteer" component={Volunteer} />
-        <Route path="/volunteer-needs" component={VolunteerNeeds} />
-          <Route path="/my-parish" component={MyParish} />
+          <Route path="/serve" component={Serve} />
+          <Route path="/volunteer"><Redirect to="/serve" /></Route>
+          <Route path="/volunteer-needs"><Redirect to="/serve" /></Route>
+          <Route path="/worship/today" component={WorshipToday} />
+          <Route path="/my-parish"><Redirect to="/about" /></Route>
           <Route path="/forms" component={FormsDocuments} />
           <Route path="/baptism-form" component={BaptismForm} />
           <Route path="/sponsor-form" component={SponsorForm} />
           <Route path="/marriage-form" component={MarriageForm} />
           <Route path="/funeral-form" component={FuneralForm} />
           <Route path="/sacrament-preparation" component={SacramentProgress} />
-          <Route path="/homilies" component={HomilyArchive} />
+          <Route path="/homilies"><Redirect to="/bulletins" /></Route>
           <Route path="/prayers" component={Prayers} />
           <Route path="/giving" component={Giving} />
           <Route path="/contact" component={Contact} />

@@ -1,32 +1,26 @@
 /**
- * Navigation Menu Data — All nav links, searchable pages, and mobile menu sections.
+ * Navigation Menu Data — 5-bucket IA structure.
+ * Buckets: Worship, Faith Formation, Parish Life, About + standalone Give + I'm New CTA
  */
 
-import { Clock, BookOpen, Users, Heart, Calendar, FileText, GraduationCap, Newspaper, Phone, UserPlus, HandHeart, Cross, Church, Search } from "lucide-react";
+import { Clock, BookOpen, Users, Heart, Calendar, FileText, GraduationCap, Newspaper, Phone, UserPlus, HandHeart, Cross, Church, Search, Flame, Sun, BookHeart } from "lucide-react";
 
 export type NavItem = {
   href: string;
   label: string;
-  children?: { href: string; label: string }[];
+  highlight?: boolean; // renders as CTA button
+  children?: { href: string; label: string; description?: string }[];
 };
 
 export const navLinks: NavItem[] = [
   {
-    href: "/about",
-    label: "About",
-    children: [
-      { href: "/about", label: "Our Parish" },
-      { href: "/new-here", label: "New Here? Plan Your Visit" },
-      { href: "/staff", label: "Staff & Leadership" },
-      { href: "/parish-registration", label: "New Parishioner Registration" },
-    ],
-  },
-  {
     href: "/mass-times",
-    label: "Mass & Prayer",
+    label: "Worship",
     children: [
       { href: "/mass-times", label: "Mass Times & Confession" },
       { href: "/sacraments", label: "Sacraments" },
+      { href: "/prayers", label: "Prayers & Devotions" },
+      { href: "/worship/today", label: "Today's Readings & Saint" },
     ],
   },
   {
@@ -46,15 +40,23 @@ export const navLinks: NavItem[] = [
       { href: "/news", label: "News" },
       { href: "/calendar", label: "Full Calendar" },
       { href: "/gallery", label: "Photo Gallery" },
-      { href: "/bulletins", label: "Weekly Bulletins" },
+      { href: "/bulletins", label: "Bulletins & Homilies" },
       { href: "/calendar?filter=cyo", label: "CYO Schedule" },
       { href: "/ministries", label: "Ministries & Devotions" },
-      { href: "/volunteer", label: "Volunteer" },
-      { href: "/forms", label: "Forms & Documents" },
+      { href: "/serve", label: "Serve & Volunteer" },
     ],
   },
-  { href: "/giving", label: "Giving" },
-  { href: "/contact", label: "Contact" },
+  {
+    href: "/about",
+    label: "About",
+    children: [
+      { href: "/about", label: "Our Parish" },
+      { href: "/staff", label: "Staff & Leadership" },
+      { href: "/contact", label: "Contact Us" },
+    ],
+  },
+  { href: "/giving", label: "Give" },
+  { href: "/new-here", label: "I'm New", highlight: true },
 ];
 
 // Searchable page index — includes all pages with keywords for fuzzy matching
@@ -63,6 +65,8 @@ export type SearchableItem = { href: string; label: string; keywords: string[]; 
 export const searchablePages: SearchableItem[] = [
   { href: "/mass-times", label: "Mass Times & Confession", keywords: ["mass", "confession", "reconciliation", "schedule", "saturday", "sunday", "weekday", "holy day", "prayer", "lauds"], icon: Clock },
   { href: "/sacraments", label: "Sacraments", keywords: ["baptism", "confirmation", "marriage", "wedding", "funeral", "communion", "eucharist", "sponsor", "rcia", "anointing"], icon: Cross },
+  { href: "/prayers", label: "Prayers & Devotions", keywords: ["prayer", "rosary", "novena", "adoration", "devotion", "candle", "intention"], icon: Flame },
+  { href: "/worship/today", label: "Today's Readings & Saint", keywords: ["readings", "saint", "daily", "gospel", "liturgy", "today", "catholic resources", "usccb", "formed"], icon: Sun },
   { href: "/faith-formation", label: "Faith Formation", keywords: ["faith", "formation", "religious education", "rcia", "walking with purpose", "blaze", "adult"], icon: GraduationCap },
   { href: "/calendar?filter=ccd", label: "CCD Calendar", keywords: ["ccd", "religious ed", "class", "schedule", "catechism"], icon: Calendar },
   { href: "/ccd-registration", label: "CCD Registration", keywords: ["ccd", "register", "enroll", "religious ed", "sign up", "child"], icon: FileText },
@@ -70,21 +74,21 @@ export const searchablePages: SearchableItem[] = [
   { href: "/faith-formation", label: "Teen Life & Youth Ministry", keywords: ["teen", "youth", "high school", "confirmation", "young", "teen life"], icon: Users },
   { href: "/news", label: "News", keywords: ["news", "announcement", "update", "parish"], icon: Newspaper },
   { href: "/calendar", label: "Full Calendar", keywords: ["calendar", "events", "schedule", "upcoming", "parish", "cyo", "ccd", "full"], icon: Calendar },
-  { href: "/bulletins", label: "Weekly Bulletins", keywords: ["bulletin", "weekly", "pdf", "download", "read"], icon: BookOpen },
+  { href: "/bulletins", label: "Bulletins & Homilies", keywords: ["bulletin", "weekly", "pdf", "download", "read", "homily", "sermon", "listen"], icon: BookOpen },
   { href: "/calendar?filter=cyo", label: "CYO Schedule", keywords: ["cyo", "basketball", "sports", "practice", "youth", "athletics"], icon: Calendar },
   { href: "/ministries", label: "Ministries & Devotions", keywords: ["ministry", "devotion", "lector", "eucharistic", "choir", "music", "rosary", "prayer", "share care", "fiat", "embrace"], icon: HandHeart },
-  { href: "/volunteer", label: "Volunteer", keywords: ["volunteer", "help", "serve", "sign up", "get involved"], icon: Users },
-  { href: "/forms", label: "Forms & Documents", keywords: ["form", "document", "download", "pdf", "application"], icon: FileText },
+  { href: "/serve", label: "Serve & Volunteer", keywords: ["volunteer", "help", "serve", "sign up", "get involved", "needs", "urgent"], icon: Users },
   { href: "/giving", label: "Give Online", keywords: ["give", "donate", "offering", "weshare", "venmo", "tithe", "stewardship", "cardinal", "appeal"], icon: Heart },
   { href: "/contact", label: "Contact Us", keywords: ["contact", "phone", "email", "address", "office", "hours", "directions", "map"], icon: Phone },
   { href: "/gallery", label: "Photo Gallery", keywords: ["photo", "gallery", "pictures", "images", "events", "album"], icon: Church },
   { href: "/about", label: "Our Parish", keywords: ["about", "parish", "history", "armonk", "cross", "community"], icon: Church },
-  { href: "/new-here", label: "New Here? Plan Your Visit", keywords: ["new", "visit", "welcome", "first time", "directions", "what to expect"], icon: UserPlus },
+  { href: "/new-here", label: "I'm New — Plan Your Visit", keywords: ["new", "visit", "welcome", "first time", "directions", "what to expect"], icon: UserPlus },
   { href: "/staff", label: "Staff & Leadership", keywords: ["staff", "pastor", "priest", "deacon", "director", "leadership", "team", "contact"], icon: Users },
   { href: "/parish-registration", label: "Register as a Parishioner", keywords: ["register", "new member", "join", "parishioner", "sign up", "family"], icon: UserPlus },
+  { href: "/forms", label: "Forms & Documents", keywords: ["form", "document", "download", "pdf", "application"], icon: FileText },
 ];
 
-// Grouped mobile menu matching site flow
+// Grouped mobile menu matching 5-bucket IA
 export type MobileMenuSection = {
   title: string;
   items: { href: string; label: string; icon: typeof Clock }[];
@@ -96,6 +100,8 @@ export const mobileMenuSections: MobileMenuSection[] = [
     items: [
       { href: "/mass-times", label: "Mass Times & Confession", icon: Clock },
       { href: "/sacraments", label: "Sacraments", icon: Cross },
+      { href: "/prayers", label: "Prayers & Devotions", icon: Flame },
+      { href: "/worship/today", label: "Today's Readings & Saint", icon: Sun },
     ],
   },
   {
@@ -113,27 +119,26 @@ export const mobileMenuSections: MobileMenuSection[] = [
       { href: "/news", label: "News", icon: Newspaper },
       { href: "/calendar", label: "Calendar", icon: Calendar },
       { href: "/gallery", label: "Photo Gallery", icon: Church },
-      { href: "/bulletins", label: "Weekly Bulletins", icon: BookOpen },
+      { href: "/bulletins", label: "Bulletins & Homilies", icon: BookOpen },
       { href: "/calendar?filter=cyo", label: "CYO Schedule", icon: Calendar },
       { href: "/ministries", label: "Ministries & Devotions", icon: HandHeart },
-      { href: "/volunteer", label: "Volunteer", icon: Users },
-      { href: "/forms", label: "Forms & Documents", icon: FileText },
+      { href: "/serve", label: "Serve & Volunteer", icon: Users },
     ],
   },
   {
-    title: "Give & Connect",
-    items: [
-      { href: "/giving", label: "Give Online", icon: Heart },
-      { href: "/contact", label: "Contact Us", icon: Phone },
-    ],
-  },
-  {
-    title: "About",
+    title: "About & Connect",
     items: [
       { href: "/about", label: "Our Parish", icon: Church },
-      { href: "/new-here", label: "New Here? Plan Your Visit", icon: UserPlus },
       { href: "/staff", label: "Staff & Leadership", icon: Users },
+      { href: "/contact", label: "Contact Us", icon: Phone },
+      { href: "/new-here", label: "I'm New — Plan Your Visit", icon: UserPlus },
       { href: "/parish-registration", label: "Register as a Parishioner", icon: UserPlus },
+    ],
+  },
+  {
+    title: "Give",
+    items: [
+      { href: "/giving", label: "Give Online", icon: Heart },
     ],
   },
 ];

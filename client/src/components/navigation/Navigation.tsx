@@ -93,6 +93,14 @@ export default function Navigation() {
             {navLinks.map((link) =>
               link.children ? (
                 <DesktopDropdown key={link.label} item={link} location={location} />
+              ) : link.highlight ? (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="ml-1.5 px-4 py-1.5 rounded-full text-xs font-semibold bg-primary text-white hover:bg-primary/90 transition-all duration-150 press-scale shadow-sm"
+                >
+                  {link.label}
+                </Link>
               ) : (
                 <Link
                   key={link.href}

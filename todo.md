@@ -936,14 +936,14 @@
 - [x] Migrate hardcoded address/phone/policy from NewHere, Contact, Footer, SEO to parishInfo
 
 ### P1 — Information Architecture + Homepage
-- [ ] Implement 5-bucket navigation (Worship, Faith Formation, Parish Life, About) + I'm New button + Give
-- [ ] Homepage 13→7 beats (Hero, This Week, Now, Pastor Welcome, Journey Cards, Prayer Wall, Newsletter)
-- [ ] Move Daily Readings + Saint of Day + Catholic Resources to /worship/today
-- [ ] Merge Volunteer + Volunteer Needs → /serve (urgent needs on top, ongoing below)
-- [ ] Demote Forms & Documents from nav (forms live in context on Sacraments/CCD pages)
-- [ ] Cut MyParish page (no unique data)
-- [ ] Fold Homily Archive into Bulletins as "Read & Listen" library
-- [ ] Mobile bottom nav: Home, Mass, Give, Prayers, Menu
+- [x] Implement 5-bucket navigation (Worship, Faith Formation, Parish Life, About) + I'm New button + Give
+- [x] Homepage 13→7 beats (Hero, This Week, Now, Pastor Welcome, Journey Cards, Prayer Wall, Newsletter)
+- [x] Move Daily Readings + Saint of Day + Catholic Resources to /worship/today
+- [x] Merge Volunteer + Volunteer Needs → /serve (urgent needs on top, ongoing below)
+- [x] Demote Forms & Documents from nav (forms live in context on Sacraments/CCD pages)
+- [x] Cut MyParish page (no unique data)
+- [x] Fold Homily Archive into Bulletins as "Read & Listen" library
+- [x] Mobile bottom nav: Home, Mass, Give, Prayers, Menu
 
 ### P1 — Visual System
 - [ ] Liturgical-season accent CSS variable driven from liturgicalSeason.ts

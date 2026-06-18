@@ -37,4 +37,6 @@ export const VolunteerNeeds = lazy(() => import("./pages/VolunteerNeeds"));
 export const MyParish = lazy(() => import("./pages/MyParish"));
 export const SacramentProgress = lazy(() => import("./pages/SacramentProgress"));
 export const HomilyArchive = lazy(() => import("./pages/HomilyArchive"));
+export const Serve = lazy(() => import("./pages/Serve"));
+export const WorshipToday = lazy(() => import("./pages/WorshipToday"));
 export const AdminRouter = lazy(() => import("./pages/AdminRouter"));
