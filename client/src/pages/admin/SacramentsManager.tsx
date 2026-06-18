@@ -44,16 +44,17 @@ function BaptismSubmissions() {
     onSuccess: () => { utils.baptism.list.invalidate(); toast.success("Status updated"); }
   });
 
-  if (isLoading) return <div className="space-y-3">{[1,2,3].map(i => <Skeleton key={i} className="h-20 w-full" />)}</div>;
-  if (!submissions || submissions.length === 0) {
-    return <Card className="p-8 text-center"><p className="text-muted-foreground">No baptism registrations yet.</p></Card>;
-  }
-
   const statusOptions = useMemo(() => {
+    if (!submissions || submissions.length === 0) return [];
     const counts: Record<string, number> = {};
     submissions.forEach((s: any) => { counts[s.status] = (counts[s.status] || 0) + 1; });
     return Object.entries(counts).map(([value, count]) => ({ value, label: value, count }));
   }, [submissions]);
+
+  if (isLoading) return <div className="space-y-3">{[1,2,3].map(i => <Skeleton key={i} className="h-20 w-full" />)}</div>;
+  if (!submissions || submissions.length === 0) {
+    return <Card className="p-8 text-center"><p className="text-muted-foreground">No baptism registrations yet.</p></Card>;
+  }
 
   return (
     <AdminTableControls
@@ -110,16 +111,17 @@ function SponsorSubmissions() {
     onSuccess: () => { utils.sponsor.list.invalidate(); toast.success("Status updated"); }
   });
 
-  if (isLoading) return <div className="space-y-3">{[1,2,3].map(i => <Skeleton key={i} className="h-20 w-full" />)}</div>;
-  if (!submissions || submissions.length === 0) {
-    return <Card className="p-8 text-center"><p className="text-muted-foreground">No sponsor certificate requests yet.</p></Card>;
-  }
-
   const statusOptions = useMemo(() => {
+    if (!submissions || submissions.length === 0) return [];
     const counts: Record<string, number> = {};
     submissions.forEach((s: any) => { counts[s.status] = (counts[s.status] || 0) + 1; });
     return Object.entries(counts).map(([value, count]) => ({ value, label: value, count }));
   }, [submissions]);
+
+  if (isLoading) return <div className="space-y-3">{[1,2,3].map(i => <Skeleton key={i} className="h-20 w-full" />)}</div>;
+  if (!submissions || submissions.length === 0) {
+    return <Card className="p-8 text-center"><p className="text-muted-foreground">No sponsor certificate requests yet.</p></Card>;
+  }
 
   return (
     <AdminTableControls
@@ -171,16 +173,17 @@ function MarriageSubmissions() {
     onSuccess: () => { utils.marriage.list.invalidate(); toast.success("Status updated"); }
   });
 
-  if (isLoading) return <div className="space-y-3">{[1,2,3].map(i => <Skeleton key={i} className="h-20 w-full" />)}</div>;
-  if (!submissions || submissions.length === 0) {
-    return <Card className="p-8 text-center"><p className="text-muted-foreground">No marriage inquiries yet.</p></Card>;
-  }
-
   const statusOptions = useMemo(() => {
+    if (!submissions || submissions.length === 0) return [];
     const counts: Record<string, number> = {};
     submissions.forEach((s: any) => { counts[s.status] = (counts[s.status] || 0) + 1; });
     return Object.entries(counts).map(([value, count]) => ({ value, label: value, count }));
   }, [submissions]);
+
+  if (isLoading) return <div className="space-y-3">{[1,2,3].map(i => <Skeleton key={i} className="h-20 w-full" />)}</div>;
+  if (!submissions || submissions.length === 0) {
+    return <Card className="p-8 text-center"><p className="text-muted-foreground">No marriage inquiries yet.</p></Card>;
+  }
 
   return (
     <AdminTableControls
@@ -233,16 +236,17 @@ function FuneralSubmissions() {
     onSuccess: () => { utils.funeral.list.invalidate(); toast.success("Status updated"); }
   });
 
-  if (isLoading) return <div className="space-y-3">{[1,2,3].map(i => <Skeleton key={i} className="h-20 w-full" />)}</div>;
-  if (!submissions || submissions.length === 0) {
-    return <Card className="p-8 text-center"><p className="text-muted-foreground">No funeral planning forms yet.</p></Card>;
-  }
-
   const statusOptions = useMemo(() => {
+    if (!submissions || submissions.length === 0) return [];
     const counts: Record<string, number> = {};
     submissions.forEach((s: any) => { counts[s.status] = (counts[s.status] || 0) + 1; });
     return Object.entries(counts).map(([value, count]) => ({ value, label: value, count }));
   }, [submissions]);
+
+  if (isLoading) return <div className="space-y-3">{[1,2,3].map(i => <Skeleton key={i} className="h-20 w-full" />)}</div>;
+  if (!submissions || submissions.length === 0) {
+    return <Card className="p-8 text-center"><p className="text-muted-foreground">No funeral planning forms yet.</p></Card>;
+  }
 
   return (
     <AdminTableControls

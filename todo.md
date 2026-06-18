@@ -1104,3 +1104,13 @@
 - [x] YT-4: Preserve admin announcement override (marquee_text non-empty → show that instead)
 - [x] YT-5: No stpatrickinarmonk YouTube string remains in codebase (only email/calendar refs remain, which are correct)
 - [x] YT-6: Tests green (68/68) + 0 TS errors
+
+### MANUS-BAPTISM-FIXES
+- [x] FIX-1: Rewrote SacramentsManager.tsx — split into 4 sub-components with hooks above early returns
+- [x] FIX-1b: All sub-components (Baptism, Sponsor, Marriage, Funeral) fixed
+- [x] FIX-1c: Audited all admin managers — ParishRegistrationsManager.tsx also fixed (same pattern)
+- [x] FIX-2: Added sendBaptismConfirmation email on baptism.submit
+- [x] FIX-2b: Added confirmation emails for sponsor, marriage, funeral submissions
+- [x] FIX-3: Verified — staff_members table is separate from users; emeritus renders as In Memoriam (no login created)
+- [x] SMOKE: Added server/sacraments.test.ts (7 tests: email mocks + schema separation)
+- [x] AC: All tests green (75/75) + 0 TS errors

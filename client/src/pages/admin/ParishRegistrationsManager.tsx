@@ -15,16 +15,17 @@ export function ParishRegistrationsManager() {
     onSuccess: () => { utils.parishRegistration.list.invalidate(); toast.success("Status updated"); },
   });
 
-  if (isLoading) return <Skeleton className="h-64 w-full" />;
-  if (!registrations || registrations.length === 0) {
-    return <Card><CardContent className="p-8 text-center text-muted-foreground">No parish registrations yet.</CardContent></Card>;
-  }
-
   const statusOptions = useMemo(() => {
+    if (!registrations || registrations.length === 0) return [];
     const counts: Record<string, number> = {};
     registrations.forEach((r: any) => { counts[r.status] = (counts[r.status] || 0) + 1; });
     return Object.entries(counts).map(([value, count]) => ({ value, label: value, count }));
   }, [registrations]);
+
+  if (isLoading) return <Skeleton className="h-64 w-full" />;
+  if (!registrations || registrations.length === 0) {
+    return <Card><CardContent className="p-8 text-center text-muted-foreground">No parish registrations yet.</CardContent></Card>;
+  }
 
   return (
     <div className="space-y-4">

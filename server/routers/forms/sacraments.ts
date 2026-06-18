@@ -6,6 +6,12 @@ import { routeNotification } from "../../notifications/route";
 const sacSection = sectionProcedure("sacraments");
 import { rateLimitedFormProcedure } from "../_rateLimited";
 import { createAuditLog } from "../../db/auditLog";
+import {
+  sendBaptismConfirmation,
+  sendSponsorConfirmation,
+  sendMarriageConfirmation,
+  sendFuneralConfirmation,
+} from "../../email/sacramentConfirmations";
 
 export const baptismRouter = router({
   submit: rateLimitedFormProcedure.input(z.object({
@@ -26,6 +32,8 @@ export const baptismRouter = router({
   })).mutation(async ({ input }) => {
     await db.createBaptismRegistration(input as any);
     await routeNotification("sacraments", { title: "New Baptism Registration", content: `${input.childFirstName} ${input.childLastName} - Parent: ${input.parentEmail}` });
+    // Send confirmation email to parent
+    await sendBaptismConfirmation(input.parentEmail, `${input.childFirstName} ${input.childLastName}`);
     return { success: true };
   }),
   list: sacSection.query(async () => {
@@ -61,6 +69,8 @@ export const sponsorRouter = router({
   })).mutation(async ({ input }) => {
     await db.createSponsorCertificate(input as any);
     await routeNotification("sacraments", { title: "New Sponsor Certificate Request", content: `${input.sponsorFirstName} ${input.sponsorLastName} for ${input.candidateName} (${input.sacramentType})` });
+    // Send confirmation email to sponsor
+    await sendSponsorConfirmation(input.sponsorEmail, `${input.sponsorFirstName} ${input.sponsorLastName}`, input.candidateName);
     return { success: true };
   }),
   list: sacSection.query(async () => {
@@ -101,6 +111,8 @@ export const marriageRouter = router({
   })).mutation(async ({ input }) => {
     await db.createMarriageInquiry(input as any);
     await routeNotification("sacraments", { title: "New Marriage Inquiry", content: `${input.brideFirstName} ${input.brideLastName} & ${input.groomFirstName} ${input.groomLastName} - Preferred: ${input.preferredDate || 'TBD'}` });
+    // Send confirmation email to bride
+    await sendMarriageConfirmation(input.brideEmail, `${input.brideFirstName} ${input.brideLastName}`, `${input.groomFirstName} ${input.groomLastName}`);
     return { success: true };
   }),
   list: sacSection.query(async () => {
@@ -137,6 +149,8 @@ export const funeralRouter = router({
   })).mutation(async ({ input }) => {
     await db.createFuneralPrePlanning(input as any);
     await routeNotification("sacraments", { title: "New Funeral Pre-Planning Form", content: `Planner: ${input.plannerName} - For: ${input.deceasedName} (${input.isPrePlanning ? 'Pre-planning' : 'Immediate need'})` });
+    // Send confirmation email to planner
+    await sendFuneralConfirmation(input.plannerEmail, input.plannerName, input.deceasedName, input.isPrePlanning);
     return { success: true };
   }),
   list: sacSection.query(async () => {
