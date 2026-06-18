@@ -7,6 +7,7 @@ export {
   sponsorRouter,
   marriageRouter,
   funeralRouter,
+  sacramentUnifiedRouter,
   documentsRouter,
   teenLifeRouter,
   parishRegistrationRouter,

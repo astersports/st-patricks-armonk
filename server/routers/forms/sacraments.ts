@@ -129,6 +129,13 @@ export const marriageRouter = router({
   }),
 });
 
+/** Unified view: all sacrament submissions in one typed list */
+export const sacramentUnifiedRouter = router({
+  allSubmissions: sacSection.query(async () => {
+    return db.getAllSacramentSubmissions();
+  }),
+});
+
 export const funeralRouter = router({
   submit: rateLimitedFormProcedure.input(z.object({
     plannerName: z.string().min(1),

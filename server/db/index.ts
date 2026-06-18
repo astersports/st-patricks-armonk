@@ -60,3 +60,6 @@ export { createMassIntention, getMassIntentions, updateMassIntentionStatus } fro
 
 // Audit Logs
 export { createAuditLog, getAuditLogs } from "./auditLog";
+
+// Unified Sacrament Submissions
+export { getAllSacramentSubmissions } from "./sacramentSubmissions";

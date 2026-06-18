@@ -21,7 +21,7 @@ import { ccdRouter } from "./ccd";
 import { cyoRouter } from "./cyo";
 import { volunteerRouter } from "./volunteer";
 import { galleryRouter } from "./gallery";
-import { baptismRouter, sponsorRouter, marriageRouter, funeralRouter, documentsRouter, teenLifeRouter, parishRegistrationRouter, ccdPermissionsRouter } from "./forms";
+import { baptismRouter, sponsorRouter, marriageRouter, funeralRouter, sacramentUnifiedRouter, documentsRouter, teenLifeRouter, parishRegistrationRouter, ccdPermissionsRouter } from "./forms";
 import { adminStatsRouter, usersRouter, siteSettingsRouter, importantDatesRouter } from "./admin";
 import { catholicResourcesRouter, vaticanNewsRouter, dailyReadingsRouter, saintOfDayRouter, prayerWallRouter } from "./content";
 import { faqRouter } from "./faq";
@@ -53,6 +53,7 @@ export const appRouter = router({
   sponsor: sponsorRouter,
   marriage: marriageRouter,
   funeral: funeralRouter,
+  sacraments: sacramentUnifiedRouter,
   documents: documentsRouter,
   teenLife: teenLifeRouter,
   parishRegistration: parishRegistrationRouter,

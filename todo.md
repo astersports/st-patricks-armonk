@@ -1114,3 +1114,15 @@
 - [x] FIX-3: Verified — staff_members table is separate from users; emeritus renders as In Memoriam (no login created)
 - [x] SMOKE: Added server/sacraments.test.ts (7 tests: email mocks + schema separation)
 - [x] AC: All tests green (75/75) + 0 TS errors
+
+### L99-SACRAMENTS-VIEW
+- [x] L99-1: Created shared/sacramentStages.ts with canonical stage mapping, types, ACTIONS config
+- [x] L99-2: Added sacraments.allSubmissions tRPC endpoint (UNION of 4 tables, typed SacramentSubmissionRow)
+- [x] L99-3: Extended AdminTableControls with sort pills + date-range filter (7d/30d/90d)
+- [x] L99-4: Rewrote SacramentsManager as unified table (type/stage/date filters, sort, urgency)
+- [x] L99-5: Declarative actions config per type+rawStatus (confirm on Deny via AlertDialog)
+- [x] L99-6: Row expand shows type-specific detail fields (fetched from per-type list cache)
+- [x] L99-7: Mobile card layout at 375px (badges, actions, expand)
+- [x] L99-8: Urgent funerals: red left-border + Immediate pill + sort-to-top in all sort modes
+- [x] L99-9: Accessibility (text+color badges, 44px tap targets, expand/collapse buttons)
+- [x] L99-10: Tests pass (83/83, 8 new stage mapping tests + allSubmissions export test, 0 TS errors)
