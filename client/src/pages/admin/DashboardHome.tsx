@@ -15,6 +15,7 @@ import {
   Newspaper, Users, Camera, Calendar, Heart,
   UserPlus, Cross, GraduationCap, AlertCircle,
   Megaphone, Check, Pencil, CloudSnow, Thermometer,
+  BookOpen, HandHeart, UserCog,
 } from "lucide-react";
 import { ActivityFeed, QuickActions, StatCard } from "./dashboard/ActivityFeed";
 import { useMemo } from "react";
@@ -110,6 +111,10 @@ export default function DashboardHome() {
           <StatCard icon={Users} label="Teen Life" value={stats.pendingTeenLife} href="/teen-life" color="text-orange-600" highlight={stats.pendingTeenLife > 0} />
           <StatCard icon={Heart} label="Intentions" value={stats.pendingMassIntentions} href="/mass-intentions" color="text-rose-500" highlight={stats.pendingMassIntentions > 0} />
           <StatCard icon={Users} label="Vol. Needs" value={stats.unfilledVolunteerNeeds} href="/volunteer-needs" color="text-teal-600" highlight={stats.unfilledVolunteerNeeds > 0} />
+          <StatCard icon={BookOpen} label="Bulletins" value={stats.totalBulletins} href="/bulletins" color="text-cyan-600" />
+          <StatCard icon={HandHeart} label="Prayers" value={stats.totalPrayerIntentions} href="/prayer-wall" color="text-violet-600" />
+          <StatCard icon={UserCog} label="Staff" value={stats.totalStaff} href="/staff-directory" color="text-slate-600" />
+          <StatCard icon={UserPlus} label="Total Reg." value={stats.totalParishRegistrations} href="/registrations" color="text-emerald-600" />
         </div>
       ) : null}
 

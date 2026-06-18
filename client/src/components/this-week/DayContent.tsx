@@ -36,14 +36,21 @@ interface DayContentProps {
 
 function WeatherBadge({ forecast }: { forecast: any }) {
   if (!forecast) return null;
+  const isSevere = forecast.precipProbabilityMax > 70;
+  const isRain = forecast.precipProbabilityMax > 40;
+  const badgeCls = isSevere
+    ? "weather-badge-severe"
+    : isRain
+    ? "weather-badge-rain"
+    : "weather-badge-clear";
   return (
-    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-sky-50 text-sky-800 dark:bg-sky-900/30 dark:text-sky-300">
+    <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium ${badgeCls}`}>
       <ColorfulWeatherIcon icon={forecast.icon || "clear"} className="w-4 h-4" />
       <span className="font-semibold">{forecast.high}°</span>
       <span className="text-muted-foreground/70">/</span>
       <span>{forecast.low}°</span>
       {forecast.precipProbabilityMax > 20 && (
-        <span className="inline-flex items-center gap-0.5 text-blue-600 dark:text-blue-400">
+        <span className="inline-flex items-center gap-0.5 weather-strip-rain-text">
           <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
           </svg>

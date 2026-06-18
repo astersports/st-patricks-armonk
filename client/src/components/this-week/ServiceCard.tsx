@@ -103,16 +103,16 @@ export function ServiceCard({ svc, idx, isPast, isLive, isNext, countdown, progr
               <span
                 className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[11px] font-medium whitespace-nowrap ${
                   weather.isSevereWarning
-                    ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
+                    ? "weather-badge-severe"
                     : weather.isRainWarning
-                    ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300"
-                    : "bg-sky-50 text-sky-700 dark:bg-sky-900/30 dark:text-sky-300"
+                    ? "weather-badge-rain"
+                    : "weather-badge-clear"
                 }`}
               >
                 <ColorfulWeatherIcon icon={weather.icon} className="w-3.5 h-3.5" />
                 <span className="font-semibold">{weather.temperature}°</span>
-                {weather.precipProbability > 20 && (
-                  <span className="flex items-center gap-0.5 text-blue-600 dark:text-blue-400">
+                                {weather.precipProbability > 20 && (
+                  <span className="flex items-center gap-0.5 weather-strip-rain-text">
                     <DropletIcon className="w-2.5 h-2.5" />
                     {weather.precipProbability}%
                   </span>
@@ -122,22 +122,21 @@ export function ServiceCard({ svc, idx, isPast, isLive, isNext, countdown, progr
           </div>
         )}
       </div>
-
       {/* Weather badge for live/past states (shown in original position) */}
       {weather && isLive && (
         <span
           className={`hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[11px] font-medium ${
             weather.isSevereWarning
-              ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
+              ? "weather-badge-severe"
               : weather.isRainWarning
-              ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300"
-              : "bg-sky-50 text-sky-700 dark:bg-sky-900/30 dark:text-sky-300"
+              ? "weather-badge-rain"
+              : "weather-badge-clear"
           }`}
         >
           <ColorfulWeatherIcon icon={weather.icon} className="w-3.5 h-3.5" />
           <span className="font-semibold">{weather.temperature}°</span>
           {weather.precipProbability > 20 && (
-            <span className="flex items-center gap-0.5 text-blue-600 dark:text-blue-400">
+            <span className="flex items-center gap-0.5 weather-strip-rain-text">
               <DropletIcon className="w-2.5 h-2.5" />
               {weather.precipProbability}%
             </span>

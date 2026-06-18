@@ -1037,3 +1037,13 @@
 - [x] E2. Giving.tsx hardcoded phone → useParishInfo()
 - [x] E3. Delete dead ComponentShowcase.tsx
 - [x] E4. Log swallowed error in parishAssistant.ts context builder
+
+### Part C — Parishioner Features (skipped, now completing)
+- [x] C1. Surface Mass Intentions form in navigation (already in nav + added CTA on Mass Times page)
+- [x] C2. Build /watch livestream page + LIVE NOW chip in nav (already exists: Watch.tsx + WatchLiveChip in Navigation.tsx)
+- [x] C3. Add-to-calendar buttons on Mass Times rows (already exists: CalendarPlus button + downloadMassICS in WeeklySchedule.tsx)
+- [x] C4. Tokenize WeatherBadge + weather on event detail pages (DayContent + ServiceCard now use CSS token classes)
+
+### Part D — Staff Features (skipped, now completing)
+- [x] D1. Extend admin dashboard counts (bulletins, prayers, staff, total registrations added)
+- [x] D4. Ground AI Assistant in live admin schedule + today's readings (already implemented: getLiveSchedule() + buildReadingsContext())

@@ -1,5 +1,5 @@
 import { eq, desc, sql, gte, and } from "drizzle-orm";
-import { newsPosts, events, emailSubscriptions, ccdRegistrations, volunteerSignups, galleryPhotos, parishRegistrations, baptismRegistrations, marriageInquiries, teenLifeRegistrations, ccdPermissions, siteSettings, prayerIntentions, massIntentions, volunteerNeeds, sponsorCertificates, funeralPrePlanning } from "../../drizzle/schema";
+import { newsPosts, events, emailSubscriptions, ccdRegistrations, volunteerSignups, galleryPhotos, parishRegistrations, baptismRegistrations, marriageInquiries, teenLifeRegistrations, ccdPermissions, siteSettings, prayerIntentions, massIntentions, volunteerNeeds, sponsorCertificates, funeralPrePlanning, bulletins, staffMembers } from "../../drizzle/schema";
 import { getDb } from "./_connection";
 
 // ===== ADMIN STATS =====
@@ -22,6 +22,11 @@ export async function getAdminStats() {
   // Unread generic submissions (sponsor certs + funeral pre-planning pending)
   const [sponsorPendingCount] = await db!.select({ count: sql<number>`count(*)` }).from(sponsorCertificates).where(eq(sponsorCertificates.status, "pending"));
   const [funeralPendingCount] = await db!.select({ count: sql<number>`count(*)` }).from(funeralPrePlanning).where(eq(funeralPrePlanning.status, "pending"));
+  // Extended counts (D1)
+  const [bulletinCount] = await db!.select({ count: sql<number>`count(*)` }).from(bulletins);
+  const [prayerCount] = await db!.select({ count: sql<number>`count(*)` }).from(prayerIntentions);
+  const [staffCount] = await db!.select({ count: sql<number>`count(*)` }).from(staffMembers);
+  const [totalParishReg] = await db!.select({ count: sql<number>`count(*)` }).from(parishRegistrations);
 
   return {
     totalNews: newsCount.count,
@@ -38,6 +43,10 @@ export async function getAdminStats() {
     unfilledVolunteerNeeds: volunteerNeedsCount.count,
     pendingSponsorCerts: sponsorPendingCount.count,
     pendingFunerals: funeralPendingCount.count,
+    totalBulletins: bulletinCount.count,
+    totalPrayerIntentions: prayerCount.count,
+    totalStaff: staffCount.count,
+    totalParishRegistrations: totalParishReg.count,
   };
 }
 
