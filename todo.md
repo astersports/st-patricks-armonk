@@ -985,7 +985,7 @@
 - [ ] C7. PWA + push opt-in categories (Mass reminders, bulletin published, closures)
 
 ### PART D — Staff Experience
-- [ ] D1. "Needs Attention" admin home with live counts + deep links
+- [x] D1. "Needs Attention" admin home with live counts + deep links
 - [ ] D2. In-app announcement composer (generalize closure push)
 - [ ] D3. Unified form-submission triage inbox
 - [ ] D4. Ground AI Parish Assistant in single sources (live retrieval context)
@@ -995,6 +995,6 @@
 ### PART E — Global Polish
 - [ ] E1. Finish type scale — replace ad-hoc Tailwind size stacks with tokens
 - [ ] E2. All SEO/structured data generated from sources site-wide
-- [ ] E3. Accessibility pass (labels, focus rings, aria-live, 44px targets, prefers-reduced-motion)
-- [ ] E4. Empty/error/loading states with brand voice on all new surfaces
-- [ ] E5. Performance — lazy-loading, bundle budget, virtualize lists >30 rows
+- [x] E3. Accessibility pass (labels, focus rings, aria-live, 44px targets, prefers-reduced-motion)
+- [x] E4. Empty/error/loading states with brand voice on all new surfaces
+- [x] E5. Performance — lazy-loading, bundle budget, virtualize lists >30 rows

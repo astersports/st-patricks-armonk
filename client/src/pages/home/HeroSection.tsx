@@ -216,6 +216,8 @@ export function HeroSection() {
             <p
               className="flex items-center gap-2 text-emerald-200 text-xs sm:text-sm font-medium mb-6 opacity-0 [text-shadow:_0_1px_4px_rgba(0,0,0,0.7)]"
               style={{ animation: 'fadeSlideUp 0.7s ease 0.38s forwards' }}
+              aria-live="polite"
+              aria-atomic="true"
             >
               <Clock className="w-3.5 h-3.5" />
               {nextMassLabel}

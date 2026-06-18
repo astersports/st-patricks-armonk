@@ -211,7 +211,7 @@ export function NowStatusBar() {
           )}
 
           {/* Text */}
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0" aria-live="polite" aria-atomic="true">
             {status.isActive ? (
               <span className="text-sm font-semibold text-primary">
                 {status.activeLabel} in Progress — {status.remainingMin}m remaining

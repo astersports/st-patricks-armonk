@@ -78,7 +78,14 @@ export function ClosureManager() {
     activateMutation.mutate({ type, title, message });
   };
 
-  if (isLoading) return <div className="p-4 text-muted-foreground">Loading...</div>;
+  if (isLoading) return (
+    <div className="text-center py-12">
+      <div className="mx-auto w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center mb-3 animate-pulse">
+        <AlertTriangle className="w-5 h-5 text-amber-600" />
+      </div>
+      <p className="text-sm text-muted-foreground">Checking alert status...</p>
+    </div>
+  );
 
   return (
     <div className="space-y-6">
@@ -182,16 +189,18 @@ export function ClosureManager() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="text-sm font-medium">Title</label>
+              <label htmlFor="closure-title" className="text-sm font-medium">Title</label>
               <Input
+                id="closure-title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g., Parish Closed — Severe Weather"
               />
             </div>
             <div>
-              <label className="text-sm font-medium">Message</label>
+              <label htmlFor="closure-message" className="text-sm font-medium">Message</label>
               <Textarea
+                id="closure-message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="e.g., All Masses and activities are cancelled today..."

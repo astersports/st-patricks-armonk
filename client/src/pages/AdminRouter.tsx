@@ -9,7 +9,7 @@ const GalleryManager = lazy(() => import("./admin/GalleryManager"));
 const UserManager = lazy(() => import("./admin/UserManager"));
 const SettingsManager = lazy(() => import("./admin/SettingsManager"));
 
-import { FormExport } from "./admin/FormExport";
+const FormExport = lazy(() => import("./admin/FormExport").then(m => ({ default: m.FormExport })));
 const FaqManager = lazy(() => import("./admin/FaqManager"));
 const VolunteerNeedsManager = lazy(() => import("./admin/VolunteerNeedsManager"));
 const NeedsAttention = lazy(() => import("./admin/NeedsAttention"));
@@ -17,21 +17,19 @@ const ClosureManager = lazy(() => import("./admin/ClosureManager").then(m => ({ 
 const ScheduleManager = lazy(() => import("./admin/ScheduleManager"));
 const MassIntentionsManager = lazy(() => import("./admin/MassIntentionsManager").then(m => ({ default: m.MassIntentionsManager })));
 
-// Legacy managers from Admin.tsx (imported eagerly since they're in a single file)
-import {
-  NewsManager,
-  BulletinManager,
-  EventManager,
-  SubscriberList,
-  CcdManager,
-  CyoManager,
-  VolunteerManager,
-  DocumentsManager,
-  SacramentsManager,
-  ParishRegistrationsManager,
-  CcdPermissionsManager,
-  KeyDatesManager,
-} from "./admin";
+// Legacy managers — lazy-loaded from individual files for proper code splitting
+const NewsManager = lazy(() => import("./admin/NewsManager").then(m => ({ default: m.NewsManager })));
+const BulletinManager = lazy(() => import("./admin/BulletinManager").then(m => ({ default: m.BulletinManager })));
+const EventManager = lazy(() => import("./admin/EventManager").then(m => ({ default: m.EventManager })));
+const SubscriberList = lazy(() => import("./admin/SubscriberList").then(m => ({ default: m.SubscriberList })));
+const CcdManager = lazy(() => import("./admin/CcdManager").then(m => ({ default: m.CcdManager })));
+const CyoManager = lazy(() => import("./admin/CyoManager").then(m => ({ default: m.CyoManager })));
+const VolunteerManager = lazy(() => import("./admin/VolunteerManager").then(m => ({ default: m.VolunteerManager })));
+const DocumentsManager = lazy(() => import("./admin/DocumentsManager").then(m => ({ default: m.DocumentsManager })));
+const SacramentsManager = lazy(() => import("./admin/SacramentsManager").then(m => ({ default: m.SacramentsManager })));
+const ParishRegistrationsManager = lazy(() => import("./admin/ParishRegistrationsManager").then(m => ({ default: m.ParishRegistrationsManager })));
+const CcdPermissionsManager = lazy(() => import("./admin/CcdPermissionsManager").then(m => ({ default: m.CcdPermissionsManager })));
+const KeyDatesManager = lazy(() => import("./admin/KeyDatesManager").then(m => ({ default: m.KeyDatesManager })));
 
 function AdminFallback() {
   return (

@@ -139,9 +139,11 @@ export default function ScheduleManager() {
 
   if (schedLoading || infoLoading) {
     return (
-      <div className="space-y-4">
-        <div className="h-8 w-48 bg-muted animate-pulse rounded" />
-        <div className="h-64 w-full bg-muted animate-pulse rounded" />
+      <div className="text-center py-16">
+        <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 animate-pulse">
+          <Clock className="w-6 h-6 text-primary" />
+        </div>
+        <p className="text-sm text-muted-foreground">Loading parish schedule...</p>
       </div>
     );
   }
@@ -207,7 +209,7 @@ export default function ScheduleManager() {
                           value={service.type}
                           onValueChange={(v) => updateService(globalIdx, "type", v)}
                         >
-                          <SelectTrigger className="h-8 text-xs">
+                          <SelectTrigger className="h-8 text-xs" aria-label={`Service type for ${dayName} service ${localIdx + 1}`}>
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
@@ -224,6 +226,7 @@ export default function ScheduleManager() {
                           value={service.name}
                           onChange={(e) => updateService(globalIdx, "name", e.target.value)}
                           placeholder="e.g. Vigil Mass"
+                          aria-label={`Service name for ${dayName} service ${localIdx + 1}`}
                         />
                       </div>
                       <div className="w-24">
@@ -233,6 +236,7 @@ export default function ScheduleManager() {
                           value={service.time}
                           onChange={(e) => updateService(globalIdx, "time", e.target.value)}
                           placeholder="5:30 PM"
+                          aria-label={`Service time for ${dayName} service ${localIdx + 1}`}
                         />
                       </div>
                       <div className="w-20">
@@ -243,6 +247,7 @@ export default function ScheduleManager() {
                           value={service.durationMin}
                           onChange={(e) => updateService(globalIdx, "durationMin", parseInt(e.target.value) || 0)}
                           placeholder="60"
+                          aria-label={`Duration in minutes for ${dayName} service ${localIdx + 1}`}
                         />
                       </div>
                       <div className="w-32">
@@ -385,38 +390,38 @@ export default function ScheduleManager() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div>
-                    <Label>Parish Name</Label>
-                    <Input value={parishInfo.name} onChange={(e) => setParishInfo({ ...parishInfo, name: e.target.value })} />
+                    <Label htmlFor="pi-name">Parish Name</Label>
+                    <Input id="pi-name" value={parishInfo.name} onChange={(e) => setParishInfo({ ...parishInfo, name: e.target.value })} />
                   </div>
                   <div>
-                    <Label>Address</Label>
-                    <Input value={parishInfo.address} onChange={(e) => setParishInfo({ ...parishInfo, address: e.target.value })} />
+                    <Label htmlFor="pi-address">Address</Label>
+                    <Input id="pi-address" value={parishInfo.address} onChange={(e) => setParishInfo({ ...parishInfo, address: e.target.value })} />
                   </div>
                   <div className="grid grid-cols-3 gap-2">
                     <div>
-                      <Label>City</Label>
-                      <Input value={parishInfo.city} onChange={(e) => setParishInfo({ ...parishInfo, city: e.target.value })} />
+                      <Label htmlFor="pi-city">City</Label>
+                      <Input id="pi-city" value={parishInfo.city} onChange={(e) => setParishInfo({ ...parishInfo, city: e.target.value })} />
                     </div>
                     <div>
-                      <Label>State</Label>
-                      <Input value={parishInfo.state} onChange={(e) => setParishInfo({ ...parishInfo, state: e.target.value })} />
+                      <Label htmlFor="pi-state">State</Label>
+                      <Input id="pi-state" value={parishInfo.state} onChange={(e) => setParishInfo({ ...parishInfo, state: e.target.value })} />
                     </div>
                     <div>
-                      <Label>ZIP</Label>
-                      <Input value={parishInfo.zip} onChange={(e) => setParishInfo({ ...parishInfo, zip: e.target.value })} />
+                      <Label htmlFor="pi-zip">ZIP</Label>
+                      <Input id="pi-zip" value={parishInfo.zip} onChange={(e) => setParishInfo({ ...parishInfo, zip: e.target.value })} />
                     </div>
                   </div>
                   <div>
-                    <Label>Phone</Label>
-                    <Input value={parishInfo.phone} onChange={(e) => setParishInfo({ ...parishInfo, phone: e.target.value })} />
+                    <Label htmlFor="pi-phone">Phone</Label>
+                    <Input id="pi-phone" value={parishInfo.phone} onChange={(e) => setParishInfo({ ...parishInfo, phone: e.target.value })} />
                   </div>
                   <div>
-                    <Label>Office Email</Label>
-                    <Input value={parishInfo.officeEmail} onChange={(e) => setParishInfo({ ...parishInfo, officeEmail: e.target.value })} />
+                    <Label htmlFor="pi-email">Office Email</Label>
+                    <Input id="pi-email" value={parishInfo.officeEmail} onChange={(e) => setParishInfo({ ...parishInfo, officeEmail: e.target.value })} />
                   </div>
                   <div>
-                    <Label>Office Hours</Label>
-                    <Input value={parishInfo.officeHours} onChange={(e) => setParishInfo({ ...parishInfo, officeHours: e.target.value })} />
+                    <Label htmlFor="pi-hours">Office Hours</Label>
+                    <Input id="pi-hours" value={parishInfo.officeHours} onChange={(e) => setParishInfo({ ...parishInfo, officeHours: e.target.value })} />
                   </div>
                 </CardContent>
               </Card>
@@ -429,26 +434,27 @@ export default function ScheduleManager() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div>
-                    <Label>Pastor Name</Label>
-                    <Input value={parishInfo.pastorName} onChange={(e) => setParishInfo({ ...parishInfo, pastorName: e.target.value })} />
+                    <Label htmlFor="pi-pastor">Pastor Name</Label>
+                    <Input id="pi-pastor" value={parishInfo.pastorName} onChange={(e) => setParishInfo({ ...parishInfo, pastorName: e.target.value })} />
                   </div>
                   <div>
-                    <Label>Pastor Email</Label>
-                    <Input value={parishInfo.pastorEmail} onChange={(e) => setParishInfo({ ...parishInfo, pastorEmail: e.target.value })} />
+                    <Label htmlFor="pi-pastor-email">Pastor Email</Label>
+                    <Input id="pi-pastor-email" value={parishInfo.pastorEmail} onChange={(e) => setParishInfo({ ...parishInfo, pastorEmail: e.target.value })} />
                   </div>
                   <div>
-                    <Label>Flocknote URL</Label>
-                    <Input value={parishInfo.flocknoteUrl} onChange={(e) => setParishInfo({ ...parishInfo, flocknoteUrl: e.target.value })} />
+                    <Label htmlFor="pi-flocknote">Flocknote URL</Label>
+                    <Input id="pi-flocknote" value={parishInfo.flocknoteUrl} onChange={(e) => setParishInfo({ ...parishInfo, flocknoteUrl: e.target.value })} />
                   </div>
                   <div>
-                    <Label>YouTube URL</Label>
-                    <Input value={parishInfo.youtubeUrl} onChange={(e) => setParishInfo({ ...parishInfo, youtubeUrl: e.target.value })} />
+                    <Label htmlFor="pi-youtube">YouTube URL</Label>
+                    <Input id="pi-youtube" value={parishInfo.youtubeUrl} onChange={(e) => setParishInfo({ ...parishInfo, youtubeUrl: e.target.value })} />
                   </div>
                   <Separator />
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <Label>Latitude</Label>
+                      <Label htmlFor="pi-lat">Latitude</Label>
                       <Input
+                        id="pi-lat"
                         type="number"
                         step="0.0001"
                         value={parishInfo.mapCoordinates.lat}
@@ -459,8 +465,9 @@ export default function ScheduleManager() {
                       />
                     </div>
                     <div>
-                      <Label>Longitude</Label>
+                      <Label htmlFor="pi-lng">Longitude</Label>
                       <Input
+                        id="pi-lng"
                         type="number"
                         step="0.0001"
                         value={parishInfo.mapCoordinates.lng}

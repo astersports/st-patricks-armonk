@@ -50,7 +50,7 @@ export default function DashboardHome() {
       </div>
 
       {/* Pending Actions */}
-      {stats && (stats.pendingCcdRegistrations > 0 || stats.pendingParishRegistrations > 0 || stats.pendingBaptisms > 0 || stats.pendingMarriages > 0 || stats.pendingTeenLife > 0) && (
+      {stats && (stats.pendingCcdRegistrations > 0 || stats.pendingParishRegistrations > 0 || stats.pendingBaptisms > 0 || stats.pendingMarriages > 0 || stats.pendingTeenLife > 0 || stats.pendingMassIntentions > 0) && (
         <Card className="border-amber-200 bg-amber-50/50">
           <CardHeader className="pb-3"><CardTitle className="text-base flex items-center gap-2"><AlertCircle className="w-4 h-4 text-amber-600" />Pending Actions</CardTitle></CardHeader>
           <CardContent>
@@ -60,6 +60,7 @@ export default function DashboardHome() {
               {stats.pendingBaptisms > 0 && <Link href="/sacraments"><Badge variant="outline" className="cursor-pointer hover:bg-amber-100 border-amber-300">{stats.pendingBaptisms} Baptism Request{stats.pendingBaptisms > 1 ? "s" : ""}</Badge></Link>}
               {stats.pendingMarriages > 0 && <Link href="/sacraments"><Badge variant="outline" className="cursor-pointer hover:bg-amber-100 border-amber-300">{stats.pendingMarriages} Marriage Inquir{stats.pendingMarriages > 1 ? "ies" : "y"}</Badge></Link>}
               {stats.pendingTeenLife > 0 && <Link href="/teen-life"><Badge variant="outline" className="cursor-pointer hover:bg-amber-100 border-amber-300">{stats.pendingTeenLife} Teen Life Registration{stats.pendingTeenLife > 1 ? "s" : ""}</Badge></Link>}
+              {stats.pendingMassIntentions > 0 && <Link href="/mass-intentions"><Badge variant="outline" className="cursor-pointer hover:bg-amber-100 border-amber-300">{stats.pendingMassIntentions} Mass Intention{stats.pendingMassIntentions > 1 ? "s" : ""}</Badge></Link>}
             </div>
           </CardContent>
         </Card>
@@ -101,6 +102,7 @@ export default function DashboardHome() {
           <StatCard icon={Cross} label="Baptisms" value={stats.pendingBaptisms} href="/sacraments" color="text-indigo-600" highlight={stats.pendingBaptisms > 0} />
           <StatCard icon={Cross} label="Marriages" value={stats.pendingMarriages} href="/sacraments" color="text-rose-600" highlight={stats.pendingMarriages > 0} />
           <StatCard icon={Users} label="Teen Life" value={stats.pendingTeenLife} href="/teen-life" color="text-orange-600" highlight={stats.pendingTeenLife > 0} />
+          <StatCard icon={Heart} label="Intentions" value={stats.pendingMassIntentions} href="/mass-intentions" color="text-rose-500" highlight={stats.pendingMassIntentions > 0} />
         </div>
       ) : null}
 

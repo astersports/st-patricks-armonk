@@ -142,9 +142,9 @@ export default function MassIntentionForm() {
             </div>
 
             <div className="space-y-1.5">
-              <Label>Intention Type *</Label>
+              <Label htmlFor="intentionType">Intention Type *</Label>
               <Select value={form.intentionType} onValueChange={(v) => setForm(f => ({ ...f, intentionType: v as typeof form.intentionType }))}>
-                <SelectTrigger>
+                <SelectTrigger id="intentionType" aria-label="Intention Type">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -168,9 +168,9 @@ export default function MassIntentionForm() {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label>Preferred Mass (optional)</Label>
+                <Label htmlFor="preferredMass">Preferred Mass (optional)</Label>
                 <Select value={form.preferredMass} onValueChange={(v) => setForm(f => ({ ...f, preferredMass: v }))}>
-                  <SelectTrigger>
+                  <SelectTrigger id="preferredMass" aria-label="Preferred Mass">
                     <SelectValue placeholder="No preference" />
                   </SelectTrigger>
                   <SelectContent>
@@ -195,7 +195,12 @@ export default function MassIntentionForm() {
             </div>
 
             {submitMutation.error && (
-              <p className="text-sm text-destructive">{submitMutation.error.message}</p>
+              <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20">
+                <p className="text-sm font-medium text-destructive">Something went wrong</p>
+                <p className="text-xs text-destructive/80 mt-1">
+                  {submitMutation.error.message || "We couldn't submit your intention. Please try again or call the parish office at (914) 273-9325."}
+                </p>
+              </div>
             )}
 
             <Button

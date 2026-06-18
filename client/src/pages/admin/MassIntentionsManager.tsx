@@ -22,7 +22,7 @@ const STATUS_COLORS: Record<string, string> = {
 
 export function MassIntentionsManager() {
   const [filter, setFilter] = useState<string>("all");
-  const { data: intentions, refetch } = trpc.massIntentions.list.useQuery({ status: filter as any });
+  const { data: intentions, refetch, isLoading, error } = trpc.massIntentions.list.useQuery({ status: filter as any });
   const updateStatus = trpc.massIntentions.updateStatus.useMutation({
     onSuccess: () => { refetch(); toast.success("Intention updated"); },
   });
@@ -51,10 +51,31 @@ export function MassIntentionsManager() {
         </Select>
       </div>
 
-      {!intentions?.length && (
+      {isLoading && (
+        <div className="text-center py-12">
+          <div className="mx-auto w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-3 animate-pulse">
+            <Heart className="w-5 h-5 text-primary" />
+          </div>
+          <p className="text-sm text-muted-foreground">Loading intentions...</p>
+        </div>
+      )}
+
+      {error && (
+        <div className="text-center py-12">
+          <div className="mx-auto w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center mb-3">
+            <XCircle className="w-5 h-5 text-destructive" />
+          </div>
+          <p className="text-sm font-medium text-destructive">Couldn't load intentions</p>
+          <p className="text-xs text-muted-foreground mt-1">{error.message}</p>
+          <Button variant="outline" size="sm" className="mt-3" onClick={() => refetch()}>Try Again</Button>
+        </div>
+      )}
+
+      {!isLoading && !error && !intentions?.length && (
         <div className="text-center py-12 text-muted-foreground">
           <Heart className="w-10 h-10 mx-auto mb-3 opacity-40" />
-          <p>No Mass intentions found.</p>
+          <p className="font-medium">No intentions yet</p>
+          <p className="text-xs mt-1">When parishioners submit Mass intention requests, they'll appear here for scheduling.</p>
         </div>
       )}
 

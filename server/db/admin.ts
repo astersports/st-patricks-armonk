@@ -1,5 +1,5 @@
 import { eq, desc, sql, gte } from "drizzle-orm";
-import { newsPosts, events, emailSubscriptions, ccdRegistrations, volunteerSignups, galleryPhotos, parishRegistrations, baptismRegistrations, marriageInquiries, teenLifeRegistrations, ccdPermissions, siteSettings, prayerIntentions } from "../../drizzle/schema";
+import { newsPosts, events, emailSubscriptions, ccdRegistrations, volunteerSignups, galleryPhotos, parishRegistrations, baptismRegistrations, marriageInquiries, teenLifeRegistrations, ccdPermissions, siteSettings, prayerIntentions, massIntentions } from "../../drizzle/schema";
 import { getDb } from "./_connection";
 
 // ===== ADMIN STATS =====
@@ -16,6 +16,7 @@ export async function getAdminStats() {
   const [baptismCount] = await db!.select({ count: sql<number>`count(*)` }).from(baptismRegistrations).where(eq(baptismRegistrations.status, "pending"));
   const [marriageCount] = await db!.select({ count: sql<number>`count(*)` }).from(marriageInquiries).where(eq(marriageInquiries.status, "pending"));
   const [teenLifeCount] = await db!.select({ count: sql<number>`count(*)` }).from(teenLifeRegistrations).where(eq(teenLifeRegistrations.status, "pending"));
+  const [massIntentionCount] = await db!.select({ count: sql<number>`count(*)` }).from(massIntentions).where(eq(massIntentions.status, "pending"));
 
   return {
     totalNews: newsCount.count,
@@ -28,6 +29,7 @@ export async function getAdminStats() {
     pendingBaptisms: baptismCount.count,
     pendingMarriages: marriageCount.count,
     pendingTeenLife: teenLifeCount.count,
+    pendingMassIntentions: massIntentionCount.count,
   };
 }
 
