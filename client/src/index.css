@@ -69,6 +69,66 @@
   border-color: oklch(0.72 0.16 79);
 }
 
+/* Season accent utilities — use var(--season-accent) so they auto-update with liturgical season */
+@utility text-season {
+  color: var(--season-accent);
+}
+@utility bg-season {
+  background-color: var(--season-accent);
+}
+@utility bg-season-light {
+  background-color: var(--season-accent-light);
+}
+@utility border-season {
+  border-color: var(--season-accent);
+}
+@utility text-season-muted {
+  color: var(--season-accent-muted);
+}
+
+/* Candlelight utilities — use CSS tokens */
+@utility text-candle {
+  color: var(--candle-flame);
+}
+@utility bg-candle-glow {
+  background-color: var(--candle-glow);
+}
+
+/* Type Scale utilities — locked sizes from design system */
+@utility text-display-lg {
+  font-size: var(--text-display-lg);
+  line-height: var(--leading-heading);
+  letter-spacing: -0.02em;
+}
+@utility text-display-sm {
+  font-size: var(--text-display-sm);
+  line-height: var(--leading-heading);
+  letter-spacing: -0.02em;
+}
+@utility text-h1 {
+  font-size: var(--text-h1);
+  line-height: var(--leading-heading);
+  letter-spacing: -0.015em;
+}
+@utility text-h2 {
+  font-size: var(--text-h2);
+  line-height: var(--leading-heading);
+  letter-spacing: -0.01em;
+}
+@utility text-h3 {
+  font-size: var(--text-h3);
+  line-height: var(--leading-heading);
+  letter-spacing: -0.01em;
+}
+@utility text-body {
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+}
+@utility text-caption {
+  font-size: var(--text-caption);
+  line-height: 1.4;
+}
+
 @layer base {
   *,
   ::after,
@@ -101,7 +161,7 @@
     animation: flicker 2s ease-in-out infinite;
   }
   .candle-glow {
-    filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.5));
+    filter: drop-shadow(0 0 4px var(--candle-glow));
   }
   @keyframes spark {
     0% { opacity: 1; transform: translateY(0) translateX(0) scale(1); }
@@ -160,6 +220,47 @@
       padding-inline: 2rem;
     }
   }
+}
+
+/* ===== Liturgical Season Accent (defaults; overridden by LiturgicalSeasonProvider) ===== */
+:root {
+  --season-accent: oklch(0.48 0.14 160);
+  --season-accent-light: oklch(0.92 0.04 160);
+  --season-accent-muted: oklch(0.72 0.08 160);
+  --season-accent-fg: oklch(0.98 0.01 160);
+  --season-badge-bg: oklch(0.92 0.04 160);
+  --season-badge-text: oklch(0.38 0.10 160);
+  --season-badge-border: oklch(0.85 0.06 160);
+}
+
+/* ===== Weather Tokens ===== */
+:root {
+  --weather-clear: oklch(0.72 0.16 79);       /* Gold/sunny */
+  --weather-cloudy: oklch(0.70 0.02 260);     /* Cool gray-blue */
+  --weather-rain: oklch(0.55 0.10 250);       /* Slate blue */
+  --weather-severe: oklch(0.55 0.20 25);      /* Destructive red */
+  --weather-snow: oklch(0.85 0.03 260);       /* Light ice blue */
+}
+
+/* ===== Candlelight Token (Prayer Wall) ===== */
+:root {
+  --candle-flame: oklch(0.78 0.18 79);        /* Warm amber */
+  --candle-glow: oklch(0.72 0.16 79 / 0.4);  /* Soft amber glow */
+  --candle-base: oklch(0.45 0.06 60);         /* Warm brown */
+  --candle-wax: oklch(0.92 0.02 79);          /* Cream white */
+}
+
+/* ===== Type Scale (locked) ===== */
+:root {
+  --text-display-lg: 3rem;      /* 48px — hero headlines */
+  --text-display-sm: 2.25rem;   /* 36px — section headlines mobile */
+  --text-h1: 2rem;              /* 32px */
+  --text-h2: 1.5rem;            /* 24px */
+  --text-h3: 1.25rem;           /* 20px */
+  --text-body: 1rem;            /* 16px */
+  --text-caption: 0.8125rem;    /* 13px */
+  --leading-body: 1.55;
+  --leading-heading: 1.2;
 }
 
 /* ===== L99 Motion System ===== */

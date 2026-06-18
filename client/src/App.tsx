@@ -5,6 +5,7 @@ import { Route, Switch, Redirect } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ScrollToTop from "./components/ScrollToTop";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { LiturgicalSeasonProvider } from "./contexts/LiturgicalSeasonContext";
 import { Suspense } from "react";
 import { PageLoader } from "./components/PageLoader";
 import { ParishAssistant } from "./components/ParishAssistant";
@@ -101,11 +102,13 @@ function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light">
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-          <ParishAssistant />
-        </TooltipProvider>
+        <LiturgicalSeasonProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Router />
+            <ParishAssistant />
+          </TooltipProvider>
+        </LiturgicalSeasonProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );

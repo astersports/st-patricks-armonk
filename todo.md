@@ -946,10 +946,10 @@
 - [x] Mobile bottom nav: Home, Mass, Give, Prayers, Menu
 
 ### P1 — Visual System
-- [ ] Liturgical-season accent CSS variable driven from liturgicalSeason.ts
-- [ ] Prayer Wall candlelight token (unified home teaser + full page, on-system colors)
-- [ ] Weather tokens (--weather-clear, --weather-rain, --weather-severe)
-- [ ] Lock type scale: Display 48/36, H1 32, H2 24, H3 20, body 16/1.55, caption 13
+- [x] Liturgical-season accent CSS variable driven from liturgicalSeason.ts
+- [x] Prayer Wall candlelight token (unified home teaser + full page, on-system colors)
+- [x] Weather tokens (--weather-clear, --weather-rain, --weather-severe)
+- [x] Lock type scale: Display 48/36, H1 32, H2 24, H3 20, body 16/1.55, caption 13
 
 ### P2 — Weather+ & Digital
 - [ ] Weather on every event card (calendar, event detail, CYO game cards)
