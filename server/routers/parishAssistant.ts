@@ -6,19 +6,55 @@
 import { publicProcedure, router, z, db } from "./_helpers";
 import { rateLimitedChatProcedure } from "./_rateLimited";
 import { invokeLLM } from "../_core/llm";
+import { DEFAULT_PARISH_SCHEDULE, DEFAULT_PARISH_INFO, generateSEODescription, parseTimeToMinutes, minutesToTimeString } from "../../shared/scheduleEngine";
+
+/**
+ * Build the schedule portion of the system prompt from the shared engine.
+ * This ensures the AI assistant always has correct, up-to-date Mass times.
+ */
+function buildScheduleContext(): string {
+  const s = DEFAULT_PARISH_SCHEDULE;
+  const info = DEFAULT_PARISH_INFO;
+  const lines: string[] = [];
+  lines.push(`- Location: ${info.address}, ${info.city}, ${info.state} ${info.zip}`);
+  lines.push(`- Phone: ${info.phone}`);
+  lines.push(`- Pastor: ${info.pastorName}`);
+
+  // Weekend Masses
+  const satVigil = s.services.find(svc => svc.dayOfWeek === 6 && svc.type === "mass");
+  const sunMasses = s.services.filter(svc => svc.dayOfWeek === 0 && svc.type === "mass");
+  const sunTimes = sunMasses.map(m => {
+    let t = m.time;
+    if (m.seasonal) t += ` (${m.seasonal.note})`;
+    return t;
+  }).join(", ");
+  lines.push(`- Weekend Masses: Saturday Vigil ${satVigil?.time || "5:30 PM"}, Sunday ${sunTimes}`);
+
+  // Weekday Mass
+  const weekdayMass = s.services.find(svc => svc.dayOfWeek >= 2 && svc.dayOfWeek <= 5 && svc.type === "mass");
+  if (weekdayMass) lines.push(`- Weekday Mass: Tuesday–Friday ${weekdayMass.time} (no Monday Mass)`);
+
+  // Morning Prayer
+  const prayer = s.services.find(svc => svc.type === "prayer");
+  if (prayer) lines.push(`- Morning Prayer (Lauds): Tuesday–Friday ${prayer.time}`);
+
+  // Confession
+  const confession = s.services.find(svc => svc.type === "confession");
+  if (confession) {
+    const endMin = parseTimeToMinutes(confession.time) + confession.durationMin;
+    const endTime = minutesToTimeString(endMin);
+    lines.push(`- Confessions: Saturday ${confession.time}–${endTime.split(" ")[0]} ${endTime.split(" ")[1]} or by appointment`);
+  }
+
+  lines.push(`- Parish Office Hours: ${info.officeHours}`);
+  return lines.join("\n");
+}
 
 const PARISH_CONTEXT = `You are the AI Parish Assistant for St. Patrick Church in Armonk, New York.
 You help parishioners and visitors with questions about the parish.
 
 KEY INFORMATION:
-- Location: 29 Cox Avenue, Armonk, NY 10504
-- Phone: (914) 273-9724
-- Pastor: Fr. Thadeus Aravindathu
-- Weekend Masses: Saturday Vigil 5:30 PM, Sunday 8:30 AM, 10:30 AM, 12:30 PM (Oct–Jun only)
-- Weekday Mass: Tuesday–Friday 8:30 AM (no Monday Mass)
-- Morning Prayer (Lauds): Tuesday–Friday 8:00 AM
-- Confessions: Saturday 4:30–5:15 PM or by appointment
-- Parish Office Hours: Monday–Thursday 10:00 AM – 5:00 PM, Friday Closed
+${buildScheduleContext()}
 
 PROGRAMS:
 - CCD (Religious Education): Classes for grades 1-8, registration required

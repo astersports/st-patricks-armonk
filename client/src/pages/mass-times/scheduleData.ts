@@ -1,9 +1,17 @@
 /**
  * Mass Times Schedule Data & Utility Functions
+ * Thin adapter over shared/scheduleEngine — single source of truth.
  * Types, weekly schedule, holy days, and time parsing helpers.
  */
 
 import { Church, Cross, Sun, Clock } from "lucide-react";
+import {
+  DEFAULT_PARISH_SCHEDULE,
+  parseTimeToMinutes,
+  minutesToTimeString,
+  getUpcomingHolyDays as engineGetUpcomingHolyDays,
+  type ScheduledService,
+} from "../../../../shared/scheduleEngine";
 
 export type ServiceType = "mass" | "confession" | "prayer" | "none";
 
@@ -20,64 +28,56 @@ export interface DaySchedule {
   services: Service[];
 }
 
-export const BASE_WEEKLY_SCHEDULE: DaySchedule[] = [
-  {
-    day: "Sunday",
-    shortDay: "Sun",
-    services: [
-      { type: "mass", name: "Mass", time: "8:30 AM" },
-      { type: "mass", name: "Mass", time: "10:30 AM" },
-      { type: "mass", name: "Mass", time: "12:30 PM", note: "Oct–Jun only" },
-    ],
-  },
-  {
-    day: "Monday",
-    shortDay: "Mon",
-    services: [
-      { type: "none", name: "No scheduled services", time: "" },
-    ],
-  },
-  {
-    day: "Tuesday",
-    shortDay: "Tue",
-    services: [
-      { type: "prayer", name: "Morning Prayer (Lauds)", time: "8:00 AM" },
-      { type: "mass", name: "Weekday Mass", time: "8:30 AM" },
-    ],
-  },
-  {
-    day: "Wednesday",
-    shortDay: "Wed",
-    services: [
-      { type: "prayer", name: "Morning Prayer (Lauds)", time: "8:00 AM" },
-      { type: "mass", name: "Weekday Mass", time: "8:30 AM" },
-    ],
-  },
-  {
-    day: "Thursday",
-    shortDay: "Thu",
-    services: [
-      { type: "prayer", name: "Morning Prayer (Lauds)", time: "8:00 AM" },
-      { type: "mass", name: "Weekday Mass", time: "8:30 AM" },
-    ],
-  },
-  {
-    day: "Friday",
-    shortDay: "Fri",
-    services: [
-      { type: "prayer", name: "Morning Prayer (Lauds)", time: "8:00 AM" },
-      { type: "mass", name: "Weekday Mass", time: "8:30 AM" },
-    ],
-  },
-  {
-    day: "Saturday",
-    shortDay: "Sat",
-    services: [
-      { type: "confession", name: "Confession", time: "4:30–5:15 PM" },
-      { type: "mass", name: "Vigil Mass", time: "5:30 PM" },
-    ],
-  },
-];
+const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const SHORT_DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+/**
+ * Build BASE_WEEKLY_SCHEDULE from the shared engine.
+ */
+function buildBaseSchedule(): DaySchedule[] {
+  const schedule: DaySchedule[] = [];
+  for (let day = 0; day <= 6; day++) {
+    const dayServices = DEFAULT_PARISH_SCHEDULE.services
+      .filter(s => s.dayOfWeek === day)
+      .sort((a, b) => parseTimeToMinutes(a.time) - parseTimeToMinutes(b.time));
+
+    const services: Service[] = dayServices.map(s => {
+      // For confession, show the time range
+      if (s.type === "confession") {
+        const endMin = parseTimeToMinutes(s.time) + s.durationMin;
+        const endTime = minutesToTimeString(endMin);
+        const startShort = s.time.replace(" PM", "").replace(" AM", "");
+        const endShort = endTime.replace(" PM", "").replace(" AM", "");
+        const period = s.time.includes("PM") ? "PM" : "AM";
+        return {
+          type: s.type as ServiceType,
+          name: s.name,
+          time: `${startShort}–${endShort} ${period}`,
+          note: s.note,
+        };
+      }
+      return {
+        type: s.type as ServiceType,
+        name: s.name,
+        time: s.time,
+        note: s.seasonal?.note || s.note,
+      };
+    });
+
+    if (services.length === 0) {
+      services.push({ type: "none", name: "No scheduled services", time: "" });
+    }
+
+    schedule.push({
+      day: DAY_NAMES[day],
+      shortDay: SHORT_DAYS[day],
+      services,
+    });
+  }
+  return schedule;
+}
+
+export const BASE_WEEKLY_SCHEDULE: DaySchedule[] = buildBaseSchedule();
 
 // Check if a given date is the first Friday of its month
 function isFirstFriday(date: Date): boolean {
@@ -128,66 +128,10 @@ export function getCountdown(targetHours: number, targetMinutes: number, current
   return `in ${h}h ${m}m`;
 }
 
-// Holy Days of Obligation (US) - fixed dates
-interface HolyDay {
-  month: number; // 1-indexed
-  day: number;
-  name: string;
-  massTime?: string;
-}
-
-const HOLY_DAYS: HolyDay[] = [
-  { month: 1, day: 1, name: "Solemnity of Mary, Mother of God", massTime: "10:00 AM" },
-  { month: 8, day: 15, name: "Assumption of the Blessed Virgin Mary", massTime: "8:30 AM" },
-  { month: 11, day: 1, name: "All Saints' Day", massTime: "8:30 AM" },
-  { month: 12, day: 8, name: "Immaculate Conception", massTime: "8:30 AM" },
-  { month: 12, day: 25, name: "Christmas", massTime: "10:00 AM" },
-];
-
-// Get Easter date for a given year (Anonymous Gregorian algorithm)
-function getEasterDate(year: number): Date {
-  const a = year % 19;
-  const b = Math.floor(year / 100);
-  const c = year % 100;
-  const d = Math.floor(b / 4);
-  const e = b % 4;
-  const f = Math.floor((b + 8) / 25);
-  const g = Math.floor((b - f + 1) / 3);
-  const h = (19 * a + b - d - g + 15) % 30;
-  const i = Math.floor(c / 4);
-  const k = c % 4;
-  const l = (32 + 2 * e + 2 * i - h - k) % 7;
-  const m = Math.floor((a + 11 * h + 22 * l) / 451);
-  const month = Math.floor((h + l - 7 * m + 114) / 31);
-  const day = ((h + l - 7 * m + 114) % 31) + 1;
-  return new Date(year, month - 1, day);
-}
-
-// Check for upcoming Holy Days within the next 7 days
+// Check for upcoming Holy Days within the next 7 days (delegates to shared engine)
 export function getUpcomingHolyDays(): { name: string; date: Date; massTime: string; daysUntil: number }[] {
   const now = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
-  const year = now.getFullYear();
-  const upcoming: { name: string; date: Date; massTime: string; daysUntil: number }[] = [];
-
-  for (const hd of HOLY_DAYS) {
-    const hdDate = new Date(year, hd.month - 1, hd.day);
-    const diffMs = hdDate.getTime() - new Date(year, now.getMonth(), now.getDate()).getTime();
-    const daysUntil = Math.round(diffMs / (1000 * 60 * 60 * 24));
-    if (daysUntil >= 0 && daysUntil <= 7) {
-      upcoming.push({ name: hd.name, date: hdDate, massTime: hd.massTime || "8:30 AM", daysUntil });
-    }
-  }
-
-  const easter = getEasterDate(year);
-  const ascension = new Date(easter);
-  ascension.setDate(easter.getDate() + 39);
-  const ascDiffMs = ascension.getTime() - new Date(year, now.getMonth(), now.getDate()).getTime();
-  const ascDaysUntil = Math.round(ascDiffMs / (1000 * 60 * 60 * 24));
-  if (ascDaysUntil >= 0 && ascDaysUntil <= 7) {
-    upcoming.push({ name: "Ascension of the Lord", date: ascension, massTime: "8:30 AM", daysUntil: ascDaysUntil });
-  }
-
-  return upcoming.sort((a, b) => a.daysUntil - b.daysUntil);
+  return engineGetUpcomingHolyDays(DEFAULT_PARISH_SCHEDULE, now, 7);
 }
 
 // Check if a service is currently in progress

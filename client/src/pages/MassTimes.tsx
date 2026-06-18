@@ -1,5 +1,6 @@
 /**
  * Mass Times Page — Composition of schedule, holy day alerts, and info sections.
+ * SEO description is generated from the shared schedule engine (single source of truth).
  */
 
 import PageLayout from "@/components/PageLayout";
@@ -10,16 +11,22 @@ import { HolyDayAlert } from "./mass-times/HolyDayAlert";
 import { WeeklySchedule } from "./mass-times/WeeklySchedule";
 import { AtAGlance } from "./mass-times/AtAGlance";
 import { WhatToExpect } from "./mass-times/WhatToExpect";
+import { useParishSchedule, generateSEODescription } from "@/hooks/useParishSchedule";
+import { DEFAULT_PARISH_SCHEDULE } from "../../../shared/scheduleEngine";
 
 export default function MassTimes() {
   const revealRef = useReveal();
+  const { schedule } = useParishSchedule();
+
+  // Use live schedule from DB if available, otherwise fall back to default
+  const seoDescription = generateSEODescription(schedule ?? DEFAULT_PARISH_SCHEDULE);
 
   return (
     <PageLayout>
       <SEO
         title="Mass Times & Confession"
         path="/mass-times"
-        description="Mass schedule at St. Patrick Church, Armonk NY. Saturday Vigil 5:00 PM, Sunday 8:00 AM, 10:00 AM, 12:00 PM. Daily Mass Mon-Fri 8:30 AM. Confessions Saturday 4:00-4:45 PM."
+        description={seoDescription}
       />
       <PageHeader
         eyebrow="Worship With Us"

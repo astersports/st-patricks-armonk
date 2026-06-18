@@ -1,115 +1,90 @@
 import { useState, useEffect, useMemo } from "react";
-import { Church, Cross, Sun, Clock, ChevronRight } from "lucide-react";
+import { Church, Cross, Sun, ChevronRight } from "lucide-react";
 import { ColorfulWeatherIcon } from "@/components/WeatherIcons";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
+import {
+  useParishSchedule,
+  parseTimeToMinutes,
+  getServicesForDay,
+  isServiceInProgress,
+  TIMEZONE,
+} from "@/hooks/useParishSchedule";
+import type { ScheduledService } from "@/hooks/useParishSchedule";
 
-const TIMEZONE = "America/New_York";
-
-// Full schedule — single source of truth
-type ServiceType = "mass" | "confession" | "prayer";
-
-interface ScheduleItem {
-  day: number; // 0=Sun, 1=Mon, ..., 6=Sat
-  type: ServiceType;
-  label: string;
-  time: string;
-  startHour: number;
-  startMin: number;
-  endHour: number;
-  endMin: number;
-}
-
-const SCHEDULE: ScheduleItem[] = [
-  // Sunday
-  { day: 0, type: "mass", label: "Mass", time: "8:30 AM", startHour: 8, startMin: 30, endHour: 9, endMin: 30 },
-  { day: 0, type: "mass", label: "Mass", time: "10:30 AM", startHour: 10, startMin: 30, endHour: 11, endMin: 30 },
-  { day: 0, type: "mass", label: "Mass", time: "12:30 PM", startHour: 12, startMin: 30, endHour: 13, endMin: 30 },
-  // Tuesday
-  { day: 2, type: "prayer", label: "Lauds", time: "8:00 AM", startHour: 8, startMin: 0, endHour: 8, endMin: 25 },
-  { day: 2, type: "mass", label: "Mass", time: "8:30 AM", startHour: 8, startMin: 30, endHour: 9, endMin: 0 },
-  // Wednesday
-  { day: 3, type: "prayer", label: "Lauds", time: "8:00 AM", startHour: 8, startMin: 0, endHour: 8, endMin: 25 },
-  { day: 3, type: "mass", label: "Mass", time: "8:30 AM", startHour: 8, startMin: 30, endHour: 9, endMin: 0 },
-  // Thursday
-  { day: 4, type: "prayer", label: "Lauds", time: "8:00 AM", startHour: 8, startMin: 0, endHour: 8, endMin: 25 },
-  { day: 4, type: "mass", label: "Mass", time: "8:30 AM", startHour: 8, startMin: 30, endHour: 9, endMin: 0 },
-  // Friday
-  { day: 5, type: "prayer", label: "Lauds", time: "8:00 AM", startHour: 8, startMin: 0, endHour: 8, endMin: 25 },
-  { day: 5, type: "mass", label: "Mass", time: "8:30 AM", startHour: 8, startMin: 30, endHour: 9, endMin: 0 },
-  // Saturday
-  { day: 6, type: "confession", label: "Confession", time: "4:30 PM", startHour: 16, startMin: 30, endHour: 17, endMin: 15 },
-  { day: 6, type: "mass", label: "Vigil Mass", time: "5:30 PM", startHour: 17, startMin: 30, endHour: 18, endMin: 30 },
-];
-
-function getServiceIcon(type: ServiceType) {
+function getServiceIcon(type: string) {
   switch (type) {
     case "mass": return Church;
     case "confession": return Cross;
     case "prayer": return Sun;
+    default: return Church;
   }
 }
 
-function getServiceColor(type: ServiceType) {
+function getServiceColor(type: string) {
   switch (type) {
     case "mass": return "text-primary";
     case "confession": return "text-purple-600";
     case "prayer": return "text-amber-600";
+    default: return "text-primary";
   }
 }
 
 interface MassStatus {
   isActive: boolean;
-  activeType?: ServiceType;
+  activeType?: string;
   activeLabel?: string;
   remainingMin?: number;
   nextLabel: string;
   nextTime: string;
   nextDay: string;
   countdownText: string;
-  todaySchedule: { type: ServiceType; label: string; time: string; isPast: boolean; isCurrent: boolean }[];
+  todaySchedule: { type: string; label: string; time: string; isPast: boolean; isCurrent: boolean }[];
   confessionText: string;
 }
 
-function getMassStatus(now: Date): MassStatus {
+function getMassStatus(now: Date, services: ScheduledService[]): MassStatus {
   const day = now.getDay();
+  const month = now.getMonth() + 1;
   const currentMin = now.getHours() * 60 + now.getMinutes();
 
-  // Get today's schedule
-  const todayItems = SCHEDULE.filter(s => s.day === day);
-  const todaySchedule = todayItems.map(s => {
-    const startMin = s.startHour * 60 + s.startMin;
-    const endMin = s.endHour * 60 + s.endMin;
+  // Get today's services from the shared engine
+  const todayServices = services
+    .filter(s => s.dayOfWeek === day && (!s.seasonal || s.seasonal.months.includes(month)))
+    .sort((a, b) => parseTimeToMinutes(a.time) - parseTimeToMinutes(b.time));
+
+  const todaySchedule = todayServices.map(s => {
+    const startMin = parseTimeToMinutes(s.time);
+    const endMin = startMin + s.durationMin;
     const isPast = currentMin >= endMin;
     const isCurrent = currentMin >= startMin && currentMin < endMin;
-    return { type: s.type, label: s.label, time: s.time, isPast, isCurrent };
+    return { type: s.type, label: s.name, time: s.time, isPast, isCurrent };
   });
 
   // Check if something is active right now
-  for (const s of todayItems) {
-    const startMin = s.startHour * 60 + s.startMin;
-    const endMin = s.endHour * 60 + s.endMin;
+  for (const s of todayServices) {
+    const startMin = parseTimeToMinutes(s.time);
+    const endMin = startMin + s.durationMin;
     if (currentMin >= startMin && currentMin < endMin) {
       const remaining = endMin - currentMin;
-      // Find next mass
-      const { nextLabel, nextTime, nextDay, countdownText } = findNextMass(day, currentMin);
+      const { nextLabel, nextTime, nextDay, countdownText } = findNextMass(services, day, currentMin, month);
       return {
         isActive: true,
         activeType: s.type,
-        activeLabel: s.label,
+        activeLabel: s.name,
         remainingMin: remaining,
         nextLabel,
         nextTime,
         nextDay,
         countdownText,
         todaySchedule,
-        confessionText: "Sat 4:30–5:15 PM",
+        confessionText: getConfessionText(services),
       };
     }
   }
 
   // Nothing active — find next mass
-  const { nextLabel, nextTime, nextDay, countdownText } = findNextMass(day, currentMin);
+  const { nextLabel, nextTime, nextDay, countdownText } = findNextMass(services, day, currentMin, month);
   return {
     isActive: false,
     nextLabel,
@@ -117,29 +92,42 @@ function getMassStatus(now: Date): MassStatus {
     nextDay,
     countdownText,
     todaySchedule,
-    confessionText: "Sat 4:30–5:15 PM",
+    confessionText: getConfessionText(services),
   };
 }
 
-function findNextMass(currentDay: number, currentMin: number) {
+function getConfessionText(services: ScheduledService[]): string {
+  const confession = services.find(s => s.type === "confession");
+  if (!confession) return "";
+  const startMin = parseTimeToMinutes(confession.time);
+  const endMin = startMin + confession.durationMin;
+  const endH = Math.floor(endMin / 60);
+  const endM = endMin % 60;
+  const endPeriod = endH >= 12 ? "PM" : "AM";
+  const endHour = endH > 12 ? endH - 12 : endH;
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  return `${days[confession.dayOfWeek]} ${confession.time.replace(/ (AM|PM)/, "")}–${endHour}:${endM.toString().padStart(2, "0")} ${endPeriod}`;
+}
+
+function findNextMass(services: ScheduledService[], currentDay: number, currentMin: number, month: number) {
   let minDiff = Infinity;
   let nextLabel = "";
   let nextTime = "";
   let nextDay = "";
 
-  const massItems = SCHEDULE.filter(s => s.type === "mass");
+  const massItems = services.filter(s => s.type === "mass" && (!s.seasonal || s.seasonal.months.includes(month)));
   for (const s of massItems) {
-    let daysAhead = s.day - currentDay;
+    let daysAhead = s.dayOfWeek - currentDay;
     if (daysAhead < 0) daysAhead += 7;
-    const startMin = s.startHour * 60 + s.startMin;
+    const startMin = parseTimeToMinutes(s.time);
     let diffMinutes = daysAhead * 24 * 60 + (startMin - currentMin);
     if (diffMinutes <= 0) diffMinutes += 7 * 24 * 60;
     if (diffMinutes < minDiff) {
       minDiff = diffMinutes;
-      nextLabel = s.label;
+      nextLabel = s.name;
       nextTime = s.time;
       const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-      nextDay = days[s.day];
+      nextDay = days[s.dayOfWeek];
     }
   }
 
@@ -158,8 +146,6 @@ function findNextMass(currentDay: number, currentMin: number) {
   return { nextLabel, nextTime, nextDay, countdownText };
 }
 
-
-
 function CurrentWeatherPill() {
   const { data: weather } = trpc.weather.current.useQuery(undefined, {
     staleTime: 60 * 60 * 1000,
@@ -175,6 +161,7 @@ function CurrentWeatherPill() {
 }
 
 export function NowStatusBar() {
+  const { schedule } = useParishSchedule();
   const [now, setNow] = useState(() => {
     const d = new Date();
     return new Date(d.toLocaleString("en-US", { timeZone: TIMEZONE }));
@@ -188,7 +175,8 @@ export function NowStatusBar() {
     return () => clearInterval(interval);
   }, []);
 
-  const status = useMemo(() => getMassStatus(now), [now]);
+  const services = schedule?.services ?? [];
+  const status = useMemo(() => getMassStatus(now, services), [now, services]);
 
   return (
     <div className="space-y-3">
@@ -271,10 +259,12 @@ export function NowStatusBar() {
             })}
           </div>
           {/* Confession indicator */}
-          <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-purple-500/8 text-purple-600 shrink-0 ml-auto">
-            <Cross className="w-3 h-3" />
-            <span>{status.confessionText}</span>
-          </div>
+          {status.confessionText && (
+            <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-purple-500/8 text-purple-600 shrink-0 ml-auto">
+              <Cross className="w-3 h-3" />
+              <span>{status.confessionText}</span>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -3,6 +3,11 @@
  * Uses react-helmet-async to inject title, description, OG tags, and structured data.
  */
 import { Helmet } from "react-helmet-async";
+import {
+  DEFAULT_PARISH_SCHEDULE,
+  DEFAULT_PARISH_INFO,
+  generateOpeningHours,
+} from "../../../shared/scheduleEngine";
 
 interface SEOProps {
   title?: string;
@@ -68,63 +73,75 @@ export function SEO({
 
 /**
  * Schema.org structured data for St. Patrick Church (CatholicChurch type).
+ * Generated from the shared schedule engine — single source of truth.
  * Include this on the homepage for local SEO.
  */
-export const CHURCH_STRUCTURED_DATA = {
-  "@context": "https://schema.org",
-  "@type": "CatholicChurch",
-  name: "St. Patrick Church",
-  alternateName: "St. Patrick's of Armonk",
-  url: BASE_URL || "https://st-patricks-armonk.manus.space",
-  telephone: "+1-914-273-9724",
-  email: "office@stpatricksarmonk.org",
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "137 Moseman Road",
-    addressLocality: "Armonk",
-    addressRegion: "NY",
-    postalCode: "10504",
-    addressCountry: "US",
-  },
-  geo: {
-    "@type": "GeoCoordinates",
-    latitude: 41.1268,
-    longitude: -73.7140,
-  },
-  openingHoursSpecification: [
-    {
+function buildChurchStructuredData() {
+  const info = DEFAULT_PARISH_INFO;
+  const openingHours = generateOpeningHours(DEFAULT_PARISH_SCHEDULE);
+
+  // Also include confession hours
+  const confession = DEFAULT_PARISH_SCHEDULE.services.find(s => s.type === "confession");
+
+  const openingHoursSpec = openingHours.map(h => ({
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: [h.dayOfWeek],
+    opens: h.opens,
+    closes: h.closes,
+  }));
+
+  // Add confession separately
+  if (confession) {
+    const startMin = parseInt(confession.time.split(":")[0]) * 60 +
+      parseInt(confession.time.split(":")[1]?.split(" ")[0] || "0");
+    // Use parseTimeToMinutes from engine
+    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const confStart = confession.time.replace(" PM", "").replace(" AM", "");
+    const confStartH = confession.time.includes("PM") ?
+      (parseInt(confStart.split(":")[0]) === 12 ? 12 : parseInt(confStart.split(":")[0]) + 12) :
+      parseInt(confStart.split(":")[0]);
+    const confStartM = parseInt(confStart.split(":")[1] || "0");
+    const confEndTotal = confStartH * 60 + confStartM + confession.durationMin;
+    const confEndH = Math.floor(confEndTotal / 60);
+    const confEndM = confEndTotal % 60;
+
+    openingHoursSpec.push({
       "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Saturday"],
-      opens: "17:00",
-      closes: "18:00",
-      description: "Vigil Mass",
+      dayOfWeek: [dayNames[confession.dayOfWeek]],
+      opens: `${String(confStartH).padStart(2, "0")}:${String(confStartM).padStart(2, "0")}`,
+      closes: `${String(confEndH).padStart(2, "0")}:${String(confEndM).padStart(2, "0")}`,
+    });
+  }
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "CatholicChurch",
+    name: info.name,
+    alternateName: "St. Patrick's of Armonk",
+    url: BASE_URL || "https://stpatsarmonk-24g7ux9f.manus.space",
+    telephone: info.phone,
+    email: info.officeEmail,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: info.address,
+      addressLocality: info.city,
+      addressRegion: info.state,
+      postalCode: info.zip,
+      addressCountry: "US",
     },
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Sunday"],
-      opens: "08:00",
-      closes: "12:30",
-      description: "Sunday Masses (8:00 AM, 10:00 AM, 12:00 PM)",
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: info.mapCoordinates.lat,
+      longitude: info.mapCoordinates.lng,
     },
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-      opens: "08:30",
-      closes: "09:00",
-      description: "Daily Mass",
-    },
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Saturday"],
-      opens: "16:00",
-      closes: "16:45",
-      description: "Confessions",
-    },
-  ],
-  sameAs: [
-    "https://www.facebook.com/StPatricksArmonk",
-  ],
-  image: DEFAULT_IMAGE,
-  priceRange: "Free",
-  hasMap: "https://maps.google.com/?q=St+Patrick+Church+Armonk+NY",
-};
+    openingHoursSpecification: openingHoursSpec,
+    sameAs: [
+      "https://www.facebook.com/StPatricksArmonk",
+    ],
+    image: DEFAULT_IMAGE,
+    priceRange: "Free",
+    hasMap: `https://maps.google.com/?q=${encodeURIComponent(info.name + " " + info.city + " " + info.state)}`,
+  };
+}
+
+export const CHURCH_STRUCTURED_DATA = buildChurchStructuredData();

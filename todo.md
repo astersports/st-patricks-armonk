@@ -922,3 +922,38 @@
 - [x] Improve null safety (non-null assertions only used where getDb() is guaranteed by server startup)
 - [x] Print view for form submissions (browser print CSS handles this via @media print)
 - [x] Sacrament anniversary reminders (deferred: requires date-of-sacrament data not yet collected)
+
+## Architecture Redesign (Claude Design Architect Review)
+
+### P0 — Single Source of Truth
+- [x] Build `parishSchedule` server source + admin editor (one place for all Mass/Confession/Prayer times)
+- [x] Build `shared/scheduleEngine.ts` (parseServiceMinutes, getCountdown, isServiceInProgress, getWeeklySchedule)
+- [x] Migrate all 9 hardcoded schedule copies to read from parishSchedule source
+- [x] Fix drifted MassTimes.tsx SEO description (says 5:00/8:00/10:00/12:00 instead of 5:30/8:30/10:30/12:30)
+- [x] Generate SEO structured data + .ics from parishSchedule (never hardcoded)
+- [x] Build `parishInfo` server source (name, address, phone, office hours, social links)
+- [ ] Build `sacramentPolicies` server source (per-sacrament eligibility, scheduling rules, contacts)
+- [x] Migrate hardcoded address/phone/policy from NewHere, Contact, Footer, SEO to parishInfo
+
+### P1 — Information Architecture + Homepage
+- [ ] Implement 5-bucket navigation (Worship, Faith Formation, Parish Life, About) + I'm New button + Give
+- [ ] Homepage 13→7 beats (Hero, This Week, Now, Pastor Welcome, Journey Cards, Prayer Wall, Newsletter)
+- [ ] Move Daily Readings + Saint of Day + Catholic Resources to /worship/today
+- [ ] Merge Volunteer + Volunteer Needs → /serve (urgent needs on top, ongoing below)
+- [ ] Demote Forms & Documents from nav (forms live in context on Sacraments/CCD pages)
+- [ ] Cut MyParish page (no unique data)
+- [ ] Fold Homily Archive into Bulletins as "Read & Listen" library
+- [ ] Mobile bottom nav: Home, Mass, Give, Prayers, Menu
+
+### P1 — Visual System
+- [ ] Liturgical-season accent CSS variable driven from liturgicalSeason.ts
+- [ ] Prayer Wall candlelight token (unified home teaser + full page, on-system colors)
+- [ ] Weather tokens (--weather-clear, --weather-rain, --weather-severe)
+- [ ] Lock type scale: Display 48/36, H1 32, H2 24, H3 20, body 16/1.55, caption 13
+
+### P2 — Weather+ & Digital
+- [ ] Weather on every event card (calendar, event detail, CYO game cards)
+- [ ] Sunday outlook widget in hero or This Week
+- [ ] Severe-weather → closure pipeline (admin one-tap → banner + VAPID push)
+- [ ] .ics "Add to Calendar" button on every Mass/event
+- [ ] Guided sacrament prep flows (eligibility → date → submit)

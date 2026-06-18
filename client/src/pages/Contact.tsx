@@ -26,7 +26,7 @@ export default function Contact() {
       <SEO
         title="Contact Us"
         path="/contact"
-        description="Contact St. Patrick Church, Armonk NY. Phone: (914) 273-9724. Address: 137 Moseman Road, Armonk, NY 10504. Office hours and directions."
+        description="Contact St. Patrick Church, Armonk NY. Phone: (914) 273-9724. Address: 29 Cox Avenue, Armonk, NY 10504. Office hours and directions."
       />
       {/* Page Header — refined */}
       <PageHeader

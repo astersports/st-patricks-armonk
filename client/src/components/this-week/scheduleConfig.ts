@@ -1,8 +1,23 @@
 /**
- * This Week Schedule Config — Types, schedule data, and utility functions.
+ * Schedule Config — Thin adapter over shared/scheduleEngine.
+ * 
+ * All actual schedule data comes from the shared engine (single source of truth).
+ * This file provides backward-compatible exports for ThisWeekAccordion,
+ * DayContent, ServiceCard, and RainAlertBanner.
  */
-
 import { Church, Cross, Sun } from "lucide-react";
+import {
+  parseTimeToMinutes,
+  getWeeklySchedule,
+  DEFAULT_PARISH_SCHEDULE,
+  TIMEZONE as ENGINE_TZ,
+  DAY_LABELS as ENGINE_DAYS,
+} from "../../../../shared/scheduleEngine";
+
+// Re-export types and constants
+export const TIMEZONE = ENGINE_TZ;
+export const DAY_LABELS = ENGINE_DAYS;
+export const parseServiceMinutes = parseTimeToMinutes;
 
 export interface ScheduleItem {
   time: string;
@@ -10,46 +25,11 @@ export interface ScheduleItem {
   type: "mass" | "confession" | "prayer";
 }
 
-export const DAILY_SCHEDULE: Record<number, ScheduleItem[]> = {
-  0: [ // Sunday
-    { time: "8:30 AM", label: "Mass", type: "mass" },
-    { time: "10:30 AM", label: "Mass", type: "mass" },
-    { time: "12:30 PM", label: "Mass (Oct–Jun)", type: "mass" },
-  ],
-  1: [], // Monday — no services
-  2: [ // Tuesday
-    { time: "8:00 AM", label: "Morning Prayer", type: "prayer" },
-    { time: "8:30 AM", label: "Mass", type: "mass" },
-  ],
-  3: [ // Wednesday
-    { time: "8:00 AM", label: "Morning Prayer", type: "prayer" },
-    { time: "8:30 AM", label: "Mass", type: "mass" },
-  ],
-  4: [ // Thursday
-    { time: "8:00 AM", label: "Morning Prayer", type: "prayer" },
-    { time: "8:30 AM", label: "Mass", type: "mass" },
-  ],
-  5: [ // Friday
-    { time: "8:00 AM", label: "Morning Prayer", type: "prayer" },
-    { time: "8:30 AM", label: "Mass", type: "mass" },
-  ],
-  6: [ // Saturday
-    { time: "4:30 PM", label: "Confession", type: "confession" },
-    { time: "5:30 PM", label: "Vigil Mass", type: "mass" },
-  ],
-};
-
 export const SERVICE_DURATION: Record<string, number> = {
   mass: 60,
   confession: 45,
   prayer: 30,
 };
-
-export function parseServiceMinutes(time: string): number {
-  const [timePart, ampm] = time.split(" ");
-  const [h, m] = timePart.split(":").map(Number);
-  return (ampm === "PM" && h !== 12 ? h + 12 : h === 12 && ampm === "AM" ? 0 : h) * 60 + m;
-}
 
 export const typeStyles = {
   mass: { icon: Church, color: "text-primary", bg: "bg-primary/10", borderColor: "border-l-primary" },
@@ -57,6 +37,23 @@ export const typeStyles = {
   prayer: { icon: Sun, color: "text-amber-600", bg: "bg-amber-500/10", borderColor: "border-l-amber-500" },
 };
 
-export const DAY_LABELS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+/**
+ * DAILY_SCHEDULE — derived from the shared engine's DEFAULT_PARISH_SCHEDULE.
+ * Single source of truth: edit shared/scheduleEngine.ts DEFAULT_PARISH_SCHEDULE
+ * or use the admin panel to update via siteSettings.
+ */
+function buildDailySchedule(): Record<number, ScheduleItem[]> {
+  const month = new Date().getMonth() + 1;
+  const weekly = getWeeklySchedule(DEFAULT_PARISH_SCHEDULE, month);
+  const result: Record<number, ScheduleItem[]> = {};
+  for (let day = 0; day <= 6; day++) {
+    result[day] = (weekly[day] || []).map(s => ({
+      time: s.time,
+      label: s.name,
+      type: s.type as "mass" | "confession" | "prayer",
+    }));
+  }
+  return result;
+}
 
-export const TIMEZONE = "America/New_York";
+export const DAILY_SCHEDULE: Record<number, ScheduleItem[]> = buildDailySchedule();

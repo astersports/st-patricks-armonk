@@ -28,6 +28,7 @@ import { faqRouter } from "./faq";
 import { pushNotificationsRouter } from "./pushNotifications";
 import { volunteerNeedsRouter } from "./volunteerNeeds";
 import { homiliesRouter } from "./homilies";
+import { parishScheduleRouter } from "./parishSchedule";
 
 export const appRouter = router({
   auth: authRouter,
@@ -66,6 +67,7 @@ export const appRouter = router({
   pushNotifications: pushNotificationsRouter,
   volunteerNeeds: volunteerNeedsRouter,
   homilies: homiliesRouter,
+  parishSchedule: parishScheduleRouter,
 });
 
 export type AppRouter = typeof appRouter;

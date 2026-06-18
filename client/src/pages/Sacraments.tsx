@@ -277,7 +277,7 @@ export default function Sacraments() {
                   <Badge className="bg-primary/8 text-primary border-0 text-[10px] px-1.5 py-0">Weekly</Badge>
                 </div>
                 <p className="text-muted-foreground text-sm leading-relaxed mb-3.5">
-                  The Sacrament of Reconciliation is available every Saturday from 4:30 PM to 5:15 PM, or by appointment with a priest.
+                  The Sacrament of Reconciliation is available every Saturday afternoon before Vigil Mass, or by appointment with a priest. See Mass Times for current schedule.
                 </p>
                 <Button variant="outline" size="sm" className="rounded-full" asChild>
                   <a href="/mass-times">View Full Schedule</a>

@@ -5,6 +5,40 @@ import { MapPin, Clock, Heart, Users, ArrowRight, Church, BookOpen, Car } from "
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import PageHeader from "@/components/PageHeader";
+import { useParishSchedule } from "@/hooks/useParishSchedule";
+import { DEFAULT_PARISH_SCHEDULE } from "../../../shared/scheduleEngine";
+
+function MassScheduleCards() {
+  const { schedule } = useParishSchedule();
+  const s = schedule ?? DEFAULT_PARISH_SCHEDULE;
+
+  const satVigil = s.services.find(svc => svc.dayOfWeek === 6 && svc.type === "mass");
+  const sunMasses = s.services.filter(svc => svc.dayOfWeek === 0 && svc.type === "mass");
+  const weekdayMass = s.services.find(svc => svc.dayOfWeek >= 2 && svc.dayOfWeek <= 5 && svc.type === "mass");
+
+  const sunMainTimes = sunMasses.filter(m => !m.seasonal).map(m => m.time.replace(" AM", "").replace(" PM", "")).join(" & ");
+  const sunSeasonal = sunMasses.find(m => m.seasonal);
+
+  return (
+    <div className="grid grid-cols-3 gap-2 sm:gap-3 text-center">
+      <div className="bg-background rounded-lg p-3 sm:p-4 shadow-sm">
+        <p className="text-xs sm:text-sm text-muted-foreground uppercase tracking-wider mb-1">Sat Vigil</p>
+        <p className="font-serif text-base sm:text-xl font-bold text-primary">{satVigil?.time || "5:30 PM"}</p>
+      </div>
+      <div className="bg-background rounded-lg p-3 sm:p-4 shadow-sm">
+        <p className="text-xs sm:text-sm text-muted-foreground uppercase tracking-wider mb-1">Sunday</p>
+        <p className="font-serif text-base sm:text-xl font-bold text-primary">{sunMainTimes}</p>
+        {sunSeasonal && (
+          <p className="text-xs text-muted-foreground">{sunSeasonal.time.replace(" AM", "").replace(" PM", "")} ({sunSeasonal.seasonal?.note})</p>
+        )}
+      </div>
+      <div className="bg-background rounded-lg p-3 sm:p-4 shadow-sm">
+        <p className="text-xs sm:text-sm text-muted-foreground uppercase tracking-wider mb-1">Tue–Fri</p>
+        <p className="font-serif text-base sm:text-xl font-bold text-primary">{weekdayMass?.time || "8:30 AM"}</p>
+      </div>
+    </div>
+  );
+}
 
 export default function NewHere() {
   return (
@@ -89,21 +123,7 @@ export default function NewHere() {
           <h2 className="font-serif text-xl sm:text-2xl font-bold text-foreground mb-4 text-center">
             Mass Schedule
           </h2>
-          <div className="grid grid-cols-3 gap-2 sm:gap-3 text-center">
-            <div className="bg-background rounded-lg p-3 sm:p-4 shadow-sm">
-              <p className="text-xs sm:text-sm text-muted-foreground uppercase tracking-wider mb-1">Sat Vigil</p>
-              <p className="font-serif text-base sm:text-xl font-bold text-primary">5:30 PM</p>
-            </div>
-            <div className="bg-background rounded-lg p-3 sm:p-4 shadow-sm">
-              <p className="text-xs sm:text-sm text-muted-foreground uppercase tracking-wider mb-1">Sunday</p>
-              <p className="font-serif text-base sm:text-xl font-bold text-primary">8:30 & 10:30</p>
-              <p className="text-xs text-muted-foreground">12:30 (Oct–Jun)</p>
-            </div>
-            <div className="bg-background rounded-lg p-3 sm:p-4 shadow-sm">
-              <p className="text-xs sm:text-sm text-muted-foreground uppercase tracking-wider mb-1">Tue–Fri</p>
-              <p className="font-serif text-base sm:text-xl font-bold text-primary">8:30 AM</p>
-            </div>
-          </div>
+          <MassScheduleCards />
           <div className="text-center mt-3">
             <Link href="/mass-times">
               <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 press-scale text-sm">

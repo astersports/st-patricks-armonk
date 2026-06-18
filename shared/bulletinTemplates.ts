@@ -19,10 +19,10 @@ export const bulletinTemplates: BulletinTemplate[] = [
 <table>
 <thead><tr><th>Day</th><th>Time</th><th>Intention</th></tr></thead>
 <tbody>
-<tr><td>Saturday</td><td>5:00 PM</td><td></td></tr>
-<tr><td>Sunday</td><td>8:00 AM</td><td></td></tr>
-<tr><td>Sunday</td><td>10:00 AM</td><td></td></tr>
-<tr><td>Sunday</td><td>12:00 PM</td><td></td></tr>
+<tr><td>Saturday</td><td>5:30 PM</td><td></td></tr>
+<tr><td>Sunday</td><td>8:30 AM</td><td></td></tr>
+<tr><td>Sunday</td><td>10:30 AM</td><td></td></tr>
+<tr><td>Sunday</td><td>12:30 PM</td><td></td></tr>
 </tbody>
 </table>
 
@@ -97,10 +97,10 @@ export const bulletinTemplates: BulletinTemplate[] = [
 <table>
 <thead><tr><th>Day</th><th>Time</th><th>Intention</th></tr></thead>
 <tbody>
-<tr><td>Saturday</td><td>5:00 PM</td><td></td></tr>
-<tr><td>Sunday</td><td>8:00 AM</td><td></td></tr>
-<tr><td>Sunday</td><td>10:00 AM</td><td></td></tr>
-<tr><td>Sunday</td><td>12:00 PM</td><td></td></tr>
+<tr><td>Saturday</td><td>5:30 PM</td><td></td></tr>
+<tr><td>Sunday</td><td>8:30 AM</td><td></td></tr>
+<tr><td>Sunday</td><td>10:30 AM</td><td></td></tr>
+<tr><td>Sunday</td><td>12:30 PM</td><td></td></tr>
 </tbody>
 </table>
 
@@ -157,10 +157,10 @@ export const bulletinTemplates: BulletinTemplate[] = [
 <table>
 <thead><tr><th>Day</th><th>Time</th><th>Intention</th></tr></thead>
 <tbody>
-<tr><td>Saturday</td><td>5:00 PM</td><td></td></tr>
-<tr><td>Sunday</td><td>8:00 AM</td><td></td></tr>
-<tr><td>Sunday</td><td>10:00 AM</td><td></td></tr>
-<tr><td>Sunday</td><td>12:00 PM</td><td></td></tr>
+<tr><td>Saturday</td><td>5:30 PM</td><td></td></tr>
+<tr><td>Sunday</td><td>8:30 AM</td><td></td></tr>
+<tr><td>Sunday</td><td>10:30 AM</td><td></td></tr>
+<tr><td>Sunday</td><td>12:30 PM</td><td></td></tr>
 </tbody>
 </table>
 
