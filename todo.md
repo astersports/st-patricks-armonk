@@ -998,3 +998,12 @@
 - [x] E3. Accessibility pass (labels, focus rings, aria-live, 44px targets, prefers-reduced-motion)
 - [x] E4. Empty/error/loading states with brand voice on all new surfaces
 - [x] E5. Performance — lazy-loading, bundle budget, virtualize lists >30 rows
+
+### Audit Log Expansion
+- [x] Add logAuditEvent to bulletin publish/unpublish/delete
+- [x] Add logAuditEvent to event create/update/delete
+- [x] Add logAuditEvent to news post publish/unpublish/delete
+- [x] Add logAuditEvent to CCD registration status changes (approve/waitlist/cancel)
+- [x] Add logAuditEvent to volunteer opportunity create/update/delete
+- [x] Add logAuditEvent to document upload/delete
+- [x] Add logAuditEvent to form submission status changes (baptism, marriage, sponsor cert)

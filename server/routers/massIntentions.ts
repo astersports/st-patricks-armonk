@@ -3,6 +3,7 @@
  */
 import { adminProcedure, publicProcedure, z, db } from "./_helpers";
 import { notifyOwner } from "../_core/notification";
+import { createAuditLog } from "../db/auditLog";
 
 export const massIntentionsRouter = {
   /** Public: submit a Mass intention request */
@@ -56,13 +57,14 @@ export const massIntentionsRouter = {
       scheduledMass: z.string().optional(),
       adminNotes: z.string().optional(),
     }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       await db.updateMassIntentionStatus(input.id, {
         status: input.status,
         scheduledDate: input.scheduledDate ? new Date(input.scheduledDate) : null,
         scheduledMass: input.scheduledMass || null,
         adminNotes: input.adminNotes || null,
       });
+      createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.status, entityType: "mass_intention", entityId: String(input.id), details: JSON.stringify({ newStatus: input.status, scheduledDate: input.scheduledDate }) });
       return { success: true };
     }),
 };

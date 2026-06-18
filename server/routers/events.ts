@@ -1,8 +1,8 @@
 /**
  * Events Router — CRUD for parish events.
- * ~55 lines
  */
 import { adminProcedure, publicProcedure, router, z, db } from "./_helpers";
+import { createAuditLog } from "../db/auditLog";
 
 export const eventsRouter = router({
   listUpcoming: publicProcedure.query(async () => {
@@ -31,6 +31,7 @@ export const eventsRouter = router({
       endDate: input.endDate ? new Date(input.endDate) : null,
       authorId: ctx.user.id,
     });
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "create", entityType: "event", entityId: String(id), details: JSON.stringify({ title: input.title }) });
     return { id };
   }),
   update: adminProcedure.input(z.object({
@@ -42,16 +43,19 @@ export const eventsRouter = router({
     endDate: z.string().optional(),
     allDay: z.boolean().optional(),
     published: z.boolean().optional(),
-  })).mutation(async ({ input }) => {
+  })).mutation(async ({ input, ctx }) => {
     const { id, ...data } = input;
     const updateData: Record<string, unknown> = { ...data };
     if (data.startDate) updateData.startDate = new Date(data.startDate);
     if (data.endDate) updateData.endDate = new Date(data.endDate);
     await db.updateEvent(id, updateData as any);
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "update", entityType: "event", entityId: String(id), details: JSON.stringify({ title: data.title }) });
     return { success: true };
   }),
-  delete: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+  delete: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
+    const existing = await db.getEventById(input.id);
     await db.deleteEvent(input.id);
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "delete", entityType: "event", entityId: String(input.id), details: JSON.stringify({ title: existing?.title }) });
     return { success: true };
   }),
 });

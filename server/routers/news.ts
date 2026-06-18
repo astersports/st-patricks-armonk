@@ -1,10 +1,10 @@
 /**
  * News Posts Router — CRUD for parish news articles.
- * ~80 lines
  */
 import { adminProcedure, publicProcedure, router, z, db, TRPCError } from "./_helpers";
 import { validateBase64File } from "../middleware";
 import { sendNewsNotifications } from "../notifications";
+import { createAuditLog } from "../db/auditLog";
 
 export const newsRouter = router({
   listPublished: publicProcedure.query(async () => {
@@ -34,6 +34,7 @@ export const newsRouter = router({
     if (input.published) {
       sendNewsNotifications(id, input.title, input.excerpt || "");
     }
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.published ? "publish" : "create", entityType: "news_post", entityId: String(id), details: JSON.stringify({ title: input.title }) });
     return { id };
   }),
   update: adminProcedure.input(z.object({
@@ -43,7 +44,7 @@ export const newsRouter = router({
     excerpt: z.string().optional(),
     imageUrl: z.string().optional(),
     published: z.boolean().optional(),
-  })).mutation(async ({ input }) => {
+  })).mutation(async ({ input, ctx }) => {
     const { id, ...data } = input;
     const existing = await db.getNewsPostById(id);
     if (!existing) throw new (await import("@trpc/server")).TRPCError({ code: "NOT_FOUND" });
@@ -53,13 +54,19 @@ export const newsRouter = router({
       updateData.publishedAt = new Date();
       await db.updateNewsPost(id, updateData as any);
       sendNewsNotifications(id, data.title || existing.title, data.excerpt || existing.excerpt || "");
+      createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "publish", entityType: "news_post", entityId: String(id), details: JSON.stringify({ title: data.title || existing.title }) });
     } else {
       await db.updateNewsPost(id, updateData as any);
+      if (data.published === false && existing.published) {
+        createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "unpublish", entityType: "news_post", entityId: String(id), details: JSON.stringify({ title: existing.title }) });
+      }
     }
     return { success: true };
   }),
-  delete: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+  delete: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
+    const existing = await db.getNewsPostById(input.id);
     await db.deleteNewsPost(input.id);
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "delete", entityType: "news_post", entityId: String(input.id), details: JSON.stringify({ title: existing?.title }) });
     return { success: true };
   }),
   uploadImage: adminProcedure.input(z.object({

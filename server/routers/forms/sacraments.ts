@@ -3,6 +3,7 @@
  */
 import { adminProcedure, router, z, db, notifyOwner } from "../_helpers";
 import { rateLimitedFormProcedure } from "../_rateLimited";
+import { createAuditLog } from "../../db/auditLog";
 
 export const baptismRouter = router({
   submit: rateLimitedFormProcedure.input(z.object({
@@ -32,8 +33,9 @@ export const baptismRouter = router({
     id: z.number(),
     status: z.string(),
     adminNotes: z.string().optional(),
-  })).mutation(async ({ input }) => {
+  })).mutation(async ({ input, ctx }) => {
     await db.updateBaptismStatus(input.id, input.status, input.adminNotes);
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.status, entityType: "baptism_registration", entityId: String(input.id), details: JSON.stringify({ newStatus: input.status }) });
     return { success: true };
   }),
 });
@@ -66,8 +68,9 @@ export const sponsorRouter = router({
     id: z.number(),
     status: z.string(),
     adminNotes: z.string().optional(),
-  })).mutation(async ({ input }) => {
+  })).mutation(async ({ input, ctx }) => {
     await db.updateSponsorStatus(input.id, input.status, input.adminNotes);
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.status, entityType: "sponsor_certificate", entityId: String(input.id), details: JSON.stringify({ newStatus: input.status }) });
     return { success: true };
   }),
 });
@@ -105,8 +108,9 @@ export const marriageRouter = router({
     id: z.number(),
     status: z.string(),
     adminNotes: z.string().optional(),
-  })).mutation(async ({ input }) => {
+  })).mutation(async ({ input, ctx }) => {
     await db.updateMarriageStatus(input.id, input.status, input.adminNotes);
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.status, entityType: "marriage_inquiry", entityId: String(input.id), details: JSON.stringify({ newStatus: input.status }) });
     return { success: true };
   }),
 });
@@ -140,8 +144,9 @@ export const funeralRouter = router({
     id: z.number(),
     status: z.string(),
     adminNotes: z.string().optional(),
-  })).mutation(async ({ input }) => {
+  })).mutation(async ({ input, ctx }) => {
     await db.updateFuneralStatus(input.id, input.status, input.adminNotes);
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.status, entityType: "funeral_preplanning", entityId: String(input.id), details: JSON.stringify({ newStatus: input.status }) });
     return { success: true };
   }),
 });

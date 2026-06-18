@@ -4,6 +4,7 @@
 import { adminProcedure, publicProcedure, router, z, db, nanoid, storagePut, notifyOwner } from "../_helpers";
 import { rateLimitedFormProcedure } from "../_rateLimited";
 import { validateBase64File } from "../../middleware";
+import { createAuditLog } from "../../db/auditLog";
 
 export const documentsRouter = router({
   byCategory: publicProcedure.input(z.object({ category: z.string() })).query(async ({ input }) => {
@@ -19,8 +20,9 @@ export const documentsRouter = router({
     fileUrl: z.string().min(1),
     fileKey: z.string().optional(),
     sortOrder: z.number().optional(),
-  })).mutation(async ({ input }) => {
+  })).mutation(async ({ input, ctx }) => {
     await db.createDocument({ ...input, sortOrder: input.sortOrder ?? 0 });
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "create", entityType: "document", details: JSON.stringify({ title: input.title, category: input.category }) });
     return { success: true };
   }),
   update: adminProcedure.input(z.object({
@@ -31,13 +33,15 @@ export const documentsRouter = router({
     fileUrl: z.string().optional(),
     sortOrder: z.number().optional(),
     published: z.boolean().optional(),
-  })).mutation(async ({ input }) => {
+  })).mutation(async ({ input, ctx }) => {
     const { id, ...data } = input;
     await db.updateDocument(id, data);
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "update", entityType: "document", entityId: String(id), details: JSON.stringify({ title: data.title }) });
     return { success: true };
   }),
-  delete: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+  delete: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
     await db.deleteDocument(input.id);
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "delete", entityType: "document", entityId: String(input.id) });
     return { success: true };
   }),
   upload: adminProcedure.input(z.object({
@@ -92,8 +96,9 @@ export const teenLifeRouter = router({
     id: z.number(),
     status: z.string(),
     adminNotes: z.string().optional(),
-  })).mutation(async ({ input }) => {
+  })).mutation(async ({ input, ctx }) => {
     await db.updateTeenLifeRegistrationStatus(input.id, input.status, input.adminNotes);
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.status, entityType: "teen_life_registration", entityId: String(input.id), details: JSON.stringify({ newStatus: input.status }) });
     return { success: true };
   }),
 });
@@ -126,8 +131,9 @@ export const parishRegistrationRouter = router({
     id: z.number(),
     status: z.string(),
     adminNotes: z.string().optional(),
-  })).mutation(async ({ input }) => {
+  })).mutation(async ({ input, ctx }) => {
     await db.updateParishRegistrationStatus(input.id, input.status, input.adminNotes);
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.status, entityType: "parish_registration", entityId: String(input.id), details: JSON.stringify({ newStatus: input.status }) });
     return { success: true };
   }),
 });
@@ -186,8 +192,9 @@ export const ccdPermissionsRouter = router({
     id: z.number(),
     status: z.enum(["pending", "approved", "flagged"]),
     adminNotes: z.string().optional(),
-  })).mutation(async ({ input }) => {
+  })).mutation(async ({ input, ctx }) => {
     await db.updateCcdPermissionStatus(input.id, input.status, input.adminNotes);
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.status, entityType: "ccd_permission", entityId: String(input.id), details: JSON.stringify({ newStatus: input.status }) });
     return { success: true };
   }),
 });

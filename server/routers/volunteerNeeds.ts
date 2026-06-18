@@ -5,6 +5,7 @@
  */
 import { adminProcedure, publicProcedure, router, z, db } from "./_helpers";
 import { rateLimitedFormProcedure } from "./_rateLimited";
+import { createAuditLog } from "../db/auditLog";
 
 export const volunteerNeedsRouter = router({
   /** List active volunteer needs (public) */
@@ -37,7 +38,7 @@ export const volunteerNeedsRouter = router({
       contactEmail: z.string().email().optional(),
       contactPhone: z.string().optional(),
     }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       const id = await db.createVolunteerNeed({
         title: input.title,
         description: input.description,
@@ -49,6 +50,7 @@ export const volunteerNeedsRouter = router({
         contactEmail: input.contactEmail,
         contactPhone: input.contactPhone,
       });
+      createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "create", entityType: "volunteer_need", entityId: String(id), details: JSON.stringify({ title: input.title, urgency: input.urgency }) });
       return { id };
     }),
 
@@ -67,9 +69,10 @@ export const volunteerNeedsRouter = router({
       contactPhone: z.string().optional(),
       active: z.boolean().optional(),
     }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       const { id, ...updates } = input;
       await db.updateVolunteerNeed(id, updates);
+      createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.active === false ? "close" : "update", entityType: "volunteer_need", entityId: String(id), details: JSON.stringify({ title: input.title }) });
       return { success: true };
     }),
 

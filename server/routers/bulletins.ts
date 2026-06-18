@@ -1,10 +1,10 @@
 /**
  * Bulletins Router — CRUD for weekly parish bulletins (PDF uploads).
- * ~75 lines
  */
 import { adminProcedure, publicProcedure, router, z, db, nanoid, storagePut, TRPCError } from "./_helpers";
 import { validateBase64File } from "../middleware";
 import { sendBulletinNotifications } from "../notifications";
+import { createAuditLog } from "../db/auditLog";
 
 export const bulletinsRouter = router({
   listPublished: publicProcedure.query(async () => {
@@ -35,6 +35,7 @@ export const bulletinsRouter = router({
     if (input.published) {
       sendBulletinNotifications(id, input.title);
     }
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.published ? "publish" : "create", entityType: "bulletin", entityId: String(id), details: JSON.stringify({ title: input.title }) });
     return { id };
   }),
   update: adminProcedure.input(z.object({
@@ -43,7 +44,7 @@ export const bulletinsRouter = router({
     description: z.string().optional(),
     weekDate: z.string().optional(),
     published: z.boolean().optional(),
-  })).mutation(async ({ input }) => {
+  })).mutation(async ({ input, ctx }) => {
     const { id, ...data } = input;
     const existing = await db.getBulletinById(id);
     if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
@@ -55,13 +56,19 @@ export const bulletinsRouter = router({
       updateData.publishedAt = new Date();
       await db.updateBulletin(id, updateData as any);
       sendBulletinNotifications(id, data.title || existing.title);
+      createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "publish", entityType: "bulletin", entityId: String(id), details: JSON.stringify({ title: data.title || existing.title }) });
     } else {
       await db.updateBulletin(id, updateData as any);
+      if (data.published === false && existing.published) {
+        createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "unpublish", entityType: "bulletin", entityId: String(id), details: JSON.stringify({ title: existing.title }) });
+      }
     }
     return { success: true };
   }),
-  delete: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+  delete: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
+    const existing = await db.getBulletinById(input.id);
     await db.deleteBulletin(input.id);
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "delete", entityType: "bulletin", entityId: String(input.id), details: JSON.stringify({ title: existing?.title }) });
     return { success: true };
   }),
   uploadPdf: adminProcedure.input(z.object({

@@ -1,9 +1,9 @@
 /**
  * CCD (Religious Education) Router — registration, events, permissions.
- * ~130 lines
  */
 import { adminProcedure, publicProcedure, router, z, db, nanoid, notifyOwner } from "./_helpers";
 import { rateLimitedFormProcedure } from "./_rateLimited";
+import { createAuditLog } from "../db/auditLog";
 
 export const ccdRouter = router({
   register: rateLimitedFormProcedure.input(z.object({
@@ -46,8 +46,9 @@ export const ccdRouter = router({
   updateStatus: adminProcedure.input(z.object({
     id: z.number(),
     status: z.enum(["pending", "approved", "waitlisted", "cancelled"]),
-  })).mutation(async ({ input }) => {
+  })).mutation(async ({ input, ctx }) => {
     await db.updateCcdRegistrationStatus(input.id, input.status);
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.status, entityType: "ccd_registration", entityId: String(input.id), details: JSON.stringify({ newStatus: input.status }) });
     return { success: true };
   }),
   // CCD Calendar Events
@@ -65,7 +66,7 @@ export const ccdRouter = router({
     grade: z.string().optional(),
     location: z.string().optional(),
     schoolYear: z.string().min(1),
-  })).mutation(async ({ input }) => {
+  })).mutation(async ({ input, ctx }) => {
     const id = await db.createCcdEvent({
       ...input,
       eventDate: new Date(input.eventDate),
@@ -74,6 +75,7 @@ export const ccdRouter = router({
       grade: input.grade ?? null,
       location: input.location ?? null,
     });
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "create", entityType: "ccd_event", entityId: String(id), details: JSON.stringify({ title: input.title, type: input.eventType }) });
     return { success: true, id };
   }),
   updateEvent: adminProcedure.input(z.object({
@@ -85,16 +87,18 @@ export const ccdRouter = router({
     eventType: z.enum(["class", "holiday", "special", "sacrament"]).optional(),
     grade: z.string().optional(),
     location: z.string().optional(),
-  })).mutation(async ({ input }) => {
+  })).mutation(async ({ input, ctx }) => {
     const { id, eventDate, endDate, ...rest } = input;
     const data: any = { ...rest };
     if (eventDate) data.eventDate = new Date(eventDate);
     if (endDate) data.endDate = new Date(endDate);
     await db.updateCcdEvent(id, data);
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "update", entityType: "ccd_event", entityId: String(id), details: JSON.stringify({ title: input.title }) });
     return { success: true };
   }),
-  deleteEvent: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+  deleteEvent: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
     await db.deleteCcdEvent(input.id);
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "delete", entityType: "ccd_event", entityId: String(input.id) });
     return { success: true };
   }),
 });
