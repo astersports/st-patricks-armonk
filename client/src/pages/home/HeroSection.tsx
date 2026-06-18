@@ -66,22 +66,13 @@ export function HeroSection() {
   }, []);
 
   return (
-    <section className="relative min-h-[520px] sm:min-h-[560px] md:min-h-[600px] flex flex-col overflow-hidden" aria-label="Parish welcome">
-      {/* Blurred background fill for sides */}
+    <section className="relative w-full flex flex-col overflow-hidden" style={{ aspectRatio: '4 / 3', maxHeight: '75vh' }} aria-label="Parish welcome">
+      {/* Full image — no cropping, no scaling, fills width and uses natural aspect ratio */}
       <div className="absolute inset-0">
         <img
           src="/manus-storage/StPatrick-Outside_971c848e.jpeg"
-          alt=""
-          aria-hidden="true"
-          className="w-full h-full object-cover object-center blur-xl scale-110"
-        />
-      </div>
-      {/* Main image — exact size, no cropping or scaling */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <img
-          src="/manus-storage/StPatrick-Outside_971c848e.jpeg"
           alt="St. Patrick's Church front exterior"
-          className="w-full h-full object-contain object-center"
+          className="w-full h-full object-cover object-center"
         />
       </div>
 
