@@ -242,6 +242,23 @@
   --weather-snow: oklch(0.85 0.03 260);       /* Light ice blue */
 }
 
+/* ===== Weather Badge Utilities ===== */
+.weather-badge-clear {
+  background: oklch(0.72 0.16 79 / 0.08);
+  border-color: oklch(0.72 0.16 79 / 0.25);
+  color: oklch(0.55 0.14 79);
+}
+.weather-badge-rain {
+  background: oklch(0.55 0.10 250 / 0.08);
+  border-color: oklch(0.55 0.10 250 / 0.25);
+  color: oklch(0.45 0.10 250);
+}
+.weather-badge-severe {
+  background: oklch(0.55 0.20 25 / 0.08);
+  border-color: oklch(0.55 0.20 25 / 0.25);
+  color: oklch(0.45 0.18 25);
+}
+
 /* ===== Candlelight Token (Prayer Wall) ===== */
 :root {
   --candle-flame: oklch(0.78 0.18 79);        /* Warm amber */
@@ -626,6 +643,21 @@
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+  }
+}
+
+/* ===== Accessibility: Focus Rings (WCAG 2.4.7) ===== */
+@layer base {
+  /* Visible focus ring on all interactive elements */
+  :focus-visible {
+    outline: 2px solid var(--color-primary, oklch(0.45 0.12 145));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Remove default outline for mouse users */
+  :focus:not(:focus-visible) {
+    outline: none;
   }
 }
 

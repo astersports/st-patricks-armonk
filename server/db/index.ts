@@ -56,3 +56,4 @@ export { getPublishedHomilies, getAllHomilies, createHomily, deleteHomily, updat
 
 // Saint of the Day Streaks
 export { getStreak, recordVisit } from "./saintStreaks";
+export { createMassIntention, getMassIntentions, updateMassIntentionStatus } from "./massIntentions";

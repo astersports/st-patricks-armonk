@@ -9,10 +9,59 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import MobileBottomNav from "../MobileBottomNav";
+import { useParishSchedule } from "@/hooks/useParishSchedule";
+import { isServiceInProgress, getServicesForDay } from "../../../../shared/scheduleEngine";
 
 import { navLinks } from "./menuData";
 import { DesktopDropdown } from "./DesktopNav";
 import { MobileMenu } from "./MobileMenu";
+
+/** Schedule-aware Watch Live chip — shows "LIVE NOW" pulse when a Mass is in progress */
+function WatchLiveChip() {
+  const { schedule } = useParishSchedule();
+  const [isLive, setIsLive] = useState(false);
+
+  useEffect(() => {
+    function check() {
+      if (!schedule) return;
+      const now = new Date();
+      const currentDay = now.getDay();
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      const month = now.getMonth() + 1;
+      const todayServices = getServicesForDay(schedule, currentDay, month);
+      const massServices = todayServices.filter(s => s.type === "mass");
+      setIsLive(massServices.some(s => isServiceInProgress(s, currentMinutes)));
+    }
+    check();
+    const interval = setInterval(check, 30000); // re-check every 30s
+    return () => clearInterval(interval);
+  }, [schedule]);
+
+  return (
+    <a
+      href="https://youtube.com/@stpatricksarmonk?si=Nf71id_fwNyCT_Ob"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-medium hover:underline transition-all"
+    >
+      {isLive ? (
+        <span className="inline-flex items-center gap-1">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+          </span>
+          <span className="font-bold uppercase tracking-wide">Live Now</span>
+        </span>
+      ) : (
+        <>
+          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          <span>Watch Mass</span>
+        </>
+      )}
+      <ArrowRight className="w-3 h-3" />
+    </a>
+  );
+}
 
 export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -49,16 +98,7 @@ export default function Navigation() {
           <div className="announcement-marquee flex whitespace-nowrap">
             {[0, 1].map((i) => (
               <div key={i} className="flex items-center gap-8 px-6 shrink-0 announcement-marquee-content">
-                <a
-                  href="https://youtube.com/@stpatricksarmonk?si=Nf71id_fwNyCT_Ob"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-medium hover:underline transition-all"
-                >
-                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                  <span>Watch Live Mass</span>
-                  <ArrowRight className="w-3 h-3" />
-                </a>
+                <WatchLiveChip />
                 <span className="text-white/30">•</span>
                 <Link
                   href="/parish-registration"

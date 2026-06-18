@@ -30,6 +30,7 @@ import { volunteerNeedsRouter } from "./volunteerNeeds";
 import { homiliesRouter } from "./homilies";
 import { parishScheduleRouter } from "./parishSchedule";
 import { closureAlertRouter } from "./closureAlert";
+import { massIntentionsRouter } from "./massIntentions";
 
 export const appRouter = router({
   auth: authRouter,
@@ -70,6 +71,7 @@ export const appRouter = router({
   homilies: homiliesRouter,
   parishSchedule: parishScheduleRouter,
   closureAlert: closureAlertRouter,
+  massIntentions: massIntentionsRouter,
 });
 
 export type AppRouter = typeof appRouter;

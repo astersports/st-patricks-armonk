@@ -38,6 +38,7 @@ const ALLOWED_FILES = [
   "scheduleConfig",
   "scheduleData",
   "useParishSchedule",
+  "ScheduleManager", // admin editor — default values for new rows
   "KeyDatesManager", // admin placeholder text
   "Contact",         // office hours (not Mass times)
   "FuneralForm",     // office hours display

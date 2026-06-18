@@ -1,6 +1,6 @@
 import type { AdminSection } from "@shared/roles";
 import {
-  Home, Newspaper, FileText, Calendar, Inbox,
+  Home, Newspaper, FileText, Calendar, Inbox, Clock,
   Users, Camera, Heart, BookOpen, GraduationCap, Cross,
   UserPlus, Settings, Download, MessageCircle, AlertTriangle,
 } from "lucide-react";
@@ -70,6 +70,7 @@ export const navGroups: NavGroup[] = [
     section: "sacraments",
     items: [
       { label: "Sacrament Requests", section: "sacraments", icon: Cross, path: "/sacraments" },
+      { label: "Mass Intentions", section: "sacraments", icon: Heart, path: "/mass-intentions" },
     ],
   },
   {
@@ -81,6 +82,7 @@ export const navGroups: NavGroup[] = [
       { label: "Form Export", section: "form_export", icon: Download, path: "/form-export" },
       { label: "FAQ Knowledge Base", section: "faq", icon: MessageCircle, path: "/faq" },
       { label: "Closure Alert", section: "settings", icon: AlertTriangle, path: "/closure" },
+      { label: "Mass Schedule & Info", section: "settings", icon: Clock, path: "/schedule" },
     ],
   },
 ];

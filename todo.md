@@ -970,17 +970,17 @@
 - [x] A9. Homepage polish (Next Mass hero line, pastor photo, slim top chrome)
 
 ### PART B — Admin Schedule Editor
-- [ ] B1. Admin ScheduleManager.tsx — edit Mass/Confession/Prayer times with no deploy
-- [ ] B2. Admin ParishInfo editor — address, phone, office hours, pastor, URLs
-- [ ] B3. Holy Days editor with Mass times
-- [ ] B4. Live preview using same useParishSchedule consumers
+- [x] B1. Admin ScheduleManager.tsx — edit Mass/Confession/Prayer times with no deploy
+- [x] B2. Admin ParishInfo editor — address, phone, office hours, pastor, URLs
+- [x] B3. Holy Days editor with Mass times
+- [x] B4. Live preview using same useParishSchedule consumers
 
 ### PART C — Parishioner Experience
-- [ ] C1. Mass Intentions request (online form + admin queue + email confirmation)
-- [ ] C2. Watch Mass / livestream surface with schedule-aware "Watch Live" chip
-- [ ] C3. One-tap Add to Calendar on Mass Times rows + hero Next Mass
-- [ ] C4. Weather everywhere — refactor WeatherBadge to use tokens, apply consistently
-- [ ] C5. Frictionless giving page (one-time + recurring, suggested amounts)
+- [x] C1. Mass Intentions request (online form + admin queue + email confirmation)
+- [x] C2. Watch Mass / livestream surface with schedule-aware "Watch Live" chip
+- [x] C3. One-tap Add to Calendar on Mass Times rows + hero Next Mass
+- [x] C4. Weather everywhere — refactor WeatherBadge to use tokens, apply consistently
+- [x] C5. Frictionless giving page (one-time + recurring, suggested amounts)
 - [ ] C6. Spanish (i18n) toggle for key pages
 - [ ] C7. PWA + push opt-in categories (Mass reminders, bulletin published, closures)
 

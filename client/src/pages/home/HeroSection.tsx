@@ -1,11 +1,12 @@
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { ArrowRight, Wind, Droplets, Thermometer, Sunrise, Sunset, Clock } from "lucide-react";
+import { ArrowRight, Wind, Droplets, Thermometer, Sunrise, Sunset, Clock, CalendarPlus } from "lucide-react";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { ColorfulWeatherIcon } from "@/components/WeatherIcons";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { useParishSchedule, getNextService } from "@/hooks/useParishSchedule";
+import { downloadMassICS } from "@/lib/icsGenerator";
 
 const TIMEZONE = "America/New_York";
 
@@ -15,6 +16,7 @@ export function HeroSection() {
   const [timeGreeting, setTimeGreeting] = useState("");
   const [weatherOpen, setWeatherOpen] = useState(false);
   const [nextMassLabel, setNextMassLabel] = useState("");
+  const [nextMassData, setNextMassData] = useState<{ name: string; day: string; time: string } | null>(null);
   const { schedule } = useParishSchedule();
 
   // Update Next Mass countdown every minute
@@ -29,6 +31,7 @@ export function HeroSection() {
       const parts = ["Next:", service.name, "\u00B7", dayName, service.time];
       if (countdown) parts.push("\u00B7", countdown);
       setNextMassLabel(parts.join(" "));
+      setNextMassData({ name: service.name, day: dayName, time: service.time });
     }
     update();
     const interval = setInterval(update, 60000);
@@ -216,6 +219,15 @@ export function HeroSection() {
             >
               <Clock className="w-3.5 h-3.5" />
               {nextMassLabel}
+              {nextMassData && (
+                <button
+                  onClick={(e) => { e.stopPropagation(); downloadMassICS({ title: nextMassData.name, day: nextMassData.day, time: nextMassData.time, location: "St. Patrick's Church, 29 Cox Ave, Armonk, NY 10504" }); }}
+                  className="ml-1 p-0.5 rounded hover:bg-white/20 transition-colors"
+                  title="Add to Calendar"
+                >
+                  <CalendarPlus className="w-3.5 h-3.5" />
+                </button>
+              )}
             </p>
           )}
 

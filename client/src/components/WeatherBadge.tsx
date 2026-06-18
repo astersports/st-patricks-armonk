@@ -41,10 +41,10 @@ export function WeatherBadge({
       <span
         className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium transition-colors ${
           isSevereWarning
-            ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
+            ? "weather-badge-severe"
             : isRainWarning
-            ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 animate-pulse-subtle"
-            : "bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-300"
+            ? "weather-badge-rain"
+            : "weather-badge-clear"
         }`}
       >
         <ColorfulWeatherIcon icon={icon} className="w-3.5 h-3.5" />
@@ -63,10 +63,10 @@ export function WeatherBadge({
     <div
       className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm border transition-all ${
         isSevereWarning
-          ? "bg-red-50 border-red-200 text-red-800 dark:bg-red-950/30 dark:border-red-800 dark:text-red-200"
+          ? "weather-badge-severe"
           : isRainWarning
-          ? "bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-200 shadow-[0_0_8px_rgba(245,158,11,0.15)]"
-          : "bg-sky-50 border-sky-200 text-sky-800 dark:bg-sky-950/30 dark:border-sky-800 dark:text-sky-200"
+          ? "weather-badge-rain"
+          : "weather-badge-clear"
       }`}
     >
       <ColorfulWeatherIcon icon={icon} className="w-5 h-5 shrink-0" />

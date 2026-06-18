@@ -3,7 +3,8 @@
  */
 
 import { useState, useMemo, useRef, useCallback } from "react";
-import { Calendar } from "lucide-react";
+import { Calendar, CalendarPlus } from "lucide-react";
+import { downloadMassICS } from "@/lib/icsGenerator";
 import {
   getWeeklySchedule, parseTimeStr, getCountdown, isServiceInProgress,
   getServiceColor, getServiceIcon,
@@ -151,9 +152,20 @@ export function WeeklySchedule() {
                   {inProgress && <p className="text-[10px] font-medium text-emerald-600 mt-0.5">In progress now</p>}
                   {past && !inProgress && <p className="text-[10px] font-medium text-muted-foreground mt-0.5">Completed</p>}
                 </div>
-                <div className="shrink-0 text-right">
-                  {service.time && <span className={`text-sm font-bold ${past && !inProgress ? "text-muted-foreground" : inProgress ? "text-emerald-600" : isNext ? "text-primary" : colors.text} tabular-nums`}>{service.time}</span>}
-                  {!inProgress && !past && serviceCountdowns[idx] && <p className={`text-[10px] font-medium mt-0.5 ${isNext ? "text-primary/70" : "text-muted-foreground"}`}>{serviceCountdowns[idx]}</p>}
+                <div className="shrink-0 text-right flex items-center gap-2">
+                  <div>
+                    {service.time && <span className={`text-sm font-bold ${past && !inProgress ? "text-muted-foreground" : inProgress ? "text-emerald-600" : isNext ? "text-primary" : colors.text} tabular-nums`}>{service.time}</span>}
+                    {!inProgress && !past && serviceCountdowns[idx] && <p className={`text-[10px] font-medium mt-0.5 ${isNext ? "text-primary/70" : "text-muted-foreground"}`}>{serviceCountdowns[idx]}</p>}
+                  </div>
+                  {service.time && service.type !== "none" && (
+                    <button
+                      onClick={() => downloadMassICS({ title: service.name, day: currentSchedule.day, time: service.time, location: "St. Patrick's Church, 29 Cox Ave, Armonk, NY 10504" })}
+                      className="p-1.5 rounded-md hover:bg-muted/80 transition-colors text-muted-foreground hover:text-foreground"
+                      title="Add to Calendar"
+                    >
+                      <CalendarPlus className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                 </div>
               </div>
             );

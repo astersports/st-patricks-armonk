@@ -14,6 +14,8 @@ const FaqManager = lazy(() => import("./admin/FaqManager"));
 const VolunteerNeedsManager = lazy(() => import("./admin/VolunteerNeedsManager"));
 const NeedsAttention = lazy(() => import("./admin/NeedsAttention"));
 const ClosureManager = lazy(() => import("./admin/ClosureManager").then(m => ({ default: m.ClosureManager })));
+const ScheduleManager = lazy(() => import("./admin/ScheduleManager"));
+const MassIntentionsManager = lazy(() => import("./admin/MassIntentionsManager").then(m => ({ default: m.MassIntentionsManager })));
 
 // Legacy managers from Admin.tsx (imported eagerly since they're in a single file)
 import {
@@ -69,6 +71,8 @@ export default function AdminRouter() {
           <Route path="/form-export" component={() => <FormExport />} />
           <Route path="/faq" component={() => <FaqManager />} />
           <Route path="/closure" component={() => <ClosureManager />} />
+          <Route path="/schedule" component={() => <ScheduleManager />} />
+          <Route path="/mass-intentions" component={() => <MassIntentionsManager />} />
           {/* Fallback to dashboard */}
           <Route component={() => <DashboardHome />} />
         </Switch>

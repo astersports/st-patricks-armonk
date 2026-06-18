@@ -18,6 +18,13 @@ export default function PageLayout({ children, hideBackButton }: PageLayoutProps
 
   return (
     <div className="min-h-screen flex flex-col">
+      {/* Skip to content — accessibility */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:text-sm focus:font-medium focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-ring"
+      >
+        Skip to main content
+      </a>
       <ClosureAlertBanner />
       <Navigation />
       {/* Back to Home button — shown on all interior pages */}
@@ -34,7 +41,7 @@ export default function PageLayout({ children, hideBackButton }: PageLayoutProps
           </div>
         </div>
       )}
-      <main className="flex-1">{children}</main>
+      <main id="main-content" className="flex-1" role="main">{children}</main>
       <Footer />
       <ScrollToTopButton />
       {/* Spacer for mobile bottom tab bar + safe area */}

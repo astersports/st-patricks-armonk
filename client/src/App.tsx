@@ -42,6 +42,7 @@ import {
   SacramentProgress,
   Serve,
   WorshipToday,
+  MassIntentionForm,
   AdminRouter,
 } from "./lazyPages";
 
@@ -59,6 +60,7 @@ function Router() {
           <Route path="/key-dates"><Redirect to="/calendar?filter=key-dates" /></Route>
           <Route path="/mass-times" component={MassTimes} />
           <Route path="/sacraments" component={Sacraments} />
+          <Route path="/mass-intention" component={MassIntentionForm} />
           <Route path="/news" component={NewsEvents} />
           <Route path="/news-events"><Redirect to="/news" /></Route>
           <Route path="/bulletins" component={Bulletins} />

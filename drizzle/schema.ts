@@ -677,3 +677,26 @@ export const saintStreaks = mysqlTable("saint_streaks", {
   updatedAt: timestamp("updatedAt").defaultNow().notNull(),
 });
 export type SaintStreak = typeof saintStreaks.$inferSelect;
+
+/**
+ * Mass Intentions — parishioner requests for Mass to be offered for a specific intention.
+ */
+export const massIntentions = mysqlTable("mass_intentions", {
+  id: int("id").autoincrement().primaryKey(),
+  requesterName: varchar("requester_name", { length: 255 }).notNull(),
+  requesterEmail: varchar("requester_email", { length: 255 }).notNull(),
+  requesterPhone: varchar("requester_phone", { length: 50 }),
+  intentionFor: varchar("intention_for", { length: 500 }).notNull(),
+  intentionType: varchar("intention_type", { length: 50 }).notNull(),
+  preferredDate: varchar("preferred_date", { length: 50 }),
+  preferredMass: varchar("preferred_mass", { length: 100 }),
+  notes: text("notes"),
+  status: varchar("status", { length: 30 }).default("pending").notNull(),
+  scheduledDate: timestamp("scheduled_date"),
+  scheduledMass: varchar("scheduled_mass", { length: 100 }),
+  adminNotes: text("admin_notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
+export type MassIntention = typeof massIntentions.$inferSelect;
+export type InsertMassIntention = typeof massIntentions.$inferInsert;
