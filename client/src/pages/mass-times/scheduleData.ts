@@ -20,6 +20,7 @@ export interface Service {
   name: string;
   time: string;
   note?: string;
+  durationMin?: number;
 }
 
 export interface DaySchedule {
@@ -54,6 +55,7 @@ function buildBaseSchedule(): DaySchedule[] {
           name: s.name,
           time: `${startShort}–${endShort} ${period}`,
           note: s.note,
+          durationMin: s.durationMin,
         };
       }
       return {
@@ -61,6 +63,7 @@ function buildBaseSchedule(): DaySchedule[] {
         name: s.name,
         time: s.time,
         note: s.seasonal?.note || s.note,
+        durationMin: s.durationMin,
       };
     });
 

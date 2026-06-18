@@ -37,4 +37,5 @@ export const HomilyArchive = lazy(() => import("./pages/HomilyArchive"));
 export const Serve = lazy(() => import("./pages/Serve"));
 export const WorshipToday = lazy(() => import("./pages/WorshipToday"));
 export const MassIntentionForm = lazy(() => import("./pages/MassIntentionForm"));
+export const Watch = lazy(() => import("./pages/Watch"));
 export const AdminRouter = lazy(() => import("./pages/AdminRouter"));

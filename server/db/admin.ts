@@ -1,5 +1,5 @@
-import { eq, desc, sql, gte } from "drizzle-orm";
-import { newsPosts, events, emailSubscriptions, ccdRegistrations, volunteerSignups, galleryPhotos, parishRegistrations, baptismRegistrations, marriageInquiries, teenLifeRegistrations, ccdPermissions, siteSettings, prayerIntentions, massIntentions } from "../../drizzle/schema";
+import { eq, desc, sql, gte, and } from "drizzle-orm";
+import { newsPosts, events, emailSubscriptions, ccdRegistrations, volunteerSignups, galleryPhotos, parishRegistrations, baptismRegistrations, marriageInquiries, teenLifeRegistrations, ccdPermissions, siteSettings, prayerIntentions, massIntentions, volunteerNeeds, sponsorCertificates, funeralPrePlanning } from "../../drizzle/schema";
 import { getDb } from "./_connection";
 
 // ===== ADMIN STATS =====
@@ -17,6 +17,11 @@ export async function getAdminStats() {
   const [marriageCount] = await db!.select({ count: sql<number>`count(*)` }).from(marriageInquiries).where(eq(marriageInquiries.status, "pending"));
   const [teenLifeCount] = await db!.select({ count: sql<number>`count(*)` }).from(teenLifeRegistrations).where(eq(teenLifeRegistrations.status, "pending"));
   const [massIntentionCount] = await db!.select({ count: sql<number>`count(*)` }).from(massIntentions).where(eq(massIntentions.status, "pending"));
+  // Volunteer needs: active + unfilled
+  const [volunteerNeedsCount] = await db!.select({ count: sql<number>`count(*)` }).from(volunteerNeeds).where(and(eq(volunteerNeeds.active, true), sql`${volunteerNeeds.spotsFilled} < ${volunteerNeeds.spotsNeeded}`));
+  // Unread generic submissions (sponsor certs + funeral pre-planning pending)
+  const [sponsorPendingCount] = await db!.select({ count: sql<number>`count(*)` }).from(sponsorCertificates).where(eq(sponsorCertificates.status, "pending"));
+  const [funeralPendingCount] = await db!.select({ count: sql<number>`count(*)` }).from(funeralPrePlanning).where(eq(funeralPrePlanning.status, "pending"));
 
   return {
     totalNews: newsCount.count,
@@ -30,6 +35,9 @@ export async function getAdminStats() {
     pendingMarriages: marriageCount.count,
     pendingTeenLife: teenLifeCount.count,
     pendingMassIntentions: massIntentionCount.count,
+    unfilledVolunteerNeeds: volunteerNeedsCount.count,
+    pendingSponsorCerts: sponsorPendingCount.count,
+    pendingFunerals: funeralPendingCount.count,
   };
 }
 
@@ -160,7 +168,7 @@ export async function getPendingSubmissions() {
   const db = await getDb();
   if (!db) return [];
 
-  const [baptisms, marriages, ccdRegs, parishRegs, teenLife, permissions] = await Promise.all([
+  const [baptisms, marriages, ccdRegs, parishRegs, teenLife, permissions, sponsorCerts, funerals, intentions] = await Promise.all([
     db.select({
       id: baptismRegistrations.id,
       name: sql<string>`CONCAT(${baptismRegistrations.childFirstName}, ' ', ${baptismRegistrations.childLastName})`,
@@ -208,6 +216,30 @@ export async function getPendingSubmissions() {
       adminNotes: sql<string | null>`NULL`,
       createdAt: ccdPermissions.createdAt,
     }).from(ccdPermissions),
+
+    db.select({
+      id: sponsorCertificates.id,
+      name: sql<string>`CONCAT(${sponsorCertificates.sponsorFirstName}, ' ', ${sponsorCertificates.sponsorLastName})`,
+      status: sponsorCertificates.status,
+      adminNotes: sponsorCertificates.adminNotes,
+      createdAt: sponsorCertificates.createdAt,
+    }).from(sponsorCertificates).where(eq(sponsorCertificates.status, "pending")),
+
+    db.select({
+      id: funeralPrePlanning.id,
+      name: funeralPrePlanning.deceasedName,
+      status: funeralPrePlanning.status,
+      adminNotes: funeralPrePlanning.adminNotes,
+      createdAt: funeralPrePlanning.createdAt,
+    }).from(funeralPrePlanning).where(eq(funeralPrePlanning.status, "pending")),
+
+    db.select({
+      id: massIntentions.id,
+      name: massIntentions.intentionFor,
+      status: massIntentions.status,
+      adminNotes: massIntentions.adminNotes,
+      createdAt: massIntentions.createdAt,
+    }).from(massIntentions).where(eq(massIntentions.status, "pending")),
   ]);
 
   const all = [
@@ -217,6 +249,9 @@ export async function getPendingSubmissions() {
     ...parishRegs.map(r => ({ ...r, type: "parish_registration" as const })),
     ...teenLife.map(r => ({ ...r, type: "teen_life" as const })),
     ...permissions.map(r => ({ ...r, type: "ccd_permission" as const })),
+    ...sponsorCerts.map(r => ({ ...r, type: "sponsor_cert" as const })),
+    ...funerals.map(r => ({ ...r, type: "funeral" as const })),
+    ...intentions.map(r => ({ ...r, type: "mass_intention" as const })),
   ];
 
   all.sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime());
@@ -230,6 +265,9 @@ const tableMap: Record<string, any> = {
   ccd: ccdRegistrations,
   parish_registration: parishRegistrations,
   teen_life: teenLifeRegistrations,
+  sponsor_cert: sponsorCertificates,
+  funeral: funeralPrePlanning,
+  mass_intention: massIntentions,
 };
 
 // CCD uses 'notes' field instead of 'adminNotes'

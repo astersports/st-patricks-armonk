@@ -259,6 +259,18 @@
   color: oklch(0.45 0.18 25);
 }
 
+.weather-strip-rain {
+  background: oklch(0.55 0.10 250 / 0.06);
+}
+.weather-strip-rain-text {
+  color: oklch(0.50 0.14 250);
+}
+.weather-parking-advisory {
+  background: oklch(0.72 0.16 55 / 0.08);
+  border: 1px solid oklch(0.72 0.16 55 / 0.25);
+  color: oklch(0.45 0.14 55);
+}
+
 /* ===== Candlelight Token (Prayer Wall) ===== */
 :root {
   --candle-flame: oklch(0.78 0.18 79);        /* Warm amber */

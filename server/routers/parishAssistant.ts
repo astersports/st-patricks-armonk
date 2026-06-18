@@ -6,16 +6,32 @@
 import { publicProcedure, router, z, db } from "./_helpers";
 import { rateLimitedChatProcedure } from "./_rateLimited";
 import { invokeLLM } from "../_core/llm";
-import { DEFAULT_PARISH_SCHEDULE, DEFAULT_PARISH_INFO, generateSEODescription, parseTimeToMinutes, minutesToTimeString } from "../../shared/scheduleEngine";
+import { DEFAULT_PARISH_SCHEDULE, DEFAULT_PARISH_INFO, parseTimeToMinutes, minutesToTimeString } from "../../shared/scheduleEngine";
+import type { ParishSchedule, ParishInfo } from "../../shared/scheduleEngine";
 import { generateSacramentPoliciesSummary } from "../../shared/sacramentPolicies";
 
+const SCHEDULE_KEY = "parish_schedule";
+const INFO_KEY = "parish_info";
+
+/** Read the LIVE admin-edited schedule, falling back to defaults only if unset. */
+async function getLiveSchedule(): Promise<ParishSchedule> {
+  const raw = await db.getSiteSetting(SCHEDULE_KEY);
+  if (!raw) return DEFAULT_PARISH_SCHEDULE;
+  try { return JSON.parse(raw) as ParishSchedule; } catch { return DEFAULT_PARISH_SCHEDULE; }
+}
+
+async function getLiveInfo(): Promise<ParishInfo> {
+  const raw = await db.getSiteSetting(INFO_KEY);
+  if (!raw) return DEFAULT_PARISH_INFO;
+  try { return JSON.parse(raw) as ParishInfo; } catch { return DEFAULT_PARISH_INFO; }
+}
+
 /**
- * Build the schedule portion of the system prompt from the shared engine.
- * This ensures the AI assistant always has correct, up-to-date Mass times.
+ * Build the schedule portion of the system prompt from the LIVE admin schedule.
  */
-function buildScheduleContext(): string {
-  const s = DEFAULT_PARISH_SCHEDULE;
-  const info = DEFAULT_PARISH_INFO;
+async function buildScheduleContext(): Promise<string> {
+  const s = await getLiveSchedule();
+  const info = await getLiveInfo();
   const lines: string[] = [];
   lines.push(`- Location: ${info.address}, ${info.city}, ${info.state} ${info.zip}`);
   lines.push(`- Phone: ${info.phone}`);
@@ -33,29 +49,54 @@ function buildScheduleContext(): string {
 
   // Weekday Mass
   const weekdayMass = s.services.find(svc => svc.dayOfWeek >= 2 && svc.dayOfWeek <= 5 && svc.type === "mass");
-  if (weekdayMass) lines.push(`- Weekday Mass: Tuesday–Friday ${weekdayMass.time} (no Monday Mass)`);
+  if (weekdayMass) lines.push(`- Weekday Mass: Tuesday\u2013Friday ${weekdayMass.time} (no Monday Mass)`);
 
   // Morning Prayer
   const prayer = s.services.find(svc => svc.type === "prayer");
-  if (prayer) lines.push(`- Morning Prayer (Lauds): Tuesday–Friday ${prayer.time}`);
+  if (prayer) lines.push(`- Morning Prayer (Lauds): Tuesday\u2013Friday ${prayer.time}`);
 
   // Confession
   const confession = s.services.find(svc => svc.type === "confession");
   if (confession) {
     const endMin = parseTimeToMinutes(confession.time) + confession.durationMin;
     const endTime = minutesToTimeString(endMin);
-    lines.push(`- Confessions: Saturday ${confession.time}–${endTime.split(" ")[0]} ${endTime.split(" ")[1]} or by appointment`);
+    lines.push(`- Confessions: Saturday ${confession.time}\u2013${endTime.split(" ")[0]} ${endTime.split(" ")[1]} or by appointment`);
   }
 
   lines.push(`- Parish Office Hours: ${info.officeHours}`);
   return lines.join("\n");
 }
 
-const PARISH_CONTEXT = `You are the AI Parish Assistant for St. Patrick Church in Armonk, New York.
-You help parishioners and visitors with questions about the parish.
+/** Fetch today's readings + saint for dynamic context. */
+async function buildReadingsContext(): Promise<string> {
+  let ctx = "";
+  try {
+    const { getDailyReadings } = await import("../dailyReadings");
+    const readings = await getDailyReadings();
+    if (readings) {
+      ctx += `\n\nTODAY'S READINGS (${readings.liturgicTitle || readings.date}):\n`;
+      ctx += `- First Reading: ${readings.firstReading?.title || "N/A"}\n`;
+      if (readings.secondReading) ctx += `- Second Reading: ${readings.secondReading.title}\n`;
+      ctx += `- Responsorial Psalm: ${readings.psalm?.title || "N/A"}\n`;
+      ctx += `- Gospel: ${readings.gospel?.title || "N/A"}\n`;
+    }
+  } catch (e) { console.error("[Assistant] Failed to load daily readings:", e); }
+  try {
+    const { getSaintOfDay } = await import("../saintOfDay");
+    const saint = await getSaintOfDay();
+    if (saint?.featuredSaint?.name) {
+      ctx += `\nSAINT OF THE DAY: ${saint.featuredSaint.name}`;
+      if (saint.featuredSaint.biography) ctx += ` — ${saint.featuredSaint.biography.substring(0, 200)}...`;
+      ctx += "\n";
+    } else if (saint?.saints && saint.saints.length > 0) {
+      ctx += `\nSAINT(S) OF THE DAY: ${saint.saints.join(", ")}\n`;
+    }
+  } catch (e) { console.error("[Assistant] Failed to load saint of day:", e); }
+  return ctx;
+}
 
-KEY INFORMATION:
-${buildScheduleContext()}
+const STATIC_CONTEXT_HEADER = `You are the AI Parish Assistant for St. Patrick Church in Armonk, New York.
+You help parishioners and visitors with questions about the parish.
 
 PROGRAMS:
 - CCD (Religious Education): Classes for grades 1-8, registration required
@@ -166,7 +207,7 @@ export const parishAssistantRouter = router({
             dynamicContext += `\n\n⚠️ ACTIVE CLOSURE ALERT: ${closure.title} — ${closure.message}\n`;
             dynamicContext += `(Activated ${new Date(closure.activatedAt).toLocaleString("en-US", { timeZone: "America/New_York" })})\n`;
           }
-        } catch {}
+        } catch (e) { console.error("[Assistant] Failed to parse closure alert:", e); }
       }
 
       // Latest bulletin
@@ -188,7 +229,10 @@ export const parishAssistantRouter = router({
       console.error("[Parish Assistant] Context fetch error:", err);
     }
 
-    const systemPrompt = PARISH_CONTEXT + dynamicContext;
+    // Build the LIVE schedule context (reads from admin-edited DB, not hardcoded defaults)
+    const scheduleCtx = await buildScheduleContext();
+    const readingsCtx = await buildReadingsContext();
+    const systemPrompt = STATIC_CONTEXT_HEADER + `\n\nKEY INFORMATION (LIVE from admin schedule):\n${scheduleCtx}` + dynamicContext + readingsCtx;
 
     const messages: Array<{ role: "system" | "user" | "assistant"; content: string }> = [
       { role: "system", content: systemPrompt },

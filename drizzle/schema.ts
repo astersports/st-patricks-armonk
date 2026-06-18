@@ -702,3 +702,18 @@ export const massIntentions = mysqlTable("mass_intentions", {
 });
 export type MassIntention = typeof massIntentions.$inferSelect;
 export type InsertMassIntention = typeof massIntentions.$inferInsert;
+
+// Staff Directory
+export const staffMembers = mysqlTable("staff_members", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 300 }).notNull(),
+  role: varchar("role", { length: 300 }).notNull(),
+  category: mysqlEnum("category", ["clergy", "staff", "leadership", "ministry_leader", "emeritus"]).notNull(),
+  phone: varchar("phone", { length: 50 }),
+  email: varchar("email", { length: 320 }),
+  sortOrder: int("sort_order").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type StaffMemberRow = typeof staffMembers.$inferSelect;
+export type InsertStaffMember = typeof staffMembers.$inferInsert;

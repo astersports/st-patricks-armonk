@@ -38,6 +38,9 @@ const typeLabels: Record<string, string> = {
   parish_registration: "Parish Reg.",
   teen_life: "Teen Life",
   ccd_permission: "CCD Permission",
+  sponsor_cert: "Sponsor Cert.",
+  funeral: "Funeral",
+  mass_intention: "Mass Intention",
 };
 
 const typeColors: Record<string, string> = {
@@ -47,6 +50,9 @@ const typeColors: Record<string, string> = {
   parish_registration: "bg-green-100 text-green-800",
   teen_life: "bg-amber-100 text-amber-800",
   ccd_permission: "bg-indigo-100 text-indigo-800",
+  sponsor_cert: "bg-teal-100 text-teal-800",
+  funeral: "bg-slate-100 text-slate-800",
+  mass_intention: "bg-rose-100 text-rose-800",
 };
 
 export default function NeedsAttention() {
@@ -135,6 +141,9 @@ export default function NeedsAttention() {
               <SelectItem value="parish_registration">Parish Reg.</SelectItem>
               <SelectItem value="teen_life">Teen Life</SelectItem>
               <SelectItem value="ccd_permission">CCD Permission</SelectItem>
+              <SelectItem value="sponsor_cert">Sponsor Cert.</SelectItem>
+              <SelectItem value="funeral">Funeral</SelectItem>
+              <SelectItem value="mass_intention">Mass Intention</SelectItem>
             </SelectContent>
           </Select>
         </div>

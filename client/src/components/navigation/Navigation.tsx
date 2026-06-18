@@ -40,9 +40,7 @@ function WatchLiveChip() {
 
   return (
     <a
-      href="https://youtube.com/@stpatricksarmonk?si=Nf71id_fwNyCT_Ob"
-      target="_blank"
-      rel="noopener noreferrer"
+      href="/watch"
       className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-medium hover:underline transition-all"
     >
       {isLive ? (

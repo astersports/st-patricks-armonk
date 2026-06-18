@@ -1,4 +1,5 @@
 import PageLayout from "@/components/PageLayout";
+import { useParishInfo } from "@/hooks/useParishSchedule";
 import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,8 @@ const FUND_OPTIONS = [
 
 export default function Giving() {
   const revealRef = useReveal();
+  const { info } = useParishInfo();
+  const parishPhone = info?.phone || "(914) 273-9724";
   const [selectedAmount, setSelectedAmount] = useState<number | null>(50);
   const [givingType, setGivingType] = useState<"one-time" | "recurring">("one-time");
 
@@ -193,7 +196,7 @@ export default function Giving() {
                   <li className="flex items-start gap-2">
                     <span className="text-primary font-bold mt-0.5">●</span>
                     <span><strong className="text-foreground">Envelopes</strong> — Contact the parish office at{" "}
-                      <a href="tel:9142739724" className="font-semibold text-primary hover:underline">(914) 273-9724</a>
+                      <a href={`tel:${parishPhone.replace(/[^\d+]/g, "")}`} className="font-semibold text-primary hover:underline">{parishPhone}</a>
                     </span>
                   </li>
                   <li className="flex items-start gap-2">

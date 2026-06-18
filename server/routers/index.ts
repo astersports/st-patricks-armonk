@@ -31,6 +31,7 @@ import { homiliesRouter } from "./homilies";
 import { parishScheduleRouter } from "./parishSchedule";
 import { closureAlertRouter } from "./closureAlert";
 import { massIntentionsRouter } from "./massIntentions";
+import { staffRouter } from "./staff";
 
 export const appRouter = router({
   auth: authRouter,
@@ -72,6 +73,7 @@ export const appRouter = router({
   parishSchedule: parishScheduleRouter,
   closureAlert: closureAlertRouter,
   massIntentions: massIntentionsRouter,
+  staff: staffRouter,
 });
 
 export type AppRouter = typeof appRouter;

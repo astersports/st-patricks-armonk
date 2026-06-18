@@ -288,6 +288,22 @@ export default function Sacraments() {
               ))}
             </Accordion>
 
+            {/* Mass Intention CTA */}
+            <Card className="mt-8 p-5 border border-primary/20 bg-primary/[0.02] rounded-xl">
+              <div className="flex items-center gap-3">
+                <div className="bg-primary/10 p-2.5 rounded-lg shrink-0">
+                  <Heart className="w-5 h-5 text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-serif text-base sm:text-lg font-semibold text-foreground">Request a Mass Intention</h3>
+                  <p className="text-sm text-muted-foreground mt-0.5">Honor a loved one — living or deceased — with a Mass offered in their name.</p>
+                </div>
+                <Button variant="default" size="sm" className="rounded-full shrink-0" asChild>
+                  <a href="/mass-intention">Request</a>
+                </Button>
+              </div>
+            </Card>
+
             {/* Additional Info Cards */}
             <div className="mt-10 grid md:grid-cols-2 gap-4">
               <Card className="p-5 border border-border/50 border-l-3 border-l-[oklch(0.54_0.12_160)] shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] rounded-xl">

@@ -172,7 +172,7 @@ export function WeeklySchedule() {
                   </div>
                   {service.time && service.type !== "none" && (
                     <button
-                      onClick={() => downloadMassICS({ title: service.name, day: currentSchedule.day, time: service.time, location: "St. Patrick's Church, 29 Cox Ave, Armonk, NY 10504" })}
+                      onClick={() => downloadMassICS({ title: service.name, day: currentSchedule.day, time: service.time, location: "St. Patrick's Church, 29 Cox Ave, Armonk, NY 10504", durationMin: service.durationMin })}
                       className="p-1.5 rounded-md hover:bg-muted/80 transition-colors text-muted-foreground hover:text-foreground"
                       title="Add to Calendar"
                     >

@@ -136,7 +136,7 @@ export default function Footer({ variant = "compact" }: { variant?: "full" | "co
               <a className="spf-ico" href={flocknote} target="_blank" rel="noopener noreferrer" aria-label="Join Flocknote for updates">
                 <Bell size={15} color={GOLD} />
               </a>
-              <a className="spf-ico yt" href={youtube} target="_blank" rel="noopener noreferrer" aria-label="Watch on YouTube">
+              <a className="spf-ico yt" href="/watch" aria-label="Watch Mass">
                 <Youtube size={16} color="#e0301e" />
               </a>
             </div>

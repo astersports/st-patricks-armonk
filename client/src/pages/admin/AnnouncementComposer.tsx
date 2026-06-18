@@ -1,7 +1,7 @@
 /**
  * Admin: Announcement Composer
- * Generalized push notification composer for sending announcements to all subscribers.
- * Supports custom title, body, and optional link URL.
+ * Multi-channel broadcast composer — push notifications, email list, homepage banner.
+ * Supports custom title, body, optional link URL, channel selection, and audience segment.
  */
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -19,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Megaphone, Send, Users, Loader2, Bell, AlertTriangle } from "lucide-react";
+import { Megaphone, Send, Users, Loader2, Bell, AlertTriangle, Mail, Monitor } from "lucide-react";
 
 const TEMPLATES = [
   { id: "custom", label: "Custom Message", title: "", body: "", category: "general" },
@@ -35,11 +36,17 @@ export function AnnouncementComposer() {
   const [url, setUrl] = useState("");
   const [template, setTemplate] = useState("custom");
   const [confirmSend, setConfirmSend] = useState(false);
+  const [channels, setChannels] = useState({ push: true, email: false, banner: false });
+  const [segment, setSegment] = useState<"all" | "bulletins" | "news">("all");
 
   const { data: pushCount } = trpc.pushNotifications.getCount.useQuery();
   const sendAnnouncement = trpc.pushNotifications.broadcast.useMutation({
     onSuccess: (data) => {
-      toast.success(`Announcement sent to ${data.sent} subscriber${data.sent !== 1 ? "s" : ""}!`);
+      const parts: string[] = [];
+      if (data.pushSent > 0) parts.push(`${data.pushSent} push`);
+      if (data.emailSent > 0) parts.push(`${data.emailSent} email`);
+      if (channels.banner) parts.push("banner set");
+      toast.success(`Announcement delivered: ${parts.join(", ") || "no channels selected"}`);
       setTitle("");
       setBody("");
       setUrl("");
@@ -61,9 +68,15 @@ export function AnnouncementComposer() {
     }
   };
 
+  const noChannelSelected = !channels.push && !channels.email && !channels.banner;
+
   const handleSend = () => {
     if (!title.trim() || !body.trim()) {
       toast.error("Title and message are required");
+      return;
+    }
+    if (noChannelSelected) {
+      toast.error("Select at least one delivery channel");
       return;
     }
     if (!confirmSend) {
@@ -74,6 +87,8 @@ export function AnnouncementComposer() {
       title: title.trim(),
       body: body.trim(),
       url: url.trim() || undefined,
+      channels,
+      segment,
     });
   };
 
@@ -85,7 +100,7 @@ export function AnnouncementComposer() {
           Announcement Composer
         </h1>
         <p className="text-muted-foreground text-sm mt-1">
-          Send push notifications to all subscribed parishioners
+          Broadcast announcements via push, email, and homepage banner
         </p>
       </div>
 
@@ -94,11 +109,11 @@ export function AnnouncementComposer() {
           <CardTitle className="text-base flex items-center justify-between">
             <span className="flex items-center gap-2">
               <Bell className="w-4 h-4" />
-              Compose Notification
+              Compose Broadcast
             </span>
             <Badge variant="secondary" className="gap-1">
               <Users className="w-3 h-3" />
-              {pushCount?.count ?? 0} subscribers
+              {pushCount?.count ?? 0} push subscribers
             </Badge>
           </CardTitle>
         </CardHeader>
@@ -159,12 +174,59 @@ export function AnnouncementComposer() {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               placeholder="/mass-times or https://..."
-              type="url"
             />
             <p className="text-xs text-muted-foreground">
               Where should the notification link to when tapped?
             </p>
           </div>
+
+          {/* Delivery Channels */}
+          <div className="space-y-2 pt-2 border-t">
+            <Label className="text-sm font-medium">Delivery Channels</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <label className="flex items-center gap-2 p-3 rounded-lg border cursor-pointer hover:bg-muted/50 transition-colors">
+                <Checkbox
+                  checked={channels.push}
+                  onCheckedChange={(v) => setChannels((c) => ({ ...c, push: !!v }))}
+                />
+                <Bell className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm">Push Notification</span>
+              </label>
+              <label className="flex items-center gap-2 p-3 rounded-lg border cursor-pointer hover:bg-muted/50 transition-colors">
+                <Checkbox
+                  checked={channels.email}
+                  onCheckedChange={(v) => setChannels((c) => ({ ...c, email: !!v }))}
+                />
+                <Mail className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm">Email List</span>
+              </label>
+              <label className="flex items-center gap-2 p-3 rounded-lg border cursor-pointer hover:bg-muted/50 transition-colors">
+                <Checkbox
+                  checked={channels.banner}
+                  onCheckedChange={(v) => setChannels((c) => ({ ...c, banner: !!v }))}
+                />
+                <Monitor className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm">Homepage Banner</span>
+              </label>
+            </div>
+          </div>
+
+          {/* Audience Segment (for email) */}
+          {channels.email && (
+            <div className="space-y-1.5">
+              <Label htmlFor="segment-select">Email Audience</Label>
+              <Select value={segment} onValueChange={(v) => setSegment(v as typeof segment)}>
+                <SelectTrigger id="segment-select">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Active Subscribers</SelectItem>
+                  <SelectItem value="bulletins">Bulletin Subscribers</SelectItem>
+                  <SelectItem value="news">News Subscribers</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           {/* Send Button */}
           <div className="flex items-center justify-between pt-2 border-t">
@@ -172,7 +234,7 @@ export function AnnouncementComposer() {
               <div className="flex items-center gap-2 text-amber-600 text-sm">
                 <AlertTriangle className="w-4 h-4" />
                 <span>
-                  This will send to {pushCount?.count ?? 0} subscriber{(pushCount?.count ?? 0) !== 1 ? "s" : ""}. Click again to confirm.
+                  Sending via {[channels.push && "push", channels.email && "email", channels.banner && "banner"].filter(Boolean).join(" + ")}. Click again to confirm.
                 </span>
               </div>
             )}
@@ -188,7 +250,7 @@ export function AnnouncementComposer() {
               )}
               <Button
                 onClick={handleSend}
-                disabled={!title.trim() || !body.trim() || sendAnnouncement.isPending}
+                disabled={!title.trim() || !body.trim() || noChannelSelected || sendAnnouncement.isPending}
                 className={confirmSend ? "bg-amber-600 hover:bg-amber-700" : ""}
               >
                 {sendAnnouncement.isPending ? (

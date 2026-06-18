@@ -1018,3 +1018,22 @@
 ### Clarity Pass
 - [x] Footer: replace with v3 (variant prop: full on home, compact elsewhere); wire in PageLayout
 - [x] TodayCard: add section header (WORSHIP eyebrow + "Today's Readings, Saint & Catholic News" heading)
+
+### Part C — Parishioner
+- [x] C1. Mass Intentions discoverable (menu entry + Sacraments card + confirm email)
+- [x] C2. /watch livestream page + Live chip during Mass window
+- [x] C3. Add-to-Calendar on every Mass Times row (WeeklySchedule services)
+- [x] C4. WeatherBadge tokenize + weather on event detail page
+
+### Part D — Staff
+- [x] D4. Ground AI Assistant in LIVE schedule + today's readings (highest value)
+- [x] D1. Extend dashboard counts (volunteer needs + unread submissions)
+- [x] D2. Announcement composer (banner + push + email + segment)
+- [x] D3. Unified submission triage inbox (sponsor certs, funerals, mass intentions added)
+- [x] D5. Weather-aware closure suggestion prompt on dashboard
+
+### Part E — Hygiene
+- [x] E1. Staff directory → admin-managed table + Staff Manager (DB-backed, seeded, CRUD admin page)
+- [x] E2. Giving.tsx hardcoded phone → useParishInfo()
+- [x] E3. Delete dead ComponentShowcase.tsx
+- [x] E4. Log swallowed error in parishAssistant.ts context builder

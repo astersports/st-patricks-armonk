@@ -4,6 +4,7 @@
 import { adminProcedure, publicProcedure, z, db } from "./_helpers";
 import { notifyOwner } from "../_core/notification";
 import { createAuditLog } from "../db/auditLog";
+import { sendEmail, buildFormConfirmationEmail } from "../email";
 
 export const massIntentionsRouter = {
   /** Public: submit a Mass intention request */
@@ -35,6 +36,13 @@ export const massIntentionsRouter = {
         title: "New Mass Intention Request",
         content: `${input.requesterName} has requested a Mass intention for ${input.intentionFor} (${input.intentionType}). Preferred date: ${input.preferredDate || "No preference"}.`,
       });
+
+      // Send confirmation email to requester
+      await sendEmail(
+        input.requesterEmail,
+        "Mass Intention Request Received — St. Patrick in Armonk",
+        buildFormConfirmationEmail("Mass Intention", input.requesterName)
+      );
 
       return { success: true };
     }),

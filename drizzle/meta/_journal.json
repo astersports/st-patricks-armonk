@@ -176,6 +176,13 @@
       "when": 1781750211503,
       "tag": "0024_eminent_darkstar",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "5",
+      "when": 1781771484497,
+      "tag": "0025_loving_prodigy",
+      "breakpoints": true
     }
   ]
 }

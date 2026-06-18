@@ -84,6 +84,7 @@ export const navGroups: NavGroup[] = [
       { label: "FAQ Knowledge Base", section: "faq", icon: MessageCircle, path: "/faq" },
       { label: "Closure Alert", section: "settings", icon: AlertTriangle, path: "/closure" },
       { label: "Mass Schedule & Info", section: "settings", icon: Clock, path: "/schedule" },
+      { label: "Staff Directory", section: "settings", icon: Users, path: "/staff" },
       { label: "Audit Log", section: "settings", icon: ClipboardList, path: "/audit-log" },
     ],
   },

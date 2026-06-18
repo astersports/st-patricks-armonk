@@ -105,23 +105,79 @@ export const pushNotificationsRouter = router({
     return { count: all.length };
   }),
 
-  /** Broadcast a custom announcement to all subscribers (admin only) */
+  /** Broadcast a custom announcement via push/email/banner (admin only) */
   broadcast: protectedProcedure
     .input(
       z.object({
         title: z.string().min(1).max(100),
         body: z.string().min(1).max(300),
         url: z.string().optional(),
+        channels: z.object({
+          push: z.boolean().default(true),
+          email: z.boolean().default(false),
+          banner: z.boolean().default(false),
+        }).default({ push: true, email: false, banner: false }),
+        segment: z.enum(["all", "bulletins", "news"]).default("all"),
       })
     )
-    .mutation(async ({ input }) => {
-      const result = await sendPushToAll({
-        title: input.title,
-        body: input.body,
-        url: input.url || "/",
-        icon: "/favicon.ico",
-      });
-      return { sent: result.sent, failed: result.failed };
+    .mutation(async ({ input, ctx }) => {
+      let pushSent = 0, pushFailed = 0, emailSent = 0;
+
+      // Channel: Push notification
+      if (input.channels.push) {
+        const result = await sendPushToAll({
+          title: input.title,
+          body: input.body,
+          url: input.url || "/",
+          icon: "/favicon.ico",
+        });
+        pushSent = result.sent;
+        pushFailed = result.failed;
+      }
+
+      // Channel: Email to subscriber list
+      if (input.channels.email) {
+        const { sendEmail } = await import("../email/index");
+        const { getActiveSubscribers, getAllSubscriptions } = await import("../db/subscriptions");
+        const subscribers = input.segment === "all"
+          ? (await getAllSubscriptions()).filter(s => s.active)
+          : await getActiveSubscribers(input.segment);
+        for (const sub of subscribers) {
+          const ok = await sendEmail(
+            sub.email,
+            input.title,
+            `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;"><h2>${input.title}</h2><p>${input.body}</p>${input.url ? `<p><a href="${input.url}">Read more &rarr;</a></p>` : ""}<hr/><p style="font-size:12px;color:#666;">St. Patrick's of Armonk</p></div>`
+          );
+          if (ok) emailSent++;
+        }
+      }
+
+      // Channel: Homepage banner (marquee)
+      if (input.channels.banner) {
+        const { upsertSiteSetting } = await import("../db/admin");
+        await upsertSiteSetting("marquee_text", input.body);
+      }
+
+      // Audit log
+      try {
+        const { createAuditLog } = await import("../db/auditLog");
+        await createAuditLog({
+          userId: ctx.user?.openId ?? "system",
+          userName: ctx.user?.name ?? "System",
+          action: "broadcast",
+          entityType: "announcement",
+          entityId: "broadcast",
+          details: JSON.stringify({
+            title: input.title,
+            channels: input.channels,
+            segment: input.segment,
+            pushSent,
+            emailSent,
+          }),
+        });
+      } catch { /* non-critical */ }
+
+      return { pushSent, pushFailed, emailSent };
     }),
 });
 

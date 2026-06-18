@@ -105,7 +105,7 @@ export function WeatherForecastStrip({ weather }: { weather: WeatherData }) {
           key={i}
           className={`flex-1 flex flex-col items-center gap-0.5 py-1.5 px-1 rounded-md text-xs ${
             slot.precipProbability > 40
-              ? "bg-amber-50 dark:bg-amber-950/20"
+              ? "weather-strip-rain"
               : "bg-muted/50"
           }`}
         >
@@ -113,7 +113,7 @@ export function WeatherForecastStrip({ weather }: { weather: WeatherData }) {
           <ColorfulWeatherIcon icon={slot.icon} className="w-4 h-4" />
           <span className="font-semibold">{slot.temperature}°</span>
           {slot.precipProbability > 20 && (
-            <span className="text-[10px] text-blue-600 dark:text-blue-400 flex items-center gap-0.5">
+            <span className="text-[10px] weather-strip-rain-text flex items-center gap-0.5">
               <DropletIcon className="w-2 h-2" />
               {slot.precipProbability}%
             </span>
@@ -126,7 +126,7 @@ export function WeatherForecastStrip({ weather }: { weather: WeatherData }) {
 
 export function ParkingAdvisory({ advisory }: { advisory: string }) {
   return (
-    <div className="flex items-start gap-2 px-3 py-2 rounded-lg bg-orange-50 border border-orange-200 text-orange-800 dark:bg-orange-950/30 dark:border-orange-800 dark:text-orange-200 text-xs">
+    <div className="flex items-start gap-2 px-3 py-2 rounded-lg weather-parking-advisory text-xs">
       <span className="text-base shrink-0 mt-[-1px]">🚗</span>
       <span>{advisory}</span>
     </div>

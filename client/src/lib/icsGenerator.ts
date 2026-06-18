@@ -92,6 +92,7 @@ export function downloadMassICS(options: {
   day: string;
   time: string;
   location?: string;
+  durationMin?: number;
 }): void {
   // Parse the time string like "8:30 AM" to hours/minutes
   const match = options.time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
@@ -118,7 +119,8 @@ export function downloadMassICS(options: {
   startDate.setDate(now.getDate() + daysUntil);
   startDate.setHours(hours, minutes, 0, 0);
 
-  const endDate = new Date(startDate.getTime() + 3600000); // 1 hour
+  const duration = (options.durationMin ?? 60) * 60000;
+  const endDate = new Date(startDate.getTime() + duration);
 
   downloadICS({
     title: options.title,
