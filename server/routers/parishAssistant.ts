@@ -51,9 +51,13 @@ async function buildScheduleContext(): Promise<string> {
   const weekdayMass = s.services.find(svc => svc.dayOfWeek >= 2 && svc.dayOfWeek <= 5 && svc.type === "mass");
   if (weekdayMass) lines.push(`- Weekday Mass: Tuesday\u2013Friday ${weekdayMass.time} (no Monday Mass)`);
 
-  // Morning Prayer
-  const prayer = s.services.find(svc => svc.type === "prayer");
-  if (prayer) lines.push(`- Morning Prayer (Lauds): Tuesday\u2013Friday ${prayer.time}`);
+  // Rosary
+  const rosary = s.services.find(svc => svc.name === "Rosary");
+  if (rosary) lines.push(`- Rosary: Thursdays ${rosary.time}`);
+
+  // First Friday Adoration
+  const adoration = s.services.find(svc => svc.type === "adoration");
+  if (adoration) lines.push(`- First Friday Adoration: Exposition of the Blessed Sacrament, 9 AM – 7 PM (Sept–June)`);
 
   // Confession
   const confession = s.services.find(svc => svc.type === "confession");

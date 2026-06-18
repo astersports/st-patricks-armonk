@@ -44,7 +44,7 @@ export default function FuneralForm() {
                   : "We are sorry for your loss. The parish office has received your form and will contact you shortly to finalize arrangements."}
               </p>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 max-w-sm mx-auto">
-                <p className="text-sm text-blue-800"><strong>Parish Office:</strong> (914) 273-9724<br />Monday – Thursday, 10:00 AM – 5:00 PM</p>
+                <p className="text-sm text-blue-800"><strong>Parish Office:</strong> (914) 273-9724<br />Monday – Thursday, 9:00 AM – 5:00 PM</p>
               </div>
               <Link href="/"><Button variant="outline" className="border-green-700 text-green-700 hover:bg-green-50"><ArrowLeft className="w-4 h-4 mr-2" />Home</Button></Link>
             </CardContent>

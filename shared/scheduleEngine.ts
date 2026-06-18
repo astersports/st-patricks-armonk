@@ -14,13 +14,13 @@ export type ServiceType = "mass" | "confession" | "prayer" | "adoration";
 
 export interface ScheduledService {
   type: ServiceType;
-  name: string;           // "Vigil Mass", "Morning Prayer (Lauds)", etc.
+  name: string;           // "Vigil Mass", "Rosary", "First Friday Adoration", etc.
   dayOfWeek: number;      // 0=Sun, 1=Mon, ..., 6=Sat
   time: string;           // "5:30 PM"
   durationMin: number;    // for in-progress detection + .ics end time
   seasonal?: {
     months: number[];     // 1-indexed months when active (e.g., [10,11,12,1,2,3,4,5,6] for Oct–Jun)
-    note: string;         // "Oct–Jun only"
+    note: string;         // e.g. "1st weekend in July through Labor Day: no 12:30 PM Mass"
   };
   note?: string;          // any additional note
 }
@@ -29,7 +29,7 @@ export interface HolyDay {
   month: number;          // 1-indexed
   day: number;
   name: string;
-  massTime: string;
+  massTimes: string[];    // e.g. ["8:30 AM", "12:10 PM", "7:30 PM"]
 }
 
 export interface ParishSchedule {
@@ -61,30 +61,28 @@ export const DEFAULT_PARISH_SCHEDULE: ParishSchedule = {
     // Sunday
     { type: "mass", name: "Mass", dayOfWeek: 0, time: "8:30 AM", durationMin: 60 },
     { type: "mass", name: "Mass", dayOfWeek: 0, time: "10:30 AM", durationMin: 60 },
-    { type: "mass", name: "Mass", dayOfWeek: 0, time: "12:30 PM", durationMin: 60, seasonal: { months: [10, 11, 12, 1, 2, 3, 4, 5, 6], note: "Oct–Jun only" } },
+    { type: "mass", name: "Mass", dayOfWeek: 0, time: "12:30 PM", durationMin: 60, seasonal: { months: [10, 11, 12, 1, 2, 3, 4, 5, 6], note: "1st weekend in July through Labor Day: no 12:30 PM Mass" } },
     // Monday — no services
     // Tuesday
-    { type: "prayer", name: "Morning Prayer", dayOfWeek: 2, time: "8:00 AM", durationMin: 30 },
     { type: "mass", name: "Mass", dayOfWeek: 2, time: "8:30 AM", durationMin: 30 },
     // Wednesday
-    { type: "prayer", name: "Morning Prayer", dayOfWeek: 3, time: "8:00 AM", durationMin: 30 },
     { type: "mass", name: "Mass", dayOfWeek: 3, time: "8:30 AM", durationMin: 30 },
     // Thursday
-    { type: "prayer", name: "Morning Prayer", dayOfWeek: 4, time: "8:00 AM", durationMin: 30 },
     { type: "mass", name: "Mass", dayOfWeek: 4, time: "8:30 AM", durationMin: 30 },
+    { type: "prayer", name: "Rosary", dayOfWeek: 4, time: "7:30 PM", durationMin: 30 },
     // Friday
-    { type: "prayer", name: "Morning Prayer", dayOfWeek: 5, time: "8:00 AM", durationMin: 30 },
     { type: "mass", name: "Mass", dayOfWeek: 5, time: "8:30 AM", durationMin: 30 },
+    { type: "adoration", name: "First Friday Adoration", dayOfWeek: 5, time: "9:00 AM", durationMin: 600, seasonal: { months: [9, 10, 11, 12, 1, 2, 3, 4, 5, 6], note: "First Fridays, Sept–June, 9 AM – 7 PM" }, note: "Exposition of the Blessed Sacrament (1st Friday only)" },
     // Saturday
     { type: "confession", name: "Confession", dayOfWeek: 6, time: "4:30 PM", durationMin: 45 },
     { type: "mass", name: "Vigil Mass", dayOfWeek: 6, time: "5:30 PM", durationMin: 60 },
   ],
   holyDays: [
-    { month: 1, day: 1, name: "Solemnity of Mary, Mother of God", massTime: "10:00 AM" },
-    { month: 8, day: 15, name: "Assumption of the Blessed Virgin Mary", massTime: "8:30 AM" },
-    { month: 11, day: 1, name: "All Saints' Day", massTime: "8:30 AM" },
-    { month: 12, day: 8, name: "Immaculate Conception", massTime: "8:30 AM" },
-    { month: 12, day: 25, name: "Christmas", massTime: "10:00 AM" },
+    { month: 1, day: 1, name: "Solemnity of Mary, Mother of God", massTimes: ["8:30 AM", "12:10 PM", "7:30 PM"] },
+    { month: 8, day: 15, name: "Assumption of the Blessed Virgin Mary", massTimes: ["8:30 AM", "12:10 PM", "7:30 PM"] },
+    { month: 11, day: 1, name: "All Saints' Day", massTimes: ["8:30 AM", "12:10 PM", "7:30 PM"] },
+    { month: 12, day: 8, name: "Immaculate Conception", massTimes: ["8:30 AM", "12:10 PM", "7:30 PM"] },
+    { month: 12, day: 25, name: "Christmas", massTimes: ["8:30 AM", "12:10 PM", "7:30 PM"] },
   ],
 };
 
@@ -96,7 +94,7 @@ export const DEFAULT_PARISH_INFO: ParishInfo = {
   zip: "10504",
   phone: "(914) 273-9724",
   officeEmail: "office@stpatrickinarmonk.org",
-  officeHours: "Mon–Thu 10:00 AM – 5:00 PM, Fri Closed",
+  officeHours: "Mon–Thu 9:00 AM – 5:00 PM",
   pastorName: "Fr. Thadeus Aravindathu",
   pastorEmail: "fr.thadeus@stpatrickinarmonk.org",
   flocknoteUrl: "https://stpatarmonk.flocknote.com/home",
@@ -228,17 +226,17 @@ export function getNextService(schedule: ParishSchedule, now: Date): { service: 
 /**
  * Get upcoming Holy Days within the next N days.
  */
-export function getUpcomingHolyDays(schedule: ParishSchedule, now: Date, withinDays: number = 7): { name: string; date: Date; massTime: string; daysUntil: number }[] {
+export function getUpcomingHolyDays(schedule: ParishSchedule, now: Date, withinDays: number = 7): { name: string; date: Date; massTimes: string[]; daysUntil: number }[] {
   const year = now.getFullYear();
   const today = new Date(year, now.getMonth(), now.getDate());
-  const upcoming: { name: string; date: Date; massTime: string; daysUntil: number }[] = [];
+  const upcoming: { name: string; date: Date; massTimes: string[]; daysUntil: number }[] = [];
 
   for (const hd of schedule.holyDays) {
     const hdDate = new Date(year, hd.month - 1, hd.day);
     const diffMs = hdDate.getTime() - today.getTime();
     const daysUntil = Math.round(diffMs / (1000 * 60 * 60 * 24));
     if (daysUntil >= 0 && daysUntil <= withinDays) {
-      upcoming.push({ name: hd.name, date: hdDate, massTime: hd.massTime, daysUntil });
+      upcoming.push({ name: hd.name, date: hdDate, massTimes: hd.massTimes, daysUntil });
     }
   }
 
@@ -249,7 +247,7 @@ export function getUpcomingHolyDays(schedule: ParishSchedule, now: Date, withinD
   const ascDiffMs = ascension.getTime() - today.getTime();
   const ascDaysUntil = Math.round(ascDiffMs / (1000 * 60 * 60 * 24));
   if (ascDaysUntil >= 0 && ascDaysUntil <= withinDays) {
-    upcoming.push({ name: "Ascension of the Lord", date: ascension, massTime: "8:30 AM", daysUntil: ascDaysUntil });
+    upcoming.push({ name: "Ascension of the Lord", date: ascension, massTimes: ["8:30 AM", "12:10 PM", "7:30 PM"], daysUntil: ascDaysUntil });
   }
 
   return upcoming.sort((a, b) => a.daysUntil - b.daysUntil);

@@ -13,7 +13,7 @@ import {
   type ScheduledService,
 } from "../../../../shared/scheduleEngine";
 
-export type ServiceType = "mass" | "confession" | "prayer" | "none";
+export type ServiceType = "mass" | "confession" | "prayer" | "adoration" | "none";
 
 export interface Service {
   type: ServiceType;
@@ -82,29 +82,9 @@ function buildBaseSchedule(): DaySchedule[] {
 
 export const BASE_WEEKLY_SCHEDULE: DaySchedule[] = buildBaseSchedule();
 
-// Check if a given date is the first Friday of its month
-function isFirstFriday(date: Date): boolean {
-  return date.getDay() === 5 && date.getDate() <= 7;
-}
-
-// Get the schedule with First Friday Adoration injected when applicable
+// Get the weekly schedule (now fully derived from the schedule engine)
 export function getWeeklySchedule(today: number): DaySchedule[] {
-  const schedule = BASE_WEEKLY_SCHEDULE.map(day => ({ ...day, services: [...day.services] }));
-  const now = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
-  const todayDate = now.getDate();
-  const todayDay = now.getDay();
-  const daysUntilFriday = (5 - todayDay + 7) % 7;
-  const fridayDate = new Date(now);
-  fridayDate.setDate(todayDate + daysUntilFriday);
-  if (isFirstFriday(fridayDate)) {
-    schedule[5].services.push({
-      type: "prayer",
-      name: "First Friday Adoration",
-      time: "9:00 AM",
-      note: "Eucharistic Adoration following Mass",
-    });
-  }
-  return schedule;
+  return BASE_WEEKLY_SCHEDULE.map(day => ({ ...day, services: [...day.services] }));
 }
 
 // Parse a time string like "8:30 AM" or "4:30–5:15 PM" into { hours, minutes } (24h)
@@ -132,7 +112,7 @@ export function getCountdown(targetHours: number, targetMinutes: number, current
 }
 
 // Check for upcoming Holy Days within the next 7 days (delegates to shared engine)
-export function getUpcomingHolyDays(): { name: string; date: Date; massTime: string; daysUntil: number }[] {
+export function getUpcomingHolyDays(): { name: string; date: Date; massTimes: string[]; daysUntil: number }[] {
   const now = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
   return engineGetUpcomingHolyDays(DEFAULT_PARISH_SCHEDULE, now, 7);
 }
@@ -143,6 +123,7 @@ function getServiceDuration(type: ServiceType): number {
     case "mass": return 60;
     case "confession": return 45;
     case "prayer": return 30;
+    case "adoration": return 600;
     default: return 30;
   }
 }
@@ -170,6 +151,7 @@ export function getServiceColor(type: ServiceType) {
     case "mass": return { bg: "bg-primary/8", text: "text-primary", border: "border-l-primary", dot: "bg-primary" };
     case "confession": return { bg: "bg-purple-500/8", text: "text-purple-600", border: "border-l-purple-500", dot: "bg-purple-500" };
     case "prayer": return { bg: "bg-amber-500/8", text: "text-amber-600", border: "border-l-amber-500", dot: "bg-amber-500" };
+    case "adoration": return { bg: "bg-rose-500/8", text: "text-rose-600", border: "border-l-rose-500", dot: "bg-rose-500" };
     case "none": return { bg: "bg-muted/30", text: "text-muted-foreground", border: "border-l-muted", dot: "bg-muted-foreground" };
   }
 }
@@ -179,6 +161,7 @@ export function getServiceIcon(type: ServiceType) {
     case "mass": return Church;
     case "confession": return Cross;
     case "prayer": return Sun;
+    case "adoration": return Sun;
     case "none": return Clock;
   }
 }

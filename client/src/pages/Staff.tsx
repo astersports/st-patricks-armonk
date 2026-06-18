@@ -164,7 +164,7 @@ export default function Staff() {
                   <span className="text-sm font-medium text-foreground">Office Hours</span>
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
-                  <p className="text-sm text-muted-foreground">Monday – Thursday, 10:00 AM – 5:00 PM | Friday: Closed</p>
+                  <p className="text-sm text-muted-foreground">Monday – Thursday, 9:00 AM – 5:00 PM</p>
                   <a href="tel:9142739724" className="text-sm font-medium text-primary hover:underline sm:ml-auto">
                     (914) 273-9724
                   </a>

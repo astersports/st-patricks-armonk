@@ -105,7 +105,7 @@ export default function ScheduleManager() {
   }
 
   function addHolyDay() {
-    setHolyDays((prev) => [...prev, { month: 1, day: 1, name: "", massTime: "9:00 AM" }]);
+    setHolyDays((prev) => [...prev, { month: 1, day: 1, name: "", massTimes: ["8:30 AM", "12:10 PM", "7:30 PM"] }]);
   }
 
   function removeHolyDay(index: number) {
@@ -123,7 +123,7 @@ export default function ScheduleManager() {
       toast.error(`Invalid time format on ${invalid.length} service(s). Use "H:MM AM/PM" format.`);
       return;
     }
-    const invalidHD = holyDays.filter((h) => !validateTime(h.massTime));
+    const invalidHD = holyDays.filter((h) => h.massTimes.some(t => !validateTime(t)));
     if (invalidHD.length > 0) {
       toast.error(`Invalid time format on ${invalidHD.length} holy day(s). Use "H:MM AM/PM" format.`);
       return;
@@ -345,13 +345,13 @@ export default function ScheduleManager() {
                       placeholder="e.g. Immaculate Conception"
                     />
                   </div>
-                  <div className="w-24">
-                    <Label className="text-xs">Mass Time</Label>
+                  <div className="flex-1 min-w-[180px]">
+                    <Label className="text-xs">Mass Times (comma-separated)</Label>
                     <Input
-                      className={`h-8 text-xs ${!validateTime(hd.massTime) && hd.massTime ? "border-red-500" : ""}`}
-                      value={hd.massTime}
-                      onChange={(e) => updateHolyDay(idx, "massTime", e.target.value)}
-                      placeholder="9:00 AM"
+                      className={`h-8 text-xs ${hd.massTimes.some(t => !validateTime(t)) ? "border-red-500" : ""}`}
+                      value={hd.massTimes.join(", ")}
+                      onChange={(e) => updateHolyDay(idx, "massTimes", e.target.value.split(",").map(t => t.trim()).filter(Boolean))}
+                      placeholder="8:30 AM, 12:10 PM, 7:30 PM"
                     />
                   </div>
                   <Button
@@ -556,7 +556,7 @@ function SchedulePreview() {
           <div className="flex flex-wrap gap-1.5">
             {schedule.holyDays.map((hd, i) => (
               <Badge key={i} variant="outline" className="text-xs">
-                {MONTH_NAMES[hd.month - 1]} {hd.day} — {hd.name} ({hd.massTime})
+                {MONTH_NAMES[hd.month - 1]} {hd.day} — {hd.name} ({hd.massTimes.join(", ")})
               </Badge>
             ))}
           </div>

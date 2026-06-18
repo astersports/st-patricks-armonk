@@ -1,5 +1,5 @@
 /**
- * At a Glance — Quick reference table for Mass times, confession, and lauds.
+ * At a Glance — Quick reference table for Mass times, confession, and devotions.
  * All data derived from the shared schedule engine (single source of truth).
  */
 
@@ -110,9 +110,9 @@ export function AtAGlance() {
               )}
               {prayers.length > 0 && (
                 <tr>
-                  <td className="px-4 py-3 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Lauds</td>
+                  <td className="px-4 py-3 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Devotions</td>
                   <td className="px-4 py-3">
-                    <span className="font-semibold">{prayerRange} {prayerTime}</span>
+                    <span className="font-semibold">{prayers.map(p => `${p.name}: ${["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][p.dayOfWeek]} ${p.time}`).join("; ")}</span>
                   </td>
                 </tr>
               )}

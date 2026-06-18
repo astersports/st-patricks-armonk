@@ -79,8 +79,7 @@ export default function Contact() {
                     <div>
                       <h3 className="font-semibold text-sm mb-0.5">Office Hours</h3>
                       <p className="text-sm text-muted-foreground leading-relaxed">
-                        Monday – Thursday: 10:00 AM – 5:00 PM<br />
-                        Friday: Closed
+                        Monday – Thursday: 9:00 AM – 5:00 PM
                       </p>
                     </div>
                   </div>

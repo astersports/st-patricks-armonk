@@ -1141,3 +1141,14 @@
 
 ### CCD-DROPLET-EMBED
 - [x] Replace built-in CCD registration form with embedded Droplet.io form (https://app.droplet.io/form/y5VX2N)
+
+### SCHEDULE-BULLETIN-CORRECTIONS
+- [x] SC-1: Removed all 4 Morning Prayer entries from DEFAULT_PARISH_SCHEDULE.services
+- [x] SC-2: Added Rosary (type: prayer, Thursday 7:30 PM, 30 min)
+- [x] SC-3: Added First Friday Adoration (type: adoration, Friday 9 AM, 600 min, seasonal Sept–June)
+- [x] SC-4: Fixed office hours to 9:00 AM in scheduleEngine + Contact + Staff + FuneralForm
+- [x] SC-5: Fixed 12:30 PM seasonal note to "1st weekend in July through Labor Day: no 12:30 PM Mass"
+- [x] SC-6: Changed HolyDay model from massTime to massTimes[] (ScheduleManager + HolyDayAlert updated)
+- [x] SC-7: Updated all Holy Day defaults to ["8:30 AM", "12:10 PM", "7:30 PM"]
+- [x] SC-8: Updated all downstream: scheduleData.ts, AtAGlance.tsx, parishAssistant.ts
+- [x] SC-9: Tests green (91/91) + 0 TS errors

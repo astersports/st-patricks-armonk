@@ -27,7 +27,7 @@ export function HolyDayAlert() {
               <p className="font-semibold text-sm text-amber-900">{hd.name}</p>
               <p className="text-xs text-amber-700 mt-0.5">
                 {hd.daysUntil === 0 ? "Today" : hd.daysUntil === 1 ? "Tomorrow" : `${hd.date.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" })}`}
-                {" "}&middot; Mass at <span className="font-semibold">{hd.massTime}</span>
+                {" "}&middot; Mass at <span className="font-semibold">{hd.massTimes.join(", ")}</span>
               </p>
             </div>
           ))}
