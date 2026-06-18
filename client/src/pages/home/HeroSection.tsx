@@ -66,13 +66,13 @@ export function HeroSection() {
   }, []);
 
   return (
-    <section className="relative min-h-[260px] sm:min-h-[280px] md:min-h-[300px] flex flex-col overflow-hidden" aria-label="Parish welcome">
+    <section className="relative min-h-[520px] sm:min-h-[560px] md:min-h-[600px] flex flex-col overflow-hidden" aria-label="Parish welcome">
       {/* Ken Burns background */}
       <div className="absolute inset-0 will-change-transform">
         <img
           src="/manus-storage/st-patrick-church-front_2665392e.jpeg"
           alt="St. Patrick's Church front exterior"
-          className="w-full h-[115%] object-cover object-center -translate-y-[7%] hero-ken-burns"
+          className="w-full h-full object-cover object-center hero-ken-burns"
         />
       </div>
 
@@ -165,11 +165,11 @@ export function HeroSection() {
       )}
 
       {/* Content — left-aligned, bottom-anchored */}
-      <div className="relative z-10 flex flex-col flex-1 justify-end pb-8 sm:pb-10 md:pb-12 px-5 sm:px-8 md:px-12 lg:px-20 max-w-[1400px] mx-auto w-full">
+      <div className="relative z-10 flex flex-col flex-1 justify-end pb-14 sm:pb-16 md:pb-20 px-5 sm:px-8 md:px-12 lg:px-20 max-w-[1400px] mx-auto w-full">
         <div className="max-w-3xl">
           {/* Eyebrow — time greeting + current weather on mobile */}
           <p
-            className="text-emerald-300 text-xs sm:text-sm font-medium tracking-[0.2em] uppercase mb-2 opacity-0 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
+            className="text-emerald-300 text-xs sm:text-sm font-medium tracking-[0.2em] uppercase mb-4 opacity-0 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
             style={{ animation: 'fadeSlideUp 0.6s ease 0.1s forwards' }}
           >
             {timeGreeting || "Welcome"} · Armonk, New York
@@ -177,10 +177,10 @@ export function HeroSection() {
 
           {/* Primary heading — Fraunces with gold accent */}
           <h1
-            className="text-white mb-2 opacity-0 [text-shadow:_0_2px_8px_rgba(0,0,0,0.7),_0_4px_16px_rgba(0,0,0,0.4)]"
+            className="text-white mb-4 opacity-0 [text-shadow:_0_2px_8px_rgba(0,0,0,0.7),_0_4px_16px_rgba(0,0,0,0.4)]"
             style={{
               fontFamily: "'Fraunces', Georgia, serif",
-              fontSize: 'clamp(2rem, 4vw + 0.8rem, 4rem)',
+              fontSize: 'clamp(2.5rem, 5vw + 1rem, 5.5rem)',
               fontOpticalSizing: 'auto',
               lineHeight: 1.08,
               fontWeight: 700,
@@ -194,7 +194,7 @@ export function HeroSection() {
 
           {/* Motto */}
           <p
-            className="text-white text-sm sm:text-base italic mb-1 opacity-0 max-w-xl [text-shadow:_0_2px_6px_rgba(0,0,0,0.7),_0_1px_3px_rgba(0,0,0,0.5)]"
+            className="text-white text-base sm:text-lg italic mb-2 opacity-0 max-w-xl [text-shadow:_0_2px_6px_rgba(0,0,0,0.7),_0_1px_3px_rgba(0,0,0,0.5)]"
             style={{
               lineHeight: 1.6,
               animation: 'fadeSlideUp 0.7s ease 0.3s forwards',
@@ -205,7 +205,7 @@ export function HeroSection() {
 
           {/* Address */}
           <p
-            className="text-white/90 text-xs sm:text-sm font-medium tracking-wide mb-2 opacity-0 [text-shadow:_0_1px_4px_rgba(0,0,0,0.7),_0_2px_8px_rgba(0,0,0,0.4)]"
+            className="text-white/90 text-xs sm:text-sm font-medium tracking-wide mb-3 opacity-0 [text-shadow:_0_1px_4px_rgba(0,0,0,0.7),_0_2px_8px_rgba(0,0,0,0.4)]"
             style={{ animation: 'fadeSlideUp 0.7s ease 0.35s forwards' }}
           >
             29 Cox Avenue, Armonk, NY 10504
@@ -214,7 +214,7 @@ export function HeroSection() {
           {/* Next Mass countdown */}
           {nextMassLabel && (
             <p
-              className="flex items-center gap-2 text-emerald-200 text-xs sm:text-sm font-medium mb-4 opacity-0 [text-shadow:_0_1px_4px_rgba(0,0,0,0.7)]"
+              className="flex items-center gap-2 text-emerald-200 text-xs sm:text-sm font-medium mb-6 opacity-0 [text-shadow:_0_1px_4px_rgba(0,0,0,0.7)]"
               style={{ animation: 'fadeSlideUp 0.7s ease 0.38s forwards' }}
               aria-live="polite"
               aria-atomic="true"
