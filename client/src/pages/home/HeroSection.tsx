@@ -124,28 +124,28 @@ export function HeroSection() {
                   <div className="flex items-center gap-1.5">
                     <Thermometer className="w-3.5 h-3.5 text-orange-500" />
                     <div>
-                      <p className="text-[10px] text-muted-foreground">Feels like</p>
+                      <p className="text-xs text-muted-foreground">Feels like</p>
                       <p className="text-xs font-semibold">{currentWeather.feelsLike}°F</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Droplets className="w-3.5 h-3.5 text-blue-500" />
                     <div>
-                      <p className="text-[10px] text-muted-foreground">Humidity</p>
+                      <p className="text-xs text-muted-foreground">Humidity</p>
                       <p className="text-xs font-semibold">{currentWeather.humidity}%</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Wind className="w-3.5 h-3.5 text-slate-500" />
                     <div>
-                      <p className="text-[10px] text-muted-foreground">Wind</p>
+                      <p className="text-xs text-muted-foreground">Wind</p>
                       <p className="text-xs font-semibold">{currentWeather.windSpeed} mph</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Sunrise className="w-3.5 h-3.5 text-amber-500" />
                     <div>
-                      <p className="text-[10px] text-muted-foreground">Sunrise</p>
+                      <p className="text-xs text-muted-foreground">Sunrise</p>
                       <p className="text-xs font-semibold">{currentWeather.sunrise}</p>
                     </div>
                   </div>
@@ -153,11 +153,11 @@ export function HeroSection() {
                 {currentWeather.sunset && (
                   <div className="flex items-center justify-center gap-1.5 pt-1 border-t border-border/30">
                     <Sunset className="w-3.5 h-3.5 text-orange-400" />
-                    <span className="text-[10px] text-muted-foreground">Sunset</span>
+                    <span className="text-xs text-muted-foreground">Sunset</span>
                     <span className="text-xs font-semibold">{currentWeather.sunset}</span>
                   </div>
                 )}
-                <p className="text-[10px] text-muted-foreground text-center pt-1">Armonk, NY · Updated every 15 min</p>
+                <p className="text-xs text-muted-foreground text-center pt-1">Armonk, NY · Updated every 15 min</p>
               </div>
             </PopoverContent>
           </Popover>
@@ -262,7 +262,7 @@ export function HeroSection() {
 
       {/* Scroll indicator — desktop only */}
       <div className="absolute bottom-6 right-6 md:right-12 lg:right-20 hidden md:flex flex-col items-center gap-2 opacity-50" aria-hidden="true">
-        <span className="text-white text-[10px] tracking-[0.2em] uppercase" style={{ writingMode: 'vertical-rl' }}>Scroll</span>
+        <span className="text-white text-xs tracking-[0.2em] uppercase" style={{ writingMode: 'vertical-rl' }}>Scroll</span>
         <div className="w-px h-12 bg-gradient-to-b from-white/60 to-transparent" style={{ animation: 'scrollLine 2s ease infinite' }} />
       </div>
 

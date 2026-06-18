@@ -41,7 +41,7 @@ function WatchLiveChip() {
   return (
     <a
       href="/watch"
-      className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-medium hover:underline transition-all"
+      className="inline-flex items-center gap-1.5 text-xs sm:text-xs font-medium hover:underline transition-all"
     >
       {isLive ? (
         <span className="inline-flex items-center gap-1">
@@ -101,7 +101,7 @@ export default function Navigation() {
                 <span className="text-white/30">•</span>
                 <Link
                   href="/parish-registration"
-                  className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-medium hover:underline transition-all"
+                  className="inline-flex items-center gap-1.5 text-xs sm:text-xs font-medium hover:underline transition-all"
                 >
                   <span>{marqueeText}</span>
                   <ArrowRight className="w-3 h-3" />

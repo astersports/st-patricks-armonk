@@ -54,10 +54,10 @@ export default function Footer({ variant = "compact" }: { variant?: "full" | "co
         .spf-main{padding:22px 20px 20px;}
         .spf-inner{max-width:1100px;margin:0 auto;}
         .spf-head{padding-bottom:16px;border-bottom:1px solid #e1e4e8;margin-bottom:16px;}
-        .spf-brand{color:${GREEN_DARK};font-size:18px;font-weight:800;text-transform:uppercase;
+        .spf-brand{color:${GREEN_DARK};font-size:20px;font-weight:800;text-transform:uppercase;
           letter-spacing:.5px;line-height:1;display:block;margin-bottom:3px;
           font-family:'Fraunces',Georgia,serif;}
-        .spf-tagline{color:${GOLD};font-size:10px;font-weight:700;text-transform:uppercase;
+        .spf-tagline{color:${GOLD};font-size:11px;font-weight:700;text-transform:uppercase;
           letter-spacing:1.5px;line-height:1.3;display:block;margin-bottom:14px;}
         .spf-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
         .spf-season{display:inline-flex;align-items:center;gap:6px;background:#eef6f1;
@@ -67,9 +67,9 @@ export default function Footer({ variant = "compact" }: { variant?: "full" | "co
         .spf-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;flex-shrink:0;
           animation:spf-pulse 2s infinite;}
         @keyframes spf-pulse{0%,100%{opacity:1}50%{opacity:.4}}
-        .spf-season-txt{font-size:11px;font-weight:700;color:${GREEN};text-transform:uppercase;
+        .spf-season-txt{font-size:12px;font-weight:700;color:${GREEN};text-transform:uppercase;
           letter-spacing:.8px;line-height:1;}
-        .spf-season-cta{font-size:11px;font-weight:700;color:${GOLD};letter-spacing:.3px;line-height:1;}
+        .spf-season-cta{font-size:12px;font-weight:700;color:${GOLD};letter-spacing:.3px;line-height:1;}
         .spf-vdot{width:3px;height:3px;border-radius:50%;background:#cfe6da;flex-shrink:0;}
         .spf-ico{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;
           border:1px solid #e1e4e8;border-radius:8px;background:#fff;transition:all .2s ease;flex-shrink:0;}
@@ -88,17 +88,17 @@ export default function Footer({ variant = "compact" }: { variant?: "full" | "co
         .spf-tico.green{background:#f0fdf4;color:${GREEN};}
         .spf-tico.gold{background:#fbf3dc;color:${GOLD};}
         .spf-tico.navy{background:#e8efe9;color:${GREEN_DARK};}
-        .spf-label{font-size:9px;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;line-height:1;}
-        .spf-name{font-size:13px;font-weight:800;color:${GREEN_DARK};line-height:1.2;}
-        .spf-desc{font-size:11px;color:#6b7280;line-height:1.4;margin-top:2px;}
-        .spf-arrow{font-size:12px;color:#c0cad6;margin-top:auto;padding-top:10px;font-weight:700;}
+        .spf-label{font-size:10px;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;line-height:1;}
+        .spf-name{font-size:15px;font-weight:800;color:${GREEN_DARK};line-height:1.2;}
+        .spf-desc{font-size:12.5px;color:#6b7280;line-height:1.4;margin-top:2px;}
+        .spf-arrow{font-size:13px;color:#c0cad6;margin-top:auto;padding-top:10px;font-weight:700;}
         .spf-legal{background:#edf3ef;border-top:2px solid #cfe6da;padding:9px 20px;margin-top:20px;}
         .spf-legal-in{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
-        .spf-legal p{margin:0;font-size:11px;color:#6b7280;line-height:1.4;}
+        .spf-legal p{margin:0;font-size:12px;color:#6b7280;line-height:1.4;}
         .spf-power{display:inline-flex;align-items:center;gap:5px;}
-        .spf-power span{font-size:11px;color:#6b7280;}
-        .spf-power b{font-size:11px;font-weight:700;color:${GOLD};}
-        .spf-staff{font-size:11px;color:#9ca3af;display:inline-flex;align-items:center;gap:4px;}
+        .spf-power span{font-size:12px;color:#6b7280;}
+        .spf-power b{font-size:12px;font-weight:700;color:${GOLD};}
+        .spf-staff{font-size:12px;color:#9ca3af;display:inline-flex;align-items:center;gap:4px;}
         .spf-staff:hover{color:${GREEN};}
         @media(max-width:520px){
           .spf-main{padding:18px 14px 16px;}

@@ -120,7 +120,7 @@ export function AdminTableControls<T>({
                 >
                   {opt.label}
                   {opt.count !== undefined && (
-                    <Badge variant="secondary" className="ml-1 h-4 px-1 text-[10px]">
+                    <Badge variant="secondary" className="ml-1 h-4 px-1 text-xs">
                       {opt.count}
                     </Badge>
                   )}

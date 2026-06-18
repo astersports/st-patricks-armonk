@@ -149,8 +149,8 @@ function StepItem({ step, index, total, color }: { step: Step; index: number; to
       <div className="pb-5 flex-1">
         <div className="flex items-center gap-2 mb-0.5">
           <span className="text-sm font-medium text-foreground">{step.title}</span>
-          {step.required && <Badge variant="secondary" className="text-[10px] px-1.5 py-0">Required</Badge>}
-          {!step.required && <Badge variant="outline" className="text-[10px] px-1.5 py-0">Optional</Badge>}
+          {step.required && <Badge variant="secondary" className="text-xs px-1.5 py-0">Required</Badge>}
+          {!step.required && <Badge variant="outline" className="text-xs px-1.5 py-0">Optional</Badge>}
         </div>
         <p className="text-xs text-muted-foreground leading-relaxed">{step.description}</p>
       </div>

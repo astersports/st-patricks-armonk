@@ -123,7 +123,7 @@ export function CatholicResources() {
                     <span className="text-xs text-muted-foreground ml-2 hidden sm:inline">{source.sublabel}</span>
                   </div>
                   {newCount > 0 && (
-                    <span className="text-[10px] font-bold uppercase tracking-wider bg-gold/15 text-gold px-1.5 py-0.5 rounded-full">
+                    <span className="text-xs font-bold uppercase tracking-wider bg-gold/15 text-gold px-1.5 py-0.5 rounded-full">
                       {newCount} new
                     </span>
                   )}

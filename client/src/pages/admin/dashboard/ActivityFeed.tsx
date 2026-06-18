@@ -132,7 +132,7 @@ export function StatCard({ icon: Icon, label, value, href, color, highlight }: {
     <Link href={href}>
       <Card className={`cursor-pointer hover:shadow-md transition-shadow ${highlight ? "border-amber-300 bg-amber-50/30" : ""}`}>
         <CardContent className="p-4">
-          <div className="flex items-center gap-2 mb-1"><Icon className={`w-4 h-4 ${color}`} /><span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wide leading-tight">{label}</span></div>
+          <div className="flex items-center gap-2 mb-1"><Icon className={`w-4 h-4 ${color}`} /><span className="text-xs text-muted-foreground font-medium uppercase tracking-wide leading-tight">{label}</span></div>
           <p className="text-2xl font-bold">{value}</p>
         </CardContent>
       </Card>

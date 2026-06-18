@@ -274,7 +274,7 @@ export default function Sacraments() {
                         <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                           <span className="font-serif text-sm sm:text-lg font-semibold text-foreground">{sac.title}</span>
                           {sac.badge && (
-                            <Badge className="bg-accent/10 text-accent-foreground border-0 text-[10px] px-1.5 py-0 shrink-0">{sac.badge}</Badge>
+                            <Badge className="bg-accent/10 text-accent-foreground border-0 text-xs px-1.5 py-0 shrink-0">{sac.badge}</Badge>
                           )}
                         </div>
                         <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 line-clamp-1">{sac.subtitle}</p>
@@ -309,7 +309,7 @@ export default function Sacraments() {
               <Card className="p-5 border border-border/50 border-l-3 border-l-[oklch(0.54_0.12_160)] shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] rounded-xl">
                 <div className="flex items-center gap-2 mb-2.5">
                   <h3 className="font-serif text-base text-foreground">Reconciliation</h3>
-                  <Badge className="bg-primary/8 text-primary border-0 text-[10px] px-1.5 py-0">Weekly</Badge>
+                  <Badge className="bg-primary/8 text-primary border-0 text-xs px-1.5 py-0">Weekly</Badge>
                 </div>
                 <p className="text-muted-foreground text-sm leading-relaxed mb-3.5">
                   The Sacrament of Reconciliation is available every Saturday afternoon before Vigil Mass, or by appointment with a priest. See Mass Times for current schedule.
@@ -321,7 +321,7 @@ export default function Sacraments() {
               <Card className="p-5 border border-border/50 border-l-3 border-l-[oklch(0.75_0.15_85)] shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] rounded-xl">
                 <div className="flex items-center gap-2 mb-2.5">
                   <h3 className="font-serif text-base text-foreground">Anointing of the Sick</h3>
-                  <Badge className="bg-accent/10 text-accent-foreground border-0 text-[10px] px-1.5 py-0">By Request</Badge>
+                  <Badge className="bg-accent/10 text-accent-foreground border-0 text-xs px-1.5 py-0">By Request</Badge>
                 </div>
                 <p className="text-muted-foreground text-sm leading-relaxed mb-3.5">
                   If you or a loved one is seriously ill, hospitalized, or preparing for surgery, please contact the parish office to arrange for the Sacrament of the Anointing of the Sick.

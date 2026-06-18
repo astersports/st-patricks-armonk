@@ -126,7 +126,7 @@ export function WeeklySchedule() {
               onClick={() => setSelectedDay(day.originalIndex)}
               className={`relative flex-1 min-w-[44px] py-2.5 px-1.5 rounded-lg text-center transition-all duration-200 ${isSelected ? "bg-white text-foreground shadow-sm ring-1 ring-border/50" : "hover:bg-white/50 text-muted-foreground"}`}
             >
-              <span className={`block text-[11px] font-semibold uppercase tracking-wide ${isSelected ? "text-primary" : ""}`}>{day.shortDay}</span>
+              <span className={`block text-xs font-semibold uppercase tracking-wide ${isSelected ? "text-primary" : ""}`}>{day.shortDay}</span>
               {isToday && <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full ${isSelected ? "bg-primary" : "bg-primary/60"}`} />}
               {isTomorrow && !isToday && <span className={`absolute -bottom-0.5 left-1/2 -translate-x-1/2 text-[8px] font-medium ${isSelected ? "text-muted-foreground" : "text-muted-foreground/60"}`}>tmrw</span>}
             </button>
@@ -138,8 +138,8 @@ export function WeeklySchedule() {
       <div className="animate-fade-in" key={selectedDay} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold text-base text-foreground">{currentSchedule.day}</h3>
-          {selectedDay === today && <span className="text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/8 px-2.5 py-1 rounded-full">Today</span>}
-          {selectedDay === tomorrow && <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-500/8 px-2.5 py-1 rounded-full">Tomorrow</span>}
+          {selectedDay === today && <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary/8 px-2.5 py-1 rounded-full">Today</span>}
+          {selectedDay === tomorrow && <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-500/8 px-2.5 py-1 rounded-full">Tomorrow</span>}
         </div>
 
         <div className="space-y-2">
@@ -162,13 +162,13 @@ export function WeeklySchedule() {
                     {isNext && !inProgress && <span className="text-[9px] font-bold uppercase tracking-wider text-white bg-primary px-1.5 py-0.5 rounded-full">Next</span>}
                   </div>
                   {service.note && <p className="text-xs text-muted-foreground mt-0.5">{service.note}</p>}
-                  {inProgress && <p className="text-[10px] font-medium text-emerald-600 mt-0.5">In progress now</p>}
-                  {past && !inProgress && <p className="text-[10px] font-medium text-muted-foreground mt-0.5">Completed</p>}
+                  {inProgress && <p className="text-xs font-medium text-emerald-600 mt-0.5">In progress now</p>}
+                  {past && !inProgress && <p className="text-xs font-medium text-muted-foreground mt-0.5">Completed</p>}
                 </div>
                 <div className="shrink-0 text-right flex items-center gap-2">
                   <div>
                     {service.time && <span className={`text-sm font-bold ${past && !inProgress ? "text-muted-foreground" : inProgress ? "text-emerald-600" : isNext ? "text-primary" : colors.text} tabular-nums`}>{service.time}</span>}
-                    {!inProgress && !past && serviceCountdowns[idx] && <p className={`text-[10px] font-medium mt-0.5 ${isNext ? "text-primary/70" : "text-muted-foreground"}`}>{serviceCountdowns[idx]}</p>}
+                    {!inProgress && !past && serviceCountdowns[idx] && <p className={`text-xs font-medium mt-0.5 ${isNext ? "text-primary/70" : "text-muted-foreground"}`}>{serviceCountdowns[idx]}</p>}
                   </div>
                   {service.time && service.type !== "none" && (
                     <button

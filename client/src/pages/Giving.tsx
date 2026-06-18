@@ -135,7 +135,7 @@ export default function Giving() {
                     </span>
                   ))}
                 </div>
-                <p className="text-[11px] text-muted-foreground mt-1.5">Select a fund on the WeShare page after clicking below</p>
+                <p className="text-xs text-muted-foreground mt-1.5">Select a fund on the WeShare page after clicking below</p>
               </div>
 
               {/* CTA */}
@@ -149,7 +149,7 @@ export default function Giving() {
                   <ExternalLink className="w-3.5 h-3.5 opacity-60" />
                 </Button>
               </a>
-              <p className="text-[11px] text-muted-foreground mt-2">
+              <p className="text-xs text-muted-foreground mt-2">
                 Secure payment processed by WeShare (LPi). Tax-deductible receipt sent automatically.
               </p>
             </CardContent>

@@ -109,11 +109,11 @@ export function WeatherForecastStrip({ weather }: { weather: WeatherData }) {
               : "bg-muted/50"
           }`}
         >
-          <span className="text-[10px] text-muted-foreground font-medium">{slot.label}</span>
+          <span className="text-xs text-muted-foreground font-medium">{slot.label}</span>
           <ColorfulWeatherIcon icon={slot.icon} className="w-4 h-4" />
           <span className="font-semibold">{slot.temperature}°</span>
           {slot.precipProbability > 20 && (
-            <span className="text-[10px] weather-strip-rain-text flex items-center gap-0.5">
+            <span className="text-xs weather-strip-rain-text flex items-center gap-0.5">
               <DropletIcon className="w-2 h-2" />
               {slot.precipProbability}%
             </span>

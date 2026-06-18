@@ -113,7 +113,7 @@ export function MassIntentionsManager() {
                       {intention.scheduledDate && ` on ${new Date(intention.scheduledDate).toLocaleDateString()}`}
                     </p>
                   )}
-                  <p className="text-[10px] text-muted-foreground">
+                  <p className="text-xs text-muted-foreground">
                     Submitted {new Date(intention.createdAt).toLocaleDateString()}
                   </p>
                 </div>

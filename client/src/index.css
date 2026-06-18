@@ -138,6 +138,7 @@
     border-color: var(--color-border);
   }
   html {
+    font-size: 112.5%; /* 16px → 18px base — lifts ALL text-* + --text-* tokens + rem spacing, site-wide */
     scroll-behavior: smooth;
     overflow-x: clip;
     /* Nav height: announcement bar (~36px) + nav bar (64px) = ~100px on mobile */
@@ -197,7 +198,7 @@
     overflow-x: clip;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-size: 16px;
+    font-size: 1rem; /* was 16px — now follows the 18px root */
     line-height: 1.55;
     letter-spacing: -0.01em;
   }

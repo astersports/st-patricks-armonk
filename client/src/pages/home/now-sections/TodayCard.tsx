@@ -33,7 +33,7 @@ export function TodayCard() {
                 {readings?.liturgicTitle || seasonDesc}
               </p>
             </div>
-            <span className={`shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${theme.badgeClass}`}>
+            <span className={`shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider border ${theme.badgeClass}`}>
               <Cross className="w-2.5 h-2.5" />
               {theme.label}
             </span>

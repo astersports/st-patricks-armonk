@@ -21,7 +21,7 @@ export function HolyDayAlert() {
           </svg>
         </div>
         <div className="flex-1">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-amber-700 mb-1">Holy Day of Obligation</p>
+          <p className="text-xs font-bold uppercase tracking-wider text-amber-700 mb-1">Holy Day of Obligation</p>
           {upcomingHolyDays.map((hd, i) => (
             <div key={i} className={i > 0 ? "mt-2 pt-2 border-t border-amber-200/50" : ""}>
               <p className="font-semibold text-sm text-amber-900">{hd.name}</p>
@@ -31,7 +31,7 @@ export function HolyDayAlert() {
               </p>
             </div>
           ))}
-          <p className="text-[10px] text-amber-600 mt-2 italic">Catholics are obligated to attend Mass on this day.</p>
+          <p className="text-xs text-amber-600 mt-2 italic">Catholics are obligated to attend Mass on this day.</p>
         </div>
       </div>
     </div>

@@ -50,7 +50,7 @@ export default function BaptismForm() {
       <div className="bg-green-900 text-white py-8 sm:py-12">
         <div className="container max-w-3xl">
           <Link href="/" className="text-green-300/70 hover:text-white text-sm flex items-center gap-1 mb-4 transition-colors"><ArrowLeft className="w-3.5 h-3.5" /> Home</Link>
-          <p className="text-green-300/80 font-bold tracking-[0.2em] uppercase text-[11px] mb-2">Sacrament</p>
+          <p className="text-green-300/80 font-bold tracking-[0.2em] uppercase text-xs mb-2">Sacrament</p>
           <h1 className="font-serif text-3xl sm:text-4xl font-bold leading-tight mb-2.5">Baptism Registration</h1>
           <p className="text-green-200/80 text-sm max-w-xl">Complete this form to register your child for Baptism at St. Patrick in Armonk. The parish office will contact you to schedule preparation and the ceremony.</p>
         </div>

@@ -133,13 +133,13 @@ export function ComingUpFiltered({ events, catColors }: ComingUpFilteredProps) {
                 <div className="flex items-start sm:items-center gap-3">
                   <Link href="/calendar" className="flex items-start sm:items-center gap-3 flex-1 min-w-0">
                     <div className={`w-10 h-10 rounded-lg ${colors.bg} flex flex-col items-center justify-center shrink-0`}>
-                      <span className="text-[10px] font-bold uppercase leading-none text-primary/70">{format(eventDate, "MMM")}</span>
+                      <span className="text-xs font-bold uppercase leading-none text-primary/70">{format(eventDate, "MMM")}</span>
                       <span className="text-lg font-bold leading-tight text-primary">{format(eventDate, "d")}</span>
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-foreground text-sm sm:text-base leading-snug group-hover:text-primary transition-colors">{evt.title}</p>
                       <p className="text-xs sm:text-sm text-muted-foreground">{evt.location || format(eventDate, "EEEE \u00b7 h:mm a")}</p>
-                      <span className="inline-flex sm:hidden text-[11px] font-medium text-gold bg-gold/15 px-2 py-0.5 rounded-full mt-1">{countdown}</span>
+                      <span className="inline-flex sm:hidden text-xs font-medium text-gold bg-gold/15 px-2 py-0.5 rounded-full mt-1">{countdown}</span>
                     </div>
                   </Link>
                   <button

@@ -31,14 +31,14 @@ export function PushNotificationBanner() {
           </span>
           <button
             onClick={() => setShowPrefs(!showPrefs)}
-            className="ml-auto text-emerald-600 hover:text-emerald-800 dark:hover:text-emerald-300 text-[10px] underline flex items-center gap-1"
+            className="ml-auto text-emerald-600 hover:text-emerald-800 dark:hover:text-emerald-300 text-xs underline flex items-center gap-1"
           >
             <Settings className="w-3 h-3" />
             Preferences
           </button>
           <button
             onClick={async () => { await unsubscribe(); toast.success("Notifications disabled"); }}
-            className="text-emerald-600 hover:text-emerald-800 dark:hover:text-emerald-300 text-[10px] underline"
+            className="text-emerald-600 hover:text-emerald-800 dark:hover:text-emerald-300 text-xs underline"
           >
             Turn off
           </button>

@@ -60,7 +60,7 @@ export function SectionHeader({
         </div>
         <div>
           {label && (
-            <p className="text-gold text-[10px] font-semibold tracking-[0.15em] uppercase leading-none mb-1">
+            <p className="text-gold text-xs font-semibold tracking-[0.15em] uppercase leading-none mb-1">
               {label}
             </p>
           )}

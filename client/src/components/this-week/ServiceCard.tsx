@@ -78,13 +78,13 @@ export function ServiceCard({ svc, idx, isPast, isLive, isNext, countdown, progr
         }`}>
           <span className="whitespace-nowrap">{svc.label}</span>
           {isLive && (
-            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
+            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
               <span className="relative flex h-1.5 w-1.5"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-50" /><span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" /></span>
               Live
             </span>
           )}
           {isPast && (
-            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium uppercase tracking-wider bg-muted text-muted-foreground no-underline" style={{ textDecoration: 'none' }}>
+            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium uppercase tracking-wider bg-muted text-muted-foreground no-underline" style={{ textDecoration: 'none' }}>
               Ended
             </span>
           )}
@@ -94,14 +94,14 @@ export function ServiceCard({ svc, idx, isPast, isLive, isNext, countdown, progr
         {!isPast && !isLive && (countdown || weather) && (
           <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
             {countdown && (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-tight whitespace-nowrap">
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-tight whitespace-nowrap">
                 <span className="relative flex h-1.5 w-1.5"><span className="animate-pulse absolute inline-flex h-full w-full rounded-full bg-primary/60" /><span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" /></span>
                 {countdown}
               </span>
             )}
             {weather && (
               <span
-                className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[11px] font-medium whitespace-nowrap ${
+                className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap ${
                   weather.isSevereWarning
                     ? "weather-badge-severe"
                     : weather.isRainWarning
@@ -125,7 +125,7 @@ export function ServiceCard({ svc, idx, isPast, isLive, isNext, countdown, progr
       {/* Weather badge for live/past states (shown in original position) */}
       {weather && isLive && (
         <span
-          className={`hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[11px] font-medium ${
+          className={`hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs font-medium ${
             weather.isSevereWarning
               ? "weather-badge-severe"
               : weather.isRainWarning

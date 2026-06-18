@@ -1056,3 +1056,10 @@
 - [x] P2-2. StaffManager accessibility (htmlFor/id on all inputs, aria-label on icon buttons)
 - [x] P2-3. Broadcast push segment — relabel UI to "Push — all subscribers"
 - [x] Vitest: admin gating regression test for broadcast, staff.upsert, staff.delete (6 tests pass)
+
+### Readability / Typography Bump
+- [x] 1. Raise rem base to 112.5% (16→18px) in index.css + body 16px→1rem
+- [x] 2. Replace text-[10px] → text-xs (33 replaced, 2 kept in MobileBottomNav) and text-[11px] → text-xs (15×)
+- [x] 3. Bump Footer.tsx fixed px sizes (+1–2px each)
+- [x] 4. (Superseded by 112.5% root bump — text-xs is now ~13.5px, text-sm ~15.75px; no further per-class lifts needed)
+- [x] AC: 375px viewport verified (Home, Mass Times, Sacraments, Faith Formation, Footer), 49 tests pass, 0 TS errors

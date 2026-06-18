@@ -72,7 +72,7 @@ export function AtAGlance() {
           <table className="w-full text-sm">
             <tbody>
               <tr className="border-b border-border/40">
-                <td className="px-4 py-3 font-semibold text-muted-foreground text-[11px] uppercase tracking-wider w-28">Weekend</td>
+                <td className="px-4 py-3 font-semibold text-muted-foreground text-xs uppercase tracking-wider w-28">Weekend</td>
                 <td className="px-4 py-3">
                   {satVigil && (
                     <>
@@ -92,7 +92,7 @@ export function AtAGlance() {
               </tr>
               {weekdayMasses.length > 0 && (
                 <tr className="border-b border-border/40">
-                  <td className="px-4 py-3 font-semibold text-muted-foreground text-[11px] uppercase tracking-wider">Weekday</td>
+                  <td className="px-4 py-3 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Weekday</td>
                   <td className="px-4 py-3">
                     <span className="font-semibold">{weekdayRange} {uniqueWeekdayTime}</span>
                     <span className="text-muted-foreground ml-2 text-xs">(No Monday Mass)</span>
@@ -101,7 +101,7 @@ export function AtAGlance() {
               )}
               {confession && (
                 <tr className="border-b border-border/40">
-                  <td className="px-4 py-3 font-semibold text-muted-foreground text-[11px] uppercase tracking-wider">Confession</td>
+                  <td className="px-4 py-3 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Confession</td>
                   <td className="px-4 py-3">
                     <span className="font-semibold">{confessionText}</span>
                     <span className="text-muted-foreground ml-2 text-xs">or by appt.</span>
@@ -110,7 +110,7 @@ export function AtAGlance() {
               )}
               {prayers.length > 0 && (
                 <tr>
-                  <td className="px-4 py-3 font-semibold text-muted-foreground text-[11px] uppercase tracking-wider">Lauds</td>
+                  <td className="px-4 py-3 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Lauds</td>
                   <td className="px-4 py-3">
                     <span className="font-semibold">{prayerRange} {prayerTime}</span>
                   </td>

@@ -34,7 +34,7 @@ export default function FaithFormation() {
             <div className="lg:col-span-2">
               {/* Status Banner */}
               <div className="reveal bg-accent/8 border border-accent/15 rounded-xl p-4 mb-6 flex items-center gap-3">
-                <Badge className="bg-accent text-white border-0 text-[10px] px-2 py-0.5 shrink-0">Open</Badge>
+                <Badge className="bg-accent text-white border-0 text-xs px-2 py-0.5 shrink-0">Open</Badge>
                 <div>
                   <p className="font-semibold text-accent-foreground text-sm">CCD Registration for 2026–27 is Now Open!</p>
                   <p className="text-xs text-muted-foreground mt-0.5">
