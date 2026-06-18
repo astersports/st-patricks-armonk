@@ -1,7 +1,8 @@
 /**
  * CCD (Religious Education) Router — registration, events, permissions.
  */
-import { publicProcedure, router, z, db, nanoid, notifyOwner, sectionProcedure } from "./_helpers";
+import { publicProcedure, router, z, db, nanoid, sectionProcedure } from "./_helpers";
+import { routeNotification } from "../notifications/route";
 const ccdRegSection = sectionProcedure("ccd_registrations");
 const ccdCalSection = sectionProcedure("ccd_calendar");
 import { rateLimitedFormProcedure } from "./_rateLimited";
@@ -34,7 +35,7 @@ export const ccdRouter = router({
       reminderOptIn: input.reminderOptIn,
       unsubscribeToken,
     });
-    await notifyOwner({
+    await routeNotification("ccd_registrations", {
       title: "New CCD Registration",
       content: `${input.childFirstName} ${input.childLastName} (Grade ${input.grade}) has been registered for CCD ${input.schoolYear} by ${input.parentFirstName} ${input.parentLastName} (${input.parentEmail}).`,
     });

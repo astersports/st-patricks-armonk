@@ -1,7 +1,8 @@
 /**
  * Sacrament-related form routers: baptism, sponsor, marriage, funeral.
  */
-import { router, z, db, notifyOwner, sectionProcedure } from "../_helpers";
+import { router, z, db, sectionProcedure } from "../_helpers";
+import { routeNotification } from "../../notifications/route";
 const sacSection = sectionProcedure("sacraments");
 import { rateLimitedFormProcedure } from "../_rateLimited";
 import { createAuditLog } from "../../db/auditLog";
@@ -24,7 +25,7 @@ export const baptismRouter = router({
     notes: z.string().optional(),
   })).mutation(async ({ input }) => {
     await db.createBaptismRegistration(input as any);
-    await notifyOwner({ title: "New Baptism Registration", content: `${input.childFirstName} ${input.childLastName} - Parent: ${input.parentEmail}` });
+    await routeNotification("sacraments", { title: "New Baptism Registration", content: `${input.childFirstName} ${input.childLastName} - Parent: ${input.parentEmail}` });
     return { success: true };
   }),
   list: sacSection.query(async () => {
@@ -59,7 +60,7 @@ export const sponsorRouter = router({
     notes: z.string().optional(),
   })).mutation(async ({ input }) => {
     await db.createSponsorCertificate(input as any);
-    await notifyOwner({ title: "New Sponsor Certificate Request", content: `${input.sponsorFirstName} ${input.sponsorLastName} for ${input.candidateName} (${input.sacramentType})` });
+    await routeNotification("sacraments", { title: "New Sponsor Certificate Request", content: `${input.sponsorFirstName} ${input.sponsorLastName} for ${input.candidateName} (${input.sacramentType})` });
     return { success: true };
   }),
   list: sacSection.query(async () => {
@@ -99,7 +100,7 @@ export const marriageRouter = router({
     notes: z.string().optional(),
   })).mutation(async ({ input }) => {
     await db.createMarriageInquiry(input as any);
-    await notifyOwner({ title: "New Marriage Inquiry", content: `${input.brideFirstName} ${input.brideLastName} & ${input.groomFirstName} ${input.groomLastName} - Preferred: ${input.preferredDate || 'TBD'}` });
+    await routeNotification("sacraments", { title: "New Marriage Inquiry", content: `${input.brideFirstName} ${input.brideLastName} & ${input.groomFirstName} ${input.groomLastName} - Preferred: ${input.preferredDate || 'TBD'}` });
     return { success: true };
   }),
   list: sacSection.query(async () => {
@@ -135,7 +136,7 @@ export const funeralRouter = router({
     specialRequests: z.string().optional(),
   })).mutation(async ({ input }) => {
     await db.createFuneralPrePlanning(input as any);
-    await notifyOwner({ title: "New Funeral Pre-Planning Form", content: `Planner: ${input.plannerName} - For: ${input.deceasedName} (${input.isPrePlanning ? 'Pre-planning' : 'Immediate need'})` });
+    await routeNotification("sacraments", { title: "New Funeral Pre-Planning Form", content: `Planner: ${input.plannerName} - For: ${input.deceasedName} (${input.isPrePlanning ? 'Pre-planning' : 'Immediate need'})` });
     return { success: true };
   }),
   list: sacSection.query(async () => {

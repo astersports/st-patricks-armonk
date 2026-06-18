@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Settings, Megaphone, Save } from "lucide-react";
+import NotificationRoutingEditor from "./NotificationRoutingEditor";
 
 export default function SettingsManager() {
   const { data: settings, isLoading } = trpc.siteSettings.getAll.useQuery();
@@ -99,6 +100,8 @@ export default function SettingsManager() {
           </Button>
         </CardContent>
       </Card>
+
+      <NotificationRoutingEditor />
     </div>
   );
 }

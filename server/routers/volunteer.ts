@@ -2,6 +2,7 @@
  * Volunteer Router — opportunities and signups.
  */
 import { publicProcedure, router, z, db, sectionProcedure } from "./_helpers";
+import { routeNotification } from "../notifications/route";
 const volunteersSection = sectionProcedure("volunteers");
 import { rateLimitedFormProcedure } from "./_rateLimited";
 import { createAuditLog } from "../db/auditLog";
@@ -67,6 +68,10 @@ export const volunteerRouter = router({
       ...input,
       phone: input.phone ?? null,
       notes: input.notes ?? null,
+    });
+    routeNotification("volunteers", {
+      title: "New Volunteer Signup",
+      content: `${input.name} (${input.email}) signed up for opportunity #${input.opportunityId}.${input.notes ? ` Notes: ${input.notes}` : ""}`,
     });
     return { success: true, id };
   }),

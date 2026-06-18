@@ -2,7 +2,7 @@
  * Mass Intentions Router — public submission + admin queue management.
  */
 import { adminProcedure, publicProcedure, z, db } from "./_helpers";
-import { notifyOwner } from "../_core/notification";
+import { routeNotification } from "../notifications/route";
 import { createAuditLog } from "../db/auditLog";
 import { sendEmail, buildFormConfirmationEmail } from "../email";
 
@@ -32,7 +32,7 @@ export const massIntentionsRouter = {
       });
 
       // Notify parish office
-      await notifyOwner({
+      await routeNotification("sacraments", {
         title: "New Mass Intention Request",
         content: `${input.requesterName} has requested a Mass intention for ${input.intentionFor} (${input.intentionType}). Preferred date: ${input.preferredDate || "No preference"}.`,
       });

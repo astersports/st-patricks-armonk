@@ -3,6 +3,7 @@
  * ~110 lines
  */
 import { adminProcedure, staffProcedure, sectionProcedure, publicProcedure, router, z, db } from "./_helpers";
+import { getRoutingConfig, saveRoutingConfig, type NotificationRouting } from "../notifications/route";
 
 export const adminStatsRouter = router({
   overview: staffProcedure.query(async () => {
@@ -78,6 +79,26 @@ export const siteSettingsRouter = router({
     .input(z.object({ limit: z.number().min(1).max(100).optional(), entityType: z.string().optional() }).optional())
     .query(async ({ input }) => {
       return db.getAuditLogs({ limit: input?.limit, entityType: input?.entityType });
+    }),
+  getNotificationRouting: adminProcedure.query(async () => {
+    return getRoutingConfig();
+  }),
+  updateNotificationRouting: adminProcedure
+    .input(z.object({
+      catchall: z.string().email(),
+      bySection: z.record(z.string(), z.string().email()),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      await saveRoutingConfig(input as NotificationRouting);
+      await db.createAuditLog({
+        userId: ctx.user.openId,
+        userName: ctx.user.name || undefined,
+        action: "update",
+        entityType: "notification_routing",
+        entityId: "config",
+        details: JSON.stringify(input),
+      });
+      return { success: true };
     }),
 });
 

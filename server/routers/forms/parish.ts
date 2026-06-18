@@ -1,7 +1,8 @@
 /**
  * Parish-related form routers: documents, teen life, parish registration, CCD permissions.
  */
-import { publicProcedure, router, z, db, nanoid, storagePut, notifyOwner, sectionProcedure } from "../_helpers";
+import { publicProcedure, router, z, db, nanoid, storagePut, sectionProcedure } from "../_helpers";
+import { routeNotification } from "../../notifications/route";
 const docsSection = sectionProcedure("documents");
 const teenSection = sectionProcedure("teen_life");
 const regSection = sectionProcedure("registrations");
@@ -87,10 +88,10 @@ export const teenLifeRouter = router({
       ...input,
       photoConsent: input.photoConsent ? 1 : 0,
     });
-    notifyOwner({
+    routeNotification("teen_life", {
       title: "New Teen Life Registration",
       content: `${input.teenFirstName} ${input.teenLastName} (Grade ${input.grade}) has registered for Teen Life. Parent: ${input.parentName} (${input.parentEmail}).`,
-    }).catch(() => {});
+    });
     return { success: true };
   }),
   list: teenSection.query(async () => {
@@ -122,10 +123,10 @@ export const parishRegistrationRouter = router({
     notes: z.string().optional(),
   })).mutation(async ({ input }) => {
     await db.createParishRegistration(input);
-    notifyOwner({
+    routeNotification("registrations", {
       title: "New Parish Registration",
       content: `${input.headOfHousehold} (${input.email}) has registered as a new parishioner. Address: ${input.address}, ${input.city}, ${input.state} ${input.zip}. Phone: ${input.phone}.`,
-    }).catch(() => {});
+    });
     return { success: true };
   }),
   list: regSection.query(async () => {
@@ -183,10 +184,10 @@ export const ccdPermissionsRouter = router({
     schoolYear: z.string().min(1),
   })).mutation(async ({ input }) => {
     await db.createCcdPermission(input as any);
-    notifyOwner({
+    routeNotification("ccd_permissions", {
       title: "New CCD Permission Form Submitted",
       content: `${input.parentName} submitted a CCD Permission & Release form for ${input.childFirstName} ${input.childLastName} (Grade ${input.childGrade}). Bus: ${input.needsBusTransport ? "Yes" : "No"}, Photo Release: ${input.photoReleaseConsent ? "Yes" : "No"}.`,
-    }).catch(() => {});
+    });
     return { success: true };
   }),
   list: ccdPermSection.query(async () => {

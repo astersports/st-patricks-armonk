@@ -1089,3 +1089,10 @@
 - [x] §2. Protect site-wide: schedule/info → adminProcedure (was staffProcedure)
 - [x] §4. Per-route guards in AdminRouter (SectionGuard component + Redirect to /admin)
 - [x] §6. Permission-matrix regression test (13 tests, all 7 roles verified)
+
+### Notification Routing (MANUS-NOTIFICATION-ROUTING)
+- [x] 1. Create routeNotification helper + DEFAULT_NOTIFICATION_ROUTING constant
+- [x] 2. Wire form submissions: sacraments (baptism, sponsor, marriage, funeral), ccd, mass intentions, parish reg, teen life, ccd permissions, volunteer
+- [x] 3. Admin editor UI (Settings → Notification Routing card in SettingsManager)
+- [x] 4. Unit test for routeNotification (6 tests: mapped→alias+BCC, unmapped→catchall, failure-safe)
+- [x] AC: Baptism → office@ (sacraments alias); CCD → reled@ + office@ BCC; unmapped → office@; failure never blocks (68 tests pass, 0 TS errors)
