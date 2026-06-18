@@ -5,7 +5,7 @@
  * This file provides backward-compatible exports for ThisWeekAccordion,
  * DayContent, ServiceCard, and RainAlertBanner.
  */
-import { Church, Cross, Sun } from "lucide-react";
+import { Church, Cross, Sun, Heart } from "lucide-react";
 import {
   parseTimeToMinutes,
   getWeeklySchedule,
@@ -22,19 +22,21 @@ export const parseServiceMinutes = parseTimeToMinutes;
 export interface ScheduleItem {
   time: string;
   label: string;
-  type: "mass" | "confession" | "prayer";
+  type: "mass" | "confession" | "prayer" | "adoration";
 }
 
 export const SERVICE_DURATION: Record<string, number> = {
   mass: 60,
   confession: 45,
   prayer: 30,
+  adoration: 60,
 };
 
-export const typeStyles = {
+export const typeStyles: Record<string, { icon: typeof Church; color: string; bg: string; borderColor: string }> = {
   mass: { icon: Church, color: "text-primary", bg: "bg-primary/10", borderColor: "border-l-primary" },
   confession: { icon: Cross, color: "text-purple-600", bg: "bg-purple-500/10", borderColor: "border-l-purple-500" },
   prayer: { icon: Sun, color: "text-amber-600", bg: "bg-amber-500/10", borderColor: "border-l-amber-500" },
+  adoration: { icon: Heart, color: "text-rose-600", bg: "bg-rose-500/10", borderColor: "border-l-rose-500" },
 };
 
 /**
@@ -50,7 +52,7 @@ function buildDailySchedule(): Record<number, ScheduleItem[]> {
     result[day] = (weekly[day] || []).map(s => ({
       time: s.time,
       label: s.name,
-      type: s.type as "mass" | "confession" | "prayer",
+      type: s.type as "mass" | "confession" | "prayer" | "adoration",
     }));
   }
   return result;

@@ -1166,3 +1166,4 @@
 - [x] Reduce hero image/section height on homepage (380/420/460px from 520/560/600px)
 - [x] Remove "Good Afternoon · Armonk, New York" greeting line from hero for more space
 - [x] Move weather widget from top-right (overlapping title) to inline next to "I'm New Here" button on mobile
+- [x] Fix crash when clicking FRI 19 in This Week: "adoration" type missing from typeStyles in scheduleConfig.ts
