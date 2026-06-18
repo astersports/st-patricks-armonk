@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { publicProcedure, protectedProcedure } from "../routers/_helpers";
+import { publicProcedure, protectedProcedure, adminProcedure } from "../routers/_helpers";
 import { router } from "../_core/trpc";
 import { getDb } from "../db/_connection";
 import { pushSubscriptions } from "../../drizzle/schema";
@@ -106,7 +106,7 @@ export const pushNotificationsRouter = router({
   }),
 
   /** Broadcast a custom announcement via push/email/banner (admin only) */
-  broadcast: protectedProcedure
+  broadcast: adminProcedure
     .input(
       z.object({
         title: z.string().min(1).max(100),

@@ -1047,3 +1047,12 @@
 ### Part D — Staff Features (skipped, now completing)
 - [x] D1. Extend admin dashboard counts (bulletins, prayers, staff, total registrations added)
 - [x] D4. Ground AI Assistant in live admin schedule + today's readings (already implemented: getLiveSchedule() + buildReadingsContext())
+
+### L99 Close-Out Fixes (security + correctness)
+- [x] P1-1. broadcast → adminProcedure (security)
+- [x] P1-1. staff.upsert → adminProcedure (security)
+- [x] P1-1. staff.delete → adminProcedure (security)
+- [x] P2-1. Watch page embed fix (YouTube /embed/live_stream?channel=<id> + recordings fallback)
+- [x] P2-2. StaffManager accessibility (htmlFor/id on all inputs, aria-label on icon buttons)
+- [x] P2-3. Broadcast push segment — relabel UI to "Push — all subscribers"
+- [x] Vitest: admin gating regression test for broadcast, staff.upsert, staff.delete (6 tests pass)

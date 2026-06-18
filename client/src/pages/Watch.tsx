@@ -1,26 +1,28 @@
 /**
  * Watch Mass — livestream / recordings page.
- * Embeds the parish YouTube channel with a Live chip during Mass windows.
+ * Uses YouTube /embed/live_stream?channel=<id> for frameable embeds.
+ * Falls back to a "Watch recent recordings" card when no channel ID is set.
  */
 import { useEffect, useState } from "react";
-import { ExternalLink, Radio } from "lucide-react";
+import { ExternalLink, Radio, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import PageLayout from "@/components/PageLayout";
 import PageHeader from "@/components/PageHeader";
 import { SEO } from "@/components/SEO";
 import { useParishSchedule, useParishInfo } from "@/hooks/useParishSchedule";
-import { isServiceInProgress, getServicesForDay } from "../../../shared/scheduleEngine";
+import { isServiceInProgress, getServicesForDay, TIMEZONE } from "../../../shared/scheduleEngine";
 
 export default function Watch() {
   const { schedule } = useParishSchedule();
   const { info } = useParishInfo();
   const youtubeUrl = info?.youtubeUrl ?? "https://www.youtube.com/@stpatrickinarmonk";
+  const channelId = info?.youtubeChannelId ?? "";
 
-  // Extract channel handle for embed — use /live embed for the channel
-  const channelEmbed = youtubeUrl.includes("@")
-    ? `https://www.youtube.com/${youtubeUrl.split("/").pop()}/live`
-    : `${youtubeUrl}/live`;
+  // Build the proper embeddable URL
+  const embedUrl = channelId
+    ? `https://www.youtube.com/embed/live_stream?channel=${channelId}&autoplay=1`
+    : null;
 
   const [isLive, setIsLive] = useState(false);
 
@@ -28,9 +30,11 @@ export default function Watch() {
     function check() {
       if (!schedule) return;
       const now = new Date();
-      const currentDay = now.getDay();
-      const currentMinutes = now.getHours() * 60 + now.getMinutes();
-      const month = now.getMonth() + 1;
+      // Pin to America/New_York
+      const nyTime = new Date(now.toLocaleString("en-US", { timeZone: TIMEZONE }));
+      const currentDay = nyTime.getDay();
+      const currentMinutes = nyTime.getHours() * 60 + nyTime.getMinutes();
+      const month = nyTime.getMonth() + 1;
       const todayServices = getServicesForDay(schedule, currentDay, month);
       const massServices = todayServices.filter(s => s.type === "mass");
       setIsLive(massServices.some(s => isServiceInProgress(s, currentMinutes)));
@@ -66,20 +70,37 @@ export default function Watch() {
             </div>
           )}
 
-          {/* YouTube embed */}
-          <Card className="overflow-hidden rounded-xl border border-border/50 shadow-sm">
-            <div className="aspect-video w-full">
-              <iframe
-                src={channelEmbed}
-                title="St. Patrick Church — Live Mass & Recordings"
-                className="h-full w-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="strict-origin-when-cross-origin"
-              />
-            </div>
-          </Card>
+          {/* YouTube embed or fallback */}
+          {embedUrl ? (
+            <Card className="overflow-hidden rounded-xl border border-border/50 shadow-sm">
+              <div className="aspect-video w-full">
+                <iframe
+                  src={embedUrl}
+                  title="St. Patrick Church — Live Mass & Recordings"
+                  className="h-full w-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                />
+              </div>
+            </Card>
+          ) : (
+            <Card className="p-8 text-center rounded-xl border border-border/50">
+              <Video className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+              <h2 className="font-serif text-lg font-semibold text-foreground mb-2">
+                No live Mass right now
+              </h2>
+              <p className="text-sm text-muted-foreground mb-4">
+                Watch recent recordings of Mass and homilies on our YouTube channel.
+              </p>
+              <Button variant="default" size="sm" className="rounded-full" asChild>
+                <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
+                  Watch on YouTube <ExternalLink className="w-3.5 h-3.5 ml-1.5" />
+                </a>
+              </Button>
+            </Card>
+          )}
 
           {/* Info & external link */}
           <div className="mt-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">

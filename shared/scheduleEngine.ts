@@ -50,6 +50,7 @@ export interface ParishInfo {
   pastorEmail: string;
   flocknoteUrl: string;
   youtubeUrl: string;
+  youtubeChannelId: string;
   mapCoordinates: { lat: number; lng: number };
 }
 
@@ -100,6 +101,7 @@ export const DEFAULT_PARISH_INFO: ParishInfo = {
   pastorEmail: "fr.thadeus@stpatrickinarmonk.org",
   flocknoteUrl: "https://stpatarmonk.flocknote.com/home",
   youtubeUrl: "https://www.youtube.com/@stpatrickinarmonk",
+  youtubeChannelId: "UCi5GFED3NRgqFPTkdMFN9Fg",
   mapCoordinates: { lat: 41.1264, lng: -73.7137 },
 };
 

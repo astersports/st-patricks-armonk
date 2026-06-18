@@ -134,8 +134,8 @@ export default function StaffManager() {
                   </div>
                 </div>
                 <div className="flex gap-1">
-                  <Button variant="ghost" size="sm" onClick={() => openEdit(m)}><Pencil className="w-4 h-4" /></Button>
-                  <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm(`Remove ${m.name}?`)) deleteMut.mutate({ id: m.id }); }}><Trash2 className="w-4 h-4" /></Button>
+                  <Button variant="ghost" size="sm" aria-label={`Edit ${m.name}`} onClick={() => openEdit(m)}><Pencil className="w-4 h-4" /></Button>
+                  <Button variant="ghost" size="sm" aria-label={`Delete ${m.name}`} className="text-destructive" onClick={() => { if (confirm(`Remove ${m.name}?`)) deleteMut.mutate({ id: m.id }); }}><Trash2 className="w-4 h-4" /></Button>
                 </div>
               </CardContent>
             </Card>
@@ -148,17 +148,17 @@ export default function StaffManager() {
         <DialogContent className="max-w-md">
           <DialogHeader><DialogTitle>{form.id ? "Edit Staff Member" : "Add Staff Member"}</DialogTitle></DialogHeader>
           <div className="space-y-4">
-            <div><Label>Name *</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Full name" /></div>
-            <div><Label>Role *</Label><Input value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))} placeholder="e.g. Office Manager" /></div>
-            <div><Label>Category</Label>
+            <div><Label htmlFor="staff-name">Name *</Label><Input id="staff-name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Full name" /></div>
+            <div><Label htmlFor="staff-role">Role *</Label><Input id="staff-role" value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))} placeholder="e.g. Office Manager" /></div>
+            <div><Label htmlFor="staff-category">Category</Label>
               <Select value={form.category} onValueChange={(v) => setForm(f => ({ ...f, category: v as Category }))}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger id="staff-category" aria-label="Staff category"><SelectValue /></SelectTrigger>
                 <SelectContent>{CATEGORIES.map(c => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}</SelectContent>
               </Select>
             </div>
-            <div><Label>Phone</Label><Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="(914) 273-9724" /></div>
-            <div><Label>Email</Label><Input value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} placeholder="name@stpatrickinarmonk.org" /></div>
-            <div><Label>Sort Order</Label><Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} /></div>
+            <div><Label htmlFor="staff-phone">Phone</Label><Input id="staff-phone" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="(914) 273-9724" /></div>
+            <div><Label htmlFor="staff-email">Email</Label><Input id="staff-email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} placeholder="name@stpatrickinarmonk.org" /></div>
+            <div><Label htmlFor="staff-sort">Sort Order</Label><Input id="staff-sort" type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} /></div>
             <div className="flex justify-end gap-2 pt-2">
               <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
               <Button onClick={handleSave} disabled={upsert.isPending}>{form.id ? "Update" : "Add"}</Button>

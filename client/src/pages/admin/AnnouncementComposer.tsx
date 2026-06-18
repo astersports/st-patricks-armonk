@@ -190,7 +190,7 @@ export function AnnouncementComposer() {
                   onCheckedChange={(v) => setChannels((c) => ({ ...c, push: !!v }))}
                 />
                 <Bell className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm">Push Notification</span>
+                <span className="text-sm">Push — all subscribers</span>
               </label>
               <label className="flex items-center gap-2 p-3 rounded-lg border cursor-pointer hover:bg-muted/50 transition-colors">
                 <Checkbox

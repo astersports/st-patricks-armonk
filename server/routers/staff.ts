@@ -1,7 +1,7 @@
 /**
  * Staff Router — public list + admin CRUD for staff directory.
  */
-import { publicProcedure, protectedProcedure, router, z } from "./_helpers";
+import { publicProcedure, protectedProcedure, adminProcedure, router, z } from "./_helpers";
 import { getDb } from "../db/_connection";
 import { staffMembers } from "../../drizzle/schema";
 import { eq, asc } from "drizzle-orm";
@@ -15,7 +15,7 @@ export const staffRouter = router({
   }),
 
   /** Admin: upsert a staff member */
-  upsert: protectedProcedure
+  upsert: adminProcedure
     .input(z.object({
       id: z.number().optional(),
       name: z.string().min(1).max(300),
@@ -52,7 +52,7 @@ export const staffRouter = router({
     }),
 
   /** Admin: delete a staff member */
-  delete: protectedProcedure
+  delete: adminProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       const db = await getDb();
