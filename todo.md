@@ -1164,3 +1164,4 @@
 
 ### HOMEPAGE-HERO-RESIZE
 - [x] Reduce hero image/section height on homepage (380/420/460px from 520/560/600px)
+- [x] Remove "Good Afternoon · Armonk, New York" greeting line from hero for more space

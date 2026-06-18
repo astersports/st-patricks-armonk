@@ -8,12 +8,9 @@ import { useState, useEffect } from "react";
 import { useParishSchedule, getNextService } from "@/hooks/useParishSchedule";
 import { downloadMassICS } from "@/lib/icsGenerator";
 
-const TIMEZONE = "America/New_York";
-
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export function HeroSection() {
-  const [timeGreeting, setTimeGreeting] = useState("");
   const [weatherOpen, setWeatherOpen] = useState(false);
   const [nextMassLabel, setNextMassLabel] = useState("");
   const [nextMassData, setNextMassData] = useState<{ name: string; day: string; time: string } | null>(null);
@@ -51,19 +48,6 @@ export function HeroSection() {
     refetchInterval: 30 * 60 * 1000, // refresh every 30 min
   });
 
-  useEffect(() => {
-    function getGreeting() {
-      const now = new Date();
-      const eastern = new Date(now.toLocaleString("en-US", { timeZone: TIMEZONE }));
-      const hour = eastern.getHours();
-      if (hour < 12) return "Good Morning";
-      if (hour < 17) return "Good Afternoon";
-      return "Good Evening";
-    }
-    setTimeGreeting(getGreeting());
-    const interval = setInterval(() => setTimeGreeting(getGreeting()), 60000);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <section className="relative w-full flex flex-col overflow-hidden" style={{ aspectRatio: '4 / 3', maxHeight: '75vh' }} aria-label="Parish welcome">
@@ -167,13 +151,6 @@ export function HeroSection() {
       {/* Content — left-aligned, bottom-anchored */}
       <div className="relative z-10 flex flex-col flex-1 justify-end pb-14 sm:pb-16 md:pb-20 px-5 sm:px-8 md:px-12 lg:px-20 max-w-[1400px] mx-auto w-full">
         <div className="max-w-3xl">
-          {/* Eyebrow — time greeting + current weather on mobile */}
-          <p
-            className="text-emerald-300 text-xs sm:text-sm font-medium tracking-[0.2em] uppercase mb-4 opacity-0 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
-            style={{ animation: 'fadeSlideUp 0.6s ease 0.1s forwards' }}
-          >
-            {timeGreeting || "Welcome"} · Armonk, New York
-          </p>
 
           {/* Primary heading — Fraunces with gold accent */}
           <h1
