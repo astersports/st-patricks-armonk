@@ -66,7 +66,7 @@ export function HeroSection() {
   }, []);
 
   return (
-    <section className="relative min-h-[520px] sm:min-h-[560px] md:min-h-[600px] flex flex-col overflow-hidden" aria-label="Parish welcome">
+    <section className="relative min-h-[380px] sm:min-h-[420px] md:min-h-[460px] flex flex-col overflow-hidden" aria-label="Parish welcome">
       {/* Ken Burns background */}
       <div className="absolute inset-0 will-change-transform">
         <img

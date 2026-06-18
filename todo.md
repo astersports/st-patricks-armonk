@@ -1161,3 +1161,6 @@
 - [x] HD-5: HolyDayAlert now fetches from DB first, falls back to static schedule engine
 - [x] HD-6: Integrated DB holy days into AI assistant context (parishAssistant.ts)
 - [x] HD-7: Tests green (99/99) + 0 TS errors
+
+### HOMEPAGE-HERO-RESIZE
+- [x] Reduce hero image/section height on homepage (380/420/460px from 520/560/600px)
