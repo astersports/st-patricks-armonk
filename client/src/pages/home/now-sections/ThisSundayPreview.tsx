@@ -6,6 +6,19 @@ import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { ArrowRight, Clock, Cross } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useParishSchedule, getServicesForDay } from "@/hooks/useParishSchedule";
+
+/** Derives Sunday Mass times from the schedule engine. */
+function SundayMassTimesLabel() {
+  const { schedule } = useParishSchedule();
+  const month = new Date().getMonth() + 1;
+  if (!schedule) return <span>Sunday Masses</span>;
+  const sunMasses = getServicesForDay(schedule, 0, month).filter(s => s.type === "mass");
+  if (sunMasses.length === 0) return <span>Sunday Masses</span>;
+  const times = sunMasses.map(s => s.time);
+  const label = times.length === 1 ? `Mass at ${times[0]}` : `Masses at ${times.slice(0, -1).join(", ")} & ${times[times.length - 1]}`;
+  return <span>{label}</span>;
+}
 
 export function ThisSundayPreview() {
   const { data: sundayData, isLoading } = trpc.dailyReadings.nextSunday.useQuery(undefined, {
@@ -57,7 +70,7 @@ export function ThisSundayPreview() {
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Clock className="w-3.5 h-3.5" />
-              <span>Masses at 8:30 AM, 10:30 AM & 12:30 PM</span>
+              <SundayMassTimesLabel />
               <ArrowRight className="w-3.5 h-3.5 ml-auto text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
           </div>

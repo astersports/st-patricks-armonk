@@ -1,16 +1,39 @@
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { ArrowRight, Wind, Droplets, Thermometer, Sunrise, Sunset } from "lucide-react";
+import { ArrowRight, Wind, Droplets, Thermometer, Sunrise, Sunset, Clock } from "lucide-react";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { ColorfulWeatherIcon } from "@/components/WeatherIcons";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import { useParishSchedule, getNextService } from "@/hooks/useParishSchedule";
 
 const TIMEZONE = "America/New_York";
+
+const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export function HeroSection() {
   const [timeGreeting, setTimeGreeting] = useState("");
   const [weatherOpen, setWeatherOpen] = useState(false);
+  const [nextMassLabel, setNextMassLabel] = useState("");
+  const { schedule } = useParishSchedule();
+
+  // Update Next Mass countdown every minute
+  useEffect(() => {
+    if (!schedule) return;
+    function update() {
+      const now = new Date();
+      const next = getNextService(schedule!, now);
+      if (!next) { setNextMassLabel(""); return; }
+      const { service, daysAhead, countdown } = next;
+      const dayName = daysAhead === 0 ? "Today" : daysAhead === 1 ? "Tomorrow" : DAY_NAMES[(new Date().getDay() + daysAhead) % 7];
+      const parts = ["Next:", service.name, "\u00B7", dayName, service.time];
+      if (countdown) parts.push("\u00B7", countdown);
+      setNextMassLabel(parts.join(" "));
+    }
+    update();
+    const interval = setInterval(update, 60000);
+    return () => clearInterval(interval);
+  }, [schedule]);
 
   // Close popover on scroll so it doesn't drag through the page
   useEffect(() => {
@@ -179,11 +202,22 @@ export function HeroSection() {
 
           {/* Address */}
           <p
-            className="text-white/90 text-xs sm:text-sm font-medium tracking-wide mb-8 opacity-0 [text-shadow:_0_1px_4px_rgba(0,0,0,0.7),_0_2px_8px_rgba(0,0,0,0.4)]"
+            className="text-white/90 text-xs sm:text-sm font-medium tracking-wide mb-3 opacity-0 [text-shadow:_0_1px_4px_rgba(0,0,0,0.7),_0_2px_8px_rgba(0,0,0,0.4)]"
             style={{ animation: 'fadeSlideUp 0.7s ease 0.35s forwards' }}
           >
             29 Cox Avenue, Armonk, NY 10504
           </p>
+
+          {/* Next Mass countdown */}
+          {nextMassLabel && (
+            <p
+              className="flex items-center gap-2 text-emerald-200 text-xs sm:text-sm font-medium mb-6 opacity-0 [text-shadow:_0_1px_4px_rgba(0,0,0,0.7)]"
+              style={{ animation: 'fadeSlideUp 0.7s ease 0.38s forwards' }}
+            >
+              <Clock className="w-3.5 h-3.5" />
+              {nextMassLabel}
+            </p>
+          )}
 
           {/* CTA Group */}
           <div

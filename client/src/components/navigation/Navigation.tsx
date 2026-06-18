@@ -4,7 +4,7 @@
 
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, Church, ArrowRight } from "lucide-react";
+import { Menu, X, Church, ArrowRight, Heart } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
@@ -44,30 +44,30 @@ export default function Navigation() {
             : "bg-white/80 backdrop-blur-sm"
         }`}
       >
-        {/* Top Bar with YouTube Live Stream + Announcement */}
-        <div className="bg-primary text-white py-2 overflow-hidden relative">
+        {/* Top Bar — slim single bar (≤36px) with Watch Live + Marquee */}
+        <div className="bg-primary text-white h-9 flex items-center overflow-hidden relative">
           <div className="announcement-marquee flex whitespace-nowrap">
             {[0, 1].map((i) => (
-              <div key={i} className="flex items-center gap-12 px-8 shrink-0 announcement-marquee-content">
+              <div key={i} className="flex items-center gap-8 px-6 shrink-0 announcement-marquee-content">
                 <a
                   href="https://youtube.com/@stpatricksarmonk?si=Nf71id_fwNyCT_Ob"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium hover:underline transition-all"
+                  className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-medium hover:underline transition-all"
                 >
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                   <span>Watch Live Mass</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-3 h-3" />
                 </a>
-                <span className="text-white/40">•</span>
+                <span className="text-white/30">•</span>
                 <Link
                   href="/parish-registration"
-                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium hover:underline transition-all"
+                  className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-medium hover:underline transition-all"
                 >
                   <span>{marqueeText}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-3 h-3" />
                 </Link>
-                <span className="text-white/40">•</span>
+                <span className="text-white/30">•</span>
               </div>
             ))}
           </div>
@@ -128,6 +128,15 @@ export default function Navigation() {
               </Link>
             )}
           </div>
+
+          {/* Give button — persistent gold, visible on all viewports */}
+          <Link
+            href="/giving"
+            className="ml-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-[oklch(0.75_0.15_85)] text-white hover:bg-[oklch(0.70_0.15_85)] transition-all duration-150 press-scale shadow-sm flex items-center gap-1"
+          >
+            <Heart className="w-3.5 h-3.5" fill="currentColor" />
+            Give
+          </Link>
 
           {/* Mobile Toggle */}
           <Button

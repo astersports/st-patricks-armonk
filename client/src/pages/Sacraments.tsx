@@ -56,7 +56,7 @@ const sacraments = [
     content: (
       <>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          Baptism is the first sacrament of initiation into the Catholic Church. Through Baptism, we are freed from sin and reborn as children of God. At St. Patrick in Armonk, we celebrate Baptisms on select Sundays after the 12:30 PM Mass.
+          Baptism is the first sacrament of initiation into the Catholic Church. Through Baptism, we are freed from sin and reborn as children of God. At St. Patrick in Armonk, Baptisms are celebrated on select Sundays after the late Sunday Mass.
         </p>
         <h4 className="font-semibold text-foreground mb-2">Requirements</h4>
         <ul className="space-y-1.5 text-sm text-muted-foreground mb-4 ml-4">

@@ -31,7 +31,7 @@ export default function Prayers() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#1a1208] via-[#2a1f0e] to-[#1a1208]">
+    <div className="min-h-screen section-candlelight">
       <SEO
         title="Prayer Wall"
         path="/prayers"

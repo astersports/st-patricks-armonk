@@ -60,7 +60,7 @@ export function SchedulingCard({ form, updateField }: CardProps) {
     <Card>
       <CardHeader>
         <CardTitle className="text-green-900">Scheduling Preferences</CardTitle>
-        <CardDescription>Baptisms are typically celebrated on select Sundays after the 12:30 PM Mass</CardDescription>
+        <CardDescription>Baptisms are typically celebrated on select Sundays after the late Sunday Mass</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">

@@ -1,13 +1,14 @@
-import { Link, useLocation } from "wouter";
-import { Home, Clock, Heart, Flame, Menu } from "lucide-react";
+import { useLocation } from "wouter";
+import { Home, Clock, Flame, Menu, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { MobileMenu } from "./navigation/MobileMenu";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { openParishAssistant } from "./ParishAssistant";
 
 const tabs = [
   { href: "/", label: "Home", icon: Home },
   { href: "/mass-times", label: "Mass", icon: Clock },
-  { href: "/giving", label: "Give", icon: Heart },
+  { href: "__ask__", label: "Ask", icon: Sparkles, center: true },
   { href: "/prayers", label: "Prayers", icon: Flame },
   { href: "__menu__", label: "Menu", icon: Menu },
 ];
@@ -23,8 +24,31 @@ export default function MobileBottomNav() {
         <div className="flex items-center justify-around h-16 max-w-lg mx-auto px-2">
           {tabs.map((tab) => {
             const isMenu = tab.href === "__menu__";
+            const isAsk = tab.href === "__ask__";
             const isHome = tab.href === "/";
-            const isActive = isMenu ? menuOpen : (isHome ? location === "/" : location.startsWith(tab.href));
+            const isActive = isMenu ? menuOpen : (!isAsk && (isHome ? location === "/" : location.startsWith(tab.href)));
+
+            // Raised center "Ask" button
+            if (tab.center) {
+              return (
+                <button
+                  key={tab.href}
+                  onClick={() => {
+                    setMenuOpen(false);
+                    openParishAssistant();
+                  }}
+                  className="relative flex flex-col items-center justify-center gap-[2px] min-w-[44px]"
+                  aria-label="Ask the Parish Assistant"
+                >
+                  <span className="flex items-center justify-center w-12 h-12 -translate-y-2 rounded-full bg-primary text-primary-foreground shadow-lg transition-transform duration-200 active:scale-[0.92]">
+                    <Sparkles className="w-5 h-5" strokeWidth={2} />
+                  </span>
+                  <span className="text-[10px] font-bold text-primary -mt-1 tracking-tight">
+                    Ask
+                  </span>
+                </button>
+              );
+            }
 
             return (
               <button

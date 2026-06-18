@@ -46,6 +46,11 @@ export default function Home() {
         <section className="reveal container py-8 sm:py-12 mb-4 sm:mb-6">
           <div className="max-w-2xl mx-auto text-center">
             <div className="w-10 h-0.5 bg-gold mx-auto mb-5" />
+            <img
+              src="/manus-storage/fr-thadeus-pastor_3ad472bc.jpg"
+              alt="Fr. Thadeus Aravindathu"
+              className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover mx-auto mb-5 border-2 border-gold/30 shadow-md"
+            />
             <blockquote className="font-serif text-lg sm:text-xl md:text-2xl text-foreground/90 italic leading-relaxed">
               "Whether you are a lifelong parishioner or visiting for the first time, you are welcome here. St. Patrick in Armonk is a place where faith grows, friendships form, and everyone belongs."
             </blockquote>

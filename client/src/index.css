@@ -385,6 +385,15 @@
   color: oklch(0.95 0 0);
 }
 
+/* Candlelight surface — the ONE reverent dark surface for the Prayer Wall.
+   On-system warm near-black; the existing gold accent is the flame. */
+.section-candlelight {
+  background:
+    radial-gradient(120% 80% at 50% 0%, oklch(0.26 0.04 70) 0%, oklch(0.18 0.03 70) 60%, oklch(0.15 0.02 70) 100%);
+  color: oklch(0.95 0.02 79);
+}
+.section-candlelight .text-candle-muted { color: oklch(0.80 0.04 79); }
+
 /* Ken Burns hero background */
 .hero-ken-burns {
   animation: kenBurns 20s ease-in-out infinite alternate;

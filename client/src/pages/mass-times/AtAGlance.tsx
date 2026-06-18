@@ -120,7 +120,7 @@ export function AtAGlance() {
           </table>
           {seasonalNote && (
             <div className="px-4 py-2.5 bg-muted/20 border-t border-border/40">
-              <p className="text-xs text-muted-foreground">*12:30 PM Mass: {seasonalNote}. Holy Days announced in bulletin.</p>
+              <p className="text-xs text-muted-foreground">*{sunMasses.find(m => m.seasonal)?.time || "12:30 PM"} Mass: {seasonalNote}. Holy Days announced in bulletin.</p>
             </div>
           )}
         </CardContent>

@@ -957,3 +957,44 @@
 - [x] Severe-weather → closure pipeline (admin one-tap → banner + VAPID push)
 - [x] .ics "Add to Calendar" button on individual events (not full calendar subscription)
 - [x] Guided sacrament prep flows (eligibility → date → submit)
+
+### PART A — P0 DEFECT FIXES (Build Punchlist)
+- [x] A1. Prayer Wall candlelight token — replace raw hex gradients with .section-candlelight class
+- [x] A2. Two hardcoded Mass-time duplicates in ThisWeekAccordion "At a Glance" and ThisSundayPreview
+- [x] A3. Dead code removal — delete Volunteer.tsx, VolunteerNeeds.tsx, MyParish.tsx + lazy exports
+- [x] A4. Sacrament prose hardcodes "12:30 PM Mass" — source from schedule engine
+- [x] A5. Add regression guard tests (schedule-literal guard, SEO matches schedule, structured-data matches)
+- [x] A6. AI Parish Assistant unreachable on mobile — restore as raised center "Ask" tab in bottom nav
+- [x] A7. Footer too tall on mobile — compact it (hide 8-link grid, slim padding, ≤300px)
+- [x] A8. Verify floating UI clear of bottom nav (scroll-to-top vs Ask tab)
+- [x] A9. Homepage polish (Next Mass hero line, pastor photo, slim top chrome)
+
+### PART B — Admin Schedule Editor
+- [ ] B1. Admin ScheduleManager.tsx — edit Mass/Confession/Prayer times with no deploy
+- [ ] B2. Admin ParishInfo editor — address, phone, office hours, pastor, URLs
+- [ ] B3. Holy Days editor with Mass times
+- [ ] B4. Live preview using same useParishSchedule consumers
+
+### PART C — Parishioner Experience
+- [ ] C1. Mass Intentions request (online form + admin queue + email confirmation)
+- [ ] C2. Watch Mass / livestream surface with schedule-aware "Watch Live" chip
+- [ ] C3. One-tap Add to Calendar on Mass Times rows + hero Next Mass
+- [ ] C4. Weather everywhere — refactor WeatherBadge to use tokens, apply consistently
+- [ ] C5. Frictionless giving page (one-time + recurring, suggested amounts)
+- [ ] C6. Spanish (i18n) toggle for key pages
+- [ ] C7. PWA + push opt-in categories (Mass reminders, bulletin published, closures)
+
+### PART D — Staff Experience
+- [ ] D1. "Needs Attention" admin home with live counts + deep links
+- [ ] D2. In-app announcement composer (generalize closure push)
+- [ ] D3. Unified form-submission triage inbox
+- [ ] D4. Ground AI Parish Assistant in single sources (live retrieval context)
+- [ ] D5. Weather-aware closure suggestion prompt
+- [ ] D6. Settings audit log
+
+### PART E — Global Polish
+- [ ] E1. Finish type scale — replace ad-hoc Tailwind size stacks with tokens
+- [ ] E2. All SEO/structured data generated from sources site-wide
+- [ ] E3. Accessibility pass (labels, focus rings, aria-live, 44px targets, prefers-reduced-motion)
+- [ ] E4. Empty/error/loading states with brand voice on all new surfaces
+- [ ] E5. Performance — lazy-loading, bundle budget, virtualize lists >30 rows

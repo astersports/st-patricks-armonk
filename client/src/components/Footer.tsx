@@ -44,10 +44,10 @@ export default function Footer() {
       />
 
       {/* Main Footer Content */}
-      <div className="container relative py-10 sm:py-12">
-        <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between md:gap-10">
-          {/* Left: Church identity */}
-          <div className="space-y-3 max-w-xs">
+      <div className="container relative py-6 sm:py-12">
+        <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between md:gap-10">
+          {/* Left: Church identity — compact on mobile */}
+          <div className="space-y-2 sm:space-y-3 max-w-xs">
             <h3
               className="text-gold leading-tight"
               style={{
@@ -61,22 +61,34 @@ export default function Footer() {
             </h3>
             <div className="flex flex-col gap-1.5 text-sm text-white/60" itemScope itemType="https://schema.org/CatholicChurch">
               <meta itemProp="name" content="St. Patrick Church" />
-              <span className="flex items-center gap-2" itemProp="address" itemScope itemType="https://schema.org/PostalAddress">
-                <MapPin className="w-3.5 h-3.5 text-gold/50 shrink-0" />
-                <span><span itemProp="streetAddress">29 Cox Ave</span>, <span itemProp="addressLocality">Armonk</span> <span itemProp="addressRegion">NY</span> <span itemProp="postalCode">10504</span></span>
-              </span>
-              <a href="tel:9142739724" className="flex items-center gap-2 hover:text-gold transition-colors" itemProp="telephone">
-                <Phone className="w-3.5 h-3.5 text-gold/50 shrink-0" />
-                (914) 273-9724
-              </a>
+              {/* Mobile: single row with call + directions */}
+              <div className="flex items-center gap-3 sm:flex-col sm:items-start sm:gap-1.5">
+                <a href="tel:9142739724" className="flex items-center gap-1.5 hover:text-gold transition-colors" itemProp="telephone">
+                  <Phone className="w-3.5 h-3.5 text-gold/50 shrink-0" />
+                  <span className="text-sm">(914) 273-9724</span>
+                </a>
+                <a
+                  href="https://maps.google.com/?q=29+Cox+Ave+Armonk+NY+10504"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 hover:text-gold transition-colors"
+                  itemProp="address"
+                  itemScope
+                  itemType="https://schema.org/PostalAddress"
+                >
+                  <MapPin className="w-3.5 h-3.5 text-gold/50 shrink-0" />
+                  <span className="text-sm"><span itemProp="streetAddress">29 Cox Ave</span>, <span itemProp="addressLocality">Armonk</span> <span itemProp="addressRegion">NY</span></span>
+                </a>
+              </div>
             </div>
-            <p className="text-xs text-white/35 leading-relaxed pt-1">
+            {/* Tagline — desktop only */}
+            <p className="hidden sm:block text-xs text-white/35 leading-relaxed pt-1">
               A welcoming Catholic community in northern Westchester County, serving families since 1924.
             </p>
           </div>
 
-          {/* Center: Quick links - two columns */}
-          <nav className="grid grid-cols-2 gap-x-10 gap-y-2.5">
+          {/* Center: Quick links - hidden on mobile (bottom nav + Menu cover it) */}
+          <nav className="hidden sm:grid grid-cols-2 gap-x-10 gap-y-2.5">
             <Link href="/mass-times" className="text-sm text-white/60 hover:text-gold transition-colors duration-200">Mass Times</Link>
             <Link href="/giving" className="text-sm text-white/60 hover:text-gold transition-colors duration-200">Giving</Link>
             <Link href="/news" className="text-sm text-white/60 hover:text-gold transition-colors duration-200">News</Link>
@@ -88,7 +100,7 @@ export default function Footer() {
           </nav>
 
           {/* Right: Stay connected */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2 sm:gap-3">
             <p className="text-[10px] uppercase tracking-[0.15em] text-white/40 font-semibold">Stay Connected</p>
             <div className="flex items-center gap-2.5 flex-wrap">
               <a
@@ -118,16 +130,16 @@ export default function Footer() {
       {/* Staff Access Bar */}
       <StaffAccessBar />
 
-      {/* Bottom Bar */}
+      {/* Bottom Bar — slim on mobile */}
       <div className="border-t border-white/[0.06]">
-        <div className="container py-3 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-[11px] text-white/35">
-            © {new Date().getFullYear()} St. Patrick in Armonk · <a href="https://archny.org" target="_blank" rel="noopener noreferrer" className="hover:text-gold/60 transition-colors">Archdiocese of New York</a> · <a href="https://www.ecatholic.com" target="_blank" rel="noopener noreferrer" className="hover:text-gold/60 transition-colors">eCatholic</a> · <a href="https://www.vatican.va" target="_blank" rel="noopener noreferrer" className="hover:text-gold/60 transition-colors">Vatican</a>
+        <div className="container py-2.5 sm:py-3 flex flex-col sm:flex-row items-center justify-between gap-1.5 sm:gap-2">
+          <p className="text-[10px] sm:text-[11px] text-white/35 text-center sm:text-left">
+            © {new Date().getFullYear()} St. Patrick in Armonk · <a href="https://archny.org" target="_blank" rel="noopener noreferrer" className="hover:text-gold/60 transition-colors">Archdiocese of NY</a> · <a href="https://www.ecatholic.com" target="_blank" rel="noopener noreferrer" className="hover:text-gold/60 transition-colors">eCatholic</a> · <a href="https://www.vatican.va" target="_blank" rel="noopener noreferrer" className="hover:text-gold/60 transition-colors">Vatican</a>
           </p>
           <a href="https://www.astersports.io" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:opacity-80 transition-opacity">
-            <span className="text-[11px] text-white/35">powered by</span>
+            <span className="text-[10px] sm:text-[11px] text-white/35">powered by</span>
             <img src="/manus-storage/aster_logo_clean_854bf8b0.png" alt="Aster Sports" className="h-3.5 w-3.5 object-contain opacity-50" />
-            <span className="text-[11px] font-medium text-white/45">Aster Sports</span>
+            <span className="text-[10px] sm:text-[11px] font-medium text-white/45">Aster Sports</span>
           </a>
         </div>
       </div>

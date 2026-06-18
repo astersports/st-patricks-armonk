@@ -19,6 +19,7 @@ export interface SacramentPolicy {
     value: string;
   };
   notes?: string;
+  scheduleMassRef?: { dayOfWeek: number; position: "first" | "last" };
 }
 
 export const DEFAULT_SACRAMENT_POLICIES: SacramentPolicy[] = [
@@ -36,7 +37,8 @@ export const DEFAULT_SACRAMENT_POLICIES: SacramentPolicy[] = [
       "Attend Baptism preparation class",
       "Provide godparent sponsor certificate",
     ],
-    scheduling: "Baptisms are celebrated on select Sundays after the 12:30 PM Mass, or by special arrangement.",
+    scheduling: "Baptisms are celebrated on select Sundays after the late Sunday Mass, or by special arrangement.",
+    scheduleMassRef: { dayOfWeek: 0, position: "last" }, // references last Sunday Mass from schedule engine
     contact: {
       method: "phone",
       label: "Parish Office",

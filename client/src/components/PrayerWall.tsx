@@ -141,7 +141,7 @@ export function PrayerWall() {
   return (
     <div className="relative py-10 px-4 overflow-hidden">
       {/* Dark immersive background with subtle texture */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#1a0f05] via-[#1c1208] to-[#0f0a04]" />
+      <div className="absolute inset-0 section-candlelight" />
       {/* Radial warm glow behind candle */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl" />
 
