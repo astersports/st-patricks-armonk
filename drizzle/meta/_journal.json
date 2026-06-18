@@ -190,6 +190,13 @@
       "when": 1781782873694,
       "tag": "0026_wise_wild_pack",
       "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "5",
+      "when": 1781810144559,
+      "tag": "0027_clean_toxin",
+      "breakpoints": true
     }
   ]
 }

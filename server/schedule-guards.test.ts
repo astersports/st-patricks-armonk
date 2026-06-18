@@ -45,6 +45,7 @@ const ALLOWED_FILES = [
   "Staff",           // office hours display
   "Ministries",      // devotion/meeting times (not Mass)
   "SacramentProgress", // step description
+  "HolyDaysManager",   // admin default mass times for new holy day entries
 ];
 
 // ─── Test 1: Schedule-literal guard ─────────────────────────────────────────

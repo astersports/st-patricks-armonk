@@ -1152,3 +1152,12 @@
 - [x] SC-7: Updated all Holy Day defaults to ["8:30 AM", "12:10 PM", "7:30 PM"]
 - [x] SC-8: Updated all downstream: scheduleData.ts, AtAGlance.tsx, parishAssistant.ts
 - [x] SC-9: Tests green (91/91) + 0 TS errors
+
+### HOLY-DAY-CALENDAR
+- [x] HD-1: Created holy_days DB table (id, name, date, massTimes JSON, category enum, notes, createdAt)
+- [x] HD-2: Added DB helpers (getUpcomingHolyDays, getAllHolyDays, upsertHolyDay, deleteHolyDay)
+- [x] HD-3: Added tRPC endpoints (holyDays.upcoming, holyDays.listAll, holyDays.upsert, holyDays.delete)
+- [x] HD-4: Built admin Holy Days Manager (card list, add/edit dialog, delete confirm, category filter badges)
+- [x] HD-5: HolyDayAlert now fetches from DB first, falls back to static schedule engine
+- [x] HD-6: Integrated DB holy days into AI assistant context (parishAssistant.ts)
+- [x] HD-7: Tests green (99/99) + 0 TS errors

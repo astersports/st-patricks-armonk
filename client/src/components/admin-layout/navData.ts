@@ -1,6 +1,6 @@
 import type { AdminSection } from "@shared/roles";
 import {
-  Home, Newspaper, FileText, Calendar, Inbox, Clock,
+  Home, Newspaper, FileText, Calendar, Inbox, Clock, Star,
   Users, Camera, Heart, BookOpen, GraduationCap, Cross,
   UserPlus, Settings, Download, MessageCircle, AlertTriangle, Megaphone, ClipboardList,
 } from "lucide-react";
@@ -72,6 +72,7 @@ export const navGroups: NavGroup[] = [
     items: [
       { label: "Sacrament Requests", section: "sacraments", icon: Cross, path: "/sacraments" },
       { label: "Mass Intentions", section: "sacraments", icon: Heart, path: "/mass-intentions" },
+      { label: "Holy Days", section: "sacraments", icon: Star, path: "/holy-days" },
     ],
   },
   {

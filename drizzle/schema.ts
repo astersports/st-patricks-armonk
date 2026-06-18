@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean } from "drizzle-orm/mysql-core";
+import { int, json, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -718,3 +718,17 @@ export const staffMembers = mysqlTable("staff_members", {
 });
 export type StaffMemberRow = typeof staffMembers.$inferSelect;
 export type InsertStaffMember = typeof staffMembers.$inferInsert;
+
+// Holy Days of Obligation & Special Mass Times
+export const holyDays = mysqlTable("holy_days", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 300 }).notNull(),
+  date: varchar("date", { length: 10 }).notNull(), // YYYY-MM-DD
+  massTimes: json("mass_times").$type<string[]>().notNull(), // ["8:30 AM", "12:10 PM", "7:30 PM"]
+  category: mysqlEnum("category", ["holy_day", "special_mass", "seasonal", "parish_feast", "triduum", "other"]).default("holy_day").notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type HolyDayRow = typeof holyDays.$inferSelect;
+export type InsertHolyDay = typeof holyDays.$inferInsert;

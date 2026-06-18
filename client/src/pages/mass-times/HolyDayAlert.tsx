@@ -1,12 +1,38 @@
 /**
- * Holy Day Alert — Shows upcoming Holy Days of Obligation within 7 days.
+ * Holy Day Alert — Shows upcoming Holy Days from the database (admin-managed).
+ * Falls back to schedule engine defaults if no DB entries exist.
  */
 
 import { useMemo } from "react";
-import { getUpcomingHolyDays } from "./scheduleData";
+import { trpc } from "@/lib/trpc";
+import { getUpcomingHolyDays as getStaticHolyDays } from "./scheduleData";
 
 export function HolyDayAlert() {
-  const upcomingHolyDays = useMemo(() => getUpcomingHolyDays(), []);
+  const { data: dbHolyDays } = trpc.holyDays.upcoming.useQuery({ limit: 5 });
+
+  // Use DB holy days if available, otherwise fall back to static schedule engine
+  const upcomingHolyDays = useMemo(() => {
+    if (dbHolyDays && dbHolyDays.length > 0) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return dbHolyDays
+        .map(hd => {
+          const [y, m, d] = hd.date.split("-").map(Number);
+          const date = new Date(y, m - 1, d);
+          const daysUntil = Math.round((date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+          return {
+            name: hd.name,
+            date,
+            massTimes: hd.massTimes as string[],
+            daysUntil,
+            category: hd.category,
+          };
+        })
+        .filter(hd => hd.daysUntil >= 0 && hd.daysUntil <= 14);
+    }
+    // Fallback to static schedule engine defaults (within 7 days)
+    return getStaticHolyDays().map(hd => ({ ...hd, category: "holy_day" }));
+  }, [dbHolyDays]);
 
   if (upcomingHolyDays.length === 0) return null;
 
@@ -21,7 +47,11 @@ export function HolyDayAlert() {
           </svg>
         </div>
         <div className="flex-1">
-          <p className="text-xs font-bold uppercase tracking-wider text-amber-700 mb-1">Holy Day of Obligation</p>
+          <p className="text-xs font-bold uppercase tracking-wider text-amber-700 mb-1">
+            {upcomingHolyDays.length === 1 && upcomingHolyDays[0].category === "holy_day"
+              ? "Holy Day of Obligation"
+              : "Upcoming Special Masses"}
+          </p>
           {upcomingHolyDays.map((hd, i) => (
             <div key={i} className={i > 0 ? "mt-2 pt-2 border-t border-amber-200/50" : ""}>
               <p className="font-semibold text-sm text-amber-900">{hd.name}</p>
@@ -31,7 +61,9 @@ export function HolyDayAlert() {
               </p>
             </div>
           ))}
-          <p className="text-xs text-amber-600 mt-2 italic">Catholics are obligated to attend Mass on this day.</p>
+          {upcomingHolyDays.some(hd => hd.category === "holy_day") && (
+            <p className="text-xs text-amber-600 mt-2 italic">Catholics are obligated to attend Mass on this day.</p>
+          )}
         </div>
       </div>
     </div>

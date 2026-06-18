@@ -63,3 +63,6 @@ export { createAuditLog, getAuditLogs } from "./auditLog";
 
 // Unified Sacrament Submissions
 export { getAllSacramentSubmissions } from "./sacramentSubmissions";
+
+// Holy Days
+export { getAllHolyDays, getUpcomingHolyDays, upsertHolyDay, deleteHolyDay } from "./holyDays";

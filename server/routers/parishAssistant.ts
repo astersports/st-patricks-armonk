@@ -221,6 +221,20 @@ export const parishAssistantRouter = router({
         dynamicContext += `\n\nLATEST BULLETIN: "${b.title}" published ${new Date(b.publishedAt!).toLocaleDateString("en-US", { month: "short", day: "numeric" })}. Available at /bulletins on the website.\n`;
       }
 
+      // Upcoming Holy Days (from admin-managed DB)
+      const upcomingHolyDays = await db.getUpcomingHolyDays(10);
+      if (upcomingHolyDays.length > 0) {
+        dynamicContext += "\n\nUPCOMING HOLY DAYS & SPECIAL MASSES:\n";
+        for (const hd of upcomingHolyDays) {
+          const [y, m, d] = hd.date.split("-").map(Number);
+          const dateStr = new Date(y, m - 1, d).toLocaleDateString("en-US", {
+            weekday: "short", month: "short", day: "numeric", year: "numeric",
+          });
+          const times = (hd.massTimes as string[]).join(", ");
+          dynamicContext += `- ${hd.name} (${hd.category}) — ${dateStr}, Mass at ${times}${hd.notes ? ` (${hd.notes})` : ""}\n`;
+        }
+      }
+
       // Active volunteer needs
       const volunteerNeeds = await db.getActiveVolunteerNeeds();
       if (volunteerNeeds.length > 0) {
