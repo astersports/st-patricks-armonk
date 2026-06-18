@@ -156,6 +156,34 @@ export const parishAssistantRouter = router({
           dynamicContext += `- ${n.title}: ${n.excerpt || n.content?.substring(0, 80) || ""}\n`;
         }
       }
+
+      // Closure alert status (live)
+      const closureRaw = await db.getSiteSetting("closure_alert");
+      if (closureRaw) {
+        try {
+          const closure = JSON.parse(closureRaw);
+          if (closure.active) {
+            dynamicContext += `\n\n⚠️ ACTIVE CLOSURE ALERT: ${closure.title} — ${closure.message}\n`;
+            dynamicContext += `(Activated ${new Date(closure.activatedAt).toLocaleString("en-US", { timeZone: "America/New_York" })})\n`;
+          }
+        } catch {}
+      }
+
+      // Latest bulletin
+      const bulletins = await db.getPublishedBulletins(1);
+      if (bulletins.length > 0) {
+        const b = bulletins[0];
+        dynamicContext += `\n\nLATEST BULLETIN: "${b.title}" published ${new Date(b.publishedAt!).toLocaleDateString("en-US", { month: "short", day: "numeric" })}. Available at /bulletins on the website.\n`;
+      }
+
+      // Active volunteer needs
+      const volunteerNeeds = await db.getActiveVolunteerNeeds();
+      if (volunteerNeeds.length > 0) {
+        dynamicContext += "\n\nCURRENT VOLUNTEER NEEDS:\n";
+        for (const v of volunteerNeeds.slice(0, 5)) {
+          dynamicContext += `- ${v.title}${v.urgency === "high" ? " (URGENT)" : ""}\n`;
+        }
+      }
     } catch (err) {
       console.error("[Parish Assistant] Context fetch error:", err);
     }

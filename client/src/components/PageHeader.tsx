@@ -30,41 +30,18 @@ export default function PageHeader({ eyebrow, title, description, children }: Pa
       />
       <div className="container relative">
         {/* Eyebrow */}
-        <p
-          className="text-[oklch(0.72_0.16_79)] font-semibold tracking-[0.15em] uppercase mb-3 opacity-0 animate-fade-in"
-          style={{
-            fontFamily: "'Inter', system-ui, sans-serif",
-            fontSize: "clamp(0.6875rem, 0.65rem + 0.19vw, 0.75rem)",
-          }}
-        >
+        <p className="text-gold font-semibold tracking-[0.15em] uppercase mb-3 opacity-0 animate-fade-in text-caption">
           {eyebrow}
         </p>
 
         {/* Main heading — Fraunces with optical sizing */}
-        <h1
-          className="text-foreground mb-3 opacity-0 animate-fade-in stagger-1"
-          style={{
-            fontFamily: "'Fraunces', Georgia, serif",
-            fontSize: "clamp(1.75rem, 3vw + 0.5rem, 2.75rem)",
-            fontOpticalSizing: "auto",
-            fontWeight: 600,
-            lineHeight: 1.15,
-            letterSpacing: "-0.02em",
-          }}
-        >
+        <h1 className="text-foreground font-serif font-semibold text-display-sm sm:text-display-lg mb-3 opacity-0 animate-fade-in stagger-1">
           {title}
         </h1>
 
         {/* Description */}
         {description && (
-          <p
-            className="text-muted-foreground max-w-xl opacity-0 animate-fade-up stagger-2"
-            style={{
-              fontFamily: "'Inter', system-ui, sans-serif",
-              fontSize: "clamp(0.9375rem, 0.89rem + 0.24vw, 1.0625rem)",
-              lineHeight: 1.6,
-            }}
-          >
+          <p className="text-muted-foreground max-w-xl opacity-0 animate-fade-up stagger-2 text-body leading-relaxed">
             {description}
           </p>
         )}

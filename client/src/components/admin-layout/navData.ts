@@ -2,7 +2,7 @@ import type { AdminSection } from "@shared/roles";
 import {
   Home, Newspaper, FileText, Calendar, Inbox, Clock,
   Users, Camera, Heart, BookOpen, GraduationCap, Cross,
-  UserPlus, Settings, Download, MessageCircle, AlertTriangle,
+  UserPlus, Settings, Download, MessageCircle, AlertTriangle, Megaphone, ClipboardList,
 } from "lucide-react";
 
 export type NavItem = {
@@ -31,6 +31,7 @@ export const navGroups: NavGroup[] = [
     section: "news",
     items: [
       { label: "News & Announcements", section: "news", icon: Newspaper, path: "/news" },
+      { label: "Push Announcements", section: "news", icon: Megaphone, path: "/announcements" },
       { label: "Weekly Bulletins", section: "bulletins", icon: BookOpen, path: "/bulletins" },
       { label: "Photo Gallery", section: "gallery", icon: Camera, path: "/gallery" },
       { label: "Subscribers", section: "subscribers", icon: Users, path: "/subscribers" },
@@ -83,6 +84,7 @@ export const navGroups: NavGroup[] = [
       { label: "FAQ Knowledge Base", section: "faq", icon: MessageCircle, path: "/faq" },
       { label: "Closure Alert", section: "settings", icon: AlertTriangle, path: "/closure" },
       { label: "Mass Schedule & Info", section: "settings", icon: Clock, path: "/schedule" },
+      { label: "Audit Log", section: "settings", icon: ClipboardList, path: "/audit-log" },
     ],
   },
 ];

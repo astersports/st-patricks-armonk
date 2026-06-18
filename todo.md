@@ -981,20 +981,20 @@
 - [x] C3. One-tap Add to Calendar on Mass Times rows + hero Next Mass
 - [x] C4. Weather everywhere — refactor WeatherBadge to use tokens, apply consistently
 - [x] C5. Frictionless giving page (one-time + recurring, suggested amounts)
-- [ ] C6. Spanish (i18n) toggle for key pages
-- [ ] C7. PWA + push opt-in categories (Mass reminders, bulletin published, closures)
+- [x] C6. Spanish (i18n) toggle for key pages
+- [x] C7. PWA + push opt-in categories (Mass reminders, bulletin published, closures)
 
 ### PART D — Staff Experience
 - [x] D1. "Needs Attention" admin home with live counts + deep links
-- [ ] D2. In-app announcement composer (generalize closure push)
-- [ ] D3. Unified form-submission triage inbox
-- [ ] D4. Ground AI Parish Assistant in single sources (live retrieval context)
-- [ ] D5. Weather-aware closure suggestion prompt
-- [ ] D6. Settings audit log
+- [x] D2. In-app announcement composer (generalize closure push)
+- [x] D3. Unified form-submission triage inbox (NeedsAttention page with bulk actions)
+- [x] D4. Ground AI Parish Assistant in single sources (live retrieval context)
+- [x] D5. Weather-aware closure suggestion prompt
+- [x] D6. Settings audit log
 
 ### PART E — Global Polish
-- [ ] E1. Finish type scale — replace ad-hoc Tailwind size stacks with tokens
-- [ ] E2. All SEO/structured data generated from sources site-wide
+- [x] E1. Finish type scale — replace ad-hoc Tailwind size stacks with tokens
+- [x] E2. All SEO/structured data generated from sources site-wide
 - [x] E3. Accessibility pass (labels, focus rings, aria-live, 44px targets, prefers-reduced-motion)
 - [x] E4. Empty/error/loading states with brand voice on all new surfaces
 - [x] E5. Performance — lazy-loading, bundle budget, virtualize lists >30 rows

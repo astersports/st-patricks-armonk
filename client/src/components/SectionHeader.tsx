@@ -28,21 +28,21 @@ export function SectionHeader({
     sm: {
       container: "w-7 h-7 rounded-lg",
       icon: "w-3.5 h-3.5",
-      title: "text-base sm:text-lg",
+      title: "text-h3",
       gap: "gap-2",
       mb: "mb-3",
     },
     md: {
       container: "w-8 h-8 rounded-lg",
       icon: "w-4 h-4",
-      title: "text-lg sm:text-xl",
+      title: "text-h2",
       gap: "gap-2.5",
       mb: "mb-4",
     },
     lg: {
       container: "w-9 h-9 rounded-lg",
       icon: "w-4.5 h-4.5",
-      title: "text-xl sm:text-2xl",
+      title: "text-h1",
       gap: "gap-3",
       mb: "mb-4",
     },
@@ -65,8 +65,7 @@ export function SectionHeader({
             </p>
           )}
           <h2
-            className={`font-serif ${config.title} font-bold text-foreground`}
-            style={{ letterSpacing: "-0.02em" }}
+            className={`font-serif ${config.title} font-bold text-foreground tracking-tight`}
           >
             {title}
           </h2>

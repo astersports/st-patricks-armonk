@@ -26,6 +26,7 @@ export const pushNotificationsRouter = router({
           p256dh: z.string(),
           auth: z.string(),
         }),
+        categories: z.string().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -38,6 +39,12 @@ export const pushNotificationsRouter = router({
         .where(eq(pushSubscriptions.endpoint, input.endpoint))
         .limit(1);
       if (existing) {
+        // Update categories if provided
+        if (input.categories) {
+          await db.update(pushSubscriptions)
+            .set({ categories: input.categories })
+            .where(eq(pushSubscriptions.endpoint, input.endpoint));
+        }
         return { success: true, message: "Already subscribed" };
       }
       await db.insert(pushSubscriptions).values({
@@ -45,8 +52,37 @@ export const pushNotificationsRouter = router({
         p256dh: input.keys.p256dh,
         auth: input.keys.auth,
         userId: ctx.user?.openId ?? null,
+        categories: input.categories || "mass_reminders,bulletin,closures,events,announcements",
       });
       return { success: true, message: "Subscribed to notifications" };
+    }),
+
+  /** Update notification categories for an existing subscription */
+  updateCategories: publicProcedure
+    .input(z.object({
+      endpoint: z.string().url(),
+      categories: z.string(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      await db.update(pushSubscriptions)
+        .set({ categories: input.categories })
+        .where(eq(pushSubscriptions.endpoint, input.endpoint));
+      return { success: true };
+    }),
+
+  /** Get categories for a subscription */
+  getCategories: publicProcedure
+    .input(z.object({ endpoint: z.string().url() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return { categories: "mass_reminders,bulletin,closures,events,announcements" };
+      const [sub] = await db.select({ categories: pushSubscriptions.categories })
+        .from(pushSubscriptions)
+        .where(eq(pushSubscriptions.endpoint, input.endpoint))
+        .limit(1);
+      return { categories: sub?.categories || "mass_reminders,bulletin,closures,events,announcements" };
     }),
 
   /** Unsubscribe from push notifications */
@@ -68,17 +104,37 @@ export const pushNotificationsRouter = router({
     const all = await db.select().from(pushSubscriptions);
     return { count: all.length };
   }),
+
+  /** Broadcast a custom announcement to all subscribers (admin only) */
+  broadcast: protectedProcedure
+    .input(
+      z.object({
+        title: z.string().min(1).max(100),
+        body: z.string().min(1).max(300),
+        url: z.string().optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const result = await sendPushToAll({
+        title: input.title,
+        body: input.body,
+        url: input.url || "/",
+        icon: "/favicon.ico",
+      });
+      return { sent: result.sent, failed: result.failed };
+    }),
 });
 
 /**
- * Send a push notification to all subscribers.
- * Called when a new bulletin is published.
+ * Send a push notification to subscribers.
+ * If category is specified, only sends to subscribers who opted into that category.
  */
 export async function sendPushToAll(payload: {
   title: string;
   body: string;
   url?: string;
   icon?: string;
+  category?: string;
 }) {
   if (!ENV.vapidPublicKey || !ENV.vapidPrivateKey) {
     console.warn("[Push] VAPID keys not configured, skipping push");
@@ -91,7 +147,15 @@ export async function sendPushToAll(payload: {
     return { sent: 0, failed: 0 };
   }
 
-  const subs = await db.select().from(pushSubscriptions);
+  let subs = await db.select().from(pushSubscriptions);
+
+  // Filter by category if specified
+  if (payload.category) {
+    subs = subs.filter(sub => {
+      const cats = (sub.categories || "").split(",").map(c => c.trim());
+      return cats.includes(payload.category!);
+    });
+  }
 
   let sent = 0;
   let failed = 0;

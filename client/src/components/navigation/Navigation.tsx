@@ -7,6 +7,7 @@ import { Link, useLocation } from "wouter";
 import { Menu, X, Church, ArrowRight, Heart } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { LanguageToggle } from "@/components/LanguageToggle";
 import { trpc } from "@/lib/trpc";
 import MobileBottomNav from "../MobileBottomNav";
 import { useParishSchedule } from "@/hooks/useParishSchedule";
@@ -168,6 +169,9 @@ export default function Navigation() {
               </Link>
             )}
           </div>
+
+          {/* Language toggle */}
+          <LanguageToggle />
 
           {/* Give button — persistent gold, visible on all viewports */}
           <Link

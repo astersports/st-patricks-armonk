@@ -9,6 +9,7 @@ import { adminProcedure } from "./_helpers";
 import * as db from "../db";
 import { sendPushToAll } from "./pushNotifications";
 import { notifyOwner } from "../_core/notification";
+import { createAuditLog } from "../db/auditLog";
 
 const CLOSURE_KEY = "closure_alert";
 
@@ -77,6 +78,14 @@ export const closureAlertRouter = router({
         content: `Type: ${input.type}\nMessage: ${input.message}\nPush sent to ${pushResult.sent} subscribers.`,
       });
 
+      // Audit log
+      await createAuditLog({
+        userId: ctx.user.openId,
+        userName: ctx.user.name || undefined,
+        action: "activate",
+        entityType: "closure_alert",
+        details: JSON.stringify({ type: input.type, title: input.title }),
+      });
       return { success: true, pushSent: pushResult.sent };
     }),
 
@@ -96,6 +105,14 @@ export const closureAlertRouter = router({
       content: `Previous alert "${previous.title}" has been cleared.`,
     });
 
+    // Audit log
+    await createAuditLog({
+      userId: ctx.user.openId,
+      userName: ctx.user.name || undefined,
+      action: "deactivate",
+      entityType: "closure_alert",
+      details: JSON.stringify({ previousTitle: previous.title }),
+    });
     return { success: true };
   }),
 });

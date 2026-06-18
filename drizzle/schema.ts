@@ -571,6 +571,8 @@ export const pushSubscriptions = mysqlTable("push_subscriptions", {
   p256dh: text("p256dh").notNull(),
   auth: text("auth").notNull(),
   userId: varchar("userId", { length: 255 }),
+  /** Comma-separated category list: mass_reminders,bulletin,closures,events,announcements */
+  categories: varchar("categories", { length: 500 }).default("mass_reminders,bulletin,closures,events,announcements"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 export type PushSubscriptionRow = typeof pushSubscriptions.$inferSelect;

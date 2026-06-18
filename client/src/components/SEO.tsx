@@ -145,3 +145,61 @@ function buildChurchStructuredData() {
 }
 
 export const CHURCH_STRUCTURED_DATA = buildChurchStructuredData();
+
+/**
+ * Generate Event structured data (Schema.org/Event) for individual events.
+ * Use on event detail pages for rich search results.
+ */
+export function buildEventStructuredData(event: {
+  title: string;
+  description?: string;
+  startDate: string | number;
+  endDate?: string | number;
+  location?: string;
+}) {
+  const info = DEFAULT_PARISH_INFO;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: event.title,
+    description: event.description || `${event.title} at St. Patrick Church, Armonk`,
+    startDate: new Date(event.startDate).toISOString(),
+    ...(event.endDate && { endDate: new Date(event.endDate).toISOString() }),
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    eventStatus: "https://schema.org/EventScheduled",
+    location: {
+      "@type": "Place",
+      name: event.location || info.name,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: info.address,
+        addressLocality: info.city,
+        addressRegion: info.state,
+        postalCode: info.zip,
+        addressCountry: "US",
+      },
+    },
+    organizer: {
+      "@type": "Organization",
+      name: info.name,
+      url: BASE_URL || "https://stpatsarmonk-24g7ux9f.manus.space",
+    },
+  };
+}
+
+/**
+ * Generate BreadcrumbList structured data for navigation.
+ * Helps search engines understand site hierarchy.
+ */
+export function buildBreadcrumbStructuredData(items: Array<{ name: string; path: string }>) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      item: `${BASE_URL || "https://stpatsarmonk-24g7ux9f.manus.space"}${item.path}`,
+    })),
+  };
+}

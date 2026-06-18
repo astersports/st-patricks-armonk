@@ -16,6 +16,8 @@ const NeedsAttention = lazy(() => import("./admin/NeedsAttention"));
 const ClosureManager = lazy(() => import("./admin/ClosureManager").then(m => ({ default: m.ClosureManager })));
 const ScheduleManager = lazy(() => import("./admin/ScheduleManager"));
 const MassIntentionsManager = lazy(() => import("./admin/MassIntentionsManager").then(m => ({ default: m.MassIntentionsManager })));
+const AnnouncementComposer = lazy(() => import("./admin/AnnouncementComposer"));
+const AuditLog = lazy(() => import("./admin/AuditLog"));
 
 // Legacy managers — lazy-loaded from individual files for proper code splitting
 const NewsManager = lazy(() => import("./admin/NewsManager").then(m => ({ default: m.NewsManager })));
@@ -71,6 +73,8 @@ export default function AdminRouter() {
           <Route path="/closure" component={() => <ClosureManager />} />
           <Route path="/schedule" component={() => <ScheduleManager />} />
           <Route path="/mass-intentions" component={() => <MassIntentionsManager />} />
+          <Route path="/announcements" component={() => <AnnouncementComposer />} />
+          <Route path="/audit-log" component={() => <AuditLog />} />
           {/* Fallback to dashboard */}
           <Route component={() => <DashboardHome />} />
         </Switch>

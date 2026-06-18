@@ -6,6 +6,7 @@ import { z } from "zod";
 import { router } from "../routers/_helpers";
 import { publicProcedure, staffProcedure } from "../routers/_helpers";
 import * as db from "../db";
+import { createAuditLog } from "../db/auditLog";
 import { DEFAULT_PARISH_SCHEDULE, DEFAULT_PARISH_INFO } from "../../shared/scheduleEngine";
 import type { ParishSchedule, ParishInfo } from "../../shared/scheduleEngine";
 
@@ -46,16 +47,30 @@ export const parishScheduleRouter = router({
   /** Admin: update the full schedule */
   updateSchedule: staffProcedure
     .input(z.object({ schedule: z.any() }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       await db.upsertSiteSetting(SCHEDULE_KEY, JSON.stringify(input.schedule));
+      await createAuditLog({
+        userId: ctx.user.openId,
+        userName: ctx.user.name || undefined,
+        action: "update",
+        entityType: "parish_schedule",
+        details: "Schedule updated",
+      });
       return { success: true };
     }),
 
   /** Admin: update parish info */
   updateInfo: staffProcedure
     .input(z.object({ info: z.any() }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       await db.upsertSiteSetting(INFO_KEY, JSON.stringify(input.info));
+      await createAuditLog({
+        userId: ctx.user.openId,
+        userName: ctx.user.name || undefined,
+        action: "update",
+        entityType: "parish_info",
+        details: "Parish info updated",
+      });
       return { success: true };
     }),
 });

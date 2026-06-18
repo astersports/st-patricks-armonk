@@ -2,14 +2,14 @@
  * ClosureManager — Admin one-tap severe weather / emergency closure panel.
  * Allows admin to activate/deactivate closure alerts with push notifications.
  */
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, CloudLightning, ShieldAlert, Info, Power, PowerOff } from "lucide-react";
+import { AlertTriangle, CloudLightning, ShieldAlert, Info, Power, PowerOff, CloudSnow, Thermometer } from "lucide-react";
 import { toast } from "sonner";
 
 const presets = [
@@ -40,6 +40,32 @@ export function ClosureManager() {
   const utils = trpc.useUtils();
   const { data: alert, isLoading } = trpc.closureAlert.get.useQuery();
   const { data: pushCount } = trpc.pushNotifications.getCount.useQuery();
+  const { data: forecast } = trpc.weather.daily.useQuery();
+
+  // Weather-aware closure suggestion
+  const weatherSuggestion = useMemo(() => {
+    if (!forecast || !Array.isArray(forecast)) return null;
+    // Check next 2 days for severe conditions
+    for (const day of forecast.slice(0, 2)) {
+      const code = day.weatherCode;
+      // WMO codes: 71-77 = snow, 85-86 = snow showers, 66-67 = freezing rain
+      // 95-99 = thunderstorm, 56-57 = freezing drizzle
+      const isSnow = code >= 71 && code <= 77 || code >= 85 && code <= 86;
+      const isFreezingRain = code >= 66 && code <= 67 || code >= 56 && code <= 57;
+      const isThunderstorm = code >= 95 && code <= 99;
+      const isExtremeCold = day.low <= 10; // 10°F or below
+      if (isSnow || isFreezingRain || isThunderstorm || isExtremeCold) {
+        const dateStr = new Date(day.date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+        let reason = "";
+        if (isSnow) reason = `Snow expected (${day.description})`;
+        else if (isFreezingRain) reason = `Freezing rain/drizzle expected`;
+        else if (isThunderstorm) reason = `Severe thunderstorm expected`;
+        else if (isExtremeCold) reason = `Extreme cold (low: ${day.low}°F)`;
+        return { date: dateStr, reason, high: day.high, low: day.low, precipChance: day.precipProbabilityMax };
+      }
+    }
+    return null;
+  }, [forecast]);
 
   const [type, setType] = useState<"weather" | "emergency" | "custom">("weather");
   const [title, setTitle] = useState("");
@@ -135,6 +161,42 @@ export function ClosureManager() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Weather Suggestion */}
+      {!alert?.active && weatherSuggestion && (
+        <Card className="border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-950/20">
+          <CardContent className="p-4">
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center shrink-0">
+                <CloudSnow className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-sm text-blue-900 dark:text-blue-100">Weather Advisory</p>
+                <p className="text-sm text-blue-700 dark:text-blue-300 mt-0.5">
+                  {weatherSuggestion.reason} on {weatherSuggestion.date}.
+                  {weatherSuggestion.precipChance > 60 && ` ${weatherSuggestion.precipChance}% precipitation chance.`}
+                </p>
+                <div className="flex items-center gap-3 mt-2 text-xs text-blue-600 dark:text-blue-400">
+                  <span className="flex items-center gap-1"><Thermometer className="w-3 h-3" />High {weatherSuggestion.high}° / Low {weatherSuggestion.low}°</span>
+                </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="mt-3 border-blue-300 text-blue-700 hover:bg-blue-100"
+                  onClick={() => {
+                    setType("weather");
+                    setTitle("Parish Closed — Severe Weather");
+                    setMessage(`All Masses and activities are cancelled on ${weatherSuggestion.date} due to ${weatherSuggestion.reason.toLowerCase()}. Stay safe.`);
+                    setConfirming(true);
+                  }}
+                >
+                  Consider Closure for {weatherSuggestion.date}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Quick Presets */}
       {!alert?.active && !confirming && (

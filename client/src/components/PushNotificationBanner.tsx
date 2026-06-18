@@ -3,9 +3,10 @@
  * Shows on the Bulletins page when the user hasn't subscribed yet.
  * ~65 lines
  */
-import { Bell, BellOff, Check, X } from "lucide-react";
+import { Bell, BellOff, Check, X, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
+import { NotificationPreferences } from "@/components/NotificationPreferences";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -14,6 +15,7 @@ export function PushNotificationBanner() {
   const [dismissed, setDismissed] = useState(() => {
     try { return sessionStorage.getItem("push-banner-dismissed") === "1"; } catch { return false; }
   });
+  const [showPrefs, setShowPrefs] = useState(false);
 
   // Don't show if unsupported, denied, or user dismissed this session
   if (!isSupported || state === "denied" || dismissed) return null;
@@ -21,17 +23,27 @@ export function PushNotificationBanner() {
   // Already subscribed — show a subtle confirmation
   if (isSubscribed) {
     return (
-      <div className="rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 px-3 py-2 flex items-center gap-2 text-xs">
-        <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-        <span className="text-emerald-800 dark:text-emerald-200 font-medium">
-          Push notifications enabled
-        </span>
-        <button
-          onClick={async () => { await unsubscribe(); toast.success("Notifications disabled"); }}
-          className="ml-auto text-emerald-600 hover:text-emerald-800 dark:hover:text-emerald-300 text-[10px] underline"
-        >
-          Turn off
-        </button>
+      <div className="space-y-3">
+        <div className="rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 px-3 py-2 flex items-center gap-2 text-xs">
+          <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+          <span className="text-emerald-800 dark:text-emerald-200 font-medium">
+            Push notifications enabled
+          </span>
+          <button
+            onClick={() => setShowPrefs(!showPrefs)}
+            className="ml-auto text-emerald-600 hover:text-emerald-800 dark:hover:text-emerald-300 text-[10px] underline flex items-center gap-1"
+          >
+            <Settings className="w-3 h-3" />
+            Preferences
+          </button>
+          <button
+            onClick={async () => { await unsubscribe(); toast.success("Notifications disabled"); }}
+            className="text-emerald-600 hover:text-emerald-800 dark:hover:text-emerald-300 text-[10px] underline"
+          >
+            Turn off
+          </button>
+        </div>
+        {showPrefs && <NotificationPreferences />}
       </div>
     );
   }

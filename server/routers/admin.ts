@@ -61,9 +61,23 @@ export const siteSettingsRouter = router({
   }),
   update: sectionProcedure("settings")
     .input(z.object({ key: z.string(), value: z.string() }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       await db.upsertSiteSetting(input.key, input.value);
+      // Audit log
+      await db.createAuditLog({
+        userId: ctx.user.openId,
+        userName: ctx.user.name || undefined,
+        action: "update",
+        entityType: "site_setting",
+        entityId: input.key,
+        details: JSON.stringify({ value: input.value.substring(0, 200) }),
+      });
       return { success: true };
+    }),
+  auditLog: staffProcedure
+    .input(z.object({ limit: z.number().min(1).max(100).optional(), entityType: z.string().optional() }).optional())
+    .query(async ({ input }) => {
+      return db.getAuditLogs({ limit: input?.limit, entityType: input?.entityType });
     }),
 });
 
