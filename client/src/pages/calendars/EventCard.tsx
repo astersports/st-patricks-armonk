@@ -2,11 +2,12 @@
  * Event Card — Individual event row in the calendar list view.
  */
 
-import { Clock, MapPin, Star, MessageCircle } from "lucide-react";
+import { Clock, MapPin, Star, MessageCircle, CalendarPlus } from "lucide-react";
 import { openParishAssistant } from "@/components/ParishAssistant";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { WeatherBadge, ParkingAdvisory } from "@/components/WeatherBadge";
+import { downloadICS } from "@/lib/icsGenerator";
 import {
   toEastern, sourceConfig, keyDateCategoryBorder, keyDateCategoryColor,
   keyDateCategoryLabel, sacramentPatterns, type UnifiedEvent,
@@ -109,14 +110,32 @@ export function EventCard({ event, activeSource, weatherData }: EventCardProps) 
           </div>
         )}
 
-        {/* Ask about this event */}
-        <button
-          onClick={() => openParishAssistant(`Tell me about ${event.title} on ${format(eventDate, "MMMM d")}`)}
-          className="mt-2 inline-flex items-center gap-1 text-xs text-primary hover:underline opacity-70 hover:opacity-100 transition-opacity"
-        >
-          <MessageCircle className="w-3 h-3" />
-          Ask about this
-        </button>
+        {/* Action buttons */}
+        <div className="mt-2 flex items-center gap-3">
+          <button
+            onClick={() => {
+              downloadICS({
+                title: event.title,
+                startDate: eventDate,
+                endDate: endDate || undefined,
+                location: event.location || "St. Patrick Church, 29 Cox Ave, Armonk NY 10504",
+                description: event.description || undefined,
+                allDay: event.allDay,
+              });
+            }}
+            className="inline-flex items-center gap-1 text-xs text-primary hover:underline opacity-70 hover:opacity-100 transition-opacity"
+          >
+            <CalendarPlus className="w-3 h-3" />
+            Add to Calendar
+          </button>
+          <button
+            onClick={() => openParishAssistant(`Tell me about ${event.title} on ${format(eventDate, "MMMM d")}`)}
+            className="inline-flex items-center gap-1 text-xs text-primary hover:underline opacity-70 hover:opacity-100 transition-opacity"
+          >
+            <MessageCircle className="w-3 h-3" />
+            Ask about this
+          </button>
+        </div>
       </div>
     </div>
   );

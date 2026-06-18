@@ -29,6 +29,7 @@ import { pushNotificationsRouter } from "./pushNotifications";
 import { volunteerNeedsRouter } from "./volunteerNeeds";
 import { homiliesRouter } from "./homilies";
 import { parishScheduleRouter } from "./parishSchedule";
+import { closureAlertRouter } from "./closureAlert";
 
 export const appRouter = router({
   auth: authRouter,
@@ -68,6 +69,7 @@ export const appRouter = router({
   volunteerNeeds: volunteerNeedsRouter,
   homilies: homiliesRouter,
   parishSchedule: parishScheduleRouter,
+  closureAlert: closureAlertRouter,
 });
 
 export type AppRouter = typeof appRouter;

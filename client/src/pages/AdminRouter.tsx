@@ -13,6 +13,7 @@ import { FormExport } from "./admin/FormExport";
 const FaqManager = lazy(() => import("./admin/FaqManager"));
 const VolunteerNeedsManager = lazy(() => import("./admin/VolunteerNeedsManager"));
 const NeedsAttention = lazy(() => import("./admin/NeedsAttention"));
+const ClosureManager = lazy(() => import("./admin/ClosureManager").then(m => ({ default: m.ClosureManager })));
 
 // Legacy managers from Admin.tsx (imported eagerly since they're in a single file)
 import {
@@ -67,6 +68,7 @@ export default function AdminRouter() {
           <Route path="/settings" component={() => <SettingsManager />} />
           <Route path="/form-export" component={() => <FormExport />} />
           <Route path="/faq" component={() => <FaqManager />} />
+          <Route path="/closure" component={() => <ClosureManager />} />
           {/* Fallback to dashboard */}
           <Route component={() => <DashboardHome />} />
         </Switch>

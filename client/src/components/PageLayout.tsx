@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import Navigation from "./navigation";
 import Footer from "./Footer";
 import ScrollToTopButton from "./ScrollToTopButton";
+import { ClosureAlertBanner } from "./ClosureAlertBanner";
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -17,6 +18,7 @@ export default function PageLayout({ children, hideBackButton }: PageLayoutProps
 
   return (
     <div className="min-h-screen flex flex-col">
+      <ClosureAlertBanner />
       <Navigation />
       {/* Back to Home button — shown on all interior pages */}
       {!isHome && !hideBackButton && (

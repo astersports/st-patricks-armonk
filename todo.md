@@ -932,7 +932,7 @@
 - [x] Fix drifted MassTimes.tsx SEO description (says 5:00/8:00/10:00/12:00 instead of 5:30/8:30/10:30/12:30)
 - [x] Generate SEO structured data + .ics from parishSchedule (never hardcoded)
 - [x] Build `parishInfo` server source (name, address, phone, office hours, social links)
-- [ ] Build `sacramentPolicies` server source (per-sacrament eligibility, scheduling rules, contacts)
+- [x] Build `sacramentPolicies` server source (per-sacrament eligibility, scheduling rules, contacts)
 - [x] Migrate hardcoded address/phone/policy from NewHere, Contact, Footer, SEO to parishInfo
 
 ### P1 — Information Architecture + Homepage
@@ -952,8 +952,8 @@
 - [x] Lock type scale: Display 48/36, H1 32, H2 24, H3 20, body 16/1.55, caption 13
 
 ### P2 — Weather+ & Digital
-- [ ] Weather on every event card (calendar, event detail, CYO game cards)
-- [ ] Sunday outlook widget in hero or This Week
-- [ ] Severe-weather → closure pipeline (admin one-tap → banner + VAPID push)
-- [ ] .ics "Add to Calendar" button on every Mass/event
+- [x] Weather on every event card (calendar, event detail, CYO game cards) — already integrated via EventCard
+- [x] Sunday outlook widget in This Week section
+- [x] Severe-weather → closure pipeline (admin one-tap → banner + VAPID push)
+- [x] .ics "Add to Calendar" button on individual events (not full calendar subscription)
 - [ ] Guided sacrament prep flows (eligibility → date → submit)

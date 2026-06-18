@@ -7,6 +7,7 @@ import { publicProcedure, router, z, db } from "./_helpers";
 import { rateLimitedChatProcedure } from "./_rateLimited";
 import { invokeLLM } from "../_core/llm";
 import { DEFAULT_PARISH_SCHEDULE, DEFAULT_PARISH_INFO, generateSEODescription, parseTimeToMinutes, minutesToTimeString } from "../../shared/scheduleEngine";
+import { generateSacramentPoliciesSummary } from "../../shared/sacramentPolicies";
 
 /**
  * Build the schedule portion of the system prompt from the shared engine.
@@ -61,9 +62,9 @@ PROGRAMS:
 - Teen Life: Youth ministry for high school students (meets in St. Francis Hall)
 - CYO Basketball: Grades 3-8, November–March, St. Francis Hall
 - RCIA: Rite of Christian Initiation of Adults
-- Baptism: Contact the parish office to schedule
-- Marriage: Contact the parish office at least 6 months in advance
-- Funeral: Contact the parish office
+
+SACRAMENTS:
+${generateSacramentPoliciesSummary()}
 
 GUIDELINES:
 - Be warm, welcoming, and helpful

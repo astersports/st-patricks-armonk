@@ -10,6 +10,7 @@ import { trpc } from "@/lib/trpc";
 import { ColorfulWeatherIcon } from "@/components/WeatherIcons";
 import { ServiceCard } from "./this-week/ServiceCard";
 import { DayContent } from "./this-week/DayContent";
+import { SundayOutlook } from "./this-week/SundayOutlook";
 import {
   DAILY_SCHEDULE, SERVICE_DURATION, parseServiceMinutes,
   DAY_LABELS, TIMEZONE,
@@ -252,6 +253,11 @@ export function ThisWeekAccordion() {
           dayName={dayName}
           serviceWeatherMap={serviceWeatherMap}
         />
+      </div>
+
+      {/* Sunday Outlook */}
+      <div className="px-4 pb-1">
+        <SundayOutlook dailyForecast={dailyForecast} />
       </div>
 
       {/* At a Glance footer */}
