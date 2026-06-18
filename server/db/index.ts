@@ -28,7 +28,7 @@ export { createCyoTeam, getCyoTeams, updateCyoTeam, deleteCyoTeam, createCyoGame
 export { createVolunteerOpportunity, getVolunteerOpportunities, updateVolunteerOpportunity, deleteVolunteerOpportunity, createVolunteerSignup, getVolunteerSignups, cancelVolunteerSignup } from "./volunteer";
 
 // Digital Forms (Baptism, Sponsor, Marriage, Funeral, Teen Life, Parish Registration)
-export { createBaptismRegistration, getBaptismRegistrations, updateBaptismStatus, createSponsorCertificate, getSponsorCertificates, updateSponsorStatus, createMarriageInquiry, getMarriageInquiries, updateMarriageStatus, createFuneralPrePlanning, getFuneralPrePlannings, updateFuneralStatus, createTeenLifeRegistration, getTeenLifeRegistrations, updateTeenLifeRegistrationStatus, createParishRegistration, getParishRegistrations, updateParishRegistrationStatus } from "./forms";
+export { createBaptismRegistration, getBaptismRegistrations, updateBaptismStatus, createSponsorCertificate, getSponsorCertificates, updateSponsorStatus, createMarriageInquiry, getMarriageInquiries, updateMarriageStatus, createFuneralPrePlanning, getFuneralPrePlannings, updateFuneralStatus, createTeenLifeRegistration, getTeenLifeRegistrations, updateTeenLifeRegistrationStatus, createParishRegistration, getParishRegistrations, updateParishRegistrationStatus, getBaptismContactInfo, getSponsorContactInfo, getMarriageContactInfo, getFuneralContactInfo } from "./forms";
 
 // Parish Documents
 export { getDocuments, createDocument, updateDocument, deleteDocument, getDocumentsByCategory, getAllDocuments } from "./documents";

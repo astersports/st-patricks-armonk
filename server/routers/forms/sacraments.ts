@@ -12,6 +12,7 @@ import {
   sendMarriageConfirmation,
   sendFuneralConfirmation,
 } from "../../email/sacramentConfirmations";
+import { sendSacramentStatusEmail } from "../../email/sacramentStatusEmails";
 
 export const baptismRouter = router({
   submit: rateLimitedFormProcedure.input(z.object({
@@ -43,9 +44,16 @@ export const baptismRouter = router({
     id: z.number(),
     status: z.string(),
     adminNotes: z.string().optional(),
+    notify: z.boolean().optional(),
   })).mutation(async ({ input, ctx }) => {
     await db.updateBaptismStatus(input.id, input.status, input.adminNotes);
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.status, entityType: "baptism_registration", entityId: String(input.id), details: JSON.stringify({ newStatus: input.status }) });
+    if (input.notify) {
+      const contact = await db.getBaptismContactInfo(input.id);
+      if (contact?.email) {
+        sendSacramentStatusEmail({ type: "baptism", newStatus: input.status, recipientEmail: contact.email, recipientName: contact.recipientName, subjectName: contact.name }).catch(() => {});
+      }
+    }
     return { success: true };
   }),
 });
@@ -80,9 +88,16 @@ export const sponsorRouter = router({
     id: z.number(),
     status: z.string(),
     adminNotes: z.string().optional(),
+    notify: z.boolean().optional(),
   })).mutation(async ({ input, ctx }) => {
     await db.updateSponsorStatus(input.id, input.status, input.adminNotes);
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.status, entityType: "sponsor_certificate", entityId: String(input.id), details: JSON.stringify({ newStatus: input.status }) });
+    if (input.notify) {
+      const contact = await db.getSponsorContactInfo(input.id);
+      if (contact?.email) {
+        sendSacramentStatusEmail({ type: "sponsor", newStatus: input.status, recipientEmail: contact.email, recipientName: contact.recipientName, subjectName: contact.name }).catch(() => {});
+      }
+    }
     return { success: true };
   }),
 });
@@ -122,9 +137,16 @@ export const marriageRouter = router({
     id: z.number(),
     status: z.string(),
     adminNotes: z.string().optional(),
+    notify: z.boolean().optional(),
   })).mutation(async ({ input, ctx }) => {
     await db.updateMarriageStatus(input.id, input.status, input.adminNotes);
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.status, entityType: "marriage_inquiry", entityId: String(input.id), details: JSON.stringify({ newStatus: input.status }) });
+    if (input.notify) {
+      const contact = await db.getMarriageContactInfo(input.id);
+      if (contact?.email) {
+        sendSacramentStatusEmail({ type: "marriage", newStatus: input.status, recipientEmail: contact.email, recipientName: contact.recipientName, subjectName: contact.name }).catch(() => {});
+      }
+    }
     return { success: true };
   }),
 });
@@ -167,9 +189,16 @@ export const funeralRouter = router({
     id: z.number(),
     status: z.string(),
     adminNotes: z.string().optional(),
+    notify: z.boolean().optional(),
   })).mutation(async ({ input, ctx }) => {
     await db.updateFuneralStatus(input.id, input.status, input.adminNotes);
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.status, entityType: "funeral_preplanning", entityId: String(input.id), details: JSON.stringify({ newStatus: input.status }) });
+    if (input.notify) {
+      const contact = await db.getFuneralContactInfo(input.id);
+      if (contact?.email) {
+        sendSacramentStatusEmail({ type: "funeral", newStatus: input.status, recipientEmail: contact.email, recipientName: contact.recipientName, subjectName: contact.name }).catch(() => {});
+      }
+    }
     return { success: true };
   }),
 });

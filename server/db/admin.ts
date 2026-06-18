@@ -1,4 +1,4 @@
-import { eq, desc, sql, gte, and } from "drizzle-orm";
+import { eq, desc, sql, gte, and, isNull } from "drizzle-orm";
 import { newsPosts, events, emailSubscriptions, ccdRegistrations, volunteerSignups, galleryPhotos, parishRegistrations, baptismRegistrations, marriageInquiries, teenLifeRegistrations, ccdPermissions, siteSettings, prayerIntentions, massIntentions, volunteerNeeds, sponsorCertificates, funeralPrePlanning, bulletins, staffMembers } from "../../drizzle/schema";
 import { getDb } from "./_connection";
 
@@ -25,7 +25,7 @@ export async function getAdminStats() {
   // CCD Permissions pending
   const [ccdPermCount] = await db!.select({ count: sql<number>`count(*)` }).from(ccdPermissions).where(eq(ccdPermissions.status, "pending"));
   // Extended counts (D1)
-  const [bulletinCount] = await db!.select({ count: sql<number>`count(*)` }).from(bulletins);
+  const [bulletinCount] = await db!.select({ count: sql<number>`count(*)` }).from(bulletins).where(isNull(bulletins.deletedAt));
   const [prayerCount] = await db!.select({ count: sql<number>`count(*)` }).from(prayerIntentions);
   const [staffCount] = await db!.select({ count: sql<number>`count(*)` }).from(staffMembers);
   const [totalParishReg] = await db!.select({ count: sql<number>`count(*)` }).from(parishRegistrations);

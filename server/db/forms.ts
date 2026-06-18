@@ -1,4 +1,4 @@
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, sql } from "drizzle-orm";
 import { baptismRegistrations, sponsorCertificates, marriageInquiries, funeralPrePlanning, teenLifeRegistrations, parishRegistrations } from "../../drizzle/schema";
 import type { BaptismRegistration, SponsorCertificate, MarriageInquiry, FuneralPrePlanning } from "../../drizzle/schema";
 import { getDb } from "./_connection";
@@ -90,6 +90,52 @@ export async function updateFuneralStatus(id: number, status: string, adminNotes
   const updateData: any = { status };
   if (adminNotes !== undefined) updateData.adminNotes = adminNotes;
   await db.update(funeralPrePlanning).set(updateData).where(eq(funeralPrePlanning.id, id));
+}
+
+// ===== SUBMISSION CONTACT INFO (for status emails) =====
+
+export async function getBaptismContactInfo(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const [row] = await db.select({
+    email: baptismRegistrations.parentEmail,
+    name: sql<string>`CONCAT(${baptismRegistrations.childFirstName}, ' ', ${baptismRegistrations.childLastName})`,
+    recipientName: sql<string>`'Parent/Guardian'`,
+  }).from(baptismRegistrations).where(eq(baptismRegistrations.id, id));
+  return row || null;
+}
+
+export async function getSponsorContactInfo(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const [row] = await db.select({
+    email: sponsorCertificates.sponsorEmail,
+    name: sql<string>`CONCAT(${sponsorCertificates.sponsorFirstName}, ' ', ${sponsorCertificates.sponsorLastName})`,
+    recipientName: sql<string>`CONCAT(${sponsorCertificates.sponsorFirstName}, ' ', ${sponsorCertificates.sponsorLastName})`,
+  }).from(sponsorCertificates).where(eq(sponsorCertificates.id, id));
+  return row || null;
+}
+
+export async function getMarriageContactInfo(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const [row] = await db.select({
+    email: marriageInquiries.brideEmail,
+    name: sql<string>`CONCAT(${marriageInquiries.brideFirstName}, ' ', ${marriageInquiries.brideLastName}, ' & ', ${marriageInquiries.groomFirstName}, ' ', ${marriageInquiries.groomLastName})`,
+    recipientName: sql<string>`CONCAT(${marriageInquiries.brideFirstName}, ' ', ${marriageInquiries.brideLastName})`,
+  }).from(marriageInquiries).where(eq(marriageInquiries.id, id));
+  return row || null;
+}
+
+export async function getFuneralContactInfo(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const [row] = await db.select({
+    email: funeralPrePlanning.plannerEmail,
+    name: funeralPrePlanning.deceasedName,
+    recipientName: funeralPrePlanning.plannerName,
+  }).from(funeralPrePlanning).where(eq(funeralPrePlanning.id, id));
+  return row || null;
 }
 
 // ===== TEEN LIFE REGISTRATIONS =====

@@ -1126,3 +1126,15 @@
 - [x] L99-8: Urgent funerals: red left-border + Immediate pill + sort-to-top in all sort modes
 - [x] L99-9: Accessibility (text+color badges, 44px tap targets, expand/collapse buttons)
 - [x] L99-10: Tests pass (83/83, 8 new stage mapping tests + allSubmissions export test, 0 TS errors)
+
+### MANUS-SACRAMENTS-ENHANCEMENTS
+- [x] SE-1: Added ONE aggregate "Pending Sacraments" StatCard (sum of 4 types) → /sacraments
+- [x] SE-1b: Removed redundant per-type Baptisms/Marriages stat cards from dashboard
+- [x] SE-1c: Needs Attention badges link to /sacraments
+- [x] SE-2: Fixed bulletin count — added isNull(bulletins.deletedAt) filter
+- [x] SE-3: Added "Notify the family" checkbox (default ON for approved/scheduled/denied, OFF for contacted/completed)
+- [x] SE-3b: Per-type/stage status-update email copy (branded, warm, per-sacrament)
+- [x] SE-3c: All 4 updateStatus mutations accept notify boolean, send email when true
+- [x] SE-4: Created shared client/src/lib/exportCsv.ts (generic, RFC 4180 compliant, BOM prefix)
+- [x] SE-4b: Added "Export CSV" button on unified Sacraments view (exports filtered+sorted rows)
+- [x] SE-5: Tests pass (91/91) — aggregate, bulletin filter, notify gating, CSV accessor correctness

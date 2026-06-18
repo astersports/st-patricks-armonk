@@ -16,7 +16,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ChevronDown, ChevronUp, AlertTriangle, Mail, Phone } from "lucide-react";
+import { ChevronDown, ChevronUp, AlertTriangle, Mail, Phone, Bell, Download } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { exportCsv, type CsvColumn } from "@/lib/exportCsv";
 import type {
   SacramentType,
   SacramentStage,
@@ -59,19 +61,28 @@ export function SacramentsManager() {
     action: SacramentAction;
   } | null>(null);
 
+  // Notify checkbox state (per-action)
+  const [notifyFamily, setNotifyFamily] = useState(true);
+
   // Expanded row state
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const handleAction = useCallback((row: SacramentSubmissionRow, action: SacramentAction) => {
+    // Determine default notify state based on status type
+    const milestoneStatuses = ["approved", "scheduled", "meeting_scheduled", "denied", "declined"];
+    const defaultNotify = milestoneStatuses.includes(action.nextStatus);
+    setNotifyFamily(defaultNotify);
+
     if (action.confirm) {
       setConfirmAction({ row, action });
       return;
     }
-    executeAction(row, action.nextStatus);
+    // For non-confirm actions, show confirm dialog too (to allow notify toggle)
+    setConfirmAction({ row, action });
   }, []);
 
-  const executeAction = useCallback((row: SacramentSubmissionRow, nextStatus: string) => {
-    const payload = { id: row.id, status: nextStatus };
+  const executeAction = useCallback((row: SacramentSubmissionRow, nextStatus: string, notify: boolean) => {
+    const payload = { id: row.id, status: nextStatus, notify };
     switch (row.type) {
       case "baptism": baptismUpdate.mutate(payload); break;
       case "sponsor": sponsorUpdate.mutate(payload); break;
@@ -176,11 +187,35 @@ export function SacramentsManager() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h2 className="text-xl font-semibold">Sacrament Submissions</h2>
-        <p className="text-sm text-muted-foreground mt-1">
-          All baptism, sponsor, marriage, and funeral submissions in one view.
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-semibold">Sacrament Submissions</h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            All baptism, sponsor, marriage, and funeral submissions in one view.
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          className="shrink-0"
+          onClick={() => {
+            const cols: CsvColumn<SacramentSubmissionRow>[] = [
+              { header: "Type", accessor: (r) => TYPE_META[r.type].label },
+              { header: "Name", accessor: (r) => r.name },
+              { header: "Email", accessor: (r) => r.email },
+              { header: "Phone", accessor: (r) => r.phone },
+              { header: "Submitted", accessor: (r) => new Date(r.submittedAt).toLocaleDateString() },
+              { header: "Preferred Date", accessor: (r) => r.preferredDate },
+              { header: "Stage", accessor: (r) => STAGE_META[r.stage].label },
+            ];
+            const today = new Date().toISOString().slice(0, 10);
+            exportCsv(items, cols, `sacraments-${today}.csv`);
+            toast.success("CSV exported");
+          }}
+        >
+          <Download className="w-4 h-4 mr-1.5" />
+          Export CSV
+        </Button>
       </div>
 
       <AdminTableControls
@@ -297,23 +332,43 @@ export function SacramentsManager() {
         )}
       </AdminTableControls>
 
-      {/* Confirm dialog for destructive actions */}
+      {/* Confirm dialog with Notify checkbox */}
       <AlertDialog open={!!confirmAction} onOpenChange={(open) => !open && setConfirmAction(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirm Action</AlertDialogTitle>
+            <AlertDialogTitle>
+              {confirmAction?.action.confirm ? "Confirm Action" : `${confirmAction?.action.label}`}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to {confirmAction?.action.label.toLowerCase()} the submission from{" "}
-              <strong>{confirmAction?.row.name}</strong>? This action cannot be undone.
+              {confirmAction?.action.confirm
+                ? <>Are you sure you want to {confirmAction?.action.label.toLowerCase()} the submission from <strong>{confirmAction?.row.name}</strong>? This action cannot be undone.</>
+                : <>Update status of <strong>{confirmAction?.row.name}</strong> to "{confirmAction?.action.label}"?</>
+              }
             </AlertDialogDescription>
           </AlertDialogHeader>
+
+          {/* Notify the family checkbox */}
+          <label className="flex items-center gap-3 px-1 py-2 cursor-pointer select-none">
+            <Checkbox
+              checked={notifyFamily}
+              onCheckedChange={(checked) => setNotifyFamily(!!checked)}
+            />
+            <div className="flex items-center gap-1.5">
+              <Bell className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm font-medium">Notify the family</span>
+            </div>
+          </label>
+          {notifyFamily && (
+            <p className="text-xs text-muted-foreground pl-8">An email will be sent to the submitter about this status change.</p>
+          )}
+
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className={confirmAction?.action.confirm ? "bg-destructive text-destructive-foreground hover:bg-destructive/90" : ""}
               onClick={() => {
                 if (confirmAction) {
-                  executeAction(confirmAction.row, confirmAction.action.nextStatus);
+                  executeAction(confirmAction.row, confirmAction.action.nextStatus, notifyFamily);
                   setConfirmAction(null);
                 }
               }}
