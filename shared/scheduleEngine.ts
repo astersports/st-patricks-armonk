@@ -100,8 +100,8 @@ export const DEFAULT_PARISH_INFO: ParishInfo = {
   pastorName: "Fr. Thadeus Aravindathu",
   pastorEmail: "fr.thadeus@stpatrickinarmonk.org",
   flocknoteUrl: "https://stpatarmonk.flocknote.com/home",
-  youtubeUrl: "https://www.youtube.com/@stpatrickinarmonk",
-  youtubeChannelId: "UCi5GFED3NRgqFPTkdMFN9Fg",
+  youtubeUrl: "https://www.youtube.com/@StPatricksArmonk",
+  youtubeChannelId: "UCVAmgwg8dltHe98xw95ZsKw",
   mapCoordinates: { lat: 41.1264, lng: -73.7137 },
 };
 

@@ -1096,3 +1096,11 @@
 - [x] 3. Admin editor UI (Settings → Notification Routing card in SettingsManager)
 - [x] 4. Unit test for routeNotification (6 tests: mapped→alias+BCC, unmapped→catchall, failure-safe)
 - [x] AC: Baptism → office@ (sacraments alias); CCD → reled@ + office@ BCC; unmapped → office@; failure never blocks (68 tests pass, 0 TS errors)
+
+### MANUS-YOUTUBE-MARQUEE
+- [x] YT-1: Fix YouTube channel handle to @StPatricksArmonk in scheduleEngine, Footer, Watch
+- [x] YT-2: Verify and fix youtubeChannelId (UCi5GFED3NRgqFPTkdMFN9Fg → UCVAmgwg8dltHe98xw95ZsKw)
+- [x] YT-3: Top banner default = single "Watch Mass" link to /watch (remove Register text)
+- [x] YT-4: Preserve admin announcement override (marquee_text non-empty → show that instead)
+- [x] YT-5: No stpatrickinarmonk YouTube string remains in codebase (only email/calendar refs remain, which are correct)
+- [x] YT-6: Tests green (68/68) + 0 TS errors

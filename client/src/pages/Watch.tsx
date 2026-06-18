@@ -16,7 +16,7 @@ import { isServiceInProgress, getServicesForDay, TIMEZONE } from "../../../share
 export default function Watch() {
   const { schedule } = useParishSchedule();
   const { info } = useParishInfo();
-  const youtubeUrl = info?.youtubeUrl ?? "https://www.youtube.com/@stpatrickinarmonk";
+  const youtubeUrl = info?.youtubeUrl ?? "https://www.youtube.com/@StPatricksArmonk";
   const channelId = info?.youtubeChannelId ?? "";
 
   // Build the proper embeddable URL

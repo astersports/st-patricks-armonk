@@ -67,7 +67,7 @@ export default function Navigation() {
   const [location] = useLocation();
   const { user, isAuthenticated } = useAuth();
   const { data: marqueeData } = trpc.siteSettings.get.useQuery({ key: "marquee_text" });
-  const marqueeText = marqueeData?.value || "New to St. Patrick in Armonk? Register as a Parishioner";
+  const announcementText = marqueeData?.value || "";
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -91,24 +91,24 @@ export default function Navigation() {
             : "bg-white/80 backdrop-blur-sm"
         }`}
       >
-        {/* Top Bar — slim single bar (≤36px) with Watch Live + Marquee */}
+        {/* Top Bar — slim single bar (≤36px): announcement override OR default Watch Mass link */}
         <div className="bg-primary text-white h-9 flex items-center overflow-hidden relative">
-          <div className="announcement-marquee flex whitespace-nowrap">
-            {[0, 1].map((i) => (
-              <div key={i} className="flex items-center gap-8 px-6 shrink-0 announcement-marquee-content">
-                <WatchLiveChip />
-                <span className="text-white/30">•</span>
-                <Link
-                  href="/parish-registration"
-                  className="inline-flex items-center gap-1.5 text-xs sm:text-xs font-medium hover:underline transition-all"
-                >
-                  <span>{marqueeText}</span>
-                  <ArrowRight className="w-3 h-3" />
-                </Link>
-                <span className="text-white/30">•</span>
-              </div>
-            ))}
-          </div>
+          {announcementText ? (
+            <div className="announcement-marquee flex whitespace-nowrap">
+              {[0, 1].map((i) => (
+                <div key={i} className="flex items-center gap-8 px-6 shrink-0 announcement-marquee-content">
+                  <span className="inline-flex items-center gap-1.5 text-xs sm:text-xs font-medium">
+                    {announcementText}
+                  </span>
+                  <span className="text-white/30">•</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="w-full flex items-center justify-center">
+              <WatchLiveChip />
+            </div>
+          )}
         </div>
         <nav className="container flex items-center justify-between h-16 lg:h-[4.5rem]">
           {/* Logo */}
