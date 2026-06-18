@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { trpc } from "@/lib/trpc";
-import { Droplets, Cross, Heart, Church, FileText, Download, ExternalLink, Sparkles } from "lucide-react";
+import { Droplets, Cross, Heart, Church, FileText, Download, ExternalLink, Sparkles, Compass } from "lucide-react";
+import { SacramentPrepWizard } from "@/components/SacramentPrepWizard";
 import { useReveal } from "@/hooks/useReveal";
 import PageHeader from "@/components/PageHeader";
 
@@ -236,6 +237,24 @@ export default function Sacraments() {
 
 
       <div ref={revealRef}>
+        {/* Guided Prep Wizard */}
+        <section className="py-6 sm:py-8">
+          <div className="container max-w-4xl">
+            <Card className="p-5 sm:p-6 border border-primary/20 bg-primary/[0.02] rounded-xl">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="bg-primary/10 p-2 rounded-lg">
+                  <Compass className="w-4 h-4 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-serif text-base sm:text-lg font-semibold">Start Your Sacrament Journey</h3>
+                  <p className="text-xs text-muted-foreground">Check eligibility and find your next steps</p>
+                </div>
+              </div>
+              <SacramentPrepWizard />
+            </Card>
+          </div>
+        </section>
+
         <section className="py-6 sm:py-10">
           <div className="container max-w-4xl">
             {/* Accordion for Sacraments */}

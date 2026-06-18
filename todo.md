@@ -956,4 +956,4 @@
 - [x] Sunday outlook widget in This Week section
 - [x] Severe-weather → closure pipeline (admin one-tap → banner + VAPID push)
 - [x] .ics "Add to Calendar" button on individual events (not full calendar subscription)
-- [ ] Guided sacrament prep flows (eligibility → date → submit)
+- [x] Guided sacrament prep flows (eligibility → date → submit)
