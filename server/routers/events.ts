@@ -1,20 +1,22 @@
 /**
  * Events Router — CRUD for parish events.
  */
-import { adminProcedure, publicProcedure, router, z, db } from "./_helpers";
+import { publicProcedure, router, z, db, sectionProcedure } from "./_helpers";
+
+const eventsSection = sectionProcedure("events");
 import { createAuditLog } from "../db/auditLog";
 
 export const eventsRouter = router({
   listUpcoming: publicProcedure.query(async () => {
     return db.getUpcomingEvents();
   }),
-  listAll: adminProcedure.query(async () => {
+  listAll: eventsSection.query(async () => {
     return db.getAllEvents();
   }),
   getById: publicProcedure.input(z.object({ id: z.number() })).query(async ({ input }) => {
     return db.getEventById(input.id);
   }),
-  create: adminProcedure.input(z.object({
+  create: eventsSection.input(z.object({
     title: z.string().min(1),
     description: z.string().optional(),
     location: z.string().optional(),
@@ -34,7 +36,7 @@ export const eventsRouter = router({
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "create", entityType: "event", entityId: String(id), details: JSON.stringify({ title: input.title }) });
     return { id };
   }),
-  update: adminProcedure.input(z.object({
+  update: eventsSection.input(z.object({
     id: z.number(),
     title: z.string().min(1).optional(),
     description: z.string().optional(),
@@ -52,7 +54,7 @@ export const eventsRouter = router({
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "update", entityType: "event", entityId: String(id), details: JSON.stringify({ title: data.title }) });
     return { success: true };
   }),
-  delete: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
+  delete: eventsSection.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
     const existing = await db.getEventById(input.id);
     await db.deleteEvent(input.id);
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "delete", entityType: "event", entityId: String(input.id), details: JSON.stringify({ title: existing?.title }) });

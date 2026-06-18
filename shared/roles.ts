@@ -47,7 +47,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, AdminSection[]> = {
     "ccd_registrations", "ccd_calendar", "ccd_permissions",
     "cyo", "teen_life", "sacraments", "documents", "users", "settings", "form_export", "faq"
   ],
-  communications: ["dashboard", "news", "bulletins", "subscribers", "gallery", "settings"],
+  communications: ["dashboard", "news", "bulletins", "subscribers", "gallery"],
   religious_ed: ["dashboard", "ccd_registrations", "ccd_calendar", "ccd_permissions", "documents"],
   youth_ministry: ["dashboard", "cyo", "teen_life"],
   sacraments: ["dashboard", "sacraments"],

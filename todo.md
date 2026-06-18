@@ -1070,3 +1070,22 @@
 - [x] Delete LanguageToggle.tsx and LanguageContext.tsx
 - [x] Grep for stragglers (useLanguage, LanguageProvider, etc.) — returns nothing
 - [x] AC: no globe toggle, grep returns nothing, 49 tests green, 0 TS errors
+
+### Dashboard Fixes (MANUS-DASHBOARD-FIXES)
+- [x] Restore deleted June 14 bulletin (re-inserted from audit log)
+- [x] FIX-1. Fix broken StatCard hrefs (staff-directory→staff, closures→closure, prayer-wall→needs-attention)
+- [x] FIX-1. Audit all other StatCard hrefs against AdminRouter (all verified)
+- [x] FIX-2. Add pendingCcdPermissions count to admin stats
+- [x] FIX-2. Add CCD Permissions StatCard + relabel existing CCD card ("CCD Reg." + "CCD Perm.")
+- [x] FIX-3. Soft-delete bulletins (add deletedAt column, update queries)
+- [x] FIX-3. Restore UI (Recently Deleted view + Restore button)
+- [x] FIX-3. Confirm dialog + undo toast on delete
+- [x] VERIFY: 559 total bulletins (legitimate historical import from ecatholic.com, 1 restored)
+
+### Admin RBAC (MANUS-ADMIN-RBAC)
+- [x] §3a. FAQ gating: create/update/delete/listAll → sectionProcedure("faq")
+- [x] §3b. Remove "settings" from ROLE_PERMISSIONS.communications
+- [x] §1. Convert routers to sectionProcedure (news, bulletins, subscriptions, events, key-dates, volunteer, ccd, cyo, teen-life, sacraments, documents, formExport, registrations)
+- [x] §2. Protect site-wide: schedule/info → adminProcedure (was staffProcedure)
+- [x] §4. Per-route guards in AdminRouter (SectionGuard component + Redirect to /admin)
+- [x] §6. Permission-matrix regression test (13 tests, all 7 roles verified)

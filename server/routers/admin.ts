@@ -91,10 +91,10 @@ export const importantDatesRouter = router({
   allPublished: publicProcedure.query(async () => {
     return db.getAllPublishedImportantDates();
   }),
-  all: adminProcedure.query(async () => {
+  all: sectionProcedure("key_dates").query(async () => {
     return db.getAllImportantDates();
   }),
-  create: adminProcedure
+  create: sectionProcedure("key_dates")
     .input(z.object({
       title: z.string().min(1).max(500),
       eventDate: z.string(),
@@ -114,7 +114,7 @@ export const importantDatesRouter = router({
       });
       return { id };
     }),
-  update: adminProcedure
+  update: sectionProcedure("key_dates")
     .input(z.object({
       id: z.number(),
       title: z.string().min(1).max(500).optional(),
@@ -136,7 +136,7 @@ export const importantDatesRouter = router({
       await db.updateImportantDate(id, updateData);
       return { success: true };
     }),
-  delete: adminProcedure
+  delete: sectionProcedure("key_dates")
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       await db.deleteImportantDate(input.id);

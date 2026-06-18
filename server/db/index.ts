@@ -10,7 +10,7 @@ export { upsertUser, getUserByOpenId, getAllUsers, updateUserRole } from "./user
 export { createNewsPost, updateNewsPost, deleteNewsPost, getPublishedNewsPosts, getAllNewsPosts, getNewsPostById } from "./news";
 
 // Bulletins
-export { createBulletin, updateBulletin, deleteBulletin, getPublishedBulletins, getAllBulletins, getBulletinById } from "./bulletins";
+export { createBulletin, updateBulletin, deleteBulletin, restoreBulletin, getDeletedBulletins, getPublishedBulletins, getAllBulletins, getBulletinById } from "./bulletins";
 
 // Events
 export { createEvent, updateEvent, deleteEvent, getUpcomingEvents, getAllEvents, getEventById } from "./events";

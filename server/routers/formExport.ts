@@ -4,18 +4,19 @@
  * Uses the GWS CLI via child_process (sandbox only) or stores export data for agent use.
  * ~100 lines
  */
-import { adminProcedure, router, z, db, TRPCError } from "./_helpers";
+import { router, z, db, TRPCError, sectionProcedure } from "./_helpers";
+const formExportSection = sectionProcedure("form_export");
 import { getSiteSetting, upsertSiteSetting } from "../db";
 
 export const formExportRouter = router({
   /** Get the configured Google Sheets spreadsheet ID */
-  getConfig: adminProcedure.query(async () => {
+  getConfig: formExportSection.query(async () => {
     const spreadsheetId = await getSiteSetting("form_export_spreadsheet_id");
     return { spreadsheetId: spreadsheetId || null };
   }),
 
   /** Set the Google Sheets spreadsheet ID for form exports */
-  setConfig: adminProcedure.input(z.object({
+  setConfig: formExportSection.input(z.object({
     spreadsheetId: z.string().min(1),
   })).mutation(async ({ input }) => {
     await upsertSiteSetting("form_export_spreadsheet_id", input.spreadsheetId);
@@ -23,7 +24,7 @@ export const formExportRouter = router({
   }),
 
   /** Get recent form submissions ready for export */
-  getRecentSubmissions: adminProcedure.input(z.object({
+  getRecentSubmissions: formExportSection.input(z.object({
     type: z.enum(["baptism", "sponsor", "marriage", "funeral", "teenLife", "parishRegistration", "ccdRegistration"]),
     limit: z.number().min(1).max(100).default(50),
   })).query(async ({ input }) => {
@@ -48,7 +49,7 @@ export const formExportRouter = router({
   }),
 
   /** Export submissions as CSV data (for download or Sheets push) */
-  exportCsv: adminProcedure.input(z.object({
+  exportCsv: formExportSection.input(z.object({
     type: z.enum(["baptism", "sponsor", "marriage", "funeral", "teenLife", "parishRegistration", "ccdRegistration"]),
   })).mutation(async ({ input }) => {
     let data: Record<string, unknown>[] = [];

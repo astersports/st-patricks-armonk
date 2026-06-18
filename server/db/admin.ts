@@ -22,6 +22,8 @@ export async function getAdminStats() {
   // Unread generic submissions (sponsor certs + funeral pre-planning pending)
   const [sponsorPendingCount] = await db!.select({ count: sql<number>`count(*)` }).from(sponsorCertificates).where(eq(sponsorCertificates.status, "pending"));
   const [funeralPendingCount] = await db!.select({ count: sql<number>`count(*)` }).from(funeralPrePlanning).where(eq(funeralPrePlanning.status, "pending"));
+  // CCD Permissions pending
+  const [ccdPermCount] = await db!.select({ count: sql<number>`count(*)` }).from(ccdPermissions).where(eq(ccdPermissions.status, "pending"));
   // Extended counts (D1)
   const [bulletinCount] = await db!.select({ count: sql<number>`count(*)` }).from(bulletins);
   const [prayerCount] = await db!.select({ count: sql<number>`count(*)` }).from(prayerIntentions);
@@ -47,6 +49,7 @@ export async function getAdminStats() {
     totalPrayerIntentions: prayerCount.count,
     totalStaff: staffCount.count,
     totalParishRegistrations: totalParishReg.count,
+    pendingCcdPermissions: ccdPermCount.count,
   };
 }
 

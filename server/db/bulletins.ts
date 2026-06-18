@@ -1,4 +1,4 @@
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, isNull, isNotNull, and } from "drizzle-orm";
 import { bulletins } from "../../drizzle/schema";
 import type { InsertBulletin } from "../../drizzle/schema";
 import { getDb } from "./_connection";
@@ -18,17 +18,34 @@ export async function updateBulletin(id: number, data: Partial<InsertBulletin>) 
   await db.update(bulletins).set(data).where(eq(bulletins.id, id));
 }
 
+/** Soft-delete: sets deletedAt timestamp instead of removing the row */
 export async function deleteBulletin(id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await db.delete(bulletins).where(eq(bulletins.id, id));
+  await db.update(bulletins).set({ deletedAt: new Date() }).where(eq(bulletins.id, id));
+}
+
+/** Restore a soft-deleted bulletin */
+export async function restoreBulletin(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(bulletins).set({ deletedAt: null }).where(eq(bulletins.id, id));
+}
+
+/** Get recently deleted bulletins (for admin restore UI) */
+export async function getDeletedBulletins() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(bulletins)
+    .where(isNotNull(bulletins.deletedAt))
+    .orderBy(desc(bulletins.deletedAt));
 }
 
 export async function getPublishedBulletins(limit = 100) {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(bulletins)
-    .where(eq(bulletins.published, true))
+    .where(and(eq(bulletins.published, true), isNull(bulletins.deletedAt)))
     .orderBy(desc(bulletins.weekDate))
     .limit(limit);
 }
@@ -36,7 +53,9 @@ export async function getPublishedBulletins(limit = 100) {
 export async function getAllBulletins() {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(bulletins).orderBy(desc(bulletins.weekDate));
+  return db.select().from(bulletins)
+    .where(isNull(bulletins.deletedAt))
+    .orderBy(desc(bulletins.weekDate));
 }
 
 export async function getBulletinById(id: number) {

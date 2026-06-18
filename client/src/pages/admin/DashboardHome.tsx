@@ -104,7 +104,8 @@ export default function DashboardHome() {
           <StatCard icon={Users} label="Subscribers" value={stats.activeSubscribers} href="/subscribers" color="text-purple-600" />
           <StatCard icon={Camera} label="Photos" value={stats.totalGalleryPhotos} href="/gallery" color="text-pink-600" />
           <StatCard icon={Heart} label="Volunteers" value={stats.totalVolunteerSignups} href="/volunteers" color="text-red-600" />
-          <StatCard icon={GraduationCap} label="CCD Pending" value={stats.pendingCcdRegistrations} href="/ccd" color="text-amber-600" highlight={stats.pendingCcdRegistrations > 0} />
+          <StatCard icon={GraduationCap} label="CCD Reg." value={stats.pendingCcdRegistrations} href="/ccd" color="text-amber-600" highlight={stats.pendingCcdRegistrations > 0} />
+          <StatCard icon={GraduationCap} label="CCD Perm." value={stats.pendingCcdPermissions} href="/ccd-permissions" color="text-amber-500" highlight={stats.pendingCcdPermissions > 0} />
           <StatCard icon={UserPlus} label="Parish Reg." value={stats.pendingParishRegistrations} href="/registrations" color="text-green-700" highlight={stats.pendingParishRegistrations > 0} />
           <StatCard icon={Cross} label="Baptisms" value={stats.pendingBaptisms} href="/sacraments" color="text-indigo-600" highlight={stats.pendingBaptisms > 0} />
           <StatCard icon={Cross} label="Marriages" value={stats.pendingMarriages} href="/sacraments" color="text-rose-600" highlight={stats.pendingMarriages > 0} />
@@ -112,8 +113,8 @@ export default function DashboardHome() {
           <StatCard icon={Heart} label="Intentions" value={stats.pendingMassIntentions} href="/mass-intentions" color="text-rose-500" highlight={stats.pendingMassIntentions > 0} />
           <StatCard icon={Users} label="Vol. Needs" value={stats.unfilledVolunteerNeeds} href="/volunteer-needs" color="text-teal-600" highlight={stats.unfilledVolunteerNeeds > 0} />
           <StatCard icon={BookOpen} label="Bulletins" value={stats.totalBulletins} href="/bulletins" color="text-cyan-600" />
-          <StatCard icon={HandHeart} label="Prayers" value={stats.totalPrayerIntentions} href="/prayer-wall" color="text-violet-600" />
-          <StatCard icon={UserCog} label="Staff" value={stats.totalStaff} href="/staff-directory" color="text-slate-600" />
+          <StatCard icon={HandHeart} label="Prayers" value={stats.totalPrayerIntentions} href="/needs-attention" color="text-violet-600" />
+          <StatCard icon={UserCog} label="Staff" value={stats.totalStaff} href="/staff" color="text-slate-600" />
           <StatCard icon={UserPlus} label="Total Reg." value={stats.totalParishRegistrations} href="/registrations" color="text-emerald-600" />
         </div>
       ) : null}
@@ -167,7 +168,7 @@ function WeatherClosureSuggestion() {
             <div className="flex items-center gap-3 mt-2 text-xs text-blue-600">
               <span className="flex items-center gap-1"><Thermometer className="w-3 h-3" />High {suggestion.high}° / Low {suggestion.low}°</span>
             </div>
-            <Link href="/closures">
+            <Link href="/closure">
               <Button size="sm" variant="outline" className="mt-3 border-blue-300 text-blue-700 hover:bg-blue-100">
                 Consider Closure for {suggestion.date}
               </Button>

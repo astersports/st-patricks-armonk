@@ -2,7 +2,8 @@
  * CYO Basketball Router — teams and games management.
  * ~90 lines
  */
-import { adminProcedure, publicProcedure, router, z, db } from "./_helpers";
+import { publicProcedure, router, z, db, sectionProcedure } from "./_helpers";
+const cyoSection = sectionProcedure("cyo");
 
 export const cyoRouter = router({
   // Teams
@@ -11,7 +12,7 @@ export const cyoRouter = router({
   }).optional()).query(async ({ input }) => {
     return db.getCyoTeams(input?.season);
   }),
-  createTeam: adminProcedure.input(z.object({
+  createTeam: cyoSection.input(z.object({
     name: z.string().min(1),
     division: z.string().min(1),
     ageGroup: z.string().min(1),
@@ -28,7 +29,7 @@ export const cyoRouter = router({
     });
     return { success: true, id };
   }),
-  updateTeam: adminProcedure.input(z.object({
+  updateTeam: cyoSection.input(z.object({
     id: z.number(),
     name: z.string().optional(),
     division: z.string().optional(),
@@ -43,7 +44,7 @@ export const cyoRouter = router({
     await db.updateCyoTeam(id, data as any);
     return { success: true };
   }),
-  deleteTeam: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+  deleteTeam: cyoSection.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
     await db.deleteCyoTeam(input.id);
     return { success: true };
   }),
@@ -53,7 +54,7 @@ export const cyoRouter = router({
   }).optional()).query(async ({ input }) => {
     return db.getCyoGames(input?.teamId);
   }),
-  createGame: adminProcedure.input(z.object({
+  createGame: cyoSection.input(z.object({
     teamId: z.number(),
     opponent: z.string().min(1),
     gameDate: z.string(),
@@ -68,7 +69,7 @@ export const cyoRouter = router({
     });
     return { success: true, id };
   }),
-  updateGame: adminProcedure.input(z.object({
+  updateGame: cyoSection.input(z.object({
     id: z.number(),
     opponent: z.string().optional(),
     gameDate: z.string().optional(),
@@ -85,7 +86,7 @@ export const cyoRouter = router({
     await db.updateCyoGame(id, data);
     return { success: true };
   }),
-  deleteGame: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+  deleteGame: cyoSection.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
     await db.deleteCyoGame(input.id);
     return { success: true };
   }),

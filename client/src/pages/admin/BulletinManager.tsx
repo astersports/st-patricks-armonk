@@ -6,18 +6,48 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import { Trash2, FileText, PenLine, Eye, ChevronDown, ChevronRight } from "lucide-react";
+import { Trash2, FileText, PenLine, Eye, ChevronDown, ChevronRight, Undo2, Archive } from "lucide-react";
 import { BulletinEditor } from "./BulletinEditor";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export function BulletinManager() {
   const utils = trpc.useUtils();
   const { data: bulletins, isLoading } = trpc.bulletins.listAll.useQuery();
-  const deleteMutation = trpc.bulletins.delete.useMutation({ onSuccess: () => { utils.bulletins.listAll.invalidate(); toast.success("Bulletin deleted"); } });
+  const { data: deletedBulletins } = trpc.bulletins.listDeleted.useQuery();
+  const deleteMutation = trpc.bulletins.delete.useMutation({
+    onSuccess: (_data, variables) => {
+      utils.bulletins.listAll.invalidate();
+      utils.bulletins.listDeleted.invalidate();
+      toast("Bulletin moved to trash", {
+        action: {
+          label: "Undo",
+          onClick: () => restoreMutation.mutate({ id: variables.id }),
+        },
+      });
+    },
+  });
+  const restoreMutation = trpc.bulletins.restore.useMutation({
+    onSuccess: () => {
+      utils.bulletins.listAll.invalidate();
+      utils.bulletins.listDeleted.invalidate();
+      toast.success("Bulletin restored");
+    },
+  });
   const updateMutation = trpc.bulletins.update.useMutation({ onSuccess: () => { utils.bulletins.listAll.invalidate(); toast.success("Bulletin updated"); } });
-  const uploadMutation = trpc.bulletins.uploadPdf.useMutation();
 
-  const [mode, setMode] = useState<"list" | "compose" | "upload">("list");
+  const [mode, setMode] = useState<"list" | "compose">("list");
   const [editingId, setEditingId] = useState<number | undefined>();
+  const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
+  const [showDeleted, setShowDeleted] = useState(false);
 
   // Group bulletins by year
   const groupedByYear = useMemo(() => {
@@ -28,13 +58,11 @@ export function BulletinManager() {
       if (!groups[year]) groups[year] = [];
       groups[year].push(b);
     }
-    // Sort years descending
     return Object.entries(groups)
       .map(([year, items]) => ({ year: Number(year), items }))
       .sort((a, b) => b.year - a.year);
   }, [bulletins]);
 
-  // Current year is expanded by default, older years collapsed
   const currentYear = new Date().getFullYear();
   const [collapsedYears, setCollapsedYears] = useState<Set<number>>(new Set());
 
@@ -56,22 +84,50 @@ export function BulletinManager() {
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Weekly Bulletins</h2>
         <div className="flex gap-2">
+          {deletedBulletins && deletedBulletins.length > 0 && (
+            <Button variant="outline" size="sm" onClick={() => setShowDeleted(!showDeleted)} className="gap-2">
+              <Archive className="w-4 h-4" />
+              Trash ({deletedBulletins.length})
+            </Button>
+          )}
           <Button onClick={() => { setEditingId(undefined); setMode("compose"); }} className="gap-2">
             <PenLine className="w-4 h-4" /> Compose Bulletin
           </Button>
         </div>
       </div>
 
+      {/* Recently Deleted Section */}
+      {showDeleted && deletedBulletins && deletedBulletins.length > 0 && (
+        <Card className="border-amber-200 bg-amber-50/50">
+          <CardContent className="p-4">
+            <h3 className="font-medium text-sm text-amber-900 mb-3 flex items-center gap-2">
+              <Archive className="w-4 h-4" /> Recently Deleted
+            </h3>
+            <div className="space-y-2">
+              {deletedBulletins.map((b) => (
+                <div key={b.id} className="flex items-center gap-3 p-2 rounded-md bg-white/60">
+                  <FileText className="w-5 h-5 text-muted-foreground shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{b.title}</p>
+                    <p className="text-xs text-muted-foreground">
+                      Deleted {b.deletedAt ? format(new Date(b.deletedAt), "MMM d, yyyy 'at' h:mm a") : "recently"}
+                    </p>
+                  </div>
+                  <Button size="sm" variant="outline" className="gap-1.5" onClick={() => restoreMutation.mutate({ id: b.id })}>
+                    <Undo2 className="w-3.5 h-3.5" /> Restore
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {isLoading ? (
         <div className="space-y-3">{[1,2,3].map(i => <Skeleton key={i} className="h-20 w-full" />)}</div>
       ) : groupedByYear.length > 0 ? (
         <div className="space-y-4">
           {groupedByYear.map(({ year, items }) => {
-            const isCollapsed = year !== currentYear && !collapsedYears.has(year)
-              ? true
-              : collapsedYears.has(year);
-            // Current year: expanded by default (collapsed only if user toggled)
-            // Older years: collapsed by default (expanded only if user toggled)
             const isExpanded = year === currentYear ? !collapsedYears.has(year) : collapsedYears.has(year);
 
             return (
@@ -128,7 +184,13 @@ export function BulletinManager() {
                                 <Button size="sm" variant="ghost"><Eye className="w-4 h-4" /></Button>
                               </a>
                             )}
-                            <Button size="sm" variant="ghost" className="text-destructive" onClick={() => deleteMutation.mutate({ id: bulletin.id })}>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="text-destructive"
+                              onClick={() => setDeleteConfirmId(bulletin.id)}
+                              aria-label="Delete bulletin"
+                            >
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
@@ -149,6 +211,32 @@ export function BulletinManager() {
           </Button>
         </Card>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteConfirmId !== null} onOpenChange={(open) => { if (!open) setDeleteConfirmId(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Move bulletin to trash?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This bulletin will be moved to the trash. You can restore it later from the Trash section.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={() => {
+                if (deleteConfirmId !== null) {
+                  deleteMutation.mutate({ id: deleteConfirmId });
+                  setDeleteConfirmId(null);
+                }
+              }}
+            >
+              Move to Trash
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

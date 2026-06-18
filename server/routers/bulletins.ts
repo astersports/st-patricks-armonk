@@ -1,7 +1,9 @@
 /**
  * Bulletins Router — CRUD for weekly parish bulletins (PDF uploads).
  */
-import { adminProcedure, publicProcedure, router, z, db, nanoid, storagePut, TRPCError } from "./_helpers";
+import { publicProcedure, router, z, db, nanoid, storagePut, TRPCError, sectionProcedure } from "./_helpers";
+
+const bulletinsSection = sectionProcedure("bulletins");
 import { validateBase64File } from "../middleware";
 import { sendBulletinNotifications } from "../notifications";
 import { createAuditLog } from "../db/auditLog";
@@ -10,13 +12,13 @@ export const bulletinsRouter = router({
   listPublished: publicProcedure.query(async () => {
     return db.getPublishedBulletins();
   }),
-  listAll: adminProcedure.query(async () => {
+  listAll: bulletinsSection.query(async () => {
     return db.getAllBulletins();
   }),
   getById: publicProcedure.input(z.object({ id: z.number() })).query(async ({ input }) => {
     return db.getBulletinById(input.id);
   }),
-  create: adminProcedure.input(z.object({
+  create: bulletinsSection.input(z.object({
     title: z.string().min(1),
     description: z.string().optional(),
     pdfUrl: z.string().min(1),
@@ -38,7 +40,7 @@ export const bulletinsRouter = router({
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.published ? "publish" : "create", entityType: "bulletin", entityId: String(id), details: JSON.stringify({ title: input.title }) });
     return { id };
   }),
-  update: adminProcedure.input(z.object({
+  update: bulletinsSection.input(z.object({
     id: z.number(),
     title: z.string().min(1).optional(),
     description: z.string().optional(),
@@ -65,13 +67,21 @@ export const bulletinsRouter = router({
     }
     return { success: true };
   }),
-  delete: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
+  delete: bulletinsSection.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
     const existing = await db.getBulletinById(input.id);
     await db.deleteBulletin(input.id);
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "delete", entityType: "bulletin", entityId: String(input.id), details: JSON.stringify({ title: existing?.title }) });
     return { success: true };
   }),
-  uploadPdf: adminProcedure.input(z.object({
+  listDeleted: bulletinsSection.query(async () => {
+    return db.getDeletedBulletins();
+  }),
+  restore: bulletinsSection.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
+    await db.restoreBulletin(input.id);
+    createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "restore", entityType: "bulletin", entityId: String(input.id), details: "{}" });
+    return { success: true };
+  }),
+  uploadPdf: bulletinsSection.input(z.object({
     fileName: z.string(),
     fileBase64: z.string(),
     contentType: z.string().default("application/pdf"),

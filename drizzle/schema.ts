@@ -54,6 +54,7 @@ export const bulletins = mysqlTable("bulletins", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
   authorId: int("authorId"),
+  deletedAt: timestamp("deletedAt"),
 });
 
 export type Bulletin = typeof bulletins.$inferSelect;

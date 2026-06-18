@@ -2,7 +2,9 @@
  * Email Subscriptions Router — subscribe, unsubscribe, list.
  * ~45 lines
  */
-import { adminProcedure, publicProcedure, router, z, db, nanoid } from "./_helpers";
+import { publicProcedure, router, z, db, nanoid, sectionProcedure } from "./_helpers";
+
+const subscribersSection = sectionProcedure("subscribers");
 import { rateLimitedPublicProcedure } from "./_rateLimited";
 
 export const subscriptionsRouter = router({
@@ -41,7 +43,7 @@ export const subscriptionsRouter = router({
     await db.unsubscribeByToken(input.token);
     return { success: true };
   }),
-  listAll: adminProcedure.query(async () => {
+  listAll: subscribersSection.query(async () => {
     return db.getAllSubscriptions();
   }),
 });

@@ -1,7 +1,9 @@
 /**
  * News Posts Router — CRUD for parish news articles.
  */
-import { adminProcedure, publicProcedure, router, z, db, TRPCError } from "./_helpers";
+import { publicProcedure, router, z, db, TRPCError, sectionProcedure } from "./_helpers";
+
+const newsSection = sectionProcedure("news");
 import { validateBase64File } from "../middleware";
 import { sendNewsNotifications } from "../notifications";
 import { createAuditLog } from "../db/auditLog";
@@ -10,13 +12,13 @@ export const newsRouter = router({
   listPublished: publicProcedure.query(async () => {
     return db.getPublishedNewsPosts();
   }),
-  listAll: adminProcedure.query(async () => {
+  listAll: newsSection.query(async () => {
     return db.getAllNewsPosts();
   }),
   getById: publicProcedure.input(z.object({ id: z.number() })).query(async ({ input }) => {
     return db.getNewsPostById(input.id);
   }),
-  create: adminProcedure.input(z.object({
+  create: newsSection.input(z.object({
     title: z.string().min(1),
     content: z.string().min(1),
     excerpt: z.string().optional(),
@@ -37,7 +39,7 @@ export const newsRouter = router({
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.published ? "publish" : "create", entityType: "news_post", entityId: String(id), details: JSON.stringify({ title: input.title }) });
     return { id };
   }),
-  update: adminProcedure.input(z.object({
+  update: newsSection.input(z.object({
     id: z.number(),
     title: z.string().min(1).optional(),
     content: z.string().min(1).optional(),
@@ -63,13 +65,13 @@ export const newsRouter = router({
     }
     return { success: true };
   }),
-  delete: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
+  delete: newsSection.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
     const existing = await db.getNewsPostById(input.id);
     await db.deleteNewsPost(input.id);
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "delete", entityType: "news_post", entityId: String(input.id), details: JSON.stringify({ title: existing?.title }) });
     return { success: true };
   }),
-  uploadImage: adminProcedure.input(z.object({
+  uploadImage: newsSection.input(z.object({
     fileName: z.string(),
     fileBase64: z.string(),
     contentType: z.string().default("image/jpeg"),

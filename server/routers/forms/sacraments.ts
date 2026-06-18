@@ -1,7 +1,8 @@
 /**
  * Sacrament-related form routers: baptism, sponsor, marriage, funeral.
  */
-import { adminProcedure, router, z, db, notifyOwner } from "../_helpers";
+import { router, z, db, notifyOwner, sectionProcedure } from "../_helpers";
+const sacSection = sectionProcedure("sacraments");
 import { rateLimitedFormProcedure } from "../_rateLimited";
 import { createAuditLog } from "../../db/auditLog";
 
@@ -26,10 +27,10 @@ export const baptismRouter = router({
     await notifyOwner({ title: "New Baptism Registration", content: `${input.childFirstName} ${input.childLastName} - Parent: ${input.parentEmail}` });
     return { success: true };
   }),
-  list: adminProcedure.query(async () => {
+  list: sacSection.query(async () => {
     return db.getBaptismRegistrations();
   }),
-  updateStatus: adminProcedure.input(z.object({
+  updateStatus: sacSection.input(z.object({
     id: z.number(),
     status: z.string(),
     adminNotes: z.string().optional(),
@@ -61,10 +62,10 @@ export const sponsorRouter = router({
     await notifyOwner({ title: "New Sponsor Certificate Request", content: `${input.sponsorFirstName} ${input.sponsorLastName} for ${input.candidateName} (${input.sacramentType})` });
     return { success: true };
   }),
-  list: adminProcedure.query(async () => {
+  list: sacSection.query(async () => {
     return db.getSponsorCertificates();
   }),
-  updateStatus: adminProcedure.input(z.object({
+  updateStatus: sacSection.input(z.object({
     id: z.number(),
     status: z.string(),
     adminNotes: z.string().optional(),
@@ -101,10 +102,10 @@ export const marriageRouter = router({
     await notifyOwner({ title: "New Marriage Inquiry", content: `${input.brideFirstName} ${input.brideLastName} & ${input.groomFirstName} ${input.groomLastName} - Preferred: ${input.preferredDate || 'TBD'}` });
     return { success: true };
   }),
-  list: adminProcedure.query(async () => {
+  list: sacSection.query(async () => {
     return db.getMarriageInquiries();
   }),
-  updateStatus: adminProcedure.input(z.object({
+  updateStatus: sacSection.input(z.object({
     id: z.number(),
     status: z.string(),
     adminNotes: z.string().optional(),
@@ -137,10 +138,10 @@ export const funeralRouter = router({
     await notifyOwner({ title: "New Funeral Pre-Planning Form", content: `Planner: ${input.plannerName} - For: ${input.deceasedName} (${input.isPrePlanning ? 'Pre-planning' : 'Immediate need'})` });
     return { success: true };
   }),
-  list: adminProcedure.query(async () => {
+  list: sacSection.query(async () => {
     return db.getFuneralPrePlannings();
   }),
-  updateStatus: adminProcedure.input(z.object({
+  updateStatus: sacSection.input(z.object({
     id: z.number(),
     status: z.string(),
     adminNotes: z.string().optional(),

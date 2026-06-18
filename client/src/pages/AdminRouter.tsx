@@ -1,7 +1,9 @@
-import { Route, Switch } from "wouter";
+import { Route, Switch, Redirect } from "wouter";
 import { lazy, Suspense } from "react";
 import AdminLayout from "@/components/AdminLayout";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { hasAccess, type AdminSection, type UserRole } from "../../../shared/roles";
 
 // Lazy-load admin pages for better code splitting
 const DashboardHome = lazy(() => import("./admin/DashboardHome"));
@@ -44,33 +46,43 @@ function AdminFallback() {
   );
 }
 
+/** Route guard: renders children only if user's role has access to the given section */
+function SectionGuard({ section, children }: { section: AdminSection; children: React.ReactNode }) {
+  const { user } = useAuth();
+  const role = (user?.role ?? "user") as UserRole;
+  if (role === "admin" || hasAccess(role, section)) {
+    return <>{children}</>;
+  }
+  return <Redirect to="/admin" />;
+}
+
 export default function AdminRouter() {
   return (
     <AdminLayout>
       <Suspense fallback={<AdminFallback />}>
         <Switch>
           <Route path="/" component={() => <DashboardHome />} />
-          <Route path="/news" component={() => <NewsManager />} />
-          <Route path="/bulletins" component={() => <BulletinManager />} />
-          <Route path="/gallery" component={() => <GalleryManager />} />
-          <Route path="/subscribers" component={() => <SubscriberList />} />
-          <Route path="/events" component={() => <EventManager />} />
-          <Route path="/key-dates" component={() => <KeyDatesManager />} />
-          <Route path="/volunteers" component={() => <VolunteerManager />} />
-          <Route path="/volunteer-needs" component={() => <VolunteerNeedsManager />} />
+          <Route path="/news" component={() => <SectionGuard section="news"><NewsManager /></SectionGuard>} />
+          <Route path="/bulletins" component={() => <SectionGuard section="bulletins"><BulletinManager /></SectionGuard>} />
+          <Route path="/gallery" component={() => <SectionGuard section="gallery"><GalleryManager /></SectionGuard>} />
+          <Route path="/subscribers" component={() => <SectionGuard section="subscribers"><SubscriberList /></SectionGuard>} />
+          <Route path="/events" component={() => <SectionGuard section="events"><EventManager /></SectionGuard>} />
+          <Route path="/key-dates" component={() => <SectionGuard section="key_dates"><KeyDatesManager /></SectionGuard>} />
+          <Route path="/volunteers" component={() => <SectionGuard section="volunteers"><VolunteerManager /></SectionGuard>} />
+          <Route path="/volunteer-needs" component={() => <SectionGuard section="volunteers"><VolunteerNeedsManager /></SectionGuard>} />
           <Route path="/needs-attention" component={() => <NeedsAttention />} />
-          <Route path="/registrations" component={() => <ParishRegistrationsManager />} />
-          <Route path="/ccd" component={() => <CcdManager />} />
-          <Route path="/ccd-calendar" component={() => <CcdManager />} />
-          <Route path="/ccd-permissions" component={() => <CcdPermissionsManager />} />
-          <Route path="/documents" component={() => <DocumentsManager />} />
-          <Route path="/cyo" component={() => <CyoManager />} />
-          <Route path="/teen-life" component={() => <CyoManager />} />
-          <Route path="/sacraments" component={() => <SacramentsManager />} />
-          <Route path="/users" component={() => <UserManager />} />
-          <Route path="/settings" component={() => <SettingsManager />} />
-          <Route path="/form-export" component={() => <FormExport />} />
-          <Route path="/faq" component={() => <FaqManager />} />
+          <Route path="/registrations" component={() => <SectionGuard section="registrations"><ParishRegistrationsManager /></SectionGuard>} />
+          <Route path="/ccd" component={() => <SectionGuard section="ccd_registrations"><CcdManager /></SectionGuard>} />
+          <Route path="/ccd-calendar" component={() => <SectionGuard section="ccd_calendar"><CcdManager /></SectionGuard>} />
+          <Route path="/ccd-permissions" component={() => <SectionGuard section="ccd_permissions"><CcdPermissionsManager /></SectionGuard>} />
+          <Route path="/documents" component={() => <SectionGuard section="documents"><DocumentsManager /></SectionGuard>} />
+          <Route path="/cyo" component={() => <SectionGuard section="cyo"><CyoManager /></SectionGuard>} />
+          <Route path="/teen-life" component={() => <SectionGuard section="teen_life"><CyoManager /></SectionGuard>} />
+          <Route path="/sacraments" component={() => <SectionGuard section="sacraments"><SacramentsManager /></SectionGuard>} />
+          <Route path="/users" component={() => <SectionGuard section="users"><UserManager /></SectionGuard>} />
+          <Route path="/settings" component={() => <SectionGuard section="settings"><SettingsManager /></SectionGuard>} />
+          <Route path="/form-export" component={() => <SectionGuard section="form_export"><FormExport /></SectionGuard>} />
+          <Route path="/faq" component={() => <SectionGuard section="faq"><FaqManager /></SectionGuard>} />
           <Route path="/closure" component={() => <ClosureManager />} />
           <Route path="/schedule" component={() => <ScheduleManager />} />
           <Route path="/mass-intentions" component={() => <MassIntentionsManager />} />

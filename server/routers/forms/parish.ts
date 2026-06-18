@@ -1,7 +1,11 @@
 /**
  * Parish-related form routers: documents, teen life, parish registration, CCD permissions.
  */
-import { adminProcedure, publicProcedure, router, z, db, nanoid, storagePut, notifyOwner } from "../_helpers";
+import { publicProcedure, router, z, db, nanoid, storagePut, notifyOwner, sectionProcedure } from "../_helpers";
+const docsSection = sectionProcedure("documents");
+const teenSection = sectionProcedure("teen_life");
+const regSection = sectionProcedure("registrations");
+const ccdPermSection = sectionProcedure("ccd_permissions");
 import { rateLimitedFormProcedure } from "../_rateLimited";
 import { validateBase64File } from "../../middleware";
 import { createAuditLog } from "../../db/auditLog";
@@ -10,10 +14,10 @@ export const documentsRouter = router({
   byCategory: publicProcedure.input(z.object({ category: z.string() })).query(async ({ input }) => {
     return db.getDocumentsByCategory(input.category);
   }),
-  all: adminProcedure.query(async () => {
+  all: docsSection.query(async () => {
     return db.getAllDocuments();
   }),
-  create: adminProcedure.input(z.object({
+  create: docsSection.input(z.object({
     title: z.string().min(1),
     description: z.string().optional(),
     category: z.string().min(1),
@@ -25,7 +29,7 @@ export const documentsRouter = router({
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "create", entityType: "document", details: JSON.stringify({ title: input.title, category: input.category }) });
     return { success: true };
   }),
-  update: adminProcedure.input(z.object({
+  update: docsSection.input(z.object({
     id: z.number(),
     title: z.string().optional(),
     description: z.string().optional(),
@@ -39,12 +43,12 @@ export const documentsRouter = router({
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "update", entityType: "document", entityId: String(id), details: JSON.stringify({ title: data.title }) });
     return { success: true };
   }),
-  delete: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
+  delete: docsSection.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
     await db.deleteDocument(input.id);
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "delete", entityType: "document", entityId: String(input.id) });
     return { success: true };
   }),
-  upload: adminProcedure.input(z.object({
+  upload: docsSection.input(z.object({
     fileName: z.string(),
     fileData: z.string(),
     contentType: z.string(),
@@ -89,10 +93,10 @@ export const teenLifeRouter = router({
     }).catch(() => {});
     return { success: true };
   }),
-  list: adminProcedure.query(async () => {
+  list: teenSection.query(async () => {
     return db.getTeenLifeRegistrations();
   }),
-  updateStatus: adminProcedure.input(z.object({
+  updateStatus: teenSection.input(z.object({
     id: z.number(),
     status: z.string(),
     adminNotes: z.string().optional(),
@@ -124,10 +128,10 @@ export const parishRegistrationRouter = router({
     }).catch(() => {});
     return { success: true };
   }),
-  list: adminProcedure.query(async () => {
+  list: regSection.query(async () => {
     return db.getParishRegistrations();
   }),
-  updateStatus: adminProcedure.input(z.object({
+  updateStatus: regSection.input(z.object({
     id: z.number(),
     status: z.string(),
     adminNotes: z.string().optional(),
@@ -185,10 +189,10 @@ export const ccdPermissionsRouter = router({
     }).catch(() => {});
     return { success: true };
   }),
-  list: adminProcedure.query(async () => {
+  list: ccdPermSection.query(async () => {
     return db.getCcdPermissions();
   }),
-  updateStatus: adminProcedure.input(z.object({
+  updateStatus: ccdPermSection.input(z.object({
     id: z.number(),
     status: z.enum(["pending", "approved", "flagged"]),
     adminNotes: z.string().optional(),

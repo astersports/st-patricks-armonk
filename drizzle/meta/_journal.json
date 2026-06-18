@@ -183,6 +183,13 @@
       "when": 1781771484497,
       "tag": "0025_loving_prodigy",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "5",
+      "when": 1781782873694,
+      "tag": "0026_wise_wild_pack",
+      "breakpoints": true
     }
   ]
 }

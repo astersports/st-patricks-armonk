@@ -1,7 +1,8 @@
 /**
  * Volunteer Router — opportunities and signups.
  */
-import { adminProcedure, publicProcedure, router, z, db } from "./_helpers";
+import { publicProcedure, router, z, db, sectionProcedure } from "./_helpers";
+const volunteersSection = sectionProcedure("volunteers");
 import { rateLimitedFormProcedure } from "./_rateLimited";
 import { createAuditLog } from "../db/auditLog";
 
@@ -9,10 +10,10 @@ export const volunteerRouter = router({
   listOpportunities: publicProcedure.query(async () => {
     return db.getVolunteerOpportunities(true);
   }),
-  listAllOpportunities: adminProcedure.query(async () => {
+  listAllOpportunities: volunteersSection.query(async () => {
     return db.getVolunteerOpportunities(false);
   }),
-  createOpportunity: adminProcedure.input(z.object({
+  createOpportunity: volunteersSection.input(z.object({
     title: z.string().min(1),
     description: z.string().optional(),
     ministry: z.string().optional(),
@@ -32,7 +33,7 @@ export const volunteerRouter = router({
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "create", entityType: "volunteer_opportunity", entityId: String(id), details: JSON.stringify({ title: input.title }) });
     return { success: true, id };
   }),
-  updateOpportunity: adminProcedure.input(z.object({
+  updateOpportunity: volunteersSection.input(z.object({
     id: z.number(),
     title: z.string().optional(),
     description: z.string().optional(),
@@ -50,7 +51,7 @@ export const volunteerRouter = router({
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "update", entityType: "volunteer_opportunity", entityId: String(id), details: JSON.stringify({ title: input.title }) });
     return { success: true };
   }),
-  deleteOpportunity: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
+  deleteOpportunity: volunteersSection.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
     await db.deleteVolunteerOpportunity(input.id);
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: "delete", entityType: "volunteer_opportunity", entityId: String(input.id) });
     return { success: true };
@@ -69,12 +70,12 @@ export const volunteerRouter = router({
     });
     return { success: true, id };
   }),
-  listSignups: adminProcedure.input(z.object({
+  listSignups: volunteersSection.input(z.object({
     opportunityId: z.number(),
   })).query(async ({ input }) => {
     return db.getVolunteerSignups(input.opportunityId);
   }),
-  cancelSignup: adminProcedure.input(z.object({
+  cancelSignup: volunteersSection.input(z.object({
     id: z.number(),
     opportunityId: z.number(),
   })).mutation(async ({ input, ctx }) => {

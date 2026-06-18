@@ -3,7 +3,8 @@
  * Public: list active needs, respond to a need.
  * Admin: create, update, close needs.
  */
-import { adminProcedure, publicProcedure, router, z, db } from "./_helpers";
+import { publicProcedure, router, z, db, sectionProcedure } from "./_helpers";
+const volunteersSection = sectionProcedure("volunteers");
 import { rateLimitedFormProcedure } from "./_rateLimited";
 import { createAuditLog } from "../db/auditLog";
 
@@ -14,19 +15,19 @@ export const volunteerNeedsRouter = router({
   }),
 
   /** List all needs including inactive (admin) */
-  listAll: adminProcedure.query(async () => {
+  listAll: volunteersSection.query(async () => {
     return db.getAllVolunteerNeeds();
   }),
 
   /** Get responses for a specific need (admin) */
-  getResponses: adminProcedure
+  getResponses: volunteersSection
     .input(z.object({ needId: z.number() }))
     .query(async ({ input }) => {
       return db.getVolunteerNeedResponses(input.needId);
     }),
 
   /** Create a new volunteer need (admin) */
-  create: adminProcedure
+  create: volunteersSection
     .input(z.object({
       title: z.string().min(1),
       description: z.string().optional(),
@@ -55,7 +56,7 @@ export const volunteerNeedsRouter = router({
     }),
 
   /** Update a volunteer need (admin) */
-  update: adminProcedure
+  update: volunteersSection
     .input(z.object({
       id: z.number(),
       title: z.string().min(1).optional(),

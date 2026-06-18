@@ -4,7 +4,7 @@
  */
 import { z } from "zod";
 import { router } from "../routers/_helpers";
-import { publicProcedure, staffProcedure } from "../routers/_helpers";
+import { publicProcedure, adminProcedure } from "../routers/_helpers";
 import * as db from "../db";
 import { createAuditLog } from "../db/auditLog";
 import { DEFAULT_PARISH_SCHEDULE, DEFAULT_PARISH_INFO } from "../../shared/scheduleEngine";
@@ -45,7 +45,7 @@ export const parishScheduleRouter = router({
   }),
 
   /** Admin: update the full schedule */
-  updateSchedule: staffProcedure
+  updateSchedule: adminProcedure
     .input(z.object({ schedule: z.any() }))
     .mutation(async ({ input, ctx }) => {
       await db.upsertSiteSetting(SCHEDULE_KEY, JSON.stringify(input.schedule));
@@ -60,7 +60,7 @@ export const parishScheduleRouter = router({
     }),
 
   /** Admin: update parish info */
-  updateInfo: staffProcedure
+  updateInfo: adminProcedure
     .input(z.object({ info: z.any() }))
     .mutation(async ({ input, ctx }) => {
       await db.upsertSiteSetting(INFO_KEY, JSON.stringify(input.info));

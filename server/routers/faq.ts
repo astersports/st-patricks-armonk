@@ -2,7 +2,9 @@
  * FAQ Router — admin CRUD for parish FAQ knowledge base.
  * ~65 lines
  */
-import { publicProcedure, protectedProcedure, router, z, db } from "./_helpers";
+import { publicProcedure, router, z, db, sectionProcedure } from "./_helpers";
+
+const faqSection = sectionProcedure("faq");
 
 export const faqRouter = router({
   /** Public: get all active FAQs (for display or assistant context) */
@@ -11,12 +13,12 @@ export const faqRouter = router({
   }),
 
   /** Admin: get all FAQs including inactive */
-  listAll: protectedProcedure.query(async () => {
+  listAll: faqSection.query(async () => {
     return db.getAllFaqs();
   }),
 
   /** Admin: create a new FAQ */
-  create: protectedProcedure.input(z.object({
+  create: faqSection.input(z.object({
     question: z.string().min(1).max(500),
     answer: z.string().min(1),
     category: z.string().max(100).default("general"),
@@ -27,7 +29,7 @@ export const faqRouter = router({
   }),
 
   /** Admin: update an existing FAQ */
-  update: protectedProcedure.input(z.object({
+  update: faqSection.input(z.object({
     id: z.number().int(),
     question: z.string().min(1).max(500).optional(),
     answer: z.string().min(1).optional(),
@@ -41,7 +43,7 @@ export const faqRouter = router({
   }),
 
   /** Admin: delete a FAQ */
-  delete: protectedProcedure.input(z.object({
+  delete: faqSection.input(z.object({
     id: z.number().int(),
   })).mutation(async ({ input }) => {
     await db.deleteFaq(input.id);
