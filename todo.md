@@ -1063,3 +1063,10 @@
 - [x] 3. Bump Footer.tsx fixed px sizes (+1–2px each)
 - [x] 4. (Superseded by 112.5% root bump — text-xs is now ~13.5px, text-sm ~15.75px; no further per-class lifts needed)
 - [x] AC: 375px viewport verified (Home, Mass Times, Sacraments, Faith Formation, Footer), 49 tests pass, 0 TS errors
+
+### Drop Spanish / Remove i18n Toggle
+- [x] Remove LanguageToggle from Navigation.tsx
+- [x] Unwrap LanguageProvider from main.tsx
+- [x] Delete LanguageToggle.tsx and LanguageContext.tsx
+- [x] Grep for stragglers (useLanguage, LanguageProvider, etc.) — returns nothing
+- [x] AC: no globe toggle, grep returns nothing, 49 tests green, 0 TS errors
