@@ -1138,3 +1138,6 @@
 - [x] SE-4: Created shared client/src/lib/exportCsv.ts (generic, RFC 4180 compliant, BOM prefix)
 - [x] SE-4b: Added "Export CSV" button on unified Sacraments view (exports filtered+sorted rows)
 - [x] SE-5: Tests pass (91/91) — aggregate, bulletin filter, notify gating, CSV accessor correctness
+
+### CCD-DROPLET-EMBED
+- [x] Replace built-in CCD registration form with embedded Droplet.io form (https://app.droplet.io/form/y5VX2N)
