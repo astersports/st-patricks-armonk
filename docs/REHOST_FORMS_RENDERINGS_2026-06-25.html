@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>St. Patrick — Digital Forms (renderings)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4efe3; --card:#fffdf7; --ink:#17241c; --green:#1d5640; --green-d:#143b2c;
+    --gold:#a87f2e; --gold-l:#c8a64e; --line:#ddd5c1; --line2:#cabf a6; --muted:#6c766c;
+    --disp:"EB Garamond",Georgia,serif; --body:"Inter",system-ui,sans-serif;
+    --r:6px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#e7e0d1;color:var(--ink);font-family:var(--body);line-height:1.55;-webkit-font-smoothing:antialiased}
+  :focus-visible{outline:2px solid var(--green);outline-offset:2px}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+
+  .board{position:sticky;top:0;z-index:30;background:rgba(231,224,209,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .board .wrap{display:flex;align-items:center;gap:14px;height:54px;flex-wrap:wrap}
+  .board b{font-family:var(--disp);font-weight:600;font-size:18px}
+  .board .tag{font-size:12px;color:var(--muted);font-style:italic;font-family:var(--disp)}
+
+  .scene{padding:54px 0}
+  .scene-label{font-family:var(--body);font-weight:600;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+  .anno{font-size:12.5px;color:var(--muted);font-style:italic;font-family:var(--disp);font-size:14px;margin:4px 0 22px}
+
+  /* browser frame */
+  .browser{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--paper);box-shadow:0 30px 70px -34px rgba(20,40,30,.45)}
+  .bbar{display:flex;align-items:center;gap:7px;padding:9px 13px;background:#ece5d6;border-bottom:1px solid var(--line)}
+  .bbar i{width:10px;height:10px;border-radius:50%;background:#c7bda6;display:inline-block}
+  .bbar .url{margin-left:8px;font-size:12px;color:var(--muted);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:3px 12px;font-family:var(--body)}
+
+  /* parish masthead */
+  .mast{text-align:center;padding:30px 20px 22px;background:
+     linear-gradient(180deg,rgba(29,86,64,.05),transparent)}
+  .crest{width:34px;height:34px;margin:0 auto 12px;display:block;color:var(--green)}
+  .mast .pname{font-family:var(--disp);font-weight:600;font-size:27px;color:var(--green-d);letter-spacing:.01em}
+  .mast .ploc{font-family:var(--disp);font-style:italic;font-size:15px;color:var(--muted);margin-top:2px}
+  .rule{display:flex;align-items:center;justify-content:center;gap:10px;margin:16px auto 0;max-width:280px}
+  .rule .ln{height:1px;background:var(--gold-l);flex:1}
+  .rule .dot{width:5px;height:5px;border-radius:50%;background:var(--gold);transform:rotate(45deg)}
+
+  /* form document */
+  .doc{max-width:600px;margin:0 auto;padding:34px 26px 46px}
+  .eyebrow{font-family:var(--body);font-weight:600;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+  .doc h1{font-family:var(--disp);font-weight:600;font-size:38px;line-height:1.05;margin:8px 0 6px;color:var(--green-d)}
+  .lede{font-family:var(--disp);font-size:17px;color:#41514a;margin:0 0 22px}
+
+  /* routing banner — the signature */
+  .route{display:flex;gap:13px;align-items:flex-start;background:var(--card);border:1px solid var(--line);
+    border-left:3px solid var(--gold);border-radius:var(--r);padding:14px 16px;margin-bottom:26px}
+  .route .arr{font-family:var(--disp);font-size:22px;color:var(--gold);line-height:1;margin-top:1px}
+  .route p{margin:0;font-size:13.5px;color:#3c4b44}
+  .route b{font-weight:600;color:var(--green-d)}
+
+  form{display:block}
+  .f{margin-bottom:17px}
+  .f label{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px}
+  .f .req{color:var(--gold);font-weight:700}
+  .f input[type=text],.f input[type=date],.f input[type=email],.f input[type=tel],.f select{
+    width:100%;font-family:var(--body);font-size:14px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line2);border-radius:var(--r);padding:11px 12px}
+  .f .help{font-size:11.5px;color:var(--muted);margin-top:5px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .checks{display:flex;flex-direction:column;gap:9px;margin-top:2px}
+  .chk{display:flex;align-items:center;gap:10px;font-size:13.5px;background:var(--card);border:1px solid var(--line2);border-radius:var(--r);padding:10px 12px}
+  .chk .box{width:17px;height:17px;border:1.5px solid var(--green);border-radius:3px;flex:0 0 auto}
+  .chk.on{border-color:var(--green);background:rgba(29,86,64,.05)}
+  .chk.on .box{background:var(--green);position:relative}
+  .chk.on .box::after{content:"";position:absolute;left:5px;top:1px;width:5px;height:9px;border:solid var(--card);border-width:0 2px 2px 0;transform:rotate(45deg)}
+
+  /* secured upload */
+  .secure{border:1px dashed var(--green);border-radius:var(--r);padding:14px;background:rgba(29,86,64,.04)}
+  .secure .top{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--green-d)}
+  .secure svg{width:15px;height:15px}
+  .secure .drop{margin-top:9px;font-size:12.5px;color:var(--muted);border:1px solid var(--line2);border-radius:var(--r);background:var(--card);padding:10px 12px;text-align:center}
+  .secure .note{font-size:11.5px;color:var(--green);margin-top:8px;display:flex;gap:6px;align-items:center}
+
+  .submit{margin-top:24px;width:100%;border:none;background:var(--green);color:#f6f3ea;font-family:var(--body);
+    font-weight:600;font-size:15px;padding:14px;border-radius:var(--r);cursor:pointer}
+  .submit:hover{background:var(--green-d)}
+  .fineprint{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:14px;font-size:11.5px;color:var(--muted)}
+  .fineprint svg{width:13px;height:13px;color:var(--green)}
+
+  /* ===== Scene 2: staff inbox ===== */
+  .panel{max-width:760px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 30px 70px -34px rgba(20,40,30,.45)}
+  .phead{display:flex;align-items:center;gap:12px;padding:18px 22px;background:var(--green-d);color:#eef3ee}
+  .phead .crest{margin:0;width:24px;height:24px;color:var(--gold-l)}
+  .phead .ttl{font-family:var(--disp);font-weight:600;font-size:18px}
+  .phead .who{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:12px;color:#bcd0c4;background:rgba(255,255,255,.08);padding:5px 11px;border-radius:999px}
+  .phead .who svg{width:13px;height:13px}
+  .pbody{padding:20px 22px 26px}
+  .pbody h2{font-family:var(--disp);font-weight:600;font-size:24px;color:var(--green-d);margin:0 0 3px}
+  .tabs{display:flex;gap:18px;border-bottom:1px solid var(--line);margin:14px 0 6px}
+  .tabs span{font-size:13px;font-weight:600;color:var(--muted);padding-bottom:10px;cursor:default}
+  .tabs span.act{color:var(--green-d);border-bottom:2px solid var(--gold)}
+  .tabs span .ct{font-family:var(--body);font-size:11px;background:var(--gold);color:#fff;border-radius:999px;padding:1px 7px;margin-left:5px}
+
+  .sub{display:flex;align-items:center;gap:13px;padding:15px 4px;border-bottom:1px solid var(--line)}
+  .sicon{width:36px;height:36px;border-radius:8px;background:rgba(29,86,64,.08);display:grid;place-items:center;color:var(--green);flex:0 0 auto}
+  .sicon svg{width:18px;height:18px}
+  .smain{min-width:0;flex:1}
+  .sform{font-size:14px;font-weight:600;color:var(--ink)}
+  .smeta{font-size:12px;color:var(--muted);margin-top:2px}
+  .sroute{color:var(--green-d);font-weight:600}
+  .sright{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+  .pill{font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
+  .pill.new{background:var(--gold);color:#fff}
+  .pill.done{background:rgba(29,86,64,.1);color:var(--green-d)}
+  .act-btn{font-size:11.5px;font-weight:600;color:var(--green-d);border:1px solid var(--line2);border-radius:5px;padding:5px 9px;background:var(--card);cursor:pointer}
+  .act-btn.lock{display:inline-flex;align-items:center;gap:5px}
+  .act-btn svg{width:12px;height:12px}
+  .sub.done{opacity:.6}
+
+  .scene-foot{font-size:12px;color:var(--muted);text-align:center;margin-top:18px;font-style:italic;font-family:var(--disp);font-size:13.5px}
+  footer{padding:34px 0 64px;text-align:center;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);margin-top:50px;font-family:var(--disp);font-style:italic}
+
+  @media (max-width:680px){.row2{grid-template-columns:1fr}.doc h1{font-size:31px}}
+</style>
+</head>
+<body>
+
+<div class="board"><div class="wrap">
+  <b>St. Patrick — Digital Forms</b>
+  <span class="tag">renderings · proposed parish identity · for Frank / CC review</span>
+</div></div>
+
+<!-- crest symbol (quatrefoil) reused -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="quatrefoil" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M12 2a3.4 3.4 0 0 1 3.2 2.3A3.4 3.4 0 0 1 19.7 8.8 3.4 3.4 0 0 1 22 12a3.4 3.4 0 0 1-2.3 3.2 3.4 3.4 0 0 1-4.5 4.5A3.4 3.4 0 0 1 12 22a3.4 3.4 0 0 1-3.2-2.3 3.4 3.4 0 0 1-4.5-4.5A3.4 3.4 0 0 1 2 12a3.4 3.4 0 0 1 2.3-3.2A3.4 3.4 0 0 1 8.8 4.3 3.4 3.4 0 0 1 12 2Zm0 5.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Z"/>
+</symbol></svg>
+
+<!-- ===================== SCENE 1: PARISHIONER FORM ===================== -->
+<section class="scene"><div class="wrap">
+  <div class="scene-label">Scene 1 — Parishioner fills the form</div>
+  <p class="anno">A blank form, made digital. Every form shows where it goes and what happens next — the routing is on the page.</p>
+
+  <div class="browser">
+    <div class="bbar"><i></i><i></i><i></i><span class="url">stpatrickinarmonk.org/forms/faith-formation</span></div>
+
+    <div class="mast">
+      <svg class="crest"><use href="#quatrefoil"/></svg>
+      <div class="pname">St. Patrick&rsquo;s Church</div>
+      <div class="ploc">Armonk, New York</div>
+      <div class="rule"><span class="ln"></span><span class="dot"></span><span class="ln"></span></div>
+    </div>
+
+    <div class="doc">
+      <div class="eyebrow">Faith Formation</div>
+      <h1>CCD Registration</h1>
+      <p class="lede">Register your child for this year&rsquo;s religious education and sacrament preparation.</p>
+
+      <div class="route">
+        <span class="arr">&rarr;</span>
+        <p>This goes to the <b>Faith Formation Office</b>. You&rsquo;ll get a confirmation email right away, and the coordinator will follow up within three days.</p>
+      </div>
+
+      <form onsubmit="return false">
+        <div class="f">
+          <label for="cn">Child&rsquo;s full name <span class="req">*</span></label>
+          <input id="cn" type="text" value="Charlotte Byrne">
+        </div>
+        <div class="row2">
+          <div class="f">
+            <label for="dob">Date of birth <span class="req">*</span></label>
+            <input id="dob" type="date" value="2015-04-09">
+          </div>
+          <div class="f">
+            <label for="gr">Grade <span class="req">*</span></label>
+            <select id="gr"><option>4th grade</option></select>
+          </div>
+        </div>
+
+        <div class="f">
+          <label>Sacraments this year</label>
+          <div class="checks">
+            <div class="chk on"><span class="box"></span>First Reconciliation</div>
+            <div class="chk on"><span class="box"></span>First Holy Communion</div>
+            <div class="chk"><span class="box"></span>Confirmation</div>
+          </div>
+        </div>
+
+        <div class="row2">
+          <div class="f">
+            <label for="pn">Parent / guardian <span class="req">*</span></label>
+            <input id="pn" type="text" value="Maureen Byrne">
+          </div>
+          <div class="f">
+            <label for="ph">Phone <span class="req">*</span></label>
+            <input id="ph" type="tel" value="(914) 273-9724">
+          </div>
+        </div>
+        <div class="f">
+          <label for="em">Email <span class="req">*</span></label>
+          <input id="em" type="email" value="mbyrne@example.com">
+          <div class="help">We&rsquo;ll send your confirmation and any follow-up here.</div>
+        </div>
+
+        <div class="f">
+          <label>Baptism certificate <span style="font-weight:400;color:var(--muted)">— only if your child was baptized at another parish</span></label>
+          <div class="secure">
+            <div class="top">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+              Secure upload
+            </div>
+            <div class="drop">Tap to add a photo or PDF</div>
+            <div class="note">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+              Encrypted. Seen only by the parish office — never posted publicly.
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="submit">Submit registration</button>
+        <div class="fineprint">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          Sent securely to the parish office and recorded so nothing gets lost.
+        </div>
+      </form>
+    </div>
+  </div>
+  <p class="scene-foot">On submit: a PDF is generated, emailed to Faith Formation, and (because it&rsquo;s a child record) stored staff-only — store-then-send, so a bounced email is never a lost registration.</p>
+</div></section>
+
+<!-- ===================== SCENE 2: STAFF INBOX ===================== -->
+<section class="scene" style="background:linear-gradient(180deg,#e7e0d1,#e1d9c8)"><div class="wrap">
+  <div class="scene-label">Scene 2 — The parish office acts on it</div>
+  <p class="anno">Where the filled forms land. Routed, recorded, and tracked to &ldquo;done&rdquo; — so a registration can&rsquo;t die unread in someone&rsquo;s inbox.</p>
+
+  <div class="panel">
+    <div class="phead">
+      <svg class="crest"><use href="#quatrefoil"/></svg>
+      <span class="ttl">Parish Office</span>
+      <span class="who"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Signed in · staff</span>
+    </div>
+    <div class="pbody">
+      <h2>Form submissions</h2>
+      <div class="tabs"><span class="act">New<span class="ct">3</span></span><span>Actioned</span><span>All</span></div>
+
+      <div class="sub">
+        <div class="sicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 4-3.5 7-8 9-4.5-2-8-5-8-9V7z"/></svg></div>
+        <div class="smain">
+          <div class="sform">CCD Registration — Charlotte Byrne</div>
+          <div class="smeta"><span class="sroute">&rarr; Faith Formation</span> · submitted 2 hours ago</div>
+        </div>
+        <div class="sright">
+          <span class="pill new">New</span>
+          <button class="act-btn">View PDF</button>
+          <button class="act-btn lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Certificate</button>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="sicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h18M3 12h18M3 17h12"/></svg></div>
+        <div class="smain">
+          <div class="sform">Sacrament Request — Confirmation</div>
+          <div class="smeta"><span class="sroute">&rarr; Fr. Daniel</span> · submitted 5 hours ago</div>
+        </div>
+        <div class="sright">
+          <span class="pill new">New</span>
+          <button class="act-btn">View PDF</button>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="sicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M5 8c0-2 3-3 7-3s7 1 7 3"/></svg></div>
+        <div class="smain">
+          <div class="sform">Mass Intention — for the Walsh family</div>
+          <div class="smeta"><span class="sroute">&rarr; Parish Office</span> · submitted yesterday · email only</div>
+        </div>
+        <div class="sright">
+          <span class="pill new">New</span>
+          <button class="act-btn">View PDF</button>
+        </div>
+      </div>
+
+      <div class="sub done">
+        <div class="sicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 4-3.5 7-8 9-4.5-2-8-5-8-9V7z"/></svg></div>
+        <div class="smain">
+          <div class="sform">CCD Registration — Liam Foley</div>
+          <div class="smeta"><span class="sroute">&rarr; Faith Formation</span> · actioned by M. Doyle</div>
+        </div>
+        <div class="sright">
+          <span class="pill done">Actioned</span>
+          <button class="act-btn">View PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="scene-foot">Sensitive forms (child records, uploads) are stored + tracked here behind staff sign-in. Low-sensitivity ones (Mass intentions, contact) are email-PDF only — no record kept.</p>
+</div></section>
+
+<footer><div class="wrap">
+  St. Patrick&rsquo;s Church, Armonk — renderings only. Build per stpatrick-forms-rehost-spec.<br>
+  Proposed parish identity (EB Garamond / liturgical green &amp; gold) — replace with the parish&rsquo;s actual marks.
+</div></footer>
+
+</body>
+</html>

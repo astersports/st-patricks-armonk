@@ -1,0 +1,126 @@
+BUILD SPEC — St. Patrick: Off-Manus Rehost + Digital Forms (C1 / S1 / S2)
+Status: ARCHITECT DELIVERABLE. Standalone rehost on the #103 pattern. No parish-PII
+        migration — the forms are BLANK (build, not rescue). Ratified design; the new
+        host must exist first (D-1, Frank). DB/auth holds for owner approval at provision.
+For: Claude Code (CC) · Author: Claude (architect) · Date: 2026-06-25 · Relayed by Frank
+
+────────────────────────────────────────────────────────────────────────
+0. GROUNDING / SCOPE CORRECTION
+────────────────────────────────────────────────────────────────────────
+The 19 "PII tables" are BLANK FORM TEMPLATES, not stored records. So:
+  - NO MySQL→Postgres data migration for forms — rebuild them natively. The A1 "dump
+    the DB before Manus purges" emergency is CLOSED for the form tables.
+  - REMAINING rescue (separate, operator-run, only if non-empty): the Forge S3 file
+    bucket (bulletins/audio/photos/any uploads) + the Droplet.io (live CCD
+    registrations) and Flocknote (subscribers) external-account exports. Those, not
+    the form tables, are the only things still on a clock.
+This spec is the FORMS SYSTEM — the piece Frank emphasized. The surrounding parish CMS
+  (bulletins, Mass schedule, homily archive) rehosts on the same stack as a parallel
+  slice; out of scope here, noted in §9.
+
+────────────────────────────────────────────────────────────────────────
+1. THE JOB (Frank's words)
+────────────────────────────────────────────────────────────────────────
+Blank forms get FILLED OUT and DISTRIBUTED to the right destination so AN ACTION
+HAPPENS. A parishioner completes a form on the site → it generates a PDF → the PDF is
+emailed to the form's configured recipient → for the sensitive subset, the submission +
+any uploaded file are also stored securely so nothing is lost and staff can act on it.
+
+────────────────────────────────────────────────────────────────────────
+2. STACK (ruled — standalone, #103 pattern; NOT a youth-sports tenant)
+────────────────────────────────────────────────────────────────────────
+Q1/S2 ruled: STANDALONE rehost. A parish CMS + form system is a different domain from
+the youth-sports multi-tenant schema; forcing it in is a bad marriage. Reuse the #103
+PATTERN, not its instance:
+  - Host: Railway. · DB + Storage: Supabase (Postgres + Storage). · Staff auth: Google
+    OAuth (own-JWT session, the #103 option-(b) shape). · Email delivery: a real email
+    service (Resend or SendGrid) — pick one, keyless-fallback to log in dev.
+  - All outbound (email API, any geocode) through the app's fetch boundary; secrets via
+    env, never committed.
+
+────────────────────────────────────────────────────────────────────────
+3. FORM MODEL — a registry, not hardcoded pages
+────────────────────────────────────────────────────────────────────────
+Each form is a config row, so adding/editing a form is data, not code:
+  form: { slug, title, intro, fields[], recipients[], sensitivity, confirmationCopy }
+  field: { key, label, type (text|date|select|checkbox|file|…), required, help }
+  recipients: where the filled form is routed (the "distributed somewhere" core) —
+    one or more parish roles/addresses, e.g. CCD Coordinator, Parish Office, the priest.
+  sensitivity: T0 (low) | T1 (sensitive — child data / cert uploads).
+Initial forms (blank): CCD / Faith-Formation registration (T1), sacrament request (T1
+  if cert upload), Mass intention (T0), bulletin/Flocknote signup (T0), general
+  contact (T0). Exact set from the parish; the registry makes it editable.
+
+────────────────────────────────────────────────────────────────────────
+4. SUBMIT PIPELINE — fill → PDF → route → (store)
+────────────────────────────────────────────────────────────────────────
+On submit (public, unauthenticated):
+  1. Validate server-side (required, types, file magic-byte check — the audit flagged
+     St Patrick's missing upload validation; do NOT repeat it).
+  2. Render a PDF of the submission (parish letterhead).
+  3. ROUTE: email the PDF to the form's configured recipient(s). This is the action
+     trigger. Active-voice confirmation to the submitter ("Your registration was sent
+     to the Faith Formation office.").
+  4. SENSITIVITY-TIERED PERSISTENCE:
+     - T0: email-PDF only. No stored record needed (mass intention, contact, signup).
+     - T1: ALSO write the submission row + any uploaded file to Supabase. Files →
+       Supabase Storage (encrypted at rest), staff-read-only via RLS. Email a SECURE
+       STAFF LINK to the file, do NOT attach a child's birth cert to a plaintext email.
+  STORE-THEN-SEND for T1: persist first, then email — so a bounced email is never a
+  lost registration. Log + flag email failures for staff retry.
+
+────────────────────────────────────────────────────────────────────────
+5. STAFF INBOX — so the action actually happens (light v1)
+────────────────────────────────────────────────────────────────────────
+Behind Google staff login: a submissions list for T1 forms — newest first, routed
+recipient shown, status New | Actioned, view-PDF, view-secured-file, mark-actioned.
+Purpose: a registration can't die unread in someone's inbox. RLS: only staff of the
+parish read submissions; the public can submit, never read. Keep v1 minimal (list +
+status + PDF/file view); status workflow can grow later.
+
+────────────────────────────────────────────────────────────────────────
+6. PRIVACY / SAFETY  (forms collect minors' data — design it in, don't bolt on)
+────────────────────────────────────────────────────────────────────────
+The moment a blank form goes live and is filled, you are collecting real PII again —
+including children's (CCD registration, sacrament records, cert uploads). So:
+  - Submissions are NEVER public. Public can POST; only staff READ (RLS). No public read
+    path to any submission or file.
+  - Child-data uploads (cert, etc.): Supabase Storage, encrypted at rest, staff-RLS,
+    delivered to staff as a secured link — never as a plaintext email attachment.
+  - Minimize: collect only the fields the action needs. No field that isn't acted on.
+  - Retention: add a stated retention/disposal answer per T1 form (e.g. purge after the
+    sacrament cycle). Stub now; parish confirms the period. [DECISION — parish]
+  - Transport: email service over TLS; for T1, the email carries a link, not the PII
+    payload, wherever feasible.
+
+────────────────────────────────────────────────────────────────────────
+7. A11Y + QUALITY (the audit flagged St Patrick weakest here — clear the bar)
+────────────────────────────────────────────────────────────────────────
+Labels on every field, visible focus, real error feedback (say what's wrong + how to
+fix, in the interface's voice), 44px targets, reduced-motion, date inputs that are
+timezone-safe (T1 finding). Forms must be fully keyboard + screen-reader usable.
+
+────────────────────────────────────────────────────────────────────────
+8. EXECUTION PLAN (for CC, once the host is provisioned — D-1)
+────────────────────────────────────────────────────────────────────────
+1. Provision: Railway project + Supabase (Postgres + Storage) + Google OAuth app +
+   email-service key. (Frank/owner; secrets via env.)
+2. Schema: forms registry + submissions + storage bucket + RLS (public insert via a
+   SECDEF submit RPC; staff-only select). Additive; holds for owner approval.
+3. Submit RPC/edge fn: validate → PDF → email (route) → store-then-send for T1.
+4. Public form renderer (registry-driven) + the secured upload field.
+5. Staff inbox (Google-auth, RLS, status + PDF/file view).
+6. Tests: required/validation, magic-byte upload check, RLS denies public read of
+   submissions/files, store-then-send (email failure ≠ lost row), routing hits the
+   configured recipient, runs keyless/DB-less in dev.
+Standard gates: CI green; secrets in env; this repo gets the CI workflow it currently
+  lacks (D-3). DB/auth/RLS holds for owner approval.
+
+────────────────────────────────────────────────────────────────────────
+9. OUT OF SCOPE / NEXT
+────────────────────────────────────────────────────────────────────────
+- The broader parish CMS rehost (bulletins, Mass schedule, homily archive, the parish
+  assistant LLM) — same stack, parallel slice, its own pass.
+- The S3 file-bucket pull + Droplet/Flocknote exports (operator-run rescue, §0).
+- Parish's real brand identity (the rendering uses a proposed green/gold parish
+  identity as a placeholder — replace with the parish's actual marks).
