@@ -17,6 +17,7 @@ export function CcdPermissionsManager() {
   const { data: permissions, isLoading } = trpc.ccdPermissions.list.useQuery();
   const updateStatus = trpc.ccdPermissions.updateStatus.useMutation({
     onSuccess: () => { toast.success("Status updated"); },
+    onError: () => { toast.error("Couldn't update status. Please try again."); },
   });
 
   if (isLoading) return <Skeleton className="h-64 w-full" />;

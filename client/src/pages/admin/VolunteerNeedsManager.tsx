@@ -78,6 +78,7 @@ function NeedRow({ need }: { need: any }) {
       utils.volunteerNeeds.listAll.invalidate();
       toast.success("Need updated");
     },
+    onError: () => { toast.error("Couldn't update the need. Please try again."); },
   });
 
   return (
