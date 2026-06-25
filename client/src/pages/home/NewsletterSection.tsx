@@ -40,6 +40,7 @@ export function NewsletterSection() {
             >
               <Input
                 type="email"
+                aria-label="Your email address"
                 placeholder="Your email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}

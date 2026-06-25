@@ -44,6 +44,7 @@ export function Sidebar({
         <button
           onClick={() => setSidebarOpen(false)}
           className="lg:hidden p-1 rounded hover:bg-muted"
+          aria-label="Close navigation menu"
         >
           <X className="w-5 h-5" />
         </button>

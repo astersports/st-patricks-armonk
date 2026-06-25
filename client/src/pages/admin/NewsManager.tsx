@@ -101,10 +101,10 @@ export function NewsManager() {
                       Publish
                     </Button>
                   )}
-                  <Button size="sm" variant="ghost" onClick={() => startEdit(post)}>
+                  <Button size="sm" variant="ghost" aria-label={`Edit ${post.title}`} onClick={() => startEdit(post)}>
                     <Edit className="w-4 h-4" />
                   </Button>
-                  <Button size="sm" variant="ghost" className="text-destructive" onClick={() => deleteMutation.mutate({ id: post.id })}>
+                  <Button size="sm" variant="ghost" className="text-destructive" aria-label={`Delete ${post.title}`} onClick={() => deleteMutation.mutate({ id: post.id })}>
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>

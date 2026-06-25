@@ -106,6 +106,7 @@ function NeedRow({ need }: { need: any }) {
             <Button
               variant="ghost"
               size="sm"
+              aria-label={`View responses for ${need.title}`}
               onClick={() => setViewResponses(!viewResponses)}
             >
               <Eye className="w-4 h-4" />
@@ -114,6 +115,7 @@ function NeedRow({ need }: { need: any }) {
               <Button
                 variant="ghost"
                 size="sm"
+                aria-label={`Close ${need.title}`}
                 onClick={() => updateMutation.mutate({ id: need.id, active: false })}
               >
                 <XCircle className="w-4 h-4 text-red-500" />
@@ -122,6 +124,7 @@ function NeedRow({ need }: { need: any }) {
               <Button
                 variant="ghost"
                 size="sm"
+                aria-label={`Reopen ${need.title}`}
                 onClick={() => updateMutation.mutate({ id: need.id, active: true })}
               >
                 <CheckCircle className="w-4 h-4 text-green-500" />

@@ -197,10 +197,10 @@ export function HolyDaysManager() {
                   {h.notes && <p className="text-sm text-muted-foreground mt-1 italic">{h.notes}</p>}
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="sm" onClick={() => openEdit(h)}>
+                  <Button variant="ghost" size="sm" aria-label={`Edit ${h.name}`} onClick={() => openEdit(h)}>
                     <Pencil className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="sm" className="text-destructive" onClick={() => setDeleteTarget({ id: h.id, name: h.name })}>
+                  <Button variant="ghost" size="sm" className="text-destructive" aria-label={`Delete ${h.name}`} onClick={() => setDeleteTarget({ id: h.id, name: h.name })}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>

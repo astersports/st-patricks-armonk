@@ -106,7 +106,7 @@ export function ParishAssistant() {
           <p className="font-semibold text-sm">Parish Assistant</p>
           <p className="text-xs opacity-80">Ask me anything about St. Patrick's</p>
         </div>
-        <button onClick={() => setOpen(false)} className="hover:opacity-70"><X className="w-5 h-5" /></button>
+        <button onClick={() => setOpen(false)} className="hover:opacity-70" aria-label="Close Parish Assistant"><X className="w-5 h-5" /></button>
       </div>
 
       {/* Messages */}
@@ -158,10 +158,11 @@ export function ParishAssistant() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask a question..."
+            aria-label="Ask the Parish Assistant a question"
             className="flex-1 text-sm"
             disabled={chatMutation.isPending}
           />
-          <Button type="submit" size="sm" disabled={!input.trim() || chatMutation.isPending}>
+          <Button type="submit" size="sm" aria-label="Send message" disabled={!input.trim() || chatMutation.isPending}>
             <Send className="w-4 h-4" />
           </Button>
         </form>

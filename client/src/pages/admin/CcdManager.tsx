@@ -152,10 +152,10 @@ export function CcdManager() {
                   {event.grade && <span className="text-xs text-muted-foreground">Grade: {event.grade}</span>}
                 </div>
                 <div className="flex gap-1">
-                  <Button size="sm" variant="ghost" className="h-7" onClick={() => startEditEvent(event)}>
+                  <Button size="sm" variant="ghost" className="h-7" aria-label="Edit CCD event" onClick={() => startEditEvent(event)}>
                     <Edit className="w-3 h-3" />
                   </Button>
-                  <Button size="sm" variant="ghost" className="text-destructive h-7" onClick={() => deleteEventMutation.mutate({ id: event.id })}>
+                  <Button size="sm" variant="ghost" className="text-destructive h-7" aria-label="Delete CCD event" onClick={() => deleteEventMutation.mutate({ id: event.id })}>
                     <Trash2 className="w-3 h-3" />
                   </Button>
                 </div>

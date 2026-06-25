@@ -93,13 +93,13 @@ export function PhotoGrid({ photos, isLoading, filterAlbum, onShowUpload }: Phot
                 </div>
               )}
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                <Button size="sm" variant="secondary" className="h-8 w-8 p-0" onClick={() => startEdit(photo)}>
+                <Button size="sm" variant="secondary" className="h-8 w-8 p-0" aria-label={`Edit ${photo.title || "photo"}`} onClick={() => startEdit(photo)}>
                   <Edit className="w-4 h-4" />
                 </Button>
-                <Button size="sm" variant="secondary" className="h-8 w-8 p-0" onClick={() => updateMutation.mutate({ id: photo.id, published: !photo.published })}>
+                <Button size="sm" variant="secondary" className="h-8 w-8 p-0" aria-label={photo.published ? `Hide ${photo.title || "photo"}` : `Show ${photo.title || "photo"}`} onClick={() => updateMutation.mutate({ id: photo.id, published: !photo.published })}>
                   {photo.published ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </Button>
-                <Button size="sm" variant="destructive" className="h-8 w-8 p-0" onClick={() => { if (confirm("Delete this photo?")) deleteMutation.mutate({ id: photo.id }); }}>
+                <Button size="sm" variant="destructive" className="h-8 w-8 p-0" aria-label={`Delete ${photo.title || "photo"}`} onClick={() => { if (confirm("Delete this photo?")) deleteMutation.mutate({ id: photo.id }); }}>
                   <Trash2 className="w-4 h-4" />
                 </Button>
               </div>

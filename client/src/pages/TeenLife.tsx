@@ -119,16 +119,16 @@ export default function TeenLife() {
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label className="text-sm font-medium text-foreground mb-1 block">First Name *</label>
-                      <Input value={form.teenFirstName} onChange={(e) => setForm({ ...form, teenFirstName: e.target.value })} required />
+                      <Input aria-label="Teen first name" value={form.teenFirstName} onChange={(e) => setForm({ ...form, teenFirstName: e.target.value })} required />
                     </div>
                     <div>
                       <label className="text-sm font-medium text-foreground mb-1 block">Last Name *</label>
-                      <Input value={form.teenLastName} onChange={(e) => setForm({ ...form, teenLastName: e.target.value })} required />
+                      <Input aria-label="Teen last name" value={form.teenLastName} onChange={(e) => setForm({ ...form, teenLastName: e.target.value })} required />
                     </div>
                     <div>
                       <label className="text-sm font-medium text-foreground mb-1 block">Grade *</label>
                       <Select value={form.grade} onValueChange={(v) => setForm({ ...form, grade: v })}>
-                        <SelectTrigger><SelectValue placeholder="Select grade" /></SelectTrigger>
+                        <SelectTrigger aria-label="Teen grade"><SelectValue placeholder="Select grade" /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="9">9th Grade</SelectItem>
                           <SelectItem value="10">10th Grade</SelectItem>
@@ -139,7 +139,7 @@ export default function TeenLife() {
                     </div>
                     <div>
                       <label className="text-sm font-medium text-foreground mb-1 block">School</label>
-                      <Input value={form.school} onChange={(e) => setForm({ ...form, school: e.target.value })} placeholder="e.g., Byram Hills High School" />
+                      <Input aria-label="Teen school" value={form.school} onChange={(e) => setForm({ ...form, school: e.target.value })} placeholder="e.g., Byram Hills High School" />
                     </div>
                   </div>
                 </div>
@@ -150,19 +150,19 @@ export default function TeenLife() {
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label className="text-sm font-medium text-foreground mb-1 block">Parent/Guardian Name *</label>
-                      <Input value={form.parentName} onChange={(e) => setForm({ ...form, parentName: e.target.value })} required />
+                      <Input aria-label="Parent or guardian name" value={form.parentName} onChange={(e) => setForm({ ...form, parentName: e.target.value })} required />
                     </div>
                     <div>
                       <label className="text-sm font-medium text-foreground mb-1 block">Email *</label>
-                      <Input type="email" value={form.parentEmail} onChange={(e) => setForm({ ...form, parentEmail: e.target.value })} required />
+                      <Input aria-label="Parent or guardian email" type="email" value={form.parentEmail} onChange={(e) => setForm({ ...form, parentEmail: e.target.value })} required />
                     </div>
                     <div>
                       <label className="text-sm font-medium text-foreground mb-1 block">Phone *</label>
-                      <Input type="tel" value={form.parentPhone} onChange={(e) => setForm({ ...form, parentPhone: e.target.value })} required />
+                      <Input aria-label="Parent or guardian phone" type="tel" value={form.parentPhone} onChange={(e) => setForm({ ...form, parentPhone: e.target.value })} required />
                     </div>
                     <div>
                       <label className="text-sm font-medium text-foreground mb-1 block">Address</label>
-                      <Input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="Street, City, State, ZIP" />
+                      <Input aria-label="Home address" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="Street, City, State, ZIP" />
                     </div>
                   </div>
                 </div>
@@ -173,11 +173,11 @@ export default function TeenLife() {
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label className="text-sm font-medium text-foreground mb-1 block">Emergency Contact Name</label>
-                      <Input value={form.emergencyContact} onChange={(e) => setForm({ ...form, emergencyContact: e.target.value })} />
+                      <Input aria-label="Emergency contact name" value={form.emergencyContact} onChange={(e) => setForm({ ...form, emergencyContact: e.target.value })} />
                     </div>
                     <div>
                       <label className="text-sm font-medium text-foreground mb-1 block">Emergency Contact Phone</label>
-                      <Input type="tel" value={form.emergencyPhone} onChange={(e) => setForm({ ...form, emergencyPhone: e.target.value })} />
+                      <Input aria-label="Emergency contact phone" type="tel" value={form.emergencyPhone} onChange={(e) => setForm({ ...form, emergencyPhone: e.target.value })} />
                     </div>
                   </div>
                 </div>
@@ -188,11 +188,11 @@ export default function TeenLife() {
                   <div className="space-y-4">
                     <div>
                       <label className="text-sm font-medium text-foreground mb-1 block">Interests & Activities</label>
-                      <Textarea value={form.interests} onChange={(e) => setForm({ ...form, interests: e.target.value })} placeholder="What activities or topics interest your teen? (e.g., service projects, retreats, social events, Bible study)" rows={3} />
+                      <Textarea aria-label="Interests and activities" value={form.interests} onChange={(e) => setForm({ ...form, interests: e.target.value })} placeholder="What activities or topics interest your teen? (e.g., service projects, retreats, social events, Bible study)" rows={3} />
                     </div>
                     <div>
                       <label className="text-sm font-medium text-foreground mb-1 block">Medical Notes / Allergies</label>
-                      <Textarea value={form.medicalNotes} onChange={(e) => setForm({ ...form, medicalNotes: e.target.value })} placeholder="Any medical conditions, allergies, or special needs we should be aware of" rows={2} />
+                      <Textarea aria-label="Medical notes or allergies" value={form.medicalNotes} onChange={(e) => setForm({ ...form, medicalNotes: e.target.value })} placeholder="Any medical conditions, allergies, or special needs we should be aware of" rows={2} />
                     </div>
                     <div className="flex items-start gap-3 pt-2">
                       <Checkbox

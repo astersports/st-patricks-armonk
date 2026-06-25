@@ -87,10 +87,10 @@ export default function FaqManager() {
                     onCheckedChange={(active) => updateMutation.mutate({ id: faq.id, active })}
                     className="mr-2"
                   />
-                  <Button variant="ghost" size="sm" onClick={() => startEdit(faq)}>
+                  <Button variant="ghost" size="sm" aria-label={`Edit ${faq.question}`} onClick={() => startEdit(faq)}>
                     <Pencil className="w-3.5 h-3.5" />
                   </Button>
-                  <Button variant="ghost" size="sm" onClick={() => { if (confirm("Delete this FAQ?")) deleteMutation.mutate({ id: faq.id }); }}>
+                  <Button variant="ghost" size="sm" aria-label={`Delete ${faq.question}`} onClick={() => { if (confirm("Delete this FAQ?")) deleteMutation.mutate({ id: faq.id }); }}>
                     <Trash2 className="w-3.5 h-3.5 text-destructive" />
                   </Button>
                 </div>

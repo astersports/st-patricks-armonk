@@ -97,6 +97,7 @@ export default function UserManager() {
                   <div className="sm:w-48">
                     <select
                       className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm"
+                      aria-label={`Role for ${user.name || user.email || "user"}`}
                       value={user.role}
                       onChange={(e) => handleRoleChange(user.id, e.target.value)}
                     >

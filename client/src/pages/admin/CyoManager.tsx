@@ -131,7 +131,7 @@ export function CyoManager() {
                     <span className="font-medium text-sm">{team.name}</span>
                     <span className="text-xs text-muted-foreground ml-2">{team.division} • {team.ageGroup} • {team.wins}W-{team.losses}L</span>
                   </div>
-                  <Button size="sm" variant="ghost" className="text-destructive h-7" onClick={() => deleteTeamMutation.mutate({ id: team.id })}>
+                  <Button size="sm" variant="ghost" className="text-destructive h-7" aria-label={`Delete team ${team.name}`} onClick={() => deleteTeamMutation.mutate({ id: team.id })}>
                     <Trash2 className="w-3 h-3" />
                   </Button>
                 </div>
@@ -183,7 +183,7 @@ export function CyoManager() {
                       {game.status === "completed" && (
                         <span className="text-sm font-bold">{game.ourScore}-{game.theirScore}</span>
                       )}
-                      <Button size="sm" variant="ghost" className="text-destructive h-7" onClick={() => deleteGameMutation.mutate({ id: game.id })}>
+                      <Button size="sm" variant="ghost" className="text-destructive h-7" aria-label={`Delete game vs ${game.opponent}`} onClick={() => deleteGameMutation.mutate({ id: game.id })}>
                         <Trash2 className="w-3 h-3" />
                       </Button>
                     </div>

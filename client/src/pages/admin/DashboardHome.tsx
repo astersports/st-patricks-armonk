@@ -80,7 +80,7 @@ export default function DashboardHome() {
           {editingBanner ? (
             <div className="flex items-center gap-2">
               <Input value={bannerText} onChange={(e) => setBannerText(e.target.value)} placeholder="Enter announcement text..." className="flex-1 text-sm" onKeyDown={(e) => e.key === "Enter" && handleSaveBanner()} />
-              <Button size="sm" onClick={handleSaveBanner} disabled={updateSetting.isPending}><Check className="w-3.5 h-3.5" /></Button>
+              <Button size="sm" onClick={handleSaveBanner} disabled={updateSetting.isPending} aria-label="Save announcement banner"><Check className="w-3.5 h-3.5" /></Button>
               <Button size="sm" variant="outline" onClick={() => { setEditingBanner(false); setBannerText(marqueeData?.value || ""); }}>Cancel</Button>
             </div>
           ) : (

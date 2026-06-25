@@ -197,10 +197,10 @@ export function KeyDatesManager() {
                     </p>
                   </div>
                   <div className="flex gap-1 shrink-0">
-                    <Button size="sm" variant="ghost" onClick={() => startEdit(date)}>
+                    <Button size="sm" variant="ghost" aria-label={`Edit ${date.title}`} onClick={() => startEdit(date)}>
                       <Edit className="w-4 h-4" />
                     </Button>
-                    <Button size="sm" variant="ghost" className="text-destructive" onClick={() => handleDelete(date.id, date.title)}>
+                    <Button size="sm" variant="ghost" className="text-destructive" aria-label={`Delete ${date.title}`} onClick={() => handleDelete(date.id, date.title)}>
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
