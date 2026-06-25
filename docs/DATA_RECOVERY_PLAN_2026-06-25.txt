@@ -1,0 +1,215 @@
+ST PATRICK IN ARMONK — MANUS DATA RECOVERY PLAN
+For: Frank · From: Claude Code · Date: 2026-06-25
+Trigger: Manus/Forge (the host + MySQL + S3 + auth for this parish site) was
+decommissioned. This is the plan to recover everything that was on Manus —
+documents, forms, content, and media. Built by a 13-agent deep pass over the repo
+(the authoritative record of what the app stored). All claims grounded in file:line.
+
+══════════════════════════════════════════════════════════════════════════
+0. TWO HARD TRUTHS (read first — they shape the whole plan)
+══════════════════════════════════════════════════════════════════════════
+A. SCRAPING THE WEBSITE CANNOT RECOVER THE FORMS. Every form SUBMISSION
+   (baptism/marriage/funeral/sponsor, CCD registration + permissions, parish +
+   teen-life registration, mass intentions, volunteer signups, newsletter
+   subscribers, private prayer requests) is write-only into the Manus MySQL and is
+   read back ONLY through admin-gated endpoints. It was NEVER rendered publicly.
+   19 of 34 tables are like this. A scrape recovers ZERO of them. They are
+   recoverable ONLY from a MySQL dump (or surviving external mirrors — see §3).
+
+B. THE UPLOADED FILES ARE THE MOST FRAGILE — NO FALLBACK. Homily audio, gallery
+   photos, admin-uploaded bulletin PDFs, parish documents, and any birth-cert
+   uploads live in a FORGE-MANAGED S3 bucket. The bucket name + credentials are NOT
+   in the repo; the DB stores only opaque keys + a relative `/manus-storage/<key>`
+   proxy path. Those files are reachable ONLY while a live app instance + a valid
+   Forge API key still exist (the proxy re-signs the S3 URL on every request). Once
+   Manus tears down, NO artifact we hold can bring the files back — not even a full
+   DB dump (it has the keys, not the bytes). PULL THE FILES FIRST.
+
+I CANNOT EXECUTE EITHER FROM THIS ENVIRONMENT: the agent egress proxy denies
+outbound to stpatrickinarmonk.org / the Manus origin (org network policy — logged
+`connect_rejected 403`; policy says report, not route around). The scrape + file
+pull must run somewhere with internet egress (your machine, or allowlist the domain
+in this environment's network policy, then a fresh session runs the script below).
+
+Live origins (either may answer if anything is still serving):
+  custom domain : https://stpatrickinarmonk.org
+  Manus origin  : https://stpatsarmonk-24g7ux9f.manus.space   (client/index.html:23)
+
+══════════════════════════════════════════════════════════════════════════
+1. PRIORITIZED RESCUE SEQUENCE (time-ordered — do in this order)
+══════════════════════════════════════════════════════════════════════════
+RACE ITEMS — do NOW, before Manus purges storage/DB (irreversible):
+  1. MySQL DUMP. If Manus offers any DB export/download/backup, get it. This is the
+     ONLY source for the 19 private tables (all the PII + forms). Run the P0-PII
+     subset FIRST (insurance against partial/timed-out access), then the full dump.
+     Commands in §4. If you can't reach the DB directly, ask Manus support for an
+     export of the database behind this app before decommission completes.
+  2. THE FILES. While any app instance + Forge key is still alive, pull every blob:
+     extract the keys (§4 step 4) and fetch each `https://<origin>/manus-storage/<key>`
+     following the 307 redirect. The scrape script (§5) does this automatically for
+     publicly-linked media; for the rest, drive it off the DB key list. If Manus can
+     export the S3 bucket directly, that's the cleaner path — request it.
+
+SURVIVING MIRRORS — lower urgency (these outlive Manus; recover when convenient, §3):
+  3. eCatholic CDN (historical bulletins), Google Calendar ICS (parish/CCD/CYO
+     calendars), Droplet.io (live CCD registrations), Flocknote (newsletter
+     subscribers), Google Sheets (formExport spreadsheet, if it was ever run).
+
+ALREADY SAFE — no action (in the GitHub repo / public content via scrape):
+  4. Mass schedule, parish info, staff directory, About/Ministries/Contact/New-Here
+     copy, baseline holy days, notification-routing defaults — all HARDCODED in the
+     repo (§6). Published content (news/events/gallery/homilies/etc.) is scrapeable
+     via the public API (§5) if the site is still up, else it comes from the DB dump.
+
+══════════════════════════════════════════════════════════════════════════
+2. THE 34 TABLES BY RECOVERY METHOD (authoritative; drizzle/schema.ts)
+══════════════════════════════════════════════════════════════════════════
+MYSQL-ONLY / NO PUBLIC MIRROR — dump-or-lose-forever (PII; scrape recovers NOTHING):
+  P0  ccd_permissions ........ minor medical/allergy/insurance + authorized-pickup +
+                               e-signature. HIGHEST sensitivity. NOT in formExport.
+  P0  baptism_registrations .. child+parents+godparents (+ birthCertUrl S3 ref)
+  P0  marriage_inquiries ..... bride/groom PII + prior-marriage details
+  P0  funeral_pre_planning ... planner+deceased+liturgy (named third parties)
+  P0  sponsor_certificates ... sponsor PII + Catholic-eligibility
+  P0  ccd_registrations ...... child+parent enrollment  (LIVE submissions are at
+                               Droplet.io — §3 — but any in-DB rows are here)
+  P0  teen_life_registrations  minors + free-text medical notes
+  P0  parish_registrations ... household contact  (formExport-covered if run)
+  P0  mass_intentions ........ requester contact + intention (pastoral, sensitive)
+  P1  email_subscriptions .... subscriber emails (Flocknote is a SEPARATE list, §3)
+  P1  volunteer_signups, volunteer_need_responses .. signup contact PII
+  P1  push_subscriptions ..... web-push endpoints/keys
+  P2  users (Forge-OAuth — dead post-decommission; keep only as role reference),
+      audit_logs, prayer_support (tally), saint_streaks
+
+PUBLIC-SCRAPEABLE (published rows; via the tRPC API §5 — or the DB dump, cleaner):
+  news_posts (latest 20 public; older = DB-only), events (upcoming 20, future-only;
+  past = DB-only), important_dates (allPublished = full history), staff_members,
+  parish_faqs (no public page — via faq.listActive API or DB), holy_days,
+  ccd_events, cyo_teams (+coach contact may be DB-only), cyo_games,
+  volunteer_opportunities, volunteer_needs, prayer_intentions (isPublic=true only),
+  site_settings (rendered values; admin keys DB-only)
+
+S3-FILE REFERENCES (the table holds the KEY/URL; the FILE must be pulled separately):
+  bulletins.pdfKey/pdfUrl, parish_documents.fileKey/fileUrl,
+  gallery_photos.imageKey/imageUrl, homilies.audioKey/audioUrl,
+  baptism_registrations.birthCertUrl
+  (Bulletin CONTENT also survives in bulletins.sourceHtml/sourceMarkdown in the DB,
+   so bulletins are reconstructable from a dump even if the PDF blob is lost.)
+
+══════════════════════════════════════════════════════════════════════════
+3. SURVIVING EXTERNAL MIRRORS (recover independently of Manus — big wins)
+══════════════════════════════════════════════════════════════════════════
+· eCATHOLIC CDN — historical bulletins. The bulk of the bulletin archive was
+  imported from eCatholic (scripts/import-bulletins.mjs); pdfUrl = a PUBLIC stable
+  URL `https://files.ecatholic.com/10907/bulletins/YYYYMMDD.pdf`. Recoverable
+  directly from eCatholic (site id 10907) with zero parish-site dependency.
+· GOOGLE CALENDAR ICS — parish/CCD/CYO calendars, FULL history, public (icsParser.ts:129):
+    parish: https://calendar.google.com/calendar/ical/auhh52vq6k97cih05uovakdvlcobb3qj%40import.calendar.google.com/public/basic.ics
+    ccd:    https://calendar.google.com/calendar/ical/reled%40stpatrickinarmonk.org/public/basic.ics
+    cyo:    https://calendar.google.com/calendar/ical/stpatrickinarmonk.org_5snqr5qqph11et22r6sk81k67g%40group.calendar.google.com/public/basic.ics
+  Fetch the raw .ics for the fullest history (the app windows to 180 days).
+· DROPLET.IO — LIVE CCD registrations go to an external form, NOT the Manus DB:
+  `https://app.droplet.io/form/y5VX2N` (CcdRegistration.tsx:15). Export submissions
+  from the Droplet.io account directly — these survive Manus entirely.
+· FLOCKNOTE — newsletter/messaging: `https://stpatarmonk.flocknote.com`. NOT synced
+  to the app DB (outbound link only). The real subscriber base lives in Flocknote —
+  export it from Flocknote admin. (Only homepage-form-only signups are DB-only.)
+· GOOGLE SHEETS (formExport) — an admin-triggered export to a Google Sheet
+  (site_settings.form_export_spreadsheet_id) covered CCD-registration,
+  parish-registration, teen-life. IF it was ever run, those sheets survive in Google
+  Drive. NOT covered: ccd_permissions (the most sensitive). Worth locating in Drive.
+· PARISH OFFICE EMAIL — every submission fired a staff notification + a submitter
+  confirmation email (server/email/*, routeNotification). These carry PARTIAL data
+  (one-line summaries, not full records, no medical) but may reconstruct some
+  submissions from the office inbox / sent-mail if the DB is unrecoverable.
+
+══════════════════════════════════════════════════════════════════════════
+4. MYSQL EXPORT SPEC (run once the DB is reachable; FK-order-independent — 0 DB FKs)
+══════════════════════════════════════════════════════════════════════════
+Connection: the app used a single DATABASE_URL (server/db/_connection.ts) → MySQL.
+Parse host/port/user/password/db from it.
+
+STEP 1 — P0 PII subset FIRST (irreplaceable; get this before a full dump can time out):
+  mysqldump --host=H --port=P --user=U --password=PW --single-transaction --quick \
+    --default-character-set=utf8mb4 --set-gtid-purged=OFF DB \
+    ccd_permissions baptism_registrations marriage_inquiries funeral_pre_planning \
+    sponsor_certificates ccd_registrations teen_life_registrations \
+    parish_registrations mass_intentions > stpat_P0_pii.sql
+
+STEP 2 — full dump (master artifact):
+  mysqldump --host=H --port=P --user=U --password=PW --single-transaction --quick \
+    --routines --triggers --events --default-character-set=utf8mb4 \
+    --set-gtid-purged=OFF DB > stpat_full.sql
+
+STEP 3 — per-table CSV for the sensitive tables (analyst-friendly; no FILE priv needed):
+  for T in ccd_permissions baptism_registrations marriage_inquiries \
+           funeral_pre_planning sponsor_certificates ccd_registrations \
+           teen_life_registrations parish_registrations mass_intentions \
+           email_subscriptions volunteer_signups volunteer_need_responses; do
+    mysql --host=H --port=P --user=U --password=PW --default-character-set=utf8mb4 \
+      --batch --raw -e "SELECT * FROM \`$T\`;" DB \
+      | sed 's/\t/","/g; s/^/"/; s/$/"/' > "$T.csv"; done
+
+STEP 4 — harvest the S3/blob keys, then pull the files (do while storage is alive):
+  mysql --host=H ... -e "SELECT 'bulletin' t,pdfKey k,pdfUrl u FROM bulletins WHERE pdfKey IS NOT NULL
+    UNION ALL SELECT 'document',fileKey,fileUrl FROM parish_documents WHERE fileKey IS NOT NULL
+    UNION ALL SELECT 'gallery',imageKey,imageUrl FROM gallery_photos WHERE imageKey IS NOT NULL
+    UNION ALL SELECT 'homily',audioKey,audioUrl FROM homilies WHERE audioKey IS NOT NULL
+    UNION ALL SELECT 'birthcert',NULL,birthCertUrl FROM baptism_registrations WHERE birthCertUrl IS NOT NULL;" \
+    DB > blob_keys.tsv
+  # then for each url: curl -L "https://<origin><url>" -o <basename>   (while the proxy + Forge key live)
+
+STEP 5 — content tables (lowest priority; also reconstructable from scrape):
+  mysqldump ... DB news_posts events important_dates parish_documents gallery_photos \
+    homilies holy_days staff_members ccd_events cyo_teams cyo_games \
+    volunteer_opportunities volunteer_needs parish_faqs site_settings \
+    prayer_intentions saint_streaks > stpat_content.sql
+
+══════════════════════════════════════════════════════════════════════════
+5. SCRAPE SPEC (published content + media; run where there's egress to the site)
+══════════════════════════════════════════════════════════════════════════
+The site is a client-rendered React SPA (wouter + lazy pages; a raw GET returns an
+empty shell), so use EITHER the public tRPC API (cleaner) OR Playwright/Chromium.
+
+· tRPC API: base `/api/trpc`, superjson-wrapped, GET + batch enabled. ~19
+  publicProcedure.query endpoints expose the parish's own structured data:
+  bulletins.listPublished, news.listPublished, events.listUpcoming,
+  googleCalendar.{parish,ccd,cyo,all}Events, gallery.{listPublished,albums},
+  staff.list, faq.listActive, homilies.list, parishSchedule.{getSchedule,getInfo},
+  volunteerNeeds.list, holyDays.upcoming, importantDates.allPublished,
+  siteSettings.get, prayerWall.getIntentions.
+  GET form: /api/trpc/<proc>?input=%7B%22json%22%3Anull%7D ; response under result.data.json.
+· Media: every published PDF/audio/image is at `/manus-storage/<key>` (open proxy,
+  no auth, 307→signed S3) — but ONLY while the app + Forge key are alive.
+· EXCLUDE: /admin/*, /unsubscribe/:token, /ccd-unsubscribe (auth/token-gated).
+· Caps to mind: news.listPublished=20, events.listUpcoming=20+future-only,
+  bulletins.listPublished=100. Older items beyond the cap = DB-only.
+
+A runnable script is committed alongside this doc: scripts/recover-stpat.mjs
+(saves rendered HTML + extracted JSON + downloaded PDFs/audio/images to ./recovery).
+Run it from a machine with internet egress, or after allowlisting the domain in this
+environment's network policy.
+
+══════════════════════════════════════════════════════════════════════════
+6. ALREADY RECOVERED — in the GitHub repo (no action needed)
+══════════════════════════════════════════════════════════════════════════
+· Full recurring Mass/service schedule, seasonal rules, Easter/Ascension logic,
+  baseline holy days, parish info (address/phone/pastor Fr. Thadeus Aravindathu/
+  hours/coords) — shared/scheduleEngine.ts:62-107.
+· Staff DEPARTMENT directory (all dept phones + emails) + office hours — Staff.tsx.
+· About, Ministries, Contact, New-Here page copy — hardcoded in their components.
+· Notification-routing defaults (staff email aliases) — server/notifications/route.ts:21-32.
+  (Only the staff ROSTER (staff_members) + FAQ content + admin overrides are DB-backed.)
+
+══════════════════════════════════════════════════════════════════════════
+7. THE "PERMANENTLY LOST IF NOT RECOVERED NOW" LIST (no mirror, no repo copy)
+══════════════════════════════════════════════════════════════════════════
+DB dump is the only hope for: ccd_permissions, the 4 sacrament tables, mass_intentions,
+volunteer signups/responses, push subscriptions, private prayer intentions, audit log,
+and any in-DB ccd_registrations / parish / teen-life rows not covered by Droplet/Sheets.
+Live-instance file pull is the only hope for: homily audio, gallery photos, admin-
+uploaded bulletin PDFs, parish documents, birth-cert uploads. Everything in this
+section disappears at Manus teardown if not pulled first.
+
+— end —
