@@ -12,11 +12,12 @@ import { DayContent } from "./this-week/DayContent";
 import { SundayOutlook } from "./this-week/SundayOutlook";
 import {
   DAILY_SCHEDULE, SERVICE_DURATION, parseServiceMinutes,
-  DAY_LABELS, TIMEZONE, getScheduleForDate,
+  DAY_LABELS, getScheduleForDate,
 } from "./this-week/scheduleConfig";
+import { nowInET } from "../../../shared/datetime";
 
 export function ThisWeekAccordion() {
-  const now = useMemo(() => new Date(new Date().toLocaleString("en-US", { timeZone: TIMEZONE })), []);
+  const now = useMemo(() => nowInET(), []);
 
   // Build 7 days starting from today (date-aware: respects firstOfMonth)
   const days = useMemo(() => {
@@ -38,7 +39,7 @@ export function ThisWeekAccordion() {
     if (autoAdvanced || selectedIndex !== 0) return;
     const todayServices = days[0]?.services || [];
     if (todayServices.length === 0) return;
-    const et = new Date(new Date().toLocaleString("en-US", { timeZone: TIMEZONE }));
+    const et = nowInET();
     const currentMin = et.getHours() * 60 + et.getMinutes();
     const allEnded = todayServices.every((svc) => {
       const svcMin = parseServiceMinutes(svc.time);
@@ -58,7 +59,7 @@ export function ThisWeekAccordion() {
 
   useEffect(() => {
     function computeCountdowns() {
-      const et = new Date(new Date().toLocaleString("en-US", { timeZone: TIMEZONE }));
+      const et = nowInET();
       const currentMin = et.getHours() * 60 + et.getMinutes();
       const todayDayOfWeek = et.getDay();
       const selected = days[selectedIndex];

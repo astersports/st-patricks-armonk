@@ -9,9 +9,10 @@ import {
   getWeeklySchedule, parseTimeStr, getCountdown, isServiceInProgress,
   getServiceColor, getServiceIcon,
 } from "./scheduleData";
+import { nowInET } from "../../../../shared/datetime";
 
 export function WeeklySchedule() {
-  const now = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
+  const now = nowInET();
   const today = now.getDay();
   const currentHour = now.getHours();
   const currentMinute = now.getMinutes();

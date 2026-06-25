@@ -3,6 +3,8 @@
  * Fetches the daily Mass readings (First Reading, Psalm, Gospel) with caching.
  */
 
+import { nowInET } from "../shared/datetime";
+
 interface DailyReadingsData {
   date: string;
   liturgicTitle: string;
@@ -17,8 +19,7 @@ const CACHE_DURATION = 60 * 60 * 1000; // 1 hour
 
 function getTodayDateString(): string {
   // Use Eastern Time for the date
-  const now = new Date();
-  const eastern = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
+  const eastern = nowInET();
   const year = eastern.getFullYear();
   const month = String(eastern.getMonth() + 1).padStart(2, "0");
   const day = String(eastern.getDate()).padStart(2, "0");
@@ -125,8 +126,7 @@ interface SundayReadingsData {
 let sundayCache: { data: SundayReadingsData; fetchedAt: number; dateKey: string } | null = null;
 
 function getNextSundayDateString(): { dateStr: string; daysUntil: number; formatted: string } {
-  const now = new Date();
-  const eastern = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
+  const eastern = nowInET();
   const dayOfWeek = eastern.getDay(); // 0=Sun
   
   // If today is Sunday, use today; otherwise find next Sunday

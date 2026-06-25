@@ -3,6 +3,8 @@
  * Fetches saint names and biography from the Evangelizo feed
  */
 
+import { nowInET } from "../shared/datetime";
+
 interface SaintOfDay {
   date: string;
   saints: string[];
@@ -19,8 +21,7 @@ const CACHE_TTL = 60 * 60 * 1000; // 1 hour
 
 function getTodayDateStr(): string {
   // Use Eastern Time for date
-  const now = new Date();
-  const eastern = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
+  const eastern = nowInET();
   const y = eastern.getFullYear();
   const m = String(eastern.getMonth() + 1).padStart(2, "0");
   const d = String(eastern.getDate()).padStart(2, "0");
