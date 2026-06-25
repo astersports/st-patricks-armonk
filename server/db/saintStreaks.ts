@@ -4,6 +4,7 @@
 import { eq } from "drizzle-orm";
 import { getDb } from "./_connection";
 import { saintStreaks } from "../../drizzle/schema";
+import { nowInET } from "../../shared/datetime";
 
 export async function getStreak(userId: string) {
   const db = (await getDb())!;
@@ -69,14 +70,11 @@ export async function recordVisit(userId: string): Promise<{
 }
 
 function getTodayEastern(): string {
-  const now = new Date();
-  const eastern = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
-  return formatDate(eastern);
+  return formatDate(nowInET());
 }
 
 function getYesterdayEastern(): string {
-  const now = new Date();
-  const eastern = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
+  const eastern = nowInET();
   eastern.setDate(eastern.getDate() - 1);
   return formatDate(eastern);
 }

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { publicProcedure, protectedProcedure, adminProcedure } from "../routers/_helpers";
+import { publicProcedure, adminProcedure, staffProcedure } from "../routers/_helpers";
 import { router } from "../_core/trpc";
 import { getDb } from "../db/_connection";
 import { pushSubscriptions } from "../../drizzle/schema";
@@ -97,8 +97,8 @@ export const pushNotificationsRouter = router({
       return { success: true };
     }),
 
-  /** Get subscription count (admin only) */
-  getCount: protectedProcedure.query(async () => {
+  /** Get subscription count (staff only) */
+  getCount: staffProcedure.query(async () => {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const all = await db.select().from(pushSubscriptions);

@@ -273,6 +273,7 @@ export default function ScheduleManager() {
                         variant="ghost"
                         size="sm"
                         className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                        aria-label={`Remove ${dayName} service ${localIdx + 1}`}
                         onClick={() => removeService(globalIdx)}
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -358,6 +359,7 @@ export default function ScheduleManager() {
                     variant="ghost"
                     size="sm"
                     className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                    aria-label={`Remove holy day ${hd.name || idx + 1}`}
                     onClick={() => removeHolyDay(idx)}
                   >
                     <Trash2 className="w-3.5 h-3.5" />

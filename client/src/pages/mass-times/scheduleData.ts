@@ -12,6 +12,7 @@ import {
   getUpcomingHolyDays as engineGetUpcomingHolyDays,
   type ScheduledService,
 } from "../../../../shared/scheduleEngine";
+import { nowInET } from "../../../../shared/datetime";
 
 export type ServiceType = "mass" | "confession" | "prayer" | "adoration" | "none";
 
@@ -113,7 +114,7 @@ export function getCountdown(targetHours: number, targetMinutes: number, current
 
 // Check for upcoming Holy Days within the next 7 days (delegates to shared engine)
 export function getUpcomingHolyDays(): { name: string; date: Date; massTimes: string[]; daysUntil: number }[] {
-  const now = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
+  const now = nowInET();
   return engineGetUpcomingHolyDays(DEFAULT_PARISH_SCHEDULE, now, 7);
 }
 

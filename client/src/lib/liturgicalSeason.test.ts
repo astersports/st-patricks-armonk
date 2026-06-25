@@ -38,6 +38,27 @@ describe("liturgicalSeason", () => {
       const dec6 = new Date(2026, 11, 6);
       expect(getLiturgicalSeason(dec6)).toBe("advent");
     });
+
+    // ── Boundary assertions (both failed before the season-bound fix) ──
+
+    it("returns 'advent' for Nov 29, 2026 (late-November first Sunday of Advent)", () => {
+      // First Sunday of Advent 2026 is Nov 29 — month===10, so the old
+      // month===11 guard mis-classified it as Ordinary Time.
+      const nov29 = new Date(2026, 10, 29);
+      expect(getLiturgicalSeason(nov29)).toBe("advent");
+    });
+
+    it("returns 'lent' for Good Friday 2026 (April 3)", () => {
+      // Good Friday + Holy Saturday are part of the Triduum (still Lent),
+      // not Ordinary Time. Easter 2026 is April 5, so Good Friday is April 3.
+      const goodFriday = new Date(2026, 3, 3);
+      expect(getLiturgicalSeason(goodFriday)).toBe("lent");
+    });
+
+    it("returns 'lent' for Holy Saturday 2026 (April 4)", () => {
+      const holySaturday = new Date(2026, 3, 4);
+      expect(getLiturgicalSeason(holySaturday)).toBe("lent");
+    });
   });
 
   describe("getSeasonTheme", () => {

@@ -25,6 +25,7 @@ export function MassIntentionsManager() {
   const { data: intentions, refetch, isLoading, error } = trpc.massIntentions.list.useQuery({ status: filter as any });
   const updateStatus = trpc.massIntentions.updateStatus.useMutation({
     onSuccess: () => { refetch(); toast.success("Intention updated"); },
+    onError: () => { toast.error("Couldn't update the intention. Please try again."); },
   });
 
   return (
@@ -132,6 +133,7 @@ export function MassIntentionsManager() {
                         size="sm"
                         variant="outline"
                         className="text-red-600 border-red-200 hover:bg-red-50"
+                        aria-label={`Cancel intention for ${intention.intentionFor}`}
                         onClick={() => updateStatus.mutate({ id: intention.id, status: "cancelled" })}
                       >
                         <XCircle className="w-3.5 h-3.5" />

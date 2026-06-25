@@ -10,3 +10,18 @@ export const ENV = {
   vapidPublicKey: process.env.VAPID_PUBLIC_KEY ?? "",
   vapidPrivateKey: process.env.VAPID_PRIVATE_KEY ?? "",
 };
+
+// Fail fast at boot in production if the secrets that gate auth + data access
+// are missing. A blank JWT_SECRET silently disables session signing integrity;
+// a blank DATABASE_URL leaves every query returning empty. Crashing loudly at
+// boot is safer than serving an insecure/empty app.
+if (ENV.isProduction) {
+  const missing: string[] = [];
+  if (!ENV.cookieSecret) missing.push("JWT_SECRET");
+  if (!ENV.databaseUrl) missing.push("DATABASE_URL");
+  if (missing.length > 0) {
+    throw new Error(
+      `Missing required environment variable(s) in production: ${missing.join(", ")}`
+    );
+  }
+}

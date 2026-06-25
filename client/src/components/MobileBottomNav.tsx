@@ -1,6 +1,6 @@
 import { useLocation } from "wouter";
 import { Home, Clock, Flame, Menu, Sparkles } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MobileMenu } from "./navigation/MobileMenu";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { openParishAssistant } from "./ParishAssistant";
@@ -17,6 +17,12 @@ export default function MobileBottomNav() {
   const [location] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const { user, isAuthenticated } = useAuth();
+
+  // Close the menu overlay whenever the route changes, so a menu link tap
+  // never leaves the overlay covering the new page.
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location]);
 
   return (
     <>

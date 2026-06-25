@@ -86,7 +86,7 @@ export function EventManager() {
                     {event.location && ` • ${event.location}`}
                   </p>
                 </div>
-                <Button size="sm" variant="ghost" className="text-destructive shrink-0" onClick={() => deleteMutation.mutate({ id: event.id })}>
+                <Button size="sm" variant="ghost" className="text-destructive shrink-0" aria-label={`Delete ${event.title}`} onClick={() => deleteMutation.mutate({ id: event.id })}>
                   <Trash2 className="w-4 h-4" />
                 </Button>
               </CardContent>

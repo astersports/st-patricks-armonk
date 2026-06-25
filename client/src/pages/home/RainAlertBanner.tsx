@@ -10,15 +10,15 @@ import { CloudRain, X } from "lucide-react";
 import {
   DAILY_SCHEDULE,
   parseServiceMinutes,
-  TIMEZONE,
 } from "@/components/this-week/scheduleConfig";
+import { nowInET } from "../../../../shared/datetime";
 
 export function RainAlertBanner() {
   const [dismissed, setDismissed] = useState(false);
 
   // Find the next upcoming service (today or tomorrow)
   const nextService = useMemo(() => {
-    const et = new Date(new Date().toLocaleString("en-US", { timeZone: TIMEZONE }));
+    const et = nowInET();
     const currentMin = et.getHours() * 60 + et.getMinutes();
     const todayDow = et.getDay();
 

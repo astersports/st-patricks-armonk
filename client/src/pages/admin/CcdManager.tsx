@@ -36,10 +36,19 @@ export function CcdManager() {
   const [eventGrade, setEventGrade] = useState("");
   const [eventLocation, setEventLocation] = useState("");
 
+  // datetime-local inputs expect a LOCAL "YYYY-MM-DDTHH:mm" string. Using
+  // toISOString() here shifts the displayed time by the UTC offset (e.g. a
+  // 4:00 PM event renders as 8:00 PM and saves back corrupted on every edit).
+  const toLocalDateTimeInput = (value: string | number | Date) => {
+    const d = new Date(value);
+    const pad = (n: number) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  };
+
   const startEditEvent = (event: any) => {
     setEditingEventId(event.id);
     setEventTitle(event.title);
-    setEventDate(new Date(event.eventDate).toISOString().slice(0, 16));
+    setEventDate(toLocalDateTimeInput(event.eventDate));
     setEventType(event.eventType);
     setEventDescription(event.description || "");
     setEventGrade(event.grade || "");
@@ -143,10 +152,10 @@ export function CcdManager() {
                   {event.grade && <span className="text-xs text-muted-foreground">Grade: {event.grade}</span>}
                 </div>
                 <div className="flex gap-1">
-                  <Button size="sm" variant="ghost" className="h-7" onClick={() => startEditEvent(event)}>
+                  <Button size="sm" variant="ghost" className="h-7" aria-label="Edit CCD event" onClick={() => startEditEvent(event)}>
                     <Edit className="w-3 h-3" />
                   </Button>
-                  <Button size="sm" variant="ghost" className="text-destructive h-7" onClick={() => deleteEventMutation.mutate({ id: event.id })}>
+                  <Button size="sm" variant="ghost" className="text-destructive h-7" aria-label="Delete CCD event" onClick={() => deleteEventMutation.mutate({ id: event.id })}>
                     <Trash2 className="w-3 h-3" />
                   </Button>
                 </div>

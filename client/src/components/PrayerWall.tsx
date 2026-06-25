@@ -184,6 +184,7 @@ export function PrayerWall() {
           <form onSubmit={handleSubmit} className="space-y-3 rounded-xl p-4 bg-amber-950/50 backdrop-blur-sm border border-amber-700/20">
             <input
               type="text"
+              aria-label="Your name (optional)"
               placeholder="Your name (optional)"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -191,6 +192,7 @@ export function PrayerWall() {
               maxLength={100}
             />
             <textarea
+              aria-label="Your prayer intention"
               placeholder="Your prayer intention..."
               value={intention}
               onChange={(e) => setIntention(e.target.value)}

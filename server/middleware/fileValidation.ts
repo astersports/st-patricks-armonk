@@ -1,12 +1,13 @@
 /**
  * File upload validation using magic numbers (file signatures).
  * Validates file type by inspecting actual bytes, not trusting client-provided MIME type.
- * 
- * Allowed types: PDF, JPEG, PNG, GIF, WebP
- * Max file size: 10MB
+ *
+ * Allowed types: PDF, JPEG, PNG, GIF, WebP, MP3/M4A audio
+ * Max file size: 10MB (50MB for audio)
  */
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_AUDIO_FILE_SIZE = 50 * 1024 * 1024; // 50MB — homily recordings run long
 
 interface FileSignature {
   mimeType: string;
@@ -21,9 +22,15 @@ const FILE_SIGNATURES: FileSignature[] = [
   { mimeType: "image/png", extensions: [".png"], magic: [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A] },
   { mimeType: "image/gif", extensions: [".gif"], magic: [0x47, 0x49, 0x46, 0x38] }, // GIF8
   { mimeType: "image/webp", extensions: [".webp"], magic: [0x52, 0x49, 0x46, 0x46], offset: 0 }, // RIFF...WEBP (partial check)
+  { mimeType: "audio/mpeg", extensions: [".mp3"], magic: [0x49, 0x44, 0x33] }, // ID3 (MP3 with tags)
+  { mimeType: "audio/mpeg", extensions: [".mp3"], magic: [0xFF, 0xFB] }, // MP3 frame sync (MPEG-1 Layer 3)
+  { mimeType: "audio/mpeg", extensions: [".mp3"], magic: [0xFF, 0xF3] }, // MP3 frame sync (MPEG-2 Layer 3)
+  { mimeType: "audio/mpeg", extensions: [".mp3"], magic: [0xFF, 0xF2] }, // MP3 frame sync (MPEG-2.5 Layer 3)
+  { mimeType: "audio/mp4", extensions: [".m4a"], magic: [0x66, 0x74, 0x79, 0x70], offset: 4 }, // ...ftyp (M4A/MP4 audio)
 ];
 
 const ALLOWED_MIME_TYPES = new Set(FILE_SIGNATURES.map((s) => s.mimeType));
+const AUDIO_MIME_TYPES = new Set(["audio/mpeg", "audio/mp4"]);
 
 export interface FileValidationResult {
   valid: boolean;
@@ -36,19 +43,15 @@ export interface FileValidationResult {
  * Returns the detected MIME type if valid, or an error message.
  */
 export function validateFileBuffer(buffer: Buffer, claimedContentType?: string): FileValidationResult {
-  // Size check
-  if (buffer.length > MAX_FILE_SIZE) {
-    return {
-      valid: false,
-      error: `File too large (${(buffer.length / 1024 / 1024).toFixed(1)}MB). Maximum allowed: 10MB.`,
-    };
-  }
-
-  if (buffer.length < 4) {
+  if (buffer.length < 8) {
     return { valid: false, error: "File is too small to be valid." };
   }
 
-  // Magic number detection
+  // Detect the actual type from magic bytes BEFORE applying any size limit, so
+  // the larger audio ceiling is keyed on the DETECTED type — never on a claimed
+  // one. Otherwise a client claims audio/mpeg to slip a 50MB non-audio file
+  // (e.g. a valid 40MB PDF) past the 10MB doc/image cap.
+  let detected: string | undefined;
   for (const sig of FILE_SIGNATURES) {
     const offset = sig.offset ?? 0;
     let matches = true;
@@ -58,30 +61,45 @@ export function validateFileBuffer(buffer: Buffer, claimedContentType?: string):
         break;
       }
     }
-    if (matches) {
-      // Special check for WebP: bytes 8-11 should be "WEBP"
-      if (sig.mimeType === "image/webp") {
-        if (
-          buffer.length > 11 &&
-          buffer[8] === 0x57 && // W
-          buffer[9] === 0x45 && // E
-          buffer[10] === 0x42 && // B
-          buffer[11] === 0x50 // P
-        ) {
-          return { valid: true, detectedMimeType: sig.mimeType };
-        }
-        continue; // RIFF but not WEBP
+    if (!matches) continue;
+    // Special check for WebP: bytes 8-11 should be "WEBP"
+    if (sig.mimeType === "image/webp") {
+      if (
+        buffer.length > 11 &&
+        buffer[8] === 0x57 && // W
+        buffer[9] === 0x45 && // E
+        buffer[10] === 0x42 && // B
+        buffer[11] === 0x50 // P
+      ) {
+        detected = sig.mimeType;
+        break;
       }
-      return { valid: true, detectedMimeType: sig.mimeType };
+      continue; // RIFF but not WEBP
     }
+    detected = sig.mimeType;
+    break;
   }
 
-  return {
-    valid: false,
-    error: `Unsupported file type. Allowed: PDF, JPEG, PNG, GIF, WebP. ${
-      claimedContentType ? `(Claimed: ${claimedContentType})` : ""
-    }`,
-  };
+  if (!detected) {
+    return {
+      valid: false,
+      error: `Unsupported file type. Allowed: PDF, JPEG, PNG, GIF, WebP, MP3, M4A. ${
+        claimedContentType ? `(Claimed: ${claimedContentType})` : ""
+      }`,
+    };
+  }
+
+  // Size ceiling keyed on the DETECTED type — audio gets the larger limit only
+  // because the bytes actually are audio, not because the client said so.
+  const sizeLimit = AUDIO_MIME_TYPES.has(detected) ? MAX_AUDIO_FILE_SIZE : MAX_FILE_SIZE;
+  if (buffer.length > sizeLimit) {
+    return {
+      valid: false,
+      error: `File too large (${(buffer.length / 1024 / 1024).toFixed(1)}MB). Maximum allowed: ${sizeLimit / 1024 / 1024}MB.`,
+    };
+  }
+
+  return { valid: true, detectedMimeType: detected };
 }
 
 /**

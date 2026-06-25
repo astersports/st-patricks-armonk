@@ -170,7 +170,7 @@ export function BulletinManager() {
                           </div>
                           <div className="flex gap-2 shrink-0">
                             {bulletin.sourceHtml && (
-                              <Button size="sm" variant="outline" onClick={() => { setEditingId(bulletin.id); setMode("compose"); }}>
+                              <Button size="sm" variant="outline" aria-label={`Edit ${bulletin.title}`} onClick={() => { setEditingId(bulletin.id); setMode("compose"); }}>
                                 <PenLine className="w-4 h-4" />
                               </Button>
                             )}
@@ -181,7 +181,7 @@ export function BulletinManager() {
                             )}
                             {bulletin.pdfUrl && bulletin.pdfUrl !== "placeholder" && (
                               <a href={bulletin.pdfUrl} target="_blank" rel="noopener noreferrer">
-                                <Button size="sm" variant="ghost"><Eye className="w-4 h-4" /></Button>
+                                <Button size="sm" variant="ghost" aria-label={`View ${bulletin.title} PDF`}><Eye className="w-4 h-4" /></Button>
                               </a>
                             )}
                             <Button

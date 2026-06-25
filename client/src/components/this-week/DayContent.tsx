@@ -8,7 +8,8 @@ import { useMemo } from "react";
 import { format, addDays } from "date-fns";
 import { ColorfulWeatherIcon } from "@/components/WeatherIcons";
 import { ServiceCard } from "./ServiceCard";
-import { type ScheduleItem, DAILY_SCHEDULE, parseServiceMinutes, TIMEZONE, getScheduleForDate } from "./scheduleConfig";
+import { type ScheduleItem, DAILY_SCHEDULE, parseServiceMinutes, getScheduleForDate } from "./scheduleConfig";
+import { nowInET } from "../../../../shared/datetime";
 
 interface DayData {
   index: number;
@@ -92,7 +93,7 @@ export function DayContent({
   // Compute countdowns for tomorrow's services
   const tomorrowCountdowns = useMemo(() => {
     if (!tomorrowData || tomorrowData.services.length === 0) return {};
-    const et = new Date(new Date().toLocaleString("en-US", { timeZone: TIMEZONE }));
+    const et = nowInET();
     const currentMin = et.getHours() * 60 + et.getMinutes();
     const todayDow = et.getDay();
     const daysAhead = (tomorrowData.dayOfWeek - todayDow + 7) % 7;

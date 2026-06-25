@@ -512,7 +512,7 @@ function MobileCard({
               {row.preferredDate && ` · Preferred: ${row.preferredDate}`}
             </p>
           </div>
-          <Button size="sm" variant="ghost" className="h-7 w-7 p-0 shrink-0">
+          <Button size="sm" variant="ghost" className="h-7 w-7 p-0 shrink-0" aria-label={isExpanded ? "Collapse details" : "Expand details"}>
             {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </Button>
         </div>

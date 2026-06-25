@@ -14,7 +14,7 @@ export const eventsRouter = router({
     return db.getAllEvents();
   }),
   getById: publicProcedure.input(z.object({ id: z.number() })).query(async ({ input }) => {
-    return db.getEventById(input.id);
+    return db.getEventById(input.id, true);
   }),
   create: eventsSection.input(z.object({
     title: z.string().min(1),

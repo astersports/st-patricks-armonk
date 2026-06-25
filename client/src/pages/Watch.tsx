@@ -11,7 +11,8 @@ import PageLayout from "@/components/PageLayout";
 import PageHeader from "@/components/PageHeader";
 import { SEO } from "@/components/SEO";
 import { useParishSchedule, useParishInfo } from "@/hooks/useParishSchedule";
-import { isServiceInProgress, getServicesForDay, TIMEZONE } from "../../../shared/scheduleEngine";
+import { isServiceInProgress, getServicesForDay } from "../../../shared/scheduleEngine";
+import { nowInET } from "../../../shared/datetime";
 
 export default function Watch() {
   const { schedule } = useParishSchedule();
@@ -29,9 +30,8 @@ export default function Watch() {
   useEffect(() => {
     function check() {
       if (!schedule) return;
-      const now = new Date();
       // Pin to America/New_York
-      const nyTime = new Date(now.toLocaleString("en-US", { timeZone: TIMEZONE }));
+      const nyTime = nowInET();
       const currentDay = nyTime.getDay();
       const currentMinutes = nyTime.getHours() * 60 + nyTime.getMinutes();
       const month = nyTime.getMonth() + 1;

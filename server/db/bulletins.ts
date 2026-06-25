@@ -58,9 +58,12 @@ export async function getAllBulletins() {
     .orderBy(desc(bulletins.weekDate));
 }
 
-export async function getBulletinById(id: number) {
+export async function getBulletinById(id: number, publicOnly = false) {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(bulletins).where(eq(bulletins.id, id)).limit(1);
+  const where = publicOnly
+    ? and(eq(bulletins.id, id), eq(bulletins.published, true), isNull(bulletins.deletedAt))
+    : eq(bulletins.id, id);
+  const result = await db.select().from(bulletins).where(where).limit(1);
   return result[0];
 }

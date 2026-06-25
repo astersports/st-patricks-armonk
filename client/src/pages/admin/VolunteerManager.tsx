@@ -10,14 +10,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
 import { toast } from "sonner";
-import { format } from "date-fns";
+import { safeFormatDate } from "@/lib/utils";
 import { Plus, Trash2, Edit, FileText, Upload, Users, Shield } from "lucide-react";
 
 export function VolunteerManager() {
   const utils = trpc.useUtils();
   const { data: opportunities, isLoading } = trpc.volunteer.listAllOpportunities.useQuery();
-  const createMutation = trpc.volunteer.createOpportunity.useMutation({ onSuccess: () => { utils.volunteer.listAllOpportunities.invalidate(); toast.success("Opportunity created!"); setShowForm(false); } });
-  const deleteMutation = trpc.volunteer.deleteOpportunity.useMutation({ onSuccess: () => { utils.volunteer.listAllOpportunities.invalidate(); toast.success("Deleted"); } });
 
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState("");
@@ -27,6 +25,25 @@ export function VolunteerManager() {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [spots, setSpots] = useState("10");
+
+  const resetForm = () => {
+    setTitle(""); setDescription(""); setMinistry(""); setEventDate(""); setStartTime(""); setEndTime(""); setSpots("10");
+  };
+
+  const createMutation = trpc.volunteer.createOpportunity.useMutation({
+    onSuccess: () => {
+      utils.volunteer.listAllOpportunities.invalidate();
+      toast.success("Opportunity created!");
+      // Only clear the form on success — a failed submit must keep the input.
+      resetForm();
+      setShowForm(false);
+    },
+    onError: () => { toast.error("Couldn't create the opportunity. Please try again."); },
+  });
+  const deleteMutation = trpc.volunteer.deleteOpportunity.useMutation({
+    onSuccess: () => { utils.volunteer.listAllOpportunities.invalidate(); toast.success("Deleted"); },
+    onError: () => { toast.error("Couldn't delete the opportunity. Please try again."); },
+  });
 
   const handleCreate = () => {
     if (!title || !spots) { toast.error("Title and spots required"); return; }
@@ -39,7 +56,6 @@ export function VolunteerManager() {
       endTime: endTime || undefined,
       spotsAvailable: parseInt(spots),
     });
-    setTitle(""); setDescription(""); setMinistry(""); setEventDate(""); setStartTime(""); setEndTime(""); setSpots("10");
   };
 
   return (
@@ -84,13 +100,23 @@ export function VolunteerManager() {
                   <h3 className="font-medium text-sm">{opp.title}</h3>
                   <p className="text-xs text-muted-foreground">
                     {opp.ministry && `${opp.ministry} • `}
-                    {opp.eventDate && `${format(new Date(opp.eventDate), "MMM d, yyyy")} • `}
+                    {opp.eventDate && `${safeFormatDate(opp.eventDate)} • `}
                     {opp.spotsFilled}/{opp.spotsAvailable} filled
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant={opp.active ? "default" : "secondary"}>{opp.active ? "Active" : "Inactive"}</Badge>
-                  <Button size="sm" variant="ghost" className="text-destructive h-7" onClick={() => deleteMutation.mutate({ id: opp.id })}>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-destructive h-7"
+                    aria-label={`Delete opportunity: ${opp.title}`}
+                    onClick={() => {
+                      if (window.confirm(`Delete "${opp.title}"? This can't be undone.`)) {
+                        deleteMutation.mutate({ id: opp.id });
+                      }
+                    }}
+                  >
                     <Trash2 className="w-3 h-3" />
                   </Button>
                 </div>

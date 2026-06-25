@@ -5,6 +5,15 @@
 import { adminProcedure, staffProcedure, sectionProcedure, publicProcedure, router, z, db } from "./_helpers";
 import { getRoutingConfig, saveRoutingConfig, type NotificationRouting } from "../notifications/route";
 
+/**
+ * Site-setting keys safe to read without auth. Everything else (e.g.
+ * form_export_spreadsheet_id, notification routing) must go through the
+ * staff-gated `getAll`. The public `get` endpoint only serves these.
+ * (Closure alert / parish schedule / parish info have their own dedicated
+ * routers; they are NOT served through this generic key reader.)
+ */
+const PUBLIC_SITE_SETTING_KEYS = new Set<string>(["marquee_text", "marquee_link"]);
+
 export const adminStatsRouter = router({
   overview: staffProcedure.query(async () => {
     return db.getAdminStats();
@@ -55,6 +64,10 @@ export const siteSettingsRouter = router({
   get: publicProcedure
     .input(z.object({ key: z.string() }))
     .query(async ({ input }) => {
+      if (!PUBLIC_SITE_SETTING_KEYS.has(input.key)) {
+        // Don't leak which keys exist; just return no value for non-public keys.
+        return { value: null };
+      }
       return { value: await db.getSiteSetting(input.key) };
     }),
   getAll: staffProcedure.query(async () => {

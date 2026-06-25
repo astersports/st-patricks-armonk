@@ -336,10 +336,10 @@ function NeedCard({ need }: { need: any }) {
               e.preventDefault();
               respond.mutate({ needId: need.id, name, email, phone: phone || undefined, message: message || undefined });
             }} className="space-y-4">
-              <div><label className="text-sm font-medium">Name *</label><Input value={name} onChange={e => setName(e.target.value)} required /></div>
-              <div><label className="text-sm font-medium">Email *</label><Input type="email" value={email} onChange={e => setEmail(e.target.value)} required /></div>
-              <div><label className="text-sm font-medium">Phone</label><Input value={phone} onChange={e => setPhone(e.target.value)} /></div>
-              <div><label className="text-sm font-medium">Message (optional)</label><Textarea value={message} onChange={e => setMessage(e.target.value)} rows={2} /></div>
+              <div><label className="text-sm font-medium">Name *</label><Input aria-label="Your name" value={name} onChange={e => setName(e.target.value)} required /></div>
+              <div><label className="text-sm font-medium">Email *</label><Input aria-label="Your email" type="email" value={email} onChange={e => setEmail(e.target.value)} required /></div>
+              <div><label className="text-sm font-medium">Phone</label><Input aria-label="Your phone (optional)" value={phone} onChange={e => setPhone(e.target.value)} /></div>
+              <div><label className="text-sm font-medium">Message (optional)</label><Textarea aria-label="Message (optional)" value={message} onChange={e => setMessage(e.target.value)} rows={2} /></div>
               <Button type="submit" className="w-full" disabled={respond.isPending}>
                 {respond.isPending ? "Submitting..." : "Confirm Sign Up"}
               </Button>

@@ -3,12 +3,11 @@ import { useParishInfo } from "@/hooks/useParishSchedule";
 import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, ExternalLink, QrCode, CreditCard, Gift, Repeat, DollarSign } from "lucide-react";
+import { Heart, ExternalLink, QrCode, CreditCard, Gift } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
 import PageHeader from "@/components/PageHeader";
-import { useState } from "react";
+import { PARISH_PHONE } from "../../../shared/parishConstants";
 
-const SUGGESTED_AMOUNTS = [10, 25, 50, 100, 250, 500];
 const FUND_OPTIONS = [
   { label: "Weekly Offertory", value: "offertory" },
   { label: "Building & Maintenance", value: "maintenance" },
@@ -19,12 +18,13 @@ const FUND_OPTIONS = [
 export default function Giving() {
   const revealRef = useReveal();
   const { info } = useParishInfo();
-  const parishPhone = info?.phone || "(914) 273-9724";
-  const [selectedAmount, setSelectedAmount] = useState<number | null>(50);
-  const [givingType, setGivingType] = useState<"one-time" | "recurring">("one-time");
+  const parishPhone = info?.phone || PARISH_PHONE;
 
-  // Build WeShare URL with pre-selected amount
-  const weshareUrl = "http://stpatrickinarmonk.churchgiving.com/";
+  // WeShare/ChurchGiving portal. The amount, fund, and recurrence are chosen on
+  // the WeShare page itself — its base URL does not accept those as parameters,
+  // so we link out cleanly rather than promising a pre-filled amount the portal
+  // would ignore.
+  const weshareUrl = "https://stpatrickinarmonk.churchgiving.com/";
 
   return (
     <PageLayout>
@@ -54,77 +54,9 @@ export default function Giving() {
                 </div>
               </div>
 
-              {/* One-time / Recurring toggle */}
-              <div className="flex gap-1 p-1 bg-muted rounded-lg mb-5 w-fit">
-                <button
-                  onClick={() => setGivingType("one-time")}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
-                    givingType === "one-time"
-                      ? "bg-background shadow-sm text-foreground"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  <Gift className="w-3.5 h-3.5" />
-                  One-time
-                </button>
-                <button
-                  onClick={() => setGivingType("recurring")}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
-                    givingType === "recurring"
-                      ? "bg-background shadow-sm text-foreground"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  <Repeat className="w-3.5 h-3.5" />
-                  Recurring
-                </button>
-              </div>
-
-              {/* Suggested amounts */}
-              <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-5">
-                {SUGGESTED_AMOUNTS.map((amount) => (
-                  <button
-                    key={amount}
-                    onClick={() => setSelectedAmount(amount)}
-                    className={`relative py-3 px-2 rounded-lg border text-center font-semibold transition-all press-scale ${
-                      selectedAmount === amount
-                        ? "border-primary bg-primary/5 text-primary shadow-sm ring-1 ring-primary/20"
-                        : "border-border hover:border-primary/30 hover:bg-primary/[0.02] text-foreground"
-                    }`}
-                  >
-                    <span className="text-lg">${amount}</span>
-                    {amount === 50 && (
-                      <span className="absolute -top-2 left-1/2 -translate-x-1/2 text-[9px] font-bold uppercase tracking-wider bg-primary text-primary-foreground px-1.5 py-0.5 rounded-full">
-                        Popular
-                      </span>
-                    )}
-                  </button>
-                ))}
-              </div>
-
-              {/* Custom amount */}
-              <div className="flex items-center gap-3 mb-5">
-                <div className="relative flex-1 max-w-[200px]">
-                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <input
-                    type="number"
-                    placeholder="Other"
-                    min="1"
-                    className="w-full pl-8 pr-3 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-                    onChange={(e) => {
-                      const val = parseInt(e.target.value);
-                      setSelectedAmount(val > 0 ? val : null);
-                    }}
-                  />
-                </div>
-                <span className="text-xs text-muted-foreground">
-                  {givingType === "recurring" ? "per week" : ""}
-                </span>
-              </div>
-
-              {/* Fund selection */}
+              {/* Funds you can support (chosen on the WeShare page) */}
               <div className="mb-5">
-                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Designate to</label>
+                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Funds you can support</label>
                 <div className="flex flex-wrap gap-2">
                   {FUND_OPTIONS.map((fund) => (
                     <span
@@ -135,17 +67,16 @@ export default function Giving() {
                     </span>
                   ))}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1.5">Select a fund on the WeShare page after clicking below</p>
+                <p className="text-xs text-muted-foreground mt-1.5">
+                  Choose your amount, fund, and one-time or recurring schedule on the secure WeShare page.
+                </p>
               </div>
 
               {/* CTA */}
               <a href={weshareUrl} target="_blank" rel="noopener noreferrer">
                 <Button className="w-full sm:w-auto gap-2 press-scale text-base py-5 px-8" size="lg">
                   <CreditCard className="w-4 h-4" />
-                  {selectedAmount
-                    ? `Give $${selectedAmount}${givingType === "recurring" ? "/week" : ""} via WeShare`
-                    : "Give via WeShare"
-                  }
+                  Give via WeShare
                   <ExternalLink className="w-3.5 h-3.5 opacity-60" />
                 </Button>
               </a>

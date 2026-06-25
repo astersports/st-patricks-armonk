@@ -8,9 +8,9 @@ import {
   parseTimeToMinutes,
   getServicesForDay,
   isServiceInProgress,
-  TIMEZONE,
 } from "@/hooks/useParishSchedule";
 import type { ScheduledService } from "@/hooks/useParishSchedule";
+import { nowInET } from "../../../shared/datetime";
 
 function getServiceIcon(type: string) {
   switch (type) {
@@ -169,15 +169,11 @@ function CurrentWeatherPill() {
 
 export function NowStatusBar() {
   const { schedule } = useParishSchedule();
-  const [now, setNow] = useState(() => {
-    const d = new Date();
-    return new Date(d.toLocaleString("en-US", { timeZone: TIMEZONE }));
-  });
+  const [now, setNow] = useState(() => nowInET());
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const d = new Date();
-      setNow(new Date(d.toLocaleString("en-US", { timeZone: TIMEZONE })));
+      setNow(nowInET());
     }, 30000);
     return () => clearInterval(interval);
   }, []);

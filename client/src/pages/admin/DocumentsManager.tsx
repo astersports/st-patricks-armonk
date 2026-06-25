@@ -144,11 +144,12 @@ export function DocumentsManager() {
                     </p>
                   </div>
                   <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer">
-                    <Button variant="ghost" size="sm"><Upload className="w-3 h-3" /></Button>
+                    <Button variant="ghost" size="sm" aria-label={`Open ${doc.title}`}><Upload className="w-3 h-3" /></Button>
                   </a>
                   <Button
                     variant="ghost"
                     size="sm"
+                    aria-label={`Delete ${doc.title}`}
                     onClick={() => deleteMutation.mutate({ id: doc.id })}
                     className="text-destructive hover:text-destructive"
                   >

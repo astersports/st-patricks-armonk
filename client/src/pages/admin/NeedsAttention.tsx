@@ -244,6 +244,7 @@ export default function NeedsAttention() {
                   <Button
                     variant="ghost"
                     size="sm"
+                    aria-label={`Add note for ${item.name}`}
                     onClick={() => {
                       setNoteTarget({
                         id: item.id,
