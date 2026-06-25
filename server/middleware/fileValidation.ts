@@ -43,21 +43,15 @@ export interface FileValidationResult {
  * Returns the detected MIME type if valid, or an error message.
  */
 export function validateFileBuffer(buffer: Buffer, claimedContentType?: string): FileValidationResult {
-  // Size check — audio recordings get a larger ceiling than docs/images.
-  const isAudioClaim = claimedContentType ? AUDIO_MIME_TYPES.has(claimedContentType) : false;
-  const sizeLimit = isAudioClaim ? MAX_AUDIO_FILE_SIZE : MAX_FILE_SIZE;
-  if (buffer.length > sizeLimit) {
-    return {
-      valid: false,
-      error: `File too large (${(buffer.length / 1024 / 1024).toFixed(1)}MB). Maximum allowed: ${sizeLimit / 1024 / 1024}MB.`,
-    };
-  }
-
   if (buffer.length < 8) {
     return { valid: false, error: "File is too small to be valid." };
   }
 
-  // Magic number detection
+  // Detect the actual type from magic bytes BEFORE applying any size limit, so
+  // the larger audio ceiling is keyed on the DETECTED type — never on a claimed
+  // one. Otherwise a client claims audio/mpeg to slip a 50MB non-audio file
+  // (e.g. a valid 40MB PDF) past the 10MB doc/image cap.
+  let detected: string | undefined;
   for (const sig of FILE_SIGNATURES) {
     const offset = sig.offset ?? 0;
     let matches = true;
@@ -67,30 +61,45 @@ export function validateFileBuffer(buffer: Buffer, claimedContentType?: string):
         break;
       }
     }
-    if (matches) {
-      // Special check for WebP: bytes 8-11 should be "WEBP"
-      if (sig.mimeType === "image/webp") {
-        if (
-          buffer.length > 11 &&
-          buffer[8] === 0x57 && // W
-          buffer[9] === 0x45 && // E
-          buffer[10] === 0x42 && // B
-          buffer[11] === 0x50 // P
-        ) {
-          return { valid: true, detectedMimeType: sig.mimeType };
-        }
-        continue; // RIFF but not WEBP
+    if (!matches) continue;
+    // Special check for WebP: bytes 8-11 should be "WEBP"
+    if (sig.mimeType === "image/webp") {
+      if (
+        buffer.length > 11 &&
+        buffer[8] === 0x57 && // W
+        buffer[9] === 0x45 && // E
+        buffer[10] === 0x42 && // B
+        buffer[11] === 0x50 // P
+      ) {
+        detected = sig.mimeType;
+        break;
       }
-      return { valid: true, detectedMimeType: sig.mimeType };
+      continue; // RIFF but not WEBP
     }
+    detected = sig.mimeType;
+    break;
   }
 
-  return {
-    valid: false,
-    error: `Unsupported file type. Allowed: PDF, JPEG, PNG, GIF, WebP, MP3, M4A. ${
-      claimedContentType ? `(Claimed: ${claimedContentType})` : ""
-    }`,
-  };
+  if (!detected) {
+    return {
+      valid: false,
+      error: `Unsupported file type. Allowed: PDF, JPEG, PNG, GIF, WebP, MP3, M4A. ${
+        claimedContentType ? `(Claimed: ${claimedContentType})` : ""
+      }`,
+    };
+  }
+
+  // Size ceiling keyed on the DETECTED type — audio gets the larger limit only
+  // because the bytes actually are audio, not because the client said so.
+  const sizeLimit = AUDIO_MIME_TYPES.has(detected) ? MAX_AUDIO_FILE_SIZE : MAX_FILE_SIZE;
+  if (buffer.length > sizeLimit) {
+    return {
+      valid: false,
+      error: `File too large (${(buffer.length / 1024 / 1024).toFixed(1)}MB). Maximum allowed: ${sizeLimit / 1024 / 1024}MB.`,
+    };
+  }
+
+  return { valid: true, detectedMimeType: detected };
 }
 
 /**
