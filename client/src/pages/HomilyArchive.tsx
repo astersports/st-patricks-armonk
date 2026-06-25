@@ -2,7 +2,7 @@
  * HomilyArchive — Browse past homilies with audio playback.
  * Admin can upload audio recordings; public visitors can listen and browse by date/topic.
  */
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { SEO } from "@/components/SEO";
 import PageLayout from "@/components/PageLayout";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,6 +28,23 @@ export default function HomilyArchive() {
       (h.topic ?? "").toLowerCase().includes(q)
     );
   });
+
+  // Stop playback on unmount so audio doesn't keep playing after navigating away.
+  useEffect(() => {
+    return () => {
+      audioRef.current?.pause();
+      audioRef.current = null;
+    };
+  }, []);
+
+  // If the currently-playing homily gets filtered out of view, stop it.
+  useEffect(() => {
+    if (playingId !== null && !filtered.some((h) => h.id === playingId)) {
+      audioRef.current?.pause();
+      audioRef.current = null;
+      setPlayingId(null);
+    }
+  }, [filtered, playingId]);
 
   function handlePlay(id: number, audioUrl: string) {
     if (playingId === id) {

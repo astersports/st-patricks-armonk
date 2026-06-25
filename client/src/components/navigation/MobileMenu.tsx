@@ -92,6 +92,7 @@ export function MobileMenu({ location, isAuthenticated, isAdmin, onClose }: {
                     <Link
                       key={item.href}
                       href={item.href}
+                      onClick={onClose}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
                         isActive
                           ? "text-primary bg-primary/5 font-medium"
@@ -144,6 +145,7 @@ export function MobileMenu({ location, isAuthenticated, isAdmin, onClose }: {
                       <Link
                         key={item.href}
                         href={item.href}
+                        onClick={onClose}
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
                           isActive
                             ? "text-primary bg-primary/5 font-medium"
@@ -165,6 +167,7 @@ export function MobileMenu({ location, isAuthenticated, isAdmin, onClose }: {
                 </h3>
                 <Link
                   href="/admin"
+                  onClick={onClose}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold text-primary bg-primary/5"
                 >
                   <Church className="w-4 h-4 text-primary" />

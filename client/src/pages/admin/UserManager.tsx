@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { ROLE_LABELS, type UserRole } from "@shared/roles";
 import { Users, Shield } from "lucide-react";
-import { format } from "date-fns";
+import { safeFormatDate } from "@/lib/utils";
 
 const ROLE_OPTIONS: { value: UserRole; label: string; color: string }[] = [
   { value: "admin", label: "Administrator", color: "bg-red-100 text-red-800" },
@@ -88,7 +88,7 @@ export default function UserManager() {
                       <p className="font-medium text-sm truncate">{user.name || "Unknown User"}</p>
                       <p className="text-xs text-muted-foreground truncate">{user.email || "No email"}</p>
                       <p className="text-xs text-muted-foreground">
-                        Last active: {format(new Date(user.lastSignedIn), "MMM d, yyyy")}
+                        Last active: {safeFormatDate(user.lastSignedIn)}
                       </p>
                     </div>
                   </div>

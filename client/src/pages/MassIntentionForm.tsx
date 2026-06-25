@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Heart, CheckCircle2, Cross } from "lucide-react";
 import { useParishSchedule } from "@/hooks/useParishSchedule";
 import { DEFAULT_PARISH_SCHEDULE } from "../../../shared/scheduleEngine";
+import { PARISH_PHONE } from "../../../shared/parishConstants";
 
 export default function MassIntentionForm() {
   const { schedule } = useParishSchedule();
@@ -198,7 +199,7 @@ export default function MassIntentionForm() {
               <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20">
                 <p className="text-sm font-medium text-destructive">Something went wrong</p>
                 <p className="text-xs text-destructive/80 mt-1">
-                  {submitMutation.error.message || "We couldn't submit your intention. Please try again or call the parish office at (914) 273-9325."}
+                  {submitMutation.error.message || `We couldn't submit your intention. Please try again or call the parish office at ${PARISH_PHONE}.`}
                 </p>
               </div>
             )}

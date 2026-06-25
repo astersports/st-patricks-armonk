@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
 import { toast } from "sonner";
-import { format } from "date-fns";
+import { safeFormatDate } from "@/lib/utils";
 import { Plus, Trash2, Edit, FileText, Upload, Users, Shield } from "lucide-react";
 
 export function SubscriberList() {
@@ -57,7 +57,7 @@ export function SubscriberList() {
                         </Badge>
                       </td>
                       <td className="p-3 text-sm text-muted-foreground">
-                        {format(new Date(sub.createdAt), "MMM d, yyyy")}
+                        {safeFormatDate(sub.createdAt)}
                       </td>
                     </tr>
                   ))}
