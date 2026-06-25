@@ -33,6 +33,16 @@ export const DEFAULT_NOTIFICATION_ROUTING: NotificationRouting = {
 
 const ROUTING_KEY = "notification_routing";
 
+/** Escape user-supplied text before embedding it in HTML email bodies. */
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 // ─── Load routing config ────────────────────────────────────────────────────
 
 export async function getRoutingConfig(): Promise<NotificationRouting> {
@@ -63,18 +73,21 @@ export async function routeNotification(
     const to = config.bySection[section] || config.catchall;
     const bcc = to !== config.catchall ? config.catchall : undefined;
 
-    // Build a simple HTML email body
+    // Build a simple HTML email body (escape user-supplied fields).
+    const safeTitle = escapeHtml(payload.title);
+    const safeContent = escapeHtml(payload.content);
     const htmlBody = `
-      <h2 style="margin:0 0 16px;color:#1a5c2e;">${payload.title}</h2>
-      <div style="white-space:pre-wrap;line-height:1.6;">${payload.content}</div>
+      <h2 style="margin:0 0 16px;color:#1a5c2e;">${safeTitle}</h2>
+      <div style="white-space:pre-wrap;line-height:1.6;">${safeContent}</div>
     `;
+    const subject = `[St. Patrick] ${payload.title}`;
 
     // Send to the section recipient
-    await sendEmail(to, `[St. Patrick] ${payload.title}`, htmlBody);
+    await sendEmail(to, subject, htmlBody);
 
     // BCC the catch-all separately (sendEmail doesn't support BCC natively)
     if (bcc) {
-      await sendEmail(bcc, `[St. Patrick] ${payload.title}`, htmlBody);
+      await sendEmail(bcc, subject, htmlBody);
     }
   } catch (error) {
     // Routing failure must never block the form submission

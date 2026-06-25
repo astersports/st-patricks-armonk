@@ -16,7 +16,7 @@ export const newsRouter = router({
     return db.getAllNewsPosts();
   }),
   getById: publicProcedure.input(z.object({ id: z.number() })).query(async ({ input }) => {
-    return db.getNewsPostById(input.id);
+    return db.getNewsPostById(input.id, true);
   }),
   create: newsSection.input(z.object({
     title: z.string().min(1),

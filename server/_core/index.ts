@@ -68,11 +68,9 @@ async function startServer() {
       const result = await sendCcdReminders(upcomingEvents);
       res.json({ ok: true, ...result });
     } catch (error: any) {
-      console.error("[Scheduled] CCD reminder error:", error);
+      console.error("[Scheduled] CCD reminder error:", error, { url: req.url, taskUid: (req as any).taskUid });
       res.status(500).json({
-        error: error.message || "Unknown error",
-        stack: error.stack,
-        context: { url: req.url, taskUid: (req as any).taskUid },
+        error: "Internal server error",
         timestamp: new Date().toISOString(),
       });
     }
@@ -89,11 +87,9 @@ async function startServer() {
       const result = await handleAnalyticsDigest();
       res.json({ ok: true, ...result });
     } catch (error: any) {
-      console.error("[Scheduled] Analytics digest error:", error);
+      console.error("[Scheduled] Analytics digest error:", error, { url: req.url, taskUid: (req as any).taskUid });
       res.status(500).json({
-        error: error.message || "Unknown error",
-        stack: error.stack,
-        context: { url: req.url, taskUid: (req as any).taskUid },
+        error: "Internal server error",
         timestamp: new Date().toISOString(),
       });
     }
@@ -109,11 +105,9 @@ async function startServer() {
       const result = await handleWeeklyDigest();
       res.json({ ok: true, ...result });
     } catch (error: any) {
-      console.error("[Scheduled] Weekly digest error:", error);
+      console.error("[Scheduled] Weekly digest error:", error, { url: req.url, taskUid: (req as any).taskUid });
       res.status(500).json({
-        error: error.message || "Unknown error",
-        stack: error.stack,
-        context: { url: req.url, taskUid: (req as any).taskUid },
+        error: "Internal server error",
         timestamp: new Date().toISOString(),
       });
     }
@@ -129,7 +123,8 @@ async function startServer() {
       await db.unsubscribeCcdReminder(token);
       res.json({ success: true });
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      console.error("[CCD] Unsubscribe error:", error);
+      res.status(500).json({ error: "Internal server error" });
     }
   });
 

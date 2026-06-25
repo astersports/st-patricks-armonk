@@ -156,6 +156,10 @@ class SDKServer {
 
   private getSessionSecret() {
     const secret = ENV.cookieSecret;
+    if (!secret) {
+      // Signing/verifying sessions with an empty secret is a critical auth hole.
+      throw new Error("JWT_SECRET is not configured — refusing to sign or verify sessions.");
+    }
     return new TextEncoder().encode(secret);
   }
 

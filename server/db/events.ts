@@ -39,9 +39,12 @@ export async function getAllEvents() {
   return db.select().from(events).orderBy(desc(events.startDate));
 }
 
-export async function getEventById(id: number) {
+export async function getEventById(id: number, publicOnly = false) {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(events).where(eq(events.id, id)).limit(1);
+  const where = publicOnly
+    ? and(eq(events.id, id), eq(events.published, true))
+    : eq(events.id, id);
+  const result = await db.select().from(events).where(where).limit(1);
   return result[0];
 }

@@ -2,7 +2,7 @@
  * Holy Days Router — public upcoming list + admin CRUD for holy day mass times.
  */
 import { z } from "zod";
-import { publicProcedure, protectedProcedure } from "./_helpers";
+import { publicProcedure, staffProcedure } from "./_helpers";
 import { router } from "../_core/trpc";
 import * as db from "../db";
 
@@ -24,12 +24,12 @@ export const holyDaysRouter = router({
     }),
 
   /** Admin: get all holy days (past + future) */
-  listAll: protectedProcedure.query(async () => {
+  listAll: staffProcedure.query(async () => {
     return db.getAllHolyDays();
   }),
 
   /** Admin: create or update a holy day */
-  upsert: protectedProcedure
+  upsert: staffProcedure
     .input(holyDayInput)
     .mutation(async ({ input }) => {
       const { id, ...data } = input;
@@ -37,7 +37,7 @@ export const holyDaysRouter = router({
     }),
 
   /** Admin: delete a holy day */
-  delete: protectedProcedure
+  delete: staffProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       await db.deleteHolyDay(input.id);

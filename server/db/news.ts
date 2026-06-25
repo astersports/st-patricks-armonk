@@ -1,4 +1,4 @@
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
 import { newsPosts } from "../../drizzle/schema";
 import type { InsertNewsPost } from "../../drizzle/schema";
 import { getDb } from "./_connection";
@@ -39,9 +39,12 @@ export async function getAllNewsPosts() {
   return db.select().from(newsPosts).orderBy(desc(newsPosts.createdAt));
 }
 
-export async function getNewsPostById(id: number) {
+export async function getNewsPostById(id: number, publicOnly = false) {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(newsPosts).where(eq(newsPosts.id, id)).limit(1);
+  const where = publicOnly
+    ? and(eq(newsPosts.id, id), eq(newsPosts.published, true))
+    : eq(newsPosts.id, id);
+  const result = await db.select().from(newsPosts).where(where).limit(1);
   return result[0];
 }

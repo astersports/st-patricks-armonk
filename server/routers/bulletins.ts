@@ -16,7 +16,7 @@ export const bulletinsRouter = router({
     return db.getAllBulletins();
   }),
   getById: publicProcedure.input(z.object({ id: z.number() })).query(async ({ input }) => {
-    return db.getBulletinById(input.id);
+    return db.getBulletinById(input.id, true);
   }),
   create: bulletinsSection.input(z.object({
     title: z.string().min(1),
