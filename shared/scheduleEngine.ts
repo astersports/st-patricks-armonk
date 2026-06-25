@@ -4,9 +4,11 @@
  * This module is the ONE place that defines the parish schedule data shape,
  * parsing logic, countdown calculations, and service-in-progress detection.
  * 
- * All consumers (Hero, ThisWeek, NowBar, MassTimes, NewHere, SEO, .ics) 
+ * All consumers (Hero, ThisWeek, NowBar, MassTimes, NewHere, SEO, .ics)
  * import from here. No hardcoded Mass times anywhere else.
  */
+
+import { toEasternWallClock } from "./datetime";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -220,10 +222,14 @@ export function isServiceInProgress(service: ScheduledService, currentMinutes: n
  * Uses date-aware filtering to respect firstOfMonth constraints.
  */
 export function getNextService(schedule: ParishSchedule, now: Date): { service: ScheduledService; daysAhead: number; countdown: string } | null {
-  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  // The parish is in America/New_York; resolve the time-of-day and date walk
+  // against the Eastern wall-clock so a non-Eastern (e.g. UTC server, traveling
+  // admin) device doesn't compute the wrong "next Mass".
+  const et = toEasternWallClock(now);
+  const currentMinutes = et.getHours() * 60 + et.getMinutes();
 
   // Check today's remaining services
-  const todayServices = getServicesForDate(schedule, now);
+  const todayServices = getServicesForDate(schedule, et);
   for (const service of todayServices) {
     const serviceMin = parseTimeToMinutes(service.time);
     if (serviceMin > currentMinutes) {
@@ -233,8 +239,8 @@ export function getNextService(schedule: ParishSchedule, now: Date): { service: 
 
   // Check next 7 days
   for (let ahead = 1; ahead <= 7; ahead++) {
-    const futureDate = new Date(now);
-    futureDate.setDate(now.getDate() + ahead);
+    const futureDate = new Date(et);
+    futureDate.setDate(et.getDate() + ahead);
     const services = getServicesForDate(schedule, futureDate);
     if (services.length > 0) {
       const service = services[0];
@@ -250,27 +256,33 @@ export function getNextService(schedule: ParishSchedule, now: Date): { service: 
  * Get upcoming Holy Days within the next N days.
  */
 export function getUpcomingHolyDays(schedule: ParishSchedule, now: Date, withinDays: number = 7): { name: string; date: Date; massTimes: string[]; daysUntil: number }[] {
-  const year = now.getFullYear();
-  const today = new Date(year, now.getMonth(), now.getDate());
+  // Anchor "today" on the parish's Eastern wall-clock date.
+  const et = toEasternWallClock(now);
+  const year = et.getFullYear();
+  const today = new Date(year, et.getMonth(), et.getDate());
   const upcoming: { name: string; date: Date; massTimes: string[]; daysUntil: number }[] = [];
 
-  for (const hd of schedule.holyDays) {
-    const hdDate = new Date(year, hd.month - 1, hd.day);
-    const diffMs = hdDate.getTime() - today.getTime();
-    const daysUntil = Math.round(diffMs / (1000 * 60 * 60 * 24));
-    if (daysUntil >= 0 && daysUntil <= withinDays) {
-      upcoming.push({ name: hd.name, date: hdDate, massTimes: hd.massTimes, daysUntil });
+  // Consider both this year and next year's occurrences so a late-December run
+  // includes (e.g.) Jan 1 / Mary, Mother of God within the window.
+  for (const candidateYear of [year, year + 1]) {
+    for (const hd of schedule.holyDays) {
+      const hdDate = new Date(candidateYear, hd.month - 1, hd.day);
+      const diffMs = hdDate.getTime() - today.getTime();
+      const daysUntil = Math.round(diffMs / (1000 * 60 * 60 * 24));
+      if (daysUntil >= 0 && daysUntil <= withinDays) {
+        upcoming.push({ name: hd.name, date: hdDate, massTimes: hd.massTimes, daysUntil });
+      }
     }
-  }
 
-  // Also check Ascension (Easter + 39 days)
-  const easter = getEasterDate(year);
-  const ascension = new Date(easter);
-  ascension.setDate(easter.getDate() + 39);
-  const ascDiffMs = ascension.getTime() - today.getTime();
-  const ascDaysUntil = Math.round(ascDiffMs / (1000 * 60 * 60 * 24));
-  if (ascDaysUntil >= 0 && ascDaysUntil <= withinDays) {
-    upcoming.push({ name: "Ascension of the Lord", date: ascension, massTimes: ["8:30 AM", "12:10 PM", "7:30 PM"], daysUntil: ascDaysUntil });
+    // Also check Ascension (Easter + 39 days) for the candidate year.
+    const easter = getEasterDate(candidateYear);
+    const ascension = new Date(easter);
+    ascension.setDate(easter.getDate() + 39);
+    const ascDiffMs = ascension.getTime() - today.getTime();
+    const ascDaysUntil = Math.round(ascDiffMs / (1000 * 60 * 60 * 24));
+    if (ascDaysUntil >= 0 && ascDaysUntil <= withinDays) {
+      upcoming.push({ name: "Ascension of the Lord", date: ascension, massTimes: ["8:30 AM", "12:10 PM", "7:30 PM"], daysUntil: ascDaysUntil });
+    }
   }
 
   return upcoming.sort((a, b) => a.daysUntil - b.daysUntil);

@@ -94,10 +94,10 @@ export function getLiturgicalSeason(date: Date = new Date()): LiturgicalSeason {
     return "christmas";
   }
 
-  // Check Lent (Ash Wednesday to Holy Thursday = Easter - 3)
-  const holyThursday = new Date(easter);
-  holyThursday.setDate(easter.getDate() - 3);
-  if (current >= ashWednesday && current <= holyThursday) {
+  // Check Lent (Ash Wednesday through Holy Saturday — the Sacred Triduum
+  // of Good Friday + Holy Saturday stays Lent, not Ordinary Time, right up
+  // to Easter Sunday). Bound with `current < easter`.
+  if (current >= ashWednesday && current < easter) {
     return "lent";
   }
 
@@ -106,8 +106,11 @@ export function getLiturgicalSeason(date: Date = new Date()): LiturgicalSeason {
     return "easter";
   }
 
-  // Check Advent
-  if (current >= advent1 && month === 11 && day < 25) {
+  // Check Advent (first Sunday of Advent — which can fall in late November —
+  // through Dec 24). Compare against the actual Christmas date, not month===11,
+  // so late-Nov Advent dates classify correctly.
+  const christmasEve = new Date(year, 11, 25);
+  if (current >= advent1 && current < christmasEve) {
     return "advent";
   }
 

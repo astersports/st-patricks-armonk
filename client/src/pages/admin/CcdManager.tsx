@@ -36,10 +36,19 @@ export function CcdManager() {
   const [eventGrade, setEventGrade] = useState("");
   const [eventLocation, setEventLocation] = useState("");
 
+  // datetime-local inputs expect a LOCAL "YYYY-MM-DDTHH:mm" string. Using
+  // toISOString() here shifts the displayed time by the UTC offset (e.g. a
+  // 4:00 PM event renders as 8:00 PM and saves back corrupted on every edit).
+  const toLocalDateTimeInput = (value: string | number | Date) => {
+    const d = new Date(value);
+    const pad = (n: number) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  };
+
   const startEditEvent = (event: any) => {
     setEditingEventId(event.id);
     setEventTitle(event.title);
-    setEventDate(new Date(event.eventDate).toISOString().slice(0, 16));
+    setEventDate(toLocalDateTimeInput(event.eventDate));
     setEventType(event.eventType);
     setEventDescription(event.description || "");
     setEventGrade(event.grade || "");

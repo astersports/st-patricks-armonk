@@ -20,9 +20,40 @@ function formatDateUTC(date: Date): string {
   return `${date.getUTCFullYear()}${pad(date.getUTCMonth() + 1)}${pad(date.getUTCDate())}T${pad(date.getUTCHours())}${pad(date.getUTCMinutes())}${pad(date.getUTCSeconds())}Z`;
 }
 
+/** Format a Date's LOCAL wall-clock as a floating (zoneless) ics timestamp,
+ * for use with a TZID parameter. No trailing Z — the TZID supplies the zone. */
+function formatDateFloating(date: Date): string {
+  return `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}T${pad(date.getHours())}${pad(date.getMinutes())}${pad(date.getSeconds())}`;
+}
+
 function formatDateLocal(date: Date): string {
   return `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}`;
 }
+
+const PARISH_TZID = "America/New_York";
+
+/** Standards-compliant VTIMEZONE block for America/New_York so subscribers'
+ * calendars render Mass times in Eastern wall-clock regardless of their own
+ * zone (rather than treating a local time as UTC). */
+const VTIMEZONE_AMERICA_NEW_YORK = [
+  "BEGIN:VTIMEZONE",
+  `TZID:${PARISH_TZID}`,
+  "BEGIN:DAYLIGHT",
+  "TZOFFSETFROM:-0500",
+  "TZOFFSETTO:-0400",
+  "TZNAME:EDT",
+  "DTSTART:19700308T020000",
+  "RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU",
+  "END:DAYLIGHT",
+  "BEGIN:STANDARD",
+  "TZOFFSETFROM:-0400",
+  "TZOFFSETTO:-0500",
+  "TZNAME:EST",
+  "DTSTART:19701101T020000",
+  "RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU",
+  "END:STANDARD",
+  "END:VTIMEZONE",
+];
 
 function escapeICS(str: string): string {
   return str.replace(/[\\;,]/g, (c) => `\\${c}`).replace(/\n/g, "\\n");
@@ -34,15 +65,19 @@ export function generateICS(event: ICSEvent): string {
 
   let dtStart: string;
   let dtEnd: string;
+  let timed = false;
 
   if (event.allDay) {
     dtStart = `DTSTART;VALUE=DATE:${formatDateLocal(event.startDate)}`;
     const end = event.endDate || new Date(event.startDate.getTime() + 86400000);
     dtEnd = `DTEND;VALUE=DATE:${formatDateLocal(end)}`;
   } else {
-    dtStart = `DTSTART:${formatDateUTC(event.startDate)}`;
+    // Stamp the local wall-clock with an explicit TZID rather than mislabeling
+    // it as UTC (Z), so subscribers see the correct Eastern Mass time.
+    timed = true;
+    dtStart = `DTSTART;TZID=${PARISH_TZID}:${formatDateFloating(event.startDate)}`;
     const end = event.endDate || new Date(event.startDate.getTime() + 3600000); // default 1 hour
-    dtEnd = `DTEND:${formatDateUTC(end)}`;
+    dtEnd = `DTEND;TZID=${PARISH_TZID}:${formatDateFloating(end)}`;
   }
 
   const lines = [
@@ -51,6 +86,7 @@ export function generateICS(event: ICSEvent): string {
     "PRODID:-//St. Patrick in Armonk//Events//EN",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
+    ...(timed ? VTIMEZONE_AMERICA_NEW_YORK : []),
     "BEGIN:VEVENT",
     `UID:${uid}`,
     `DTSTAMP:${now}`,
