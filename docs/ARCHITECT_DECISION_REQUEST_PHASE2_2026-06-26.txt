@@ -1,0 +1,224 @@
+ARCHITECT DECISION REQUEST — St. Patrick / Phase 2 (paperwork & sign-up automation)
+================================================================================
+From:    Claude Code (CC)
+For:     Architect (review + ratify)
+Relayed: Frank
+Date:    2026-06-26
+Status:  DECISION REQUEST (not a status recap). Four decisions, D1–D4 in §6.
+Repo:    astersports/st-patricks-armonk  (SANDBOX — see CLAUDE.md; production is a
+         separate repo on a separate account; work migrates one-way sandbox→prod)
+
+
+0. WHY THIS DOC
+--------------------------------------------------------------------------------
+The paperwork-automation audit (docs/PAPERWORK_AUTOMATION_AUDIT_2026-06-26.txt,
+merged in PR #10) ranked the work in phases. Phase 1 and the first Phase-2 item
+have shipped:
+
+  SHIPPED & MERGED
+   - Phase 1 A-1: confirmation emails + reference numbers on the 4 forms that had
+     none (parish registration, teen life, CCD permissions, volunteer).  PR #11
+   - Phase 1 A-2: server-side milestone notify default (the SacramentsManager UI
+     already pre-checked "Notify family" for milestone statuses — the audit
+     over-stated this; we only aligned the server).  PR #11
+   - Phase 1 polish: "a confirmation email is on its way" on the success screens. PR #12
+   - Phase 2 A-3: CCD permission report exports — bus roster / allergy-medical /
+     photo release / early dismissal, generated client-side from the loaded rows
+     (pure helper client/src/lib/ccdReports.ts, tested).  PR #13
+
+This document is the REMAINING Phase 2 work (A-5, A-7) plus the STRUCTURAL items
+the audit deferred — surfaced for the architect to rule on. CC has a labeled
+lean per decision (AP#39: committing to the lean); the architect/Frank decide.
+
+
+1. ONE NEW CONSTRAINT THAT CHANGES THE FRAME (read before the items)
+--------------------------------------------------------------------------------
+Since the audit was written, the operating model was made explicit and committed
+(CLAUDE.md + docs/SANDBOX_AND_MIGRATION.md, PR #14):
+
+  - This repo is the SANDBOX. It is not production and never hosts the live site.
+  - Production lives in a SEPARATE repo on a SEPARATE GitHub account (Archdiocese
+    of New York organizational-separation requirement). That repo owns hosting,
+    domain/DNS, SECRETS, real-PII retention, and go-live.
+  - Work migrates one way, sandbox → production, via an operator-built agent that
+    reads this repo. Rule of thumb: carry CODE + INTENT; never carry secrets,
+    instance handles, or host wiring.
+
+Consequence for Phase 2: both remaining items (A-5, A-7) need things that are
+ENVIRONMENT-SPECIFIC and live on the production side — a Google service-account
+credential (A-5) and a registered cron caller + cron secret (A-7). So the real
+question is not just "build it?" but "build WHERE, and in what shape so it
+migrates cleanly?"
+
+
+2. DECISION D1 (decide first) — sandbox-build-now vs. rehost/production-spec
+--------------------------------------------------------------------------------
+REQUEST: What posture do we take for the remaining Phase-2 automation — build it
+on the legacy sandbox stack now, or spec it for the Supabase/production rehost?
+
+CONTEXT / EVIDENCE:
+  - Legacy sandbox stack is MySQL/TiDB + S3 (README "Stack"); the forms-rehost
+    spec re-platforms to Supabase Postgres + Storage on the production side.
+  - The credentialed/infra parts of A-5/A-7 cannot be truly "finished" in the
+    sandbox because the credentials and cron live in production (CLAUDE.md §2,
+    docs/SANDBOX_AND_MIGRATION.md "ENVIRONMENT-SPECIFIC").
+  - But the BUSINESS LOGIC (what to export, which rows are stale, what the digest
+    says) is pure and migrates cleanly — exactly how A-3 was built (pure helper
+    in client/src/lib/ccdReports.ts).
+
+OPTIONS:
+  (A) Build fully on the sandbox now (incl. provisioning sandbox Google creds and
+      a sandbox cron). + value sooner; − partly throwaway, needs sandbox secrets,
+      duplicates infra that production must re-provision anyway.
+  (B) Spec-only; build nothing until the rehost. + no throwaway; − slower, no
+      value to staff in the interim.
+  (C) HYBRID: build the PURE LOGIC now (testable, no secrets — migrates verbatim),
+      leave the credentialed/cron wiring as a documented seam for production.
+
+CC LEAN: (C) HYBRID. It matches how A-3 already shipped, gives staff value via the
+pure pieces, and produces exactly the artifact the migration agent wants. The
+secret/cron wiring is prepared (interfaces + a stub endpoint) but PERFORMED in
+production.
+
+
+3. DECISION D2 — A-5: Google Sheets auto-export
+--------------------------------------------------------------------------------
+REQUEST: Do we wire scheduled auto-export of form submissions to a Google Sheet,
+and in what shape?
+
+CONTEXT / EVIDENCE:
+  - A scaffold already exists: server/routers/formExport.ts —
+      * getConfig/setConfig persist a spreadsheet id (site setting
+        "form_export_spreadsheet_id");
+      * getRecentSubmissions + exportCsv return submission rows / CSV.
+    BUT the file header says the actual push uses "the GWS CLI via child_process
+    (sandbox only)" — i.e. there is NO production Sheets-API path wired today;
+    export is effectively manual CSV.
+  - Scheduler mechanism = HTTP endpoints POST /api/scheduled/* gated by a cron
+    secret, hit by an external cron caller (server/_core/index.ts:54–90:
+    /api/scheduled/ccd-reminders, /api/scheduled/analytics-digest).
+  - NOTE the audit's own finding O-4: the admin "NeedsAttention" inbox is already
+    the staff system of record. A Google Sheet may duplicate it.
+
+OPTIONS:
+  (1) One-way scheduled push (app → Sheet), incremental (only new/changed rows).
+      REQUIRES: a Google service-account credential (PRODUCTION secret), a
+      /api/scheduled/sheets-export endpoint + handler, an incremental cursor, and
+      a column mapping per form type.
+  (2) Bidirectional sync (Sheet ↔ app, staff edits status in the Sheet).
+      REQUIRES: all of (1) plus conflict handling + write-back; creates a second
+      source of truth against the admin inbox (audit O-4 risk). Not recommended.
+  (3) Drop A-5. The admin inbox + the per-report CSV exports (A-3 pattern) may
+      already cover the real need; revisit only if staff specifically want a Sheet.
+
+CC LEAN: (1) one-way push, but BUILT IN PRODUCTION (the service-account secret
+lives there). In the sandbox now: finalize the pure per-form column-mapping as a
+testable helper (mirrors ccdReports.ts) so the push handler is a thin wrapper in
+production. Architect to confirm: is a Sheet actually wanted over the admin inbox,
+and one-way vs bidirectional?
+
+OPEN QUESTIONS FOR ARCHITECT:
+  - Q2a: Sheet wanted at all, or is the admin inbox + on-demand CSV sufficient?
+  - Q2b: If wanted — one-way (lean) or bidirectional?
+  - Q2c: One tab per form type, or a unified tab? (affects the column mapping)
+
+
+4. DECISION D3 — A-7: stale-submission reminders
+--------------------------------------------------------------------------------
+REQUEST: Add a recurring reminder so submissions don't die unread — and in what
+form (staff digest vs. parishioner-facing escalation)?
+
+CONTEXT / EVIDENCE:
+  - The scheduler pattern exists and is proven (server/_core/index.ts:54–90;
+    server/scheduledDigest.ts handleWeeklyDigest; server/scheduledAnalytics.ts
+    handleAnalyticsDigest). Adding one more /api/scheduled/* handler is low-risk.
+  - Routing by form-type → team alias already exists (server/notifications/route.ts;
+    routeNotification used by every form router), so "send the digest to the right
+    team" is already solved.
+  - Every form table carries a status with a "pending" state and createdAt — the
+    "stale" query is straightforward.
+
+OPTIONS:
+  (1) STAFF DIGEST: a weekly "these are pending > N days" summary to each team
+      (sacraments → office, CCD → religious-ed, etc.). Internal only; no
+      parishioner contact. REQUIRES: N threshold, a query across the form tables,
+      a compose step, a /api/scheduled/stale-submissions handler + cron entry.
+  (2) PARISHIONER ESCALATION: auto-email the family at 3/7/14 days ("we have your
+      request; next step is…"). More aggressive; parishioner-facing; needs careful
+      copy and a per-form "next step." Higher value, higher blast radius.
+  (3) AUTO-DECLINE after N days (e.g. close a baptism with no cert). NOT
+      recommended for a parish — pastorally wrong to auto-reject.
+
+CC LEAN: (1) staff digest, threshold ~7 days, internal only, reusing the existing
+team routing. Build the stale-query + digest-compose as PURE, TESTED logic in the
+sandbox now; wire the cron registration + secret in production (D1 hybrid). Revisit
+(2) parishioner escalation later if Frank wants it — it’s a separate, copy-heavy
+decision.
+
+OPEN QUESTIONS FOR ARCHITECT:
+  - Q3a: Threshold — 7 days? different per form (funerals are urgent)?
+  - Q3b: Staff-only (lean) or also gentle family nudges (option 2)?
+  - Q3c: Cadence — weekly digest, or daily for anything > threshold?
+
+
+5. DECISION D4 — structural items: ratify deferral to the rehost
+--------------------------------------------------------------------------------
+REQUEST: Confirm these audit items are deferred to the Supabase/production rehost
+(not retrofitted onto the legacy sandbox), and flag any to spec now.
+
+ITEMS (from the audit, ranked):
+  - A-6  Unified person/household record + dedupe (the audit's #1 structural
+         finding: every form spawns an orphan row; no family file).
+  - A-4  Single CCD source of truth (Droplet.io iframe vs internal
+         ccd_registrations table — parallel intake, no sync).
+  - A-11 Unified form/sacrament model (4 near-identical sacrament tables).
+  - A-10 E-signature on CCD permissions (today parentSignature is a plain text
+         field).
+  - A-9  Online payment (Mass-intention offerings / fees) — only if fees are
+         actually collected.
+
+CC LEAN: Defer ALL to the rehost — these are schema/architecture the rehost should
+bake in, and CLAUDE.md says don't perform production architecture on the sandbox.
+BUT: A-6 (the household record) is the load-bearing one — recommend the architect
+make the person/household schema the CENTERPIECE of the rehost spec so every
+future form attaches to one family file instead of spawning another orphan row.
+A-4 (single CCD source) should be decided early because it changes whether the
+internal ccd_registrations table survives at all.
+
+OPEN QUESTION FOR ARCHITECT:
+  - Q4a: Ratify deferral of A-6/A-4/A-11/A-10/A-9 to the rehost?
+  - Q4b: Should A-6 (household record) and A-4 (CCD source of truth) be specced
+         NOW as part of the rehost design, ahead of the rest?
+
+
+6. SUMMARY — DECISIONS REQUESTED
+--------------------------------------------------------------------------------
+  D1  Posture for remaining Phase 2: sandbox-now (A) / rehost-spec (B) /
+      HYBRID (C).                                              CC lean: C (hybrid)
+  D2  A-5 Sheets export: one-way push (1) / bidirectional (2) / drop (3); and
+      is a Sheet wanted over the admin inbox at all?           CC lean: (1), built
+                                                               in production; confirm wanted
+  D3  A-7 reminders: staff digest (1) / family escalation (2) / auto-decline (3);
+      threshold; cadence.                                      CC lean: (1), ~7d,
+                                                               staff-only, hybrid build
+  D4  Ratify structural deferrals (A-6/A-4/A-11/A-10/A-9) to the rehost; decide
+      whether A-6 + A-4 get specced now.                       CC lean: defer all;
+                                                               spec A-6 + A-4 now
+
+Once D1–D4 are ruled, CC will: (a) build the pure-logic pieces of the ratified
+items in the sandbox with tests, (b) document the production seams (the Google
+service-account for A-5, the cron registration for A-7) in
+docs/SANDBOX_AND_MIGRATION.md so the migration agent and the production repo pick
+them up, and (c) leave the credentialed/cron wiring to be performed in production.
+
+
+REFERENCES (file:line, grounded against main @ ddb087f)
+--------------------------------------------------------------------------------
+  - Audit ............... docs/PAPERWORK_AUTOMATION_AUDIT_2026-06-26.txt
+  - Sandbox model ....... CLAUDE.md; docs/SANDBOX_AND_MIGRATION.md
+  - Sheets scaffold ..... server/routers/formExport.ts (getConfig/setConfig/
+                          getRecentSubmissions/exportCsv; "GWS CLI ... sandbox only")
+  - Scheduler pattern ... server/_core/index.ts:54–90 (/api/scheduled/* + cron
+                          secret); server/scheduledDigest.ts; server/scheduledAnalytics.ts
+  - Notification routing  server/notifications/route.ts (routeNotification, by form type)
+  - A-3 precedent ....... client/src/lib/ccdReports.ts (pure, tested report logic)
