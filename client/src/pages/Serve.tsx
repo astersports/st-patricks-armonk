@@ -193,7 +193,7 @@ function OpportunityCard({ opportunity, onSuccess }: { opportunity: any; onSucce
 
   const signupMutation = trpc.volunteer.signup.useMutation({
     onSuccess: () => {
-      toast.success("You're signed up! Thank you for volunteering.");
+      toast.success("You're signed up! A confirmation email is on its way.");
       setOpen(false);
       setName(""); setEmail(""); setPhone(""); setNotes("");
       onSuccess();

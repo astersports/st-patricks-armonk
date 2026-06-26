@@ -101,6 +101,9 @@ export default function TeenLife() {
               <p className="text-muted-foreground max-w-md mx-auto">
                 Thank you for registering for Teen Life! The parish youth ministry team will be in touch with more information about upcoming events and meetings.
               </p>
+              <p className="text-sm text-muted-foreground/80 max-w-md mx-auto mt-3">
+                A confirmation email is on its way to your inbox — please check your spam folder if you don't see it.
+              </p>
               <Button className="mt-6" onClick={() => { setSubmitted(false); setForm({ teenFirstName: "", teenLastName: "", grade: "", school: "", parentName: "", parentEmail: "", parentPhone: "", address: "", interests: "", medicalNotes: "", emergencyContact: "", emergencyPhone: "", photoConsent: false }); }}>
                 Register Another Teen
               </Button>

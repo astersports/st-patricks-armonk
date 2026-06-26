@@ -56,9 +56,12 @@ export default function ParishRegistration() {
             <h1 className="font-serif text-3xl font-bold text-foreground mb-4 animate-fade-in">
               Welcome to St. Patrick in Armonk!
             </h1>
-            <p className="text-muted-foreground text-lg mb-6 animate-fade-up">
-              Thank you for registering. Our parish office will be in touch soon to welcome 
+            <p className="text-muted-foreground text-lg mb-3 animate-fade-up">
+              Thank you for registering. Our parish office will be in touch soon to welcome
               you to our community. We're so glad you're here.
+            </p>
+            <p className="text-sm text-muted-foreground/80 mb-6 animate-fade-up">
+              A confirmation email is on its way to your inbox — please check your spam folder if you don't see it.
             </p>
             <Button onClick={() => { setSubmitted(false); setForm({ headOfHousehold: "", spouseName: "", address: "", city: "", state: "NY", zip: "", phone: "", email: "", previousParish: "", numChildren: "", notes: "" }); }} variant="outline">
               Submit Another Registration

@@ -43,8 +43,11 @@ export default function CcdPermissions() {
           <div className="bg-primary/5 rounded-2xl p-8 sm:p-12">
             <CheckCircle className="w-16 h-16 text-primary mx-auto mb-4" />
             <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-3">Form Submitted Successfully</h2>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-muted-foreground mb-3">
               Thank you! Your CCD Permission & Release form has been received. The Religious Education office will review it and contact you if any additional information is needed.
+            </p>
+            <p className="text-sm text-muted-foreground/80 mb-6">
+              A confirmation email is on its way to your inbox — please check your spam folder if you don't see it.
             </p>
             <Button onClick={() => { setSubmitted(false); setForm({ ...form, childFirstName: "", childLastName: "", childGrade: "" }); }}>
               Submit Another Form
