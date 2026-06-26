@@ -1,7 +1,6 @@
 /**
- * Weather Icons barrel — re-exports the canonical SVG icon set + dispatcher
- * from the shared @aster/weather package (the icons were extracted verbatim
- * from this app; the package is now the single source of truth).
+ * Weather Icons barrel — re-exports the SVG icon set + dispatcher
+ * from the local WeatherIcons component.
  */
 
 export {
@@ -19,4 +18,4 @@ export {
   PartlyCloudyNightIcon,
   DropletIcon,
   ColorfulWeatherIcon,
-} from "@aster/weather/icons";
+} from "../WeatherIcons";
