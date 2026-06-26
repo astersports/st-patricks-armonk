@@ -10,6 +10,7 @@ const ccdPermSection = sectionProcedure("ccd_permissions");
 import { rateLimitedFormProcedure } from "../_rateLimited";
 import { validateBase64File } from "../../middleware";
 import { createAuditLog } from "../../db/auditLog";
+import { sendEmail, buildFormConfirmationEmail, formatSubmissionReference } from "../../email";
 
 export const documentsRouter = router({
   byCategory: publicProcedure.input(z.object({ category: z.string() })).query(async ({ input }) => {
@@ -84,7 +85,7 @@ export const teenLifeRouter = router({
     emergencyPhone: z.string().optional(),
     photoConsent: z.boolean().optional(),
   })).mutation(async ({ input }) => {
-    await db.createTeenLifeRegistration({
+    const id = await db.createTeenLifeRegistration({
       ...input,
       photoConsent: input.photoConsent ? 1 : 0,
     });
@@ -92,6 +93,14 @@ export const teenLifeRouter = router({
       title: "New Teen Life Registration",
       content: `${input.teenFirstName} ${input.teenLastName} (Grade ${input.grade}) has registered for Teen Life. Parent: ${input.parentName} (${input.parentEmail}).`,
     });
+    if (id) {
+      const reference = formatSubmissionReference("TL", id);
+      sendEmail(
+        input.parentEmail,
+        "Teen Life Registration Received — St. Patrick in Armonk",
+        buildFormConfirmationEmail("Teen Life Registration", input.parentName, reference),
+      ).catch(() => {});
+    }
     return { success: true };
   }),
   list: teenSection.query(async () => {
@@ -122,11 +131,19 @@ export const parishRegistrationRouter = router({
     numChildren: z.string().optional(),
     notes: z.string().optional(),
   })).mutation(async ({ input }) => {
-    await db.createParishRegistration(input);
+    const id = await db.createParishRegistration(input);
     routeNotification("registrations", {
       title: "New Parish Registration",
       content: `${input.headOfHousehold} (${input.email}) has registered as a new parishioner. Address: ${input.address}, ${input.city}, ${input.state} ${input.zip}. Phone: ${input.phone}.`,
     });
+    if (id) {
+      const reference = formatSubmissionReference("REG", id);
+      sendEmail(
+        input.email,
+        "Parish Registration Received — St. Patrick in Armonk",
+        buildFormConfirmationEmail("Parish Registration", input.headOfHousehold, reference),
+      ).catch(() => {});
+    }
     return { success: true };
   }),
   list: regSection.query(async () => {
@@ -183,11 +200,19 @@ export const ccdPermissionsRouter = router({
     signatureDate: z.string().min(1),
     schoolYear: z.string().min(1),
   })).mutation(async ({ input }) => {
-    await db.createCcdPermission(input as any);
+    const id = await db.createCcdPermission(input as any);
     routeNotification("ccd_permissions", {
       title: "New CCD Permission Form Submitted",
       content: `${input.parentName} submitted a CCD Permission & Release form for ${input.childFirstName} ${input.childLastName} (Grade ${input.childGrade}). Bus: ${input.needsBusTransport ? "Yes" : "No"}, Photo Release: ${input.photoReleaseConsent ? "Yes" : "No"}.`,
     });
+    if (id) {
+      const reference = formatSubmissionReference("CCD", id);
+      sendEmail(
+        input.parentEmail,
+        "CCD Permission Form Received — St. Patrick in Armonk",
+        buildFormConfirmationEmail("CCD Permission & Release", input.parentName, reference),
+      ).catch(() => {});
+    }
     return { success: true };
   }),
   list: ccdPermSection.query(async () => {

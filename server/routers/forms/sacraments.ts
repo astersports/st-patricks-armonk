@@ -14,6 +14,14 @@ import {
 } from "../../email/sacramentConfirmations";
 import { sendSacramentStatusEmail } from "../../email/sacramentStatusEmails";
 
+// Statuses that represent a real decision worth telling the family about.
+// Mirrors the SacramentsManager UI's notify-by-default list so the server and
+// the UI agree: when `notify` is omitted, a milestone status still notifies.
+const MILESTONE_STATUSES = new Set(["approved", "scheduled", "meeting_scheduled", "denied", "declined"]);
+function isMilestoneStatus(status: string): boolean {
+  return MILESTONE_STATUSES.has(status);
+}
+
 export const baptismRouter = router({
   submit: rateLimitedFormProcedure.input(z.object({
     childFirstName: z.string().min(1),
@@ -48,7 +56,7 @@ export const baptismRouter = router({
   })).mutation(async ({ input, ctx }) => {
     await db.updateBaptismStatus(input.id, input.status, input.adminNotes);
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.status, entityType: "baptism_registration", entityId: String(input.id), details: JSON.stringify({ newStatus: input.status }) });
-    if (input.notify) {
+    if (input.notify ?? isMilestoneStatus(input.status)) {
       const contact = await db.getBaptismContactInfo(input.id);
       if (contact?.email) {
         sendSacramentStatusEmail({ type: "baptism", newStatus: input.status, recipientEmail: contact.email, recipientName: contact.recipientName, subjectName: contact.name }).catch(() => {});
@@ -92,7 +100,7 @@ export const sponsorRouter = router({
   })).mutation(async ({ input, ctx }) => {
     await db.updateSponsorStatus(input.id, input.status, input.adminNotes);
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.status, entityType: "sponsor_certificate", entityId: String(input.id), details: JSON.stringify({ newStatus: input.status }) });
-    if (input.notify) {
+    if (input.notify ?? isMilestoneStatus(input.status)) {
       const contact = await db.getSponsorContactInfo(input.id);
       if (contact?.email) {
         sendSacramentStatusEmail({ type: "sponsor", newStatus: input.status, recipientEmail: contact.email, recipientName: contact.recipientName, subjectName: contact.name }).catch(() => {});
@@ -141,7 +149,7 @@ export const marriageRouter = router({
   })).mutation(async ({ input, ctx }) => {
     await db.updateMarriageStatus(input.id, input.status, input.adminNotes);
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.status, entityType: "marriage_inquiry", entityId: String(input.id), details: JSON.stringify({ newStatus: input.status }) });
-    if (input.notify) {
+    if (input.notify ?? isMilestoneStatus(input.status)) {
       const contact = await db.getMarriageContactInfo(input.id);
       if (contact?.email) {
         sendSacramentStatusEmail({ type: "marriage", newStatus: input.status, recipientEmail: contact.email, recipientName: contact.recipientName, subjectName: contact.name }).catch(() => {});
@@ -193,7 +201,7 @@ export const funeralRouter = router({
   })).mutation(async ({ input, ctx }) => {
     await db.updateFuneralStatus(input.id, input.status, input.adminNotes);
     createAuditLog({ userId: ctx.user.openId, userName: ctx.user.name || undefined, action: input.status, entityType: "funeral_preplanning", entityId: String(input.id), details: JSON.stringify({ newStatus: input.status }) });
-    if (input.notify) {
+    if (input.notify ?? isMilestoneStatus(input.status)) {
       const contact = await db.getFuneralContactInfo(input.id);
       if (contact?.email) {
         sendSacramentStatusEmail({ type: "funeral", newStatus: input.status, recipientEmail: contact.email, recipientName: contact.recipientName, subjectName: contact.name }).catch(() => {});

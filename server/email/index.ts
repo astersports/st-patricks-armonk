@@ -94,11 +94,23 @@ export function buildBulletinNotificationEmail(title: string, link: string): str
   `, `New bulletin: ${title}`);
 }
 
-export function buildFormConfirmationEmail(formType: string, submitterName: string): string {
+/**
+ * Build a short, human-readable reference number for a submission so the
+ * parishioner can quote it when following up (e.g. "CCD-00042"). Pure + stable.
+ */
+export function formatSubmissionReference(prefix: string, id: number): string {
+  return `${prefix}-${String(id).padStart(5, "0")}`;
+}
+
+export function buildFormConfirmationEmail(formType: string, submitterName: string, referenceId?: string): string {
+  const referenceLine = referenceId
+    ? `<p style="margin:0 0 12px;color:#555;">Your reference number is <strong style="color:#1a5c2e;">${referenceId}</strong> — please keep it for your records.</p>`
+    : "";
   return wrapInBrandedTemplate(`
     <h2 style="color:#1a5c2e;margin:0 0 12px;font-size:20px;">Submission Received</h2>
     <p style="margin:0 0 12px;">Dear ${submitterName},</p>
     <p style="margin:0 0 12px;">Thank you for submitting your <strong>${formType}</strong> form. We have received your submission and will review it shortly.</p>
+    ${referenceLine}
     <p style="margin:0 0 12px;color:#555;">If you have any questions, please contact the parish office at (914) 273-9724.</p>
     <p style="margin:0;">God bless,<br><em>St. Patrick Parish Office</em></p>
   `, `Your ${formType} submission has been received`);
