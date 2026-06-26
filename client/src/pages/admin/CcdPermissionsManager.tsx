@@ -11,10 +11,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { useState } from "react";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import { Plus, Trash2, Edit, FileText, Upload, Users, Shield } from "lucide-react";
+import { Plus, Trash2, Edit, FileText, Upload, Users, Shield, Download } from "lucide-react";
+import { exportCsv } from "@/lib/exportCsv";
+import { buildCcdReports } from "@/lib/ccdReports";
 
 export function CcdPermissionsManager() {
   const { data: permissions, isLoading } = trpc.ccdPermissions.list.useQuery();
+  const reports = buildCcdReports((permissions as Record<string, unknown>[]) ?? []);
   const updateStatus = trpc.ccdPermissions.updateStatus.useMutation({
     onSuccess: () => { toast.success("Status updated"); },
     onError: () => { toast.error("Couldn't update status. Please try again."); },
@@ -28,6 +31,35 @@ export function CcdPermissionsManager() {
         <h3 className="text-lg font-semibold">CCD Permission & Release Forms</h3>
         <Badge variant="outline">{permissions?.length || 0} total</Badge>
       </div>
+
+      {permissions && permissions.length > 0 && (
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Download className="w-4 h-4 text-muted-foreground" />
+              <h4 className="font-semibold text-sm">Reports</h4>
+            </div>
+            <p className="text-xs text-muted-foreground mb-3">
+              Download a staff roster from the submitted forms — no more re-reading each form by hand.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {reports.map((r) => (
+                <Button
+                  key={r.key}
+                  size="sm"
+                  variant="outline"
+                  disabled={r.rows.length === 0}
+                  onClick={() => exportCsv(r.rows, r.columns, r.filename)}
+                >
+                  <Download className="w-3.5 h-3.5 mr-1.5" />
+                  {r.label} ({r.rows.length})
+                </Button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {(!permissions || permissions.length === 0) ? (
         <Card><CardContent className="p-8 text-center text-muted-foreground">No CCD permission forms submitted yet.</CardContent></Card>
       ) : (
