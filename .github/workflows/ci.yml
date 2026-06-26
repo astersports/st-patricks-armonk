@@ -34,28 +34,28 @@ jobs:
           node-version: 22
           cache: pnpm
 
-      # @aster/weather is a PRIVATE cross-repo dependency
-      # (github:astersports/aster-weather), which pnpm resolves to a codeload
-      # tarball. The job's default GITHUB_TOKEN is scoped to THIS repo only and
-      # cannot read another repo, so CI needs a token with Contents: Read on
-      # astersports/aster-weather. Add a repository or organization Actions
-      # secret named ASTER_WEATHER_TOKEN (a fine-grained PAT or a GitHub App
-      # token). Until that secret exists, install fails here with a clear error.
+      # @aster/weather is a cross-repo dependency (github:astersports/aster-weather).
+      # pnpm resolves it to a codeload tarball, so we must supply a token that has
+      # Contents: Read on astersports/aster-weather.
+      # Prefer the ASTER_WEATHER_TOKEN secret (a fine-grained PAT scoped to that
+      # repo); fall back to the built-in GITHUB_TOKEN, which works when both repos
+      # are in the same org and the org allows cross-repo token access.
       - name: Authenticate the private @aster/weather dependency
         env:
           ASTER_WEATHER_TOKEN: ${{ secrets.ASTER_WEATHER_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [ -z "${ASTER_WEATHER_TOKEN}" ]; then
-            echo "::error::Missing secret ASTER_WEATHER_TOKEN — required to install the private @aster/weather dependency (needs Contents: Read on astersports/aster-weather). Add it under Settings → Secrets and variables → Actions."
-            exit 1
+          TOKEN="${ASTER_WEATHER_TOKEN:-${GITHUB_TOKEN}}"
+          if [ -z "${TOKEN}" ]; then
+            echo "::warning::Neither ASTER_WEATHER_TOKEN nor GITHUB_TOKEN is available — install may fail for the @aster/weather dependency."
           fi
           # Auth the codeload tarball fetch pnpm uses for the github: dependency.
           {
-            echo "//codeload.github.com/:_authToken=${ASTER_WEATHER_TOKEN}"
-            echo "//github.com/:_authToken=${ASTER_WEATHER_TOKEN}"
+            echo "//codeload.github.com/:_authToken=${TOKEN}"
+            echo "//github.com/:_authToken=${TOKEN}"
           } >> "$HOME/.npmrc"
           # ...and any git-clone fallback path npm/pnpm may take.
-          git config --global url."https://x-access-token:${ASTER_WEATHER_TOKEN}@github.com/".insteadOf "https://github.com/"
+          git config --global url."https://x-access-token:${TOKEN}@github.com/".insteadOf "https://github.com/"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
