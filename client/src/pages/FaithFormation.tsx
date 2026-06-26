@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { useReveal } from "@/hooks/useReveal";
 import PageHeader from "@/components/PageHeader";
+import SafeEnvironmentNotice from "@/components/SafeEnvironmentNotice";
 import { ProgramAccordion } from "./faith-formation/ProgramAccordion";
 import { FaithFormationSidebar } from "./faith-formation/Sidebar";
 
@@ -28,6 +29,9 @@ export default function FaithFormation() {
       />
 
       <div ref={revealRef}>
+        <section className="container pt-6 sm:pt-10">
+          <SafeEnvironmentNotice />
+        </section>
         <section className="container py-6 sm:py-10">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-8">
             {/* Main Content */}

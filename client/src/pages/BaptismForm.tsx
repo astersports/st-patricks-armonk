@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CheckCircle2, Phone, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
+import FormPrivacyNote from "@/components/FormPrivacyNote";
 import { ParentInfoCard, GodparentsCard, SchedulingCard } from "./baptism-form/BaptismFormCards";
 
 export default function BaptismForm() {
@@ -101,6 +102,8 @@ export default function BaptismForm() {
               {submitMutation.isPending ? "Submitting..." : "Submit Registration"}
             </Button>
           </div>
+
+          <FormPrivacyNote childData />
 
           {submitMutation.isError && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4"><p className="text-sm text-red-800">There was an error submitting your registration. Please try again or call the parish office.</p></div>

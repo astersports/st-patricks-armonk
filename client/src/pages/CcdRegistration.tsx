@@ -1,5 +1,6 @@
 import PageLayout from "@/components/PageLayout";
 import PageHeader from "@/components/PageHeader";
+import FormPrivacyNote from "@/components/FormPrivacyNote";
 
 export default function CcdRegistration() {
   return (
@@ -12,6 +13,7 @@ export default function CcdRegistration() {
 
       <section className="py-10">
         <div className="container max-w-4xl">
+          <FormPrivacyNote childData className="mb-4" />
           <iframe
             src="https://app.droplet.io/form/y5VX2N"
             title="CCD Registration Form"
