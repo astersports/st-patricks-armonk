@@ -7,6 +7,7 @@ import { useState } from "react";
 import PageLayout from "@/components/PageLayout";
 import { SEO } from "@/components/SEO";
 import PageHeader from "@/components/PageHeader";
+import SafeEnvironmentNotice from "@/components/SafeEnvironmentNotice";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -54,6 +55,7 @@ export default function Serve() {
 
       <section className="py-10">
         <div className="container max-w-5xl">
+          <SafeEnvironmentNotice className="mb-8" />
           {/* Urgent Needs Banner */}
           {urgentNeeds.length > 0 && (
             <div className="mb-8">

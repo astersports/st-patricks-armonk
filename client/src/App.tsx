@@ -44,6 +44,8 @@ import {
   WorshipToday,
   MassIntentionForm,
   Watch,
+  SafeEnvironment,
+  PrivacyPolicy,
   AdminRouter,
 } from "./lazyPages";
 
@@ -90,6 +92,8 @@ function Router() {
           <Route path="/homilies"><Redirect to="/bulletins" /></Route>
           <Route path="/prayers" component={Prayers} />
           <Route path="/giving" component={Giving} />
+          <Route path="/safe-environment" component={SafeEnvironment} />
+          <Route path="/privacy" component={PrivacyPolicy} />
           <Route path="/contact" component={Contact} />
           <Route path="/admin" component={AdminRouter} nest />
           <Route path="/unsubscribe/:token" component={Unsubscribe} />

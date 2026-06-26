@@ -10,6 +10,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Heart, CheckCircle, Church } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
+import FormPrivacyNote from "@/components/FormPrivacyNote";
 
 export default function ParishRegistration() {
   const [submitted, setSubmitted] = useState(false);
@@ -242,6 +243,7 @@ export default function ParishRegistration() {
               {mutation.isPending ? "Submitting..." : "Register Our Family"}
             </Button>
           </div>
+          <FormPrivacyNote className="mt-4" />
         </form>
       </section>
     </PageLayout>

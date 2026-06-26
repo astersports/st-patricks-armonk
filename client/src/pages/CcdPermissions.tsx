@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { CheckCircle, Users, Shield } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
 import PageLayout from "@/components/PageLayout";
+import FormPrivacyNote from "@/components/FormPrivacyNote";
 import { INITIAL_FORM_STATE, GRADE_OPTIONS, validateForm } from "./ccd-permissions/formDefaults";
 import { TransportSection } from "./ccd-permissions/TransportSection";
 import { MedicalSection } from "./ccd-permissions/MedicalSection";
@@ -150,6 +151,7 @@ export default function CcdPermissions() {
               <p className="text-xs text-muted-foreground mt-3">
                 By submitting this form, you confirm that all information provided is accurate. The parish office will be notified of your submission.
               </p>
+              <FormPrivacyNote childData className="mt-3" />
             </div>
           </form>
         </section>

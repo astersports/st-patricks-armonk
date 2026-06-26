@@ -3,7 +3,7 @@
  * Buckets: Worship, Faith Formation, Parish Life, About + standalone Give + I'm New CTA
  */
 
-import { Clock, BookOpen, Users, Heart, Calendar, FileText, GraduationCap, Newspaper, Phone, UserPlus, HandHeart, Cross, Church, Search, Flame, Sun, BookHeart } from "lucide-react";
+import { Clock, BookOpen, Users, Heart, Calendar, FileText, GraduationCap, Newspaper, Phone, UserPlus, HandHeart, Cross, Church, Search, Flame, Sun, BookHeart, ShieldCheck } from "lucide-react";
 
 export type NavItem = {
   href: string;
@@ -53,6 +53,7 @@ export const navLinks: NavItem[] = [
     children: [
       { href: "/about", label: "Our Parish" },
       { href: "/staff", label: "Staff & Leadership" },
+      { href: "/safe-environment", label: "Safe Environment" },
       { href: "/contact", label: "Contact Us" },
     ],
   },
@@ -87,6 +88,7 @@ export const searchablePages: SearchableItem[] = [
   { href: "/about", label: "Our Parish", keywords: ["about", "parish", "history", "armonk", "cross", "community"], icon: Church },
   { href: "/new-here", label: "I'm New — Plan Your Visit", keywords: ["new", "visit", "welcome", "first time", "directions", "what to expect"], icon: UserPlus },
   { href: "/staff", label: "Staff & Leadership", keywords: ["staff", "pastor", "priest", "deacon", "director", "leadership", "team", "contact"], icon: Users },
+  { href: "/safe-environment", label: "Safe Environment & Child Protection", keywords: ["safe environment", "child protection", "virtus", "safer spaces", "report abuse", "background check", "protecting god's children", "youth safety"], icon: ShieldCheck },
   { href: "/parish-registration", label: "Register as a Parishioner", keywords: ["register", "new member", "join", "parishioner", "sign up", "family"], icon: UserPlus },
   { href: "/forms", label: "Forms & Documents", keywords: ["form", "document", "download", "pdf", "application"], icon: FileText },
 ];
@@ -134,6 +136,7 @@ export const mobileMenuSections: MobileMenuSection[] = [
     items: [
       { href: "/about", label: "Our Parish", icon: Church },
       { href: "/staff", label: "Staff & Leadership", icon: Users },
+      { href: "/safe-environment", label: "Safe Environment", icon: ShieldCheck },
       { href: "/contact", label: "Contact Us", icon: Phone },
       { href: "/new-here", label: "I'm New — Plan Your Visit", icon: UserPlus },
       { href: "/parish-registration", label: "Register as a Parishioner", icon: UserPlus },

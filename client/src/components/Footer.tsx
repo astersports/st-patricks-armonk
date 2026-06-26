@@ -178,6 +178,10 @@ export default function Footer({ variant = "compact" }: { variant?: "full" | "co
               Archdiocese of New York
             </a>{" "}
             · {city}, {state}
+            {" · "}
+            <Link href="/safe-environment" style={{ color: "#6b7280" }}>Safe Environment</Link>
+            {" · "}
+            <Link href="/privacy" style={{ color: "#6b7280" }}>Privacy</Link>
           </p>
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
             {isAdmin ? (
