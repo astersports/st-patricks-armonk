@@ -4,9 +4,11 @@
 
 ## Overview
 
-A modern parish website for St. Patrick Church in Armonk, NY (29 Cox Avenue, Armonk, NY 10504). Built as a full-stack web application with React frontend, Express/tRPC backend, and MySQL database. Deployed on Manus hosting platform.
+A modern parish website for St. Patrick Church in Armonk, NY (29 Cox Avenue, Armonk, NY 10504). Built as a full-stack web application with React frontend, Express/tRPC backend, and MySQL database. Currently built/previewed on Manus (being decommissioned); the rebuild's target host is **Railway**, replacing the parish's live **eCatholic** site at cutover. See the README "host picture" for the full eCatholic / Manus / Railway breakdown.
 
-**Live domain:** `stpatsarmonk-24g7ux9f.manus.space`
+**Live parish site (incumbent, to replace):** eCatholic (managed CMS — parish-controlled).
+**Build/preview host (retiring):** Manus (`stpatsarmonk-24g7ux9f.manus.space`).
+**Target host:** Railway.
 **GitHub:** `astersports/st-patricks-armonk`
 
 ## Tech Stack
@@ -22,6 +24,11 @@ A modern parish website for St. Patrick Church in Armonk, NY (29 Cox Avenue, Arm
 | Storage | S3 via Manus storage proxy (`/manus-storage/`) |
 | Calendar | ICS feed parsing (Google Calendar .ics feeds) |
 | Weather | Open-Meteo API (free, no key needed) |
+
+> The Auth (Manus OAuth), Storage (S3 via Manus proxy), and DB (MySQL/TiDB) rows describe
+> the **current Manus-era build**. At the Railway cutover these re-platform onto Supabase
+> (Auth + Postgres + Storage) per the #103 pattern / forms rehost spec — they are not the
+> end state.
 
 ## Directory Structure (Post-Refactor)
 
