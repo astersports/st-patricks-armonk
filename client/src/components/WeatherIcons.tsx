@@ -1,6 +1,20 @@
 /**
- * WeatherIcons — backwards-compatible barrel re-exporting from weather-icons/.
+ * WeatherIcons — backwards-compatible barrel re-exporting the canonical icon
+ * set from the shared @aster/weather package.
  */
-export { SunnyIcon, PartlyCloudyIcon, OvercastIcon, FogIcon, DrizzleIcon, RainIcon } from "./weather-icons/DayIcons";
-export { HeavyRainIcon, SnowIcon, ThunderstormIcon, WindIcon, ClearNightIcon, PartlyCloudyNightIcon, DropletIcon } from "./weather-icons/NightAndSevereIcons";
-export { ColorfulWeatherIcon } from "./weather-icons/ColorfulWeatherIcon";
+export {
+  SunnyIcon,
+  PartlyCloudyIcon,
+  OvercastIcon,
+  FogIcon,
+  DrizzleIcon,
+  RainIcon,
+  HeavyRainIcon,
+  SnowIcon,
+  ThunderstormIcon,
+  WindIcon,
+  ClearNightIcon,
+  PartlyCloudyNightIcon,
+  DropletIcon,
+  ColorfulWeatherIcon,
+} from "@aster/weather/icons";

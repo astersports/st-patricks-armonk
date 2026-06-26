@@ -53,11 +53,17 @@ export function HeroSection() {
     <section className="relative w-full flex flex-col overflow-hidden" style={{ aspectRatio: '4 / 3', maxHeight: '75vh' }} aria-label="Parish welcome">
       {/* Full image — no cropping, no scaling, fills width and uses natural aspect ratio */}
       <div className="absolute inset-0">
-        <img
-          src="/manus-storage/StPatrick-Outside_971c848e.jpeg"
-          alt="St. Patrick's Church front exterior"
-          className="w-full h-full object-cover object-center"
-        />
+        <picture>
+          <source srcSet="/img/st-patrick-outside.webp" type="image/webp" />
+          <img
+            src="/img/st-patrick-outside.jpg"
+            alt="St. Patrick's Church front exterior in Armonk, New York"
+            width={1600}
+            height={1200}
+            fetchPriority="high"
+            className="w-full h-full object-cover object-center"
+          />
+        </picture>
       </div>
 
       {/* Dark gradient overlay — ensures text is always readable over busy backgrounds */}

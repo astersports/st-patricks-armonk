@@ -4,95 +4,20 @@
  */
 
 import type { HourlyForecast, EventWeather } from "./types";
-import { ARMONK_LAT, ARMONK_LON, FORECAST_DAYS, MAX_FORECAST_HOUR_GAP_MS } from "./types";
-import { fetchWithTimeout, getWeatherInfo } from "./helpers";
-
-// In-memory cache (60 min TTL) for hourly forecast
-let weatherCache: { hourly: HourlyForecast[]; fetchedAt: number } | null = null;
-const CACHE_TTL = 60 * 60 * 1000;
-
-// In-flight promise deduplication to prevent cache stampede
-let forecastInflight: Promise<HourlyForecast[]> | null = null;
+import { ARMONK_LAT, ARMONK_LON, MAX_FORECAST_HOUR_GAP_MS } from "./types";
+import { getWeatherInfo, toParishLocalIso } from "./helpers";
+import { fetchForecast as fetchHourlyForecast } from "@aster/weather";
 
 /**
- * Fetch 7-day hourly forecast from Open-Meteo for Armonk, NY.
- * Includes in-flight deduplication to prevent cache stampede.
+ * Fetch the 7-day hourly forecast for Armonk, NY from the shared
+ * @aster/weather engine (which owns the Open-Meteo fetch, the 60-min per-coord
+ * cache, in-flight dedup, and stale-on-error fallback). The engine returns
+ * absolute epoch-ms timestamps and intentionally drops the timezone-naive
+ * `time` string; we re-attach a venue-local `time` for the strip-label bucket.
  */
 export async function fetchForecast(): Promise<HourlyForecast[]> {
-  if (weatherCache && Date.now() - weatherCache.fetchedAt < CACHE_TTL) {
-    return weatherCache.hourly;
-  }
-  // Deduplicate concurrent requests
-  if (forecastInflight) return forecastInflight;
-
-  forecastInflight = (async () => {
-    try {
-      const url = new URL("https://api.open-meteo.com/v1/forecast");
-      url.searchParams.set("latitude", ARMONK_LAT.toString());
-      url.searchParams.set("longitude", ARMONK_LON.toString());
-      url.searchParams.set("hourly", [
-        "temperature_2m",
-        "apparent_temperature",
-        "precipitation_probability",
-        "precipitation",
-        "weather_code",
-        "cloud_cover",
-        "wind_speed_10m",
-        "is_day",
-      ].join(","));
-      url.searchParams.set("temperature_unit", "fahrenheit");
-      url.searchParams.set("wind_speed_unit", "mph");
-      url.searchParams.set("precipitation_unit", "inch");
-      url.searchParams.set("timezone", "America/New_York");
-      url.searchParams.set("forecast_days", FORECAST_DAYS.toString());
-
-      const response = await fetchWithTimeout(url.toString());
-      if (!response.ok) {
-        console.error(`Open-Meteo API error: ${response.status}`);
-        return weatherCache?.hourly || [];
-      }
-
-      let data: any;
-      try {
-        data = await response.json();
-      } catch {
-        console.error("Open-Meteo hourly forecast: failed to parse JSON response");
-        return weatherCache?.hourly || [];
-      }
-
-      // Validate response shape
-      if (!data?.hourly?.time || !Array.isArray(data.hourly.time)) {
-        console.error("Open-Meteo hourly forecast: unexpected response shape");
-        return weatherCache?.hourly || [];
-      }
-
-      const hourly = data.hourly;
-
-      // Pre-compute timestamps for O(1) lookups later
-      const forecasts: HourlyForecast[] = hourly.time.map((time: string, i: number) => ({
-        time,
-        timestamp: new Date(time).getTime(),
-        temperature: Math.round(hourly.temperature_2m[i]),
-        apparentTemperature: Math.round(hourly.apparent_temperature[i]),
-        precipitationProbability: hourly.precipitation_probability[i] || 0,
-        precipitation: hourly.precipitation[i] || 0,
-        weatherCode: hourly.weather_code[i] || 0,
-        cloudCover: hourly.cloud_cover[i] || 0,
-        windSpeed: Math.round(hourly.wind_speed_10m[i] || 0),
-        isDay: hourly.is_day[i] === 1,
-      }));
-
-      weatherCache = { hourly: forecasts, fetchedAt: Date.now() };
-      return forecasts;
-    } catch (error) {
-      console.error("Weather fetch error:", error);
-      return weatherCache?.hourly || [];
-    } finally {
-      forecastInflight = null;
-    }
-  })();
-
-  return forecastInflight;
+  const hours = await fetchHourlyForecast({ lat: ARMONK_LAT, lon: ARMONK_LON });
+  return hours.map((h) => ({ ...h, time: toParishLocalIso(h.timestamp) }));
 }
 
 /**
