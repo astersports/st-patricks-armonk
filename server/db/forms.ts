@@ -158,7 +158,7 @@ export async function createTeenLifeRegistration(data: {
   const db = await getDb();
   if (!db) return null;
   const result = await db.insert(teenLifeRegistrations).values(data);
-  return result;
+  return result[0].insertId as number;
 }
 
 export async function getTeenLifeRegistrations() {
@@ -193,7 +193,7 @@ export async function createParishRegistration(data: {
   const db = await getDb();
   if (!db) return null;
   const result = await db.insert(parishRegistrations).values(data);
-  return result;
+  return result[0].insertId as number;
 }
 
 export async function getParishRegistrations() {

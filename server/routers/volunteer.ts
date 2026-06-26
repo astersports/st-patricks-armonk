@@ -6,6 +6,7 @@ import { routeNotification } from "../notifications/route";
 const volunteersSection = sectionProcedure("volunteers");
 import { rateLimitedFormProcedure } from "./_rateLimited";
 import { createAuditLog } from "../db/auditLog";
+import { sendEmail, buildFormConfirmationEmail, formatSubmissionReference } from "../email";
 
 export const volunteerRouter = router({
   listOpportunities: publicProcedure.query(async () => {
@@ -73,6 +74,14 @@ export const volunteerRouter = router({
       title: "New Volunteer Signup",
       content: `${input.name} (${input.email}) signed up for opportunity #${input.opportunityId}.${input.notes ? ` Notes: ${input.notes}` : ""}`,
     });
+    if (id) {
+      const reference = formatSubmissionReference("VOL", id);
+      sendEmail(
+        input.email,
+        "Volunteer Sign-up Received — St. Patrick in Armonk",
+        buildFormConfirmationEmail("Volunteer Sign-up", input.name, reference),
+      ).catch(() => {});
+    }
     return { success: true, id };
   }),
   listSignups: volunteersSection.input(z.object({
