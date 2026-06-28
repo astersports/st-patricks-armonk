@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { MessageCircle, Send, X, Loader2, Church } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { pageAssistantContext } from "@/lib/pageAssistant";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -14,14 +16,6 @@ const OPEN_EVENT = "parish-assistant:open";
 export function openParishAssistant(prefillQuestion?: string) {
   window.dispatchEvent(new CustomEvent(OPEN_EVENT, { detail: { prefillQuestion } }));
 }
-
-const SUGGESTED_QUESTIONS = [
-  "Mass times?",
-  "Bag Bingo?",
-  "How to register?",
-  "Confessions?",
-  "CCD info?",
-];
 
 /** Track assistant usage in PostHog */
 function trackAssistantEvent(action: string, props?: Record<string, string>) {
@@ -39,6 +33,8 @@ export function ParishAssistant() {
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatMutation = trpc.parishAssistant.chat.useMutation();
+  const [location] = useLocation();
+  const pageCtx = pageAssistantContext(location);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -75,6 +71,7 @@ export function ParishAssistant() {
       const result = await chatMutation.mutateAsync({
         message: userMsg.content,
         history: messages.slice(-10),
+        pageContext: pageCtx.label,
       });
       setMessages([...newMessages, { role: "assistant", content: result.reply }]);
       trackAssistantEvent("answer_received", { question: text.slice(0, 100) });
@@ -82,7 +79,7 @@ export function ParishAssistant() {
       setMessages([...newMessages, { role: "assistant", content: "Sorry, I'm having trouble. Please try again or call (914) 273-9724." }]);
       trackAssistantEvent("error");
     }
-  }, [input, messages, chatMutation]);
+  }, [input, messages, chatMutation, pageCtx.label]);
 
   // Floating bubble — hidden on mobile (bottom nav handles it), shown on desktop
   if (!open) {
@@ -139,7 +136,7 @@ export function ParishAssistant() {
       {/* Suggested Questions */}
       {messages.length === 0 && (
         <div className="px-3 pb-2 flex flex-wrap gap-1.5">
-          {SUGGESTED_QUESTIONS.map(q => (
+          {pageCtx.suggestions.map(q => (
             <button
               key={q}
               onClick={() => handleSend(q)}
