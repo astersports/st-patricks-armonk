@@ -80,9 +80,20 @@ describe("triageSacrament", () => {
     expect(t.summary.length).toBeGreaterThan(0);
   });
 
-  it("reports Closed for completed/declined with no open-state flags", () => {
-    const t = triageSacrament(row({ stage: "completed", email: "a@b.com", phone: "555" }), NOW);
+  it("reports Closed for completed/declined and suppresses all flags", () => {
+    // Even an urgent funeral with missing contact + a passed date stays quiet once closed.
+    const t = triageSacrament(row({
+      stage: "declined", type: "funeral", urgent: true,
+      email: null, phone: null, preferredDate: "2026-06-01",
+    }), NOW);
     expect(t.summary).toBe("Closed");
     expect(t.flags.length).toBe(0);
+  });
+
+  it("treats a preferred date of 'today' as not yet passed (calendar-day, local)", () => {
+    // NOW is mid-day; a same-day requested date must not read as passed.
+    const t = triageSacrament(row({ preferredDate: "2026-06-28", stage: "contacted" }), NOW);
+    expect(t.flags.some(f => f.label === "Requested date passed")).toBe(false);
+    expect(t.flags.some(f => /Date in 0d/.test(f.label))).toBe(true);
   });
 });

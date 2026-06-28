@@ -44,11 +44,23 @@ function daysBetween(a: number, b: number): number {
   return Math.floor((a - b) / DAY_MS);
 }
 
-/** Parse a preferred-date string to a timestamp, or null if free-form/blank. */
+/** Local midnight of the day containing `d`. */
+function startOfLocalDay(d: Date): number {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+}
+
+/**
+ * Parse a preferred-date string to a start-of-local-day timestamp, or null if
+ * free-form/blank. Date-only strings ("YYYY-MM-DD" from <input type="date">)
+ * are parsed as LOCAL dates — `new Date("YYYY-MM-DD")` would parse as UTC and
+ * shift the calendar day in negative-offset zones (e.g. mark "today" as passed).
+ */
 function parsePreferred(s: string | null): number | null {
   if (!s) return null;
-  const t = new Date(s).getTime();
-  return Number.isFinite(t) ? t : null;
+  const iso = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s.trim());
+  if (iso) return new Date(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3])).getTime();
+  const d = new Date(s);
+  return Number.isFinite(d.getTime()) ? startOfLocalDay(d) : null;
 }
 
 /**
@@ -57,11 +69,13 @@ function parsePreferred(s: string | null): number | null {
  */
 export function triageSacrament(row: TriageInput, now: Date): SubmissionTriage {
   const nowMs = now.getTime();
+  const todayStart = startOfLocalDay(now);
   const isOpen = row.stage !== "completed" && row.stage !== "declined";
   const flags: TriageFlag[] = [];
 
+  // Closed submissions (completed/declined) need no follow-up — keep them quiet.
   // Immediate need (funeral, not pre-planning) — highest priority.
-  if (row.urgent) flags.push({ label: "Immediate need", severity: "alert" });
+  if (isOpen && row.urgent) flags.push({ label: "Immediate need", severity: "alert" });
 
   // Awaiting first reply — only meaningful while still "new".
   if (isOpen && row.stage === "new") {
@@ -76,14 +90,14 @@ export function triageSacrament(row: TriageInput, now: Date): SubmissionTriage {
   // Requested date approaching / passed (while unscheduled).
   const pref = parsePreferred(row.preferredDate);
   if (isOpen && pref !== null && row.stage !== "scheduled") {
-    const daysUntil = daysBetween(pref, nowMs);
+    const daysUntil = daysBetween(pref, todayStart); // calendar days, not affected by time of day
     if (daysUntil < 0) flags.push({ label: "Requested date passed", severity: "alert" });
     else if (daysUntil <= 14) flags.push({ label: `Date in ${daysUntil}d — not scheduled`, severity: "warn" });
   }
 
-  // Missing contact info.
-  if (!row.email) flags.push({ label: "No email on file", severity: "warn" });
-  if (!row.phone) flags.push({ label: "No phone on file", severity: "info" });
+  // Missing contact info (only actionable while the submission is still open).
+  if (isOpen && !row.email) flags.push({ label: "No email on file", severity: "warn" });
+  if (isOpen && !row.phone) flags.push({ label: "No phone on file", severity: "info" });
 
   flags.sort((a, b) => SEVERITY_RANK[a.severity] - SEVERITY_RANK[b.severity]);
   const capped = flags.slice(0, MAX_FLAGS);
