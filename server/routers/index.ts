@@ -33,6 +33,7 @@ import { closureAlertRouter } from "./closureAlert";
 import { massIntentionsRouter } from "./massIntentions";
 import { staffRouter } from "./staff";
 import { holyDaysRouter } from "./holyDays";
+import { highlightsRouter } from "./highlights";
 
 export const appRouter = router({
   auth: authRouter,
@@ -77,6 +78,7 @@ export const appRouter = router({
   massIntentions: massIntentionsRouter,
   staff: staffRouter,
   holyDays: holyDaysRouter,
+  highlights: highlightsRouter,
 });
 
 export type AppRouter = typeof appRouter;
