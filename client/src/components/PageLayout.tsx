@@ -16,8 +16,9 @@ interface PageLayoutProps {
 
 export default function PageLayout({ children, hideBackButton }: PageLayoutProps) {
   const [location] = useLocation();
-  const isHome = location === "/";
-  const scan = pageScan(location);
+  const path = location.split("?")[0].split("#")[0];
+  const isHome = path === "/";
+  const scan = pageScan(path);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -45,7 +46,7 @@ export default function PageLayout({ children, hideBackButton }: PageLayoutProps
         </div>
       )}
       <main id="main-content" className="flex-1" role="main">
-        {scan && <ParishScanConsole key={scan.scope} scan={scan} />}
+        {scan && <ParishScanConsole key={path} scan={scan} />}
         {children}
       </main>
       <Footer variant={isHome ? "full" : "compact"} />

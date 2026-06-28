@@ -15,9 +15,20 @@
 import { useEffect, useState } from "react";
 import type { ParishScan } from "@shared/parishScan";
 
-/** Track the user's reduced-motion preference (re-evaluates on change). */
+const STEP_MS = 2400;
+
+/** Read the reduced-motion preference once (guarded for non-browser contexts). */
+function prefersReducedMotion(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
+/** Track the reduced-motion preference. Initialized synchronously to avoid a motion flash. */
 function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
+  const [reduced, setReduced] = useState(prefersReducedMotion);
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => setReduced(mq.matches);
@@ -28,30 +39,15 @@ function usePrefersReducedMotion(): boolean {
   return reduced;
 }
 
-const TICK_MS = 60;
-const STEP_MS = 2400;
-
 export function ParishScanConsole({ scan }: { scan: ParishScan }) {
   const reduced = usePrefersReducedMotion();
   const [step, setStep] = useState(0);
-  const [progress, setProgress] = useState(0);
 
+  // One state update per step (~2.4s). The bar fill is a pure CSS animation,
+  // so we don't drive the progress bar from React on every frame.
   useEffect(() => {
-    if (reduced) {
-      setStep(0);
-      setProgress(100);
-      return;
-    }
-    const inc = 100 / (STEP_MS / TICK_MS);
-    const id = setInterval(() => {
-      setProgress((p) => {
-        if (p + inc >= 100) {
-          setStep((s) => (s + 1) % scan.steps.length);
-          return 0;
-        }
-        return p + inc;
-      });
-    }, TICK_MS);
+    if (reduced || scan.steps.length <= 1) return;
+    const id = setInterval(() => setStep((s) => (s + 1) % scan.steps.length), STEP_MS);
     return () => clearInterval(id);
   }, [reduced, scan.steps.length]);
 
@@ -96,10 +92,15 @@ export function ParishScanConsole({ scan }: { scan: ParishScan }) {
               </span>
             </div>
             <div className="mt-2 h-1.5 rounded-full bg-muted overflow-hidden">
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-gold/70 to-gold transition-[width] duration-100 ease-linear"
-                style={{ width: `${reduced ? 100 : Math.round(progress)}%` }}
-              />
+              {reduced ? (
+                <div className="h-full w-full rounded-full bg-gradient-to-r from-gold/70 to-gold" />
+              ) : (
+                <div
+                  key={step}
+                  className="parish-scan-bar h-full rounded-full bg-gradient-to-r from-gold/70 to-gold"
+                  style={{ ["--parish-scan-duration" as string]: `${STEP_MS}ms` }}
+                />
+              )}
             </div>
           </div>
 
