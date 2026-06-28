@@ -127,6 +127,8 @@ export const parishAssistantRouter = router({
       role: z.enum(["user", "assistant"]),
       content: z.string(),
     })).max(20).default([]),
+    /** Human label of the page the user is viewing (from client/src/lib/pageAssistant). */
+    pageContext: z.string().max(120).optional(),
   })).mutation(async ({ input }) => {
     let dynamicContext = "";
 
@@ -250,7 +252,12 @@ export const parishAssistantRouter = router({
     // Build the LIVE schedule context (reads from admin-edited DB, not hardcoded defaults)
     const scheduleCtx = await buildScheduleContext();
     const readingsCtx = await buildReadingsContext();
-    const systemPrompt = STATIC_CONTEXT_HEADER + `\n\nKEY INFORMATION (LIVE from admin schedule):\n${scheduleCtx}` + dynamicContext + readingsCtx;
+    // Page context: a light hint about what the user is currently looking at, so the
+    // assistant prefers answers relevant to that page. Never restricts what it can answer.
+    const pageCtx = input.pageContext
+      ? `\n\nCURRENT PAGE: The user is viewing the "${input.pageContext}" page. Prefer answers relevant to it, but still answer any parish question they ask.`
+      : "";
+    const systemPrompt = STATIC_CONTEXT_HEADER + `\n\nKEY INFORMATION (LIVE from admin schedule):\n${scheduleCtx}` + dynamicContext + readingsCtx + pageCtx;
 
     const messages: Array<{ role: "system" | "user" | "assistant"; content: string }> = [
       { role: "system", content: systemPrompt },
