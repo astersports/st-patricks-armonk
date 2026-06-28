@@ -22,7 +22,7 @@ interface PageRule {
 
 const DEFAULT_CONTEXT: PageAssistantContext = {
   label: "St. Patrick in Armonk",
-  suggestions: ["Mass times?", "How do I register?", "Confessions?", "CCD info?", "Upcoming events?"],
+  suggestions: ["Mass times?", "How do I register?", "Confessions?", "CCD info?"],
 };
 
 // Order matters: the FIRST matching rule wins, so list specific paths before
