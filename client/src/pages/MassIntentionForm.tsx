@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Heart, CheckCircle2, Cross } from "lucide-react";
+import { Heart, CheckCircle2, Cross, Sparkles, Loader2 } from "lucide-react";
 import { useParishSchedule } from "@/hooks/useParishSchedule";
 import { DEFAULT_PARISH_SCHEDULE } from "../../../shared/scheduleEngine";
 import { PARISH_PHONE } from "../../../shared/parishConstants";
@@ -31,6 +31,23 @@ export default function MassIntentionForm() {
   const submitMutation = trpc.massIntentions.submit.useMutation({
     onSuccess: () => setSubmitted(true),
   });
+
+  // AI-assisted wording: suggest reverent phrasings the requester can tap to use.
+  const [wordingSuggestions, setWordingSuggestions] = useState<string[]>([]);
+  const wordingMutation = trpc.massIntentions.suggestWording.useMutation();
+
+  const handleSuggestWording = async () => {
+    if (!form.intentionFor.trim() || wordingMutation.isPending) return;
+    try {
+      const res = await wordingMutation.mutateAsync({
+        intentionType: form.intentionType,
+        intentionFor: form.intentionFor.trim(),
+      });
+      setWordingSuggestions(res.suggestions);
+    } catch {
+      setWordingSuggestions([]);
+    }
+  };
 
   // Get Mass times for the preferred Mass dropdown
   const massTimes: string[] = [];
@@ -185,7 +202,22 @@ export default function MassIntentionForm() {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="notes">Additional Notes (optional)</Label>
+              <div className="flex items-center justify-between gap-2">
+                <Label htmlFor="notes">Additional Notes (optional)</Label>
+                <button
+                  type="button"
+                  onClick={handleSuggestWording}
+                  disabled={!form.intentionFor.trim() || wordingMutation.isPending}
+                  aria-label="Suggest wording for this intention"
+                  title={form.intentionFor.trim() ? "Suggest reverent wording" : "Enter who the Mass is for first"}
+                  className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {wordingMutation.isPending
+                    ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    : <Sparkles className="w-3.5 h-3.5" />}
+                  Suggest wording
+                </button>
+              </div>
               <Textarea
                 id="notes"
                 value={form.notes}
@@ -193,6 +225,23 @@ export default function MassIntentionForm() {
                 placeholder="Any special requests or additional details..."
                 rows={3}
               />
+              {wordingSuggestions.length > 0 && (
+                <div className="rounded-lg border border-primary/20 bg-primary/5 p-3 space-y-2">
+                  <p className="text-xs text-muted-foreground">Tap a phrasing to use it:</p>
+                  <div className="flex flex-col gap-1.5">
+                    {wordingSuggestions.map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => { setForm(f => ({ ...f, notes: s })); setWordingSuggestions([]); }}
+                        className="text-left text-sm rounded-md border border-primary/30 bg-background px-3 py-2 hover:bg-primary/10 transition-colors"
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {submitMutation.error && (
