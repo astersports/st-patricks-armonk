@@ -62,9 +62,9 @@ export interface ParishInfo {
 export const DEFAULT_PARISH_SCHEDULE: ParishSchedule = {
   services: [
     // Sunday
-    { type: "mass", name: "Mass", dayOfWeek: 0, time: "8:30 AM", durationMin: 60 },
-    { type: "mass", name: "Mass", dayOfWeek: 0, time: "10:30 AM", durationMin: 60 },
-    { type: "mass", name: "Mass", dayOfWeek: 0, time: "12:30 PM", durationMin: 60, seasonal: { months: [9, 10, 11, 12, 1, 2, 3, 4, 5, 6], note: "No 12:30 PM Mass from 1st Sunday in July through Labor Day weekend (resumes mid-September)" } },
+    { type: "mass", name: "Mass", dayOfWeek: 0, time: "8:30 AM", durationMin: 50 },
+    { type: "mass", name: "Mass", dayOfWeek: 0, time: "10:30 AM", durationMin: 50 },
+    { type: "mass", name: "Mass", dayOfWeek: 0, time: "12:30 PM", durationMin: 50, seasonal: { months: [9, 10, 11, 12, 1, 2, 3, 4, 5, 6], note: "No 12:30 PM Mass from 1st Sunday in July through Labor Day weekend (resumes mid-September)" } },
     // Monday — no services
     // Tuesday
     { type: "mass", name: "Mass", dayOfWeek: 2, time: "8:30 AM", durationMin: 30 },
@@ -78,7 +78,7 @@ export const DEFAULT_PARISH_SCHEDULE: ParishSchedule = {
     { type: "adoration", name: "First Friday Adoration", dayOfWeek: 5, time: "9:00 AM", durationMin: 600, seasonal: { months: [9, 10, 11, 12, 1, 2, 3, 4, 5, 6], note: "First Fridays, Sept–June, 9 AM – 7 PM" }, firstOfMonth: true, note: "Exposition of the Blessed Sacrament" },
     // Saturday
     { type: "confession", name: "Confession", dayOfWeek: 6, time: "4:30 PM", durationMin: 45 },
-    { type: "mass", name: "Vigil Mass", dayOfWeek: 6, time: "5:30 PM", durationMin: 60 },
+    { type: "mass", name: "Vigil Mass", dayOfWeek: 6, time: "5:30 PM", durationMin: 50 },
   ],
   holyDays: [
     { month: 1, day: 1, name: "Solemnity of Mary, Mother of God", massTimes: ["8:30 AM", "12:10 PM", "7:30 PM"] },
