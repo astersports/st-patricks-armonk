@@ -31,6 +31,8 @@ import {
   ACTIONS,
   STAGE_SORT_ORDER,
 } from "../../../../shared/sacramentStages";
+import { triageSacrament, type SubmissionTriage } from "../../../../shared/sacramentTriage";
+import { SubmissionTriageFlags } from "@/components/admin/SubmissionTriageFlags";
 
 /**
  * Unified Sacraments Manager — L99 spec.
@@ -104,6 +106,14 @@ export function SacramentsManager() {
     const counts: Record<string, number> = {};
     submissions.forEach((s) => { counts[s.stage] = (counts[s.stage] || 0) + 1; });
     return counts;
+  }, [submissions]);
+
+  // Rules-based triage per submission (single `now` so all rows agree).
+  const triageByKey = useMemo(() => {
+    const now = new Date();
+    const map: Record<string, SubmissionTriage> = {};
+    (submissions || []).forEach((s) => { map[`${s.type}-${s.id}`] = triageSacrament(s, now); });
+    return map;
   }, [submissions]);
 
   // Sort configurations
@@ -297,6 +307,7 @@ export function SacramentsManager() {
                           key={rowKey}
                           row={row}
                           rowKey={rowKey}
+                          triage={triageByKey[rowKey]}
                           isExpanded={isExpanded}
                           actions={actions}
                           onToggleExpand={() => setExpandedId(isExpanded ? null : rowKey)}
@@ -320,6 +331,7 @@ export function SacramentsManager() {
                     key={rowKey}
                     row={row}
                     rowKey={rowKey}
+                    triage={triageByKey[rowKey]}
                     isExpanded={isExpanded}
                     actions={actions}
                     onToggleExpand={() => setExpandedId(isExpanded ? null : rowKey)}
@@ -386,6 +398,7 @@ export function SacramentsManager() {
 function TableRow({
   row,
   rowKey,
+  triage,
   isExpanded,
   actions,
   onToggleExpand,
@@ -393,6 +406,7 @@ function TableRow({
 }: {
   row: SacramentSubmissionRow;
   rowKey: string;
+  triage?: SubmissionTriage;
   isExpanded: boolean;
   actions: SacramentAction[];
   onToggleExpand: () => void;
@@ -423,6 +437,7 @@ function TableRow({
               </Badge>
             )}
           </div>
+          {triage && <SubmissionTriageFlags flags={triage.flags} className="mt-1" />}
         </td>
         <td className="p-3">
           <Badge className={`${typeMeta.className} text-xs`}>{typeMeta.label}</Badge>
@@ -476,6 +491,7 @@ function TableRow({
 function MobileCard({
   row,
   rowKey,
+  triage,
   isExpanded,
   actions,
   onToggleExpand,
@@ -483,6 +499,7 @@ function MobileCard({
 }: {
   row: SacramentSubmissionRow;
   rowKey: string;
+  triage?: SubmissionTriage;
   isExpanded: boolean;
   actions: SacramentAction[];
   onToggleExpand: () => void;
@@ -511,6 +528,7 @@ function MobileCard({
               {new Date(row.submittedAt).toLocaleDateString()}
               {row.preferredDate && ` · Preferred: ${row.preferredDate}`}
             </p>
+            {triage && <SubmissionTriageFlags flags={triage.flags} className="mt-1.5" />}
           </div>
           <Button size="sm" variant="ghost" className="h-7 w-7 p-0 shrink-0" aria-label={isExpanded ? "Collapse details" : "Expand details"}>
             {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
