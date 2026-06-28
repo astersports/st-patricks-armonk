@@ -8,6 +8,7 @@
  */
 import { publicProcedure, z, db } from "./_helpers";
 import { invokeLLM } from "../_core/llm";
+import { ENV } from "../_core/env";
 import {
   buildThisWeekHighlights,
   defaultHighlightsIntro,
@@ -52,10 +53,19 @@ async function gatherRawHighlights(): Promise<RawHighlight[]> {
   return items;
 }
 
+/** Collapse whitespace and length-bound a fact field before it enters the prompt. */
+function boundFact(s: string, max: number): string {
+  return (s || "").replace(/\s+/g, " ").trim().slice(0, max);
+}
+
 /** One warm sentence summarizing the given highlights. Null on any failure. */
 async function aiIntro(highlights: { title: string; dateLabel: string }[]): Promise<string | null> {
+  // Degrade quietly to the template intro when no key is configured (the sandbox
+  // default) — invokeLLM would otherwise throw and log on every page load.
+  if (!ENV.forgeApiKey) return null;
   try {
-    const facts = highlights.map((h) => `- ${h.title} (${h.dateLabel})`).join("\n");
+    // Bound each fact: parish-provided, but a stray long title shouldn't bloat the prompt.
+    const facts = highlights.map((h) => `- ${boundFact(h.title, 80)} (${boundFact(h.dateLabel, 40)})`).join("\n");
     const result = await invokeLLM({
       maxTokens: 120,
       messages: [
@@ -71,7 +81,7 @@ async function aiIntro(highlights: { title: string; dateLabel: string }[]): Prom
     });
     const raw = result.choices[0]?.message?.content;
     const text = typeof raw === "string" ? raw : Array.isArray(raw) ? raw.map((p) => ("text" in p ? p.text : "")).join("") : "";
-    const cleaned = text.replace(/\s+/g, " ").trim().slice(0, 240);
+    const cleaned = text.replace(/\s+/g, " ").trim().slice(0, 200);
     return cleaned.length > 0 ? cleaned : null;
   } catch (err) {
     console.error("[Highlights] AI intro failed, using template:", err);
