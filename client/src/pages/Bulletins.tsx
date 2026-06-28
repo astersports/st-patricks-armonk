@@ -18,6 +18,7 @@ import PageHeader from "@/components/PageHeader";
 import { BulletinSubscribeCTA } from "./bulletins/BulletinSubscribeCTA";
 import { BulletinArchive } from "./bulletins/BulletinArchive";
 import { PushNotificationBanner } from "@/components/PushNotificationBanner";
+import { ThisWeekHighlights } from "@/components/ThisWeekHighlights";
 
 export default function Bulletins() {
   const { data: bulletins, isLoading } = trpc.bulletins.listPublished.useQuery();
@@ -40,7 +41,9 @@ export default function Bulletins() {
         description="Read the latest weekly bulletin or browse our archive."
       />
 
-      <section className="container py-6 sm:py-10">
+      <section className="container py-6 sm:py-10 space-y-6">
+        <ThisWeekHighlights />
+
         {isLoading ? (
           <div className="space-y-3">
             <Skeleton className="h-10 w-full rounded-lg" />
