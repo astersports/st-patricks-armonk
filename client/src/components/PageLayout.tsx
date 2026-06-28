@@ -5,6 +5,8 @@ import Navigation from "./navigation";
 import Footer from "./Footer";
 import ScrollToTopButton from "./ScrollToTopButton";
 import { ClosureAlertBanner } from "./ClosureAlertBanner";
+import { ParishScanConsole } from "./ParishScanConsole";
+import { pageScan } from "@shared/parishScan";
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -14,7 +16,9 @@ interface PageLayoutProps {
 
 export default function PageLayout({ children, hideBackButton }: PageLayoutProps) {
   const [location] = useLocation();
-  const isHome = location === "/";
+  const path = location.split("?")[0].split("#")[0];
+  const isHome = path === "/";
+  const scan = pageScan(path);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -41,7 +45,10 @@ export default function PageLayout({ children, hideBackButton }: PageLayoutProps
           </div>
         </div>
       )}
-      <main id="main-content" className="flex-1" role="main">{children}</main>
+      <main id="main-content" className="flex-1" role="main">
+        {scan && <ParishScanConsole key={path} scan={scan} />}
+        {children}
+      </main>
       <Footer variant={isHome ? "full" : "compact"} />
       <ScrollToTopButton />
       {/* Spacer for mobile bottom tab bar + safe area */}

@@ -190,6 +190,14 @@
   .animate-flicker-fast {
     animation: flicker-fast 1.2s ease-in-out infinite;
   }
+  /* Parish scan console — bar fill (CSS-driven so React updates once per step). */
+  @keyframes parish-scan-fill {
+    from { width: 0%; }
+    to { width: 100%; }
+  }
+  .parish-scan-bar {
+    animation: parish-scan-fill var(--parish-scan-duration, 2400ms) linear forwards;
+  }
 
   body {
     font-family: var(--font-sans);
