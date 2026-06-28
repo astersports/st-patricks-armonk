@@ -42,10 +42,10 @@ export function ThisWeekHighlights() {
       <p className="text-sm text-muted-foreground mb-4">{data.intro}</p>
 
       <ul className="space-y-2.5">
-        {data.items.map((h, i) => {
+        {data.items.map((h) => {
           const Icon = KIND_ICON[h.kind] ?? Calendar;
           return (
-            <li key={`${h.kind}-${h.iso}-${i}`} className="flex items-start gap-3">
+            <li key={`${h.kind}-${h.title}-${h.iso}`} className="flex items-start gap-3">
               <span className="mt-0.5 shrink-0 w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
                 <Icon className="w-3.5 h-3.5 text-primary" aria-hidden="true" />
               </span>

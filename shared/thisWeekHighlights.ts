@@ -55,11 +55,23 @@ const DEFAULTS: Required<BuildOptions> = {
   timeZone: "America/New_York",
 };
 
-/** Start of the day containing `now`, in UTC terms (lower bound is inclusive). */
-function startOfDay(now: Date): Date {
-  const d = new Date(now);
-  d.setHours(0, 0, 0, 0);
-  return d;
+/**
+ * The calendar day of `date` in `timeZone`, expressed as an integer day index
+ * (days since the epoch). Comparing these indices windows by *parish-local*
+ * calendar day regardless of the host's timezone (servers run in UTC), so items
+ * near midnight ET aren't mis-included/excluded.
+ */
+function localDayNumber(date: Date, timeZone: string): number {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+  const y = Number(parts.find((p) => p.type === "year")?.value);
+  const m = Number(parts.find((p) => p.type === "month")?.value);
+  const d = Number(parts.find((p) => p.type === "day")?.value);
+  return Math.floor(Date.UTC(y, m - 1, d) / 86_400_000);
 }
 
 /** Format a highlight's date for display in the parish timezone. */
@@ -90,8 +102,9 @@ export function buildThisWeekHighlights(
 ): Highlight[] {
   const { windowDays, max, timeZone } = { ...DEFAULTS, ...options };
 
-  const lower = startOfDay(now).getTime();
-  const upper = lower + windowDays * 24 * 60 * 60 * 1000;
+  // Window by parish-local calendar day: today (inclusive) through today+windowDays.
+  const lowerDay = localDayNumber(now, timeZone);
+  const upperDay = lowerDay + windowDays;
 
   const seen = new Set<string>();
   const out: Highlight[] = [];
@@ -99,7 +112,8 @@ export function buildThisWeekHighlights(
   for (const item of items) {
     const t = item.date instanceof Date ? item.date.getTime() : NaN;
     if (!Number.isFinite(t)) continue;
-    if (t < lower || t > upper) continue;
+    const day = localDayNumber(item.date, timeZone);
+    if (day < lowerDay || day > upperDay) continue;
 
     const title = (item.title || "").trim();
     if (!title) continue;

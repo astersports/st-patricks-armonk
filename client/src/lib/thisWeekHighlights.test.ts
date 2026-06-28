@@ -36,6 +36,17 @@ describe("buildThisWeekHighlights", () => {
     expect(out.map((h) => h.title)).toContain("Earlier today");
   });
 
+  it("windows by parish-local (ET) calendar day, not the UTC host day", () => {
+    // 02:00Z on the 28th is still the 27th at 22:00 in America/New_York, so it
+    // belongs to "yesterday" in parish-local terms and must be excluded — even
+    // though it is after UTC midnight of the 28th.
+    const out = buildThisWeekHighlights(
+      [ev({ title: "Late ET 27th", date: new Date("2026-06-28T02:00:00Z") })],
+      NOW,
+    );
+    expect(out.map((h) => h.title)).not.toContain("Late ET 27th");
+  });
+
   it("sorts ascending by date", () => {
     const out = buildThisWeekHighlights([
       ev({ title: "Later", date: new Date("2026-07-02T18:00:00Z") }),
