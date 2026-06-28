@@ -53,7 +53,9 @@ async function refineWordingWithAI(
         },
         {
           role: "user",
-          content: `Intention type: ${intentionType}. Mass offered for: "${name}".`,
+          // JSON.stringify keeps the (untrusted) subject safely quoted+escaped so a
+          // quote in the name can't break out of the delimiter.
+          content: `Intention type: ${intentionType}. Mass offered for: ${JSON.stringify(name)}.`,
         },
       ],
     });

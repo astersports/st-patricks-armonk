@@ -154,14 +154,14 @@ export default function MassIntentionForm() {
                 id="intentionFor"
                 required
                 value={form.intentionFor}
-                onChange={(e) => setForm(f => ({ ...f, intentionFor: e.target.value }))}
+                onChange={(e) => { setForm(f => ({ ...f, intentionFor: e.target.value })); setWordingSuggestions([]); }}
                 placeholder="Name(s) of person(s)"
               />
             </div>
 
             <div className="space-y-1.5">
               <Label htmlFor="intentionType">Intention Type *</Label>
-              <Select value={form.intentionType} onValueChange={(v) => setForm(f => ({ ...f, intentionType: v as typeof form.intentionType }))}>
+              <Select value={form.intentionType} onValueChange={(v) => { setForm(f => ({ ...f, intentionType: v as typeof form.intentionType })); setWordingSuggestions([]); }}>
                 <SelectTrigger id="intentionType" aria-label="Intention Type">
                   <SelectValue />
                 </SelectTrigger>
@@ -229,9 +229,9 @@ export default function MassIntentionForm() {
                 <div className="rounded-lg border border-primary/20 bg-primary/5 p-3 space-y-2">
                   <p className="text-xs text-muted-foreground">Tap a phrasing to use it:</p>
                   <div className="flex flex-col gap-1.5">
-                    {wordingSuggestions.map((s) => (
+                    {wordingSuggestions.map((s, i) => (
                       <button
-                        key={s}
+                        key={`${i}-${s}`}
                         type="button"
                         onClick={() => { setForm(f => ({ ...f, notes: s })); setWordingSuggestions([]); }}
                         className="text-left text-sm rounded-md border border-primary/30 bg-background px-3 py-2 hover:bg-primary/10 transition-colors"

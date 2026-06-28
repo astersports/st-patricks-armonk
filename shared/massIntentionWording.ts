@@ -27,8 +27,10 @@ export const MAX_INTENTION_SUGGESTIONS = 3;
 /** Collapse whitespace, strip control chars, trim, and bound length. */
 export function sanitizeIntentionName(raw: string): string {
   return (raw || "")
-    // \s collapses newlines/tabs/control whitespace to single spaces, neutralizing
-    // multi-line content before the name is embedded in a sentence or an LLM prompt.
+    // Strip ASCII control chars (incl. NUL/0x00 and DEL/0x7f) so nothing odd is
+    // embedded into a sentence or an LLM prompt. Hex escapes need no `u` flag.
+    .replace(/[\x00-\x1f\x7f]+/g, " ")
+    // Then collapse any remaining whitespace (incl. newlines/tabs) to single spaces.
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 120);

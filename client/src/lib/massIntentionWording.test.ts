@@ -12,6 +12,8 @@ describe("sanitizeIntentionName", () => {
 
   it("strips newlines / control chars (defeats injection into wording)", () => {
     expect(sanitizeIntentionName("John\nSmith\tJr")).toBe("John Smith Jr");
+    // non-whitespace ASCII control chars (NUL, DEL) are stripped too
+    expect(sanitizeIntentionName("John\u0000Smith\u007fJr")).toBe("John Smith Jr");
   });
 
   it("bounds length to 120 chars", () => {
