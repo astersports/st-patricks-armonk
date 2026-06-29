@@ -17,8 +17,8 @@ importers:
   .:
     dependencies:
       '@aster/weather':
-        specifier: github:astersports/aster-weather#2a772d0
-        version: https://codeload.github.com/astersports/aster-weather/tar.gz/2a772d0(react@19.2.1)
+        specifier: github:astersports/aster-weather#d4db522d4763cc5ddd081601f9f7a59fabd3723f
+        version: https://codeload.github.com/astersports/aster-weather/tar.gz/d4db522d4763cc5ddd081601f9f7a59fabd3723f(react@19.2.1)
       '@aws-sdk/client-s3':
         specifier: ^3.693.0
         version: 3.907.0
@@ -359,8 +359,8 @@ packages:
   '@asamuzakjp/nwsapi@2.3.9':
     resolution: {integrity: sha512-n8GuYSrI9bF7FFZ/SjhwevlHc8xaVlb/7HmHelnc/PZXBD2ZR49NnN9sMMuDdEGPeeRQ5d0hqlSlEpgCX3Wl0Q==}
 
-  '@aster/weather@https://codeload.github.com/astersports/aster-weather/tar.gz/2a772d0':
-    resolution: {tarball: https://codeload.github.com/astersports/aster-weather/tar.gz/2a772d0}
+  '@aster/weather@https://codeload.github.com/astersports/aster-weather/tar.gz/d4db522d4763cc5ddd081601f9f7a59fabd3723f':
+    resolution: {tarball: https://codeload.github.com/astersports/aster-weather/tar.gz/d4db522d4763cc5ddd081601f9f7a59fabd3723f}
     version: 0.1.0
     peerDependencies:
       react: '>=18'
@@ -4815,7 +4815,7 @@ snapshots:
 
   '@asamuzakjp/nwsapi@2.3.9': {}
 
-  '@aster/weather@https://codeload.github.com/astersports/aster-weather/tar.gz/2a772d0(react@19.2.1)':
+  '@aster/weather@https://codeload.github.com/astersports/aster-weather/tar.gz/d4db522d4763cc5ddd081601f9f7a59fabd3723f(react@19.2.1)':
     optionalDependencies:
       react: 19.2.1
 
